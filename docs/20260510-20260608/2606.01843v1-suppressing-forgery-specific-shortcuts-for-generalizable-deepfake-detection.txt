@@ -1,0 +1,1348 @@
+Title: Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection
+
+URL Source: https://arxiv.org/pdf/2606.01843v1
+
+Published Time: Tue, 02 Jun 2026 02:16:13 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection 
+
+## Yihui Wang 
+
+Hefei University of Technology China MistryNihilityn@gmail.com 
+
+## Yonghui Yang ∗
+
+National University of Singapore Singapore yyh.hfut@gmail.com 
+
+## Jilong Liu 
+
+Hefei University of Technology China liujilong0116@gmail.com 
+
+## Fengbin Zhu 
+
+National University of Singapore Singapore fengbin@nus.edu.sg 
+
+## Le Wu 
+
+Hefei University of Technology China lewu.ustc@gmail.com 
+
+## Tat-Seng Chua 
+
+National University of Singapore Singapore dcscts@nus.edu.sg 
+
+Abstract 
+
+Deepfake detection suffers from poor generalization across forgery methods, as existing models tend to rely on spurious method-specific shortcuts that fail to transfer to unseen manipulations. While recent approaches attempt to improve generalization, they lack an explicit mechanism to identify and suppress such short-cuts in learned representations. In this work, we propose Shortcut-
+
+Subspace Suppression ( S3) framework that explicitly characterizes and suppresses method-specific shortcuts via subspace modeling. Our key insight is that variations distinguishing different forgery methods capture method-specific artifacts and thus serve as an effective proxy for method-specific shortcuts. To this end, we train a lightweight linear probe for forgery method classification and perform Singular Value Decomposition (SVD) to extract the domi-nant shortcut subspace. Building on this formulation, we develop two complementary strategies to reduce shortcut reliance. During training, we softly suppress the shortcut subspace in feature repre-sentations, encouraging the model to rely on more generalizable cues for real/fake discrimination. At inference time, we introduce a training-free counterpart that attenuates neurons aligned with the identified shortcut directions, enabling plug-and-play gener-alization enhancement with improved interpretability. Extensive experiments on multiple benchmarks demonstrate that our method significantly improves cross-method generalization while maintain-ing strong in-domain performance. The code will be released upon acceptance of the submission. 
+
+Keywords 
+
+Robust Deepfake Detection, Shortcut Suppression, Neuron-level Intervention 
+
+1 Introduction 
+
+Recent advances in deep generative models, particularly GANs [ 11 ]and diffusion models [ 16 , 31 ], have significantly improved the re-alism and diversity of synthetic visual content, attracting wide-spread attention in both academia and industry. While these tech-niques enable powerful applications in content creation, they also 
+
+> Yonghui Yang is the Corresponding author.
+> Conference’17, Washington, DC, USA
+> 2026. ACM ISBN 978-x-xxxx-xxxx-x/YYYY/MM https://doi.org/10.1145/nnnnnnn.nnnnnnn
+
+raise serious concerns, including misinformation, identity imper-sonation, and potential misuse in political contexts [ 25 , 39 ]. As a result, deepfake detection has become an increasingly impor-tant task in real-world applications. Consequently, a wide range of detection methods have been proposed [ 1, 24 , 28 , 32 , 41 , 48 ] to distinguish manipulated content from authentic images. Despite their promising performance, these methods often struggle to main-tain reliability when encountering unseen forgery methods [ 27 , 45 ], limiting their applicability in practical scenarios. Such generalization failure is fundamentally rooted in the open-world nature of deepfake detection, where the forgery distribution is non-stationary and cannot be exhaustively covered during train-ing [ 47 ]. As a result, although existing detectors achieve strong performance on known manipulation types, they often fail to gen-eralize to unseen forgeries. Researchers have explored several di-rections to improve detection generalization, mainly following the principles: (i) leveraging more transferable forgery cues [ 10 , 23 , 37 ], (ii) expanding the diversity of forgery patterns through data aug-mentation or synthesis [ 34 , 42 ], and (iii) learning invariant repre-sentations to reduce reliance on method-specific biases [ 9, 43 , 49 ]. While these approaches have improved robustness to some extent, the underlying mechanisms that govern generalization behavior remain not fully understood. In particular, existing methods often lack an explicit understanding of which components of the learned representations are responsible for generalization across forgery types. Consequently, models may inadvertently rely on spurious cues that do not transfer well to unseen forgeries. This suggests the need for a more principled perspective on representation-level generalization in deepfake detection. In this work, we revisit deepfake detection from a representation-level perspective, aiming to better understand how different com-ponents of learned features contribute to generalization across forgery methods. We first conduct empirical analyses and visual-ize the feature distributions across different forgery methods. As shown in Figure 1 (a), fake samples form distinct, well-separated clusters according to their forgery technique. This indicates that the model’s representations are dominated by surface textures or patterns unique to each forgery method, rather than by uni-fied discriminative cues. Although learned representations exhibit clear method-dependent clustering patterns, the entanglement with real/fake discrimination signals makes it challenging to isolate the method-specific components.  
+
+> arXiv:2606.01843v1 [cs.CV] 1 Jun 2026 Conference’17, July 2017, Washington, DC, USA Yihui Wang et al.
+
+(a) Xception (b) Projected VQGAN 
+
+> StyleGAN2
+> StyleGAN3
+> StyleGANXL
+> sd2.1
+> ddim
+> RDDM
+> pixart
+> DiT
+> SiT
+
+Figure 1: t-SNE visualization on DF40 (EFS). (a) Xception Base-line: real (red) and fake (other colors) are clearly separable; fake samples colored by forgery method form distinct clus-ters, revealing method-specific representation patterns. (b) After projecting features onto the nullspace of the method-sensitive subspace, method-specific clusters dissolve while real/fake separation persists. 
+
+To better understand and explicitly characterize the method-specific components, we learn the method-sensitive subspace in the feature space. Specifically, we train a lightweight probe to predict forgery methods from learned representations, thereby extracting method-discriminative signals encoded in the features. We then perform SVD on the probe to identify the principal directions that are most sensitive to forgery-method variations, which span the method-sensitive subspace. This subspace captures the dominant directions for distinguishing different forgery methods and typi-cally exhibits a low-rank structure, as shown in Figure 2a. Through this formulation, method-specific features become explicitly an-alyzable, enabling us to directly study their role in model behav-ior. Specifically, we project the learned representations onto the method-sensitive subspace and then use the projected features for real/fake classification. As illustrated in Figure 2b, we compare the detection performances between the original and projected features. We find that the projected features retains most performance on the training domain, but exhibits significant collapses on unseen domains. This indicates that the method-sensitive subspace is the shortcut directions in the feature space, which directly cause the generalization failure to unseen forgery methods. Building on the above formulation, we propose a unified Shortcut-
+
+Subspace Suppression ( S3) framework that mitigates method-specific shortcuts through two complementary strategies. During training, we introduce a nullspace-based projection mechanism that explicitly suppresses the gradient components aligned with the method-sensitive subspace, thereby preventing the model from up-dating along shortcut directions. This encourages the detector to focus on more transferable cues for real/fake discrimination, rather than overfitting to method-specific patterns (as shown in Figure 1b). At inference time, we further analyze neuron activation patterns with respect to both forgery-method discrimination and real/fake prediction. Based on this analysis, we identify shortcut neurons 
+
+that are highly responsive to forgery-method variations while con-tributing greatly to the real/fake decision. We then suppress their activations without modifying model parameters, resulting in a 2 4 6 8 10 12 
+
+> Rank
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> Score
+
+(a) Energy distribution FS FR EFS FE  
+
+> Forgery-Method Type
+> 0.00
+> 0.25
+> 0.50
+> 0.75
+> 1.00
+> AUC
+> 0.8619
+> 0.9979
+> 0.6772
+> 0.3774
+> 0.5796
+> 0.9051
+> 0.3356
+> -0.2823
+> -0.0928
+> -0.3416
+> -0.2990
+> Baseline
+> Subspace
+
+(b) Detection performance Figure 2: (a) Singular value energy distribution: the first few components concentrate most energy, indicating a low-rank method-sensitive subspace. (b) AUC comparison between the original and subspace-projected features input. On the training domain (FR), the projected features retains most performance; on unseen domains (FS, EFS, FE), its AUC col-lapses, confirming that the subspace encodes the shortcut directions in the feature space. 
+
+backbone-training-free, plug-and-play intervention that directly reduces shortcut influence at test time. These two strategies provide a unified framework that mitigates method-specific shortcuts from both the optimization and inference stages, leading to improved cross-method generalization with enhanced interpretability. Our contributions are summarized as follows: 
+
+• We provide a systematic empirical analysis revealing that gen-eralization failure in deepfake detection stems from method-specific shortcuts, i.e., non-transferable patterns learned dur-ing training. 
+
+• We explicitly characterize these shortcuts as a method-sensitive subspace in the feature space, offering a principled formulation for understanding shortcut behavior. 
+
+• We propose two complementary suppression strategies, in-cluding a training-stage nullspace projection and an inference-stage shortcut neuron activation editing, which together im-prove generalization with limited computational overhead. 
+
+• Extensive experiments demonstrate that our method consis-tently outperforms state-of-the-art approaches across multiple benchmarks, achieving superior cross-method generalization while maintaining strong in-domain performance. 
+
+2 Preliminary 
+
+In this section, we briefly formalize the deepfake detection problem and the objective of cross-method generalization. 
+
+Problem Setup. Let 𝑥 ∈ X denote an input image and 𝑦 ∈ { 0, 1}
+
+its label, where 𝑦 = 0 indicates a real image and 𝑦 = 1 a fake one. Each fake sample is further associated with a forgery method label 
+
+𝑚 ∈ M , where M denotes the set of forgery methods observed during training. A common deepfake detector consists of a feature extractor 𝜙 𝜃 : X → R𝑑 (i.e., ResNet [ 15 ], Xception [ 7], CLIP [ 30 ]) and a classifier 𝜓 : R𝑑 → [ 0, 1], yielding: 
+
+𝑓 (𝑥 ) = 𝜓 (𝜙 𝜃 (𝑥 )) . (1) During training, supervision is available for both 𝑦 and 𝑚 , while at test time, the model is evaluated on samples whose forgery methods may lie outside M.
+
+Generalization Objective. Deepfake detection is inherently an open-world problem, where the distribution of forgery methods is Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection Conference’17, July 2017, Washington, DC, USA 
+
+non-stationary. Let Dtrain and Dtest denote the training and testing distributions, respectively, with potentially disjoint method sets. The generalization objective is to learn the optimal representation 
+
+𝑧 = 𝜙 𝜃 (𝑥 ) on Dtrain , which can achieve the minimal test risk: 
+
+E(𝑥,𝑦 )∼D test 
+
+ℓ (𝜓 (𝑧 ), 𝑦 ) . (2) In practice, the learned representation often captures signals that are highly predictive on Dtrain but hard to transfer across differ-ent forgery methods [ 27 , 45 , 47 ]. This drives us to explore more generalizable deepfake detection. 
+
+3 Methodology 
+
+In this work, we attribute the generalization failure to the method-specific shortcut. To tackle the shortcut issue, we first design an explicit shortcut formulation mechanism by method-sensitive sub-space extraction. Next, we introduce our proposed Shortcut-Subspace 
+
+Suppression ( S3) framework illustrated in Figure 3 for generalizable deepfake detection, which involves two complementary shortcut suppression strategies during training and inference stages, re-spectively. Finally, we give a comprehensive discussion about our proposed S 3 framework. 
+
+3.1 Method-Sensitive Subspace 
+
+To explicitly characterize method-specific shortcuts in the feature space, we begin by analyzing how forgery method information is encoded in learned representations. Given a representation z =
+
+𝜙 𝜃 (𝑥 ), we consider predicting the forgery method 𝑚 from z. If certain directions in the feature space are highly predictive of 𝑚 ,they capture variations that distinguish different method pipelines. Since such variations are inherently tied to specific manipulation methods, they are unlikely to generalize across unseen methods and thus constitute shortcut signals. To identify these directions, we introduce a linear probe: 
+
+𝑔 (z) = 𝑊 ⊤ 
+
+> 𝑚
+
+z, (3) where 𝑊 𝑚 ∈ R𝑑 ×𝐾 and 𝐾 = |M| . We adopt a linear probe for two reasons. First, linear models expose directly which directions in the representation space are predictive of the target, providing interpretability [ 2, 4, 18 ]. Second, empirical evidence suggests that high-level semantic attributes are often linearly separable in deep representations, making linear probes a standard tool for analyzing learned features across both vision and language models [5, 13]. The weight matrix 𝑊 𝑚 encodes how each feature dimension contributes to distinguishing different forgery methods. To extract the dominant method-predictive directions, we perform Singular Value Decomposition (SVD): 
+
+𝑊 𝑚 = 𝑈 Σ𝑉 ⊤. (4) The left singular vectors 𝑈 define orthogonal directions in the feature space, ordered by their importance in explaining method-discriminative variations. Empirically, we observe that a small num-ber of singular directions explain most of the method-discriminative power, indicating that shortcut signals reside in a low-dimensional subspace (as shown in Figure 2(a)). We then select the top-𝑟 singular vectors to form an orthonormal basis 𝑈 𝑟 ∈ R𝑑 ×𝑟 , which spans a low-dimensional subspace: 
+
+S = span (𝑈 𝑟 ). (5) This subspace captures the principal directions along which dif-ferent forgery methods are distinguished, and therefore serves as a proxy for method-specific shortcuts in the representation space. Based on this formulation, we propose Shortcut-Subspace 
+
+Suppression ( S3) framework from two complementary perspectives. During training, we constrain gradient updates to avoid this sub-space; at inference, we attenuate neurons aligned with these direc-tions. We next introduce these two strategies in detail. 
+
+3.2 Training-time Subspace Suppression 
+
+Based on the identified method-sensitive subspace S, we first in-troduce a training-time strategy to suppress shortcut reliance by directly constraining the optimization dynamics. During training, model parameters are updated along the gradient direction of the loss. If the gradient contains a significant component aligned with the method-sensitive subspace S, the model will increasingly rely on shortcut features, reinforcing method-specific patterns that do not generalize. To mitigate this effect, we propose Null Space Projection (NSP) , which explicitly attenuates gradient compo-nents lying in S. Instead of allowing unrestricted updates in the full feature space, NSP constrains the optimization trajectory to avoid shortcut directions, encouraging the model to learn more transferable representations. Consider the feature vectors Z extracted from the image back-bone and let ∇Z L be the gradient of the loss with respect to Z.Given the orthonormal basis 𝑈 𝑟 of the method-sensitive subspace, we construct the projection matrix: 
+
+P = 𝑈 𝑟 𝑈 ⊤ 
+
+> 𝑟
+
+, (6) which projects any vector onto S, and its complement P⊥ = I − P,which projects onto the null space of S. We can decompose the gradient into two components: 
+
+∇Z L = P∇Z L + P⊥∇Z L (7) corresponding to the shortcut-aligned and shortcut-orthogonal directions, respectively. Thus, NSP suppresses the shortcut-aligned component by applying: 
+
+∇Z Lnew = ∇Z L − 𝛼 P∇Z L = P⊥∇Z L + ( 1 − 𝛼 )P∇Z L, (8) where 𝛼 ∈ [ 0, 1] controls the suppression strength. When 𝛼 = 1,the gradient component within S is completely removed, and the update lies entirely in the null space of the shortcut subspace. For 
+
+0 < 𝛼 < 1, NSP performs soft suppression, retaining partial infor-mation while discouraging over-reliance on shortcut directions. By restricting gradient updates along method-sensitive direc-tions, NSP prevents the model from further amplifying shortcut features during training. As a result, the learned representation is biased toward components that are less dependent on specific forgery methods and thus more likely to generalize across unseen forgery methods. 
+
+3.3 Inference-time Neuron Suppression 
+
+While NSP suppresses shortcut learning during training, we further propose an inference-time strategy to mitigate shortcut reliance in already trained models. Unlike NSP, this approach is training-free and does not require modifying model parameters, making it a practical plug-and-play solution. Given the method-sensitive Conference’17, July 2017, Washington, DC, USA Yihui Wang et al. Real Image 
+
+> Fake Image
+> Layer 1
+> Layer 2
+> …
+> Layer  -1
+> Null Space Projection
+> Real -Fake Subspace
+> Loss
+> Fake Method Subspace
+> Real/Fake
+> Head
+> Loss m
+
+🔥 🔥 
+
+> Real Image
+> Fake Image
+> Layer 1
+> Layer 2
+> …
+> Layer  -2
+
+Stage 1 -2: Localize Shortcut Neurons    
+
+> top –ρ
+> Layer  -1
+> Real/Fake
+> Head
+> 𝓐 𝓐 𝒏𝒆𝒘
+> 𝓩
+> 𝓩 𝒏𝒆𝒘
+
+Stage 1: Train Probe 
+
+> P𝛻 𝒵 ℒ
+> 𝛻 𝒵 ℒ%
+> 𝛻 𝒵 ℒ&'(
+
+Null Space Projection (NSP) 
+
+Neuron Activation Editing (NAE) 
+
+> Frozen
+> Backbone
+> Method
+> Probe
+
+Stage 2: Train Real/Fake Head 
+
+> 𝓩
+
+🔥 
+
+Stage 1 -1: Train Probe (Same as NSP) Stage 2: Neurons Activation Editing 
+
+> Backbone
+> Backbone
+
+Method -Sensitive Subspace    
+
+> SVD Loss r/f
+> Method -Sensitive Subspace S
+> Loss mFrozen
+> Backbone
+> Method
+> Probe S
+
+🔥 
+
+> S
+
+𝑆 = span( 𝑈 %)
+
+𝑈 % = [𝑢 &, 𝑢 ', … , 𝑢 %] ∈ ℝ(×%
+
+g 𝑧 = 𝑊 *
+
+> +
+
+𝑧 , 𝑊 * = 𝑈 ∑𝑉 + ∈ ℝ(×%
+
+> Loss r/f
+> 𝓐
+> Decision Contribution
+> Method Sensitivity
+> Compute Two Score per Neuron
+
+Legend: Frozen 🔥 Trained Forward Data Flow Method Class Labels Real/Fake Labels Gradient Flow 
+
+Figure 3: Overview of the proposed S 3 framework. The upper part illustrates training-time subspace suppression (NSP) with alternating probe training and gradient projection; the lower part shows inference-time neuron activation editing (NAE) with probe training and activation editing rules. 0.0 0.1 0.2 0.3 0.4 0.5 
+
+> sr/f
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> sm
+> Median Score
+
+(a) 1 
+
+> 6
+> 11
+> 16
+> 21
+> 26
+> 31
+> Top k indices
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> 1.2
+> 1.4
+> sm
+> Median Method Score
+> Real-Fake Score
+> Method Score
+
+(b) 
+
+Figure 4: (a) Neuron Distribution: Decision contribution 𝑠 r/f 
+
+𝑖 
+
+vs. method sensitivity 𝑠 m
+
+𝑖 . (b) Top-𝑘 decision-critical neurons: many also exhibit high method sensitivity. 
+
+subspace S identified in Sec. 3.1, we analyze how shortcut signals manifest at the neuron level. Since neuron activations form the intermediate representation driving the final prediction, neurons whose activations are strongly aligned with S capture method-specific variations. Meanwhile, neurons contribute differently to the real/fake decision. This leads to a unified characterization: neurons that are both decision-critical and method-sensitive are likely to en-code shortcut signals. Such a formulation provides an interpretable view of the model, allowing us to explicitly localize shortcut-related neurons and enable targeted intervention. To quantify neuron contributions, we adopt a local linear approx-imation. For a properly chosen localization layer (See Appendix C.3), the model’s decision logit can be approximated as: 
+
+n⊤
+
+r/f z = c⊤a + const , (9) where nr/f is the normal vector of the decision boundary, a denotes neuron activations and c measures their contribution to the final prediction. This formulation implies that scaling neuron activations directly modulates the decision outcome, providing a principled basis for intervention. We characterize each neuron using two complementary scores. For a neuron with weight vector w𝑖 , its 
+
+decision contribution is defined as: 
+
+𝑠 r/f 
+
+𝑖 = |w𝑖 · nr/f |∥w𝑖 ∥∥ nr/f ∥ , (10) which measures alignment with the decision boundary. Its method sensitivity is defined as: 
+
+𝑠 m
+
+𝑖 =
+
+𝑟 ∑︁ 
+
+𝑗 =1
+
+(UT
+
+𝑟 w𝑖 )𝑗 · 𝜎 𝑗 , (11) which measures alignment with the method-sensitive subspace S.Together, these scores provide an interpretable decomposition of neuron roles. We visualize neurons in a 2D plane defined by (𝑠 r/f 
+
+𝑖 , 𝑠 m
+
+𝑖 ), re-vealing a clear structure (Fig. 4). Notably, neurons that are both highly decision-critical and strongly method-sensitive form a dis-tinct group, which we identify as shortcut neurons . These neurons dominate the prediction while encoding method-specific signals, making them the primary source of generalization failure. Based on this analysis, we propose Neuron Activation Editing (NAE) , an inference-time intervention that suppresses shortcut neurons without modifying model parameters. We first select neu-rons that are both: (i) above-median in decision contribution, and (ii) among the top-𝜌 fraction in method sensitivity. Let I denote the selected neuron set. During inference, we attenuate their acti-vations: 
+
+Anew [:, 𝑖 ] = A [ :, 𝑖 ] · ( 1 − 𝛼 ), ∀𝑖 ∈ I , (12) Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection Conference’17, July 2017, Washington, DC, USA 
+
+where 𝛼 ∈ [ 0, 1] controls the suppression strength. NAE offers two key advantages. First, it provides an interpretable mechanism for identifying and mitigating shortcut reliance at the neuron level. Second, it is entirely training-free and does not require modifying backbone parameters, making it directly applicable to existing mod-els. The full operation process of the proposed Shortcut-Subspace 
+
+Suppression ( S3) framework is illustrated in Algorithm 1 (Appendix). 
+
+3.4 Discussion of S 3 Framework 
+
+Interpretable Mechanism. Our key insight is that method-specific shortcuts occupy a low-dimensional subspace that is complemen-tary to transferable forensic cues. By explicitly identifying and suppressing this subspace, our framework unifies training-time and inference-time interventions under a common perspective. This subspace-based formulation not only improves cross-method generalization, but also provides an interpretable mechanism for understanding and mitigating shortcut reliance. 
+
+Simplicity and Generality. NSP introduces only a lightweight projection during optimization, while NAE is entirely training-free and can be directly applied to pre-trained models without modifying backbone parameters. Both operations incur negligi-ble overhead and scale independently of model size, making the framework efficient in real-world deployment. Furthermore, our proposed framework operates directly on feature representations and requires minimal assumptions about model architecture, mak-ing it compatible with various detectors. 
+
+4 Experiments 
+
+We evaluate NSP and NAE from three complementary perspectives. First, we assess the generalization of the cross-method by train-ing on a single forgery type and testing in four distinct categories. Second, we examine the plug - and - play nature of our methods by integrating them into four backbone architectures. Third, we an-alyze computational efficiency to demonstrate practical deploya-bility. To understand why our methods work, we further conduct feature-space visualizations and neuron-level sensitivity analysis. 
+
+4.1 Experimental Setup 
+
+4.1.1 Datasets. We perform experiments on the DF40 dataset [ 44 ], a large - scale benchmark comprising 40 deepfake manipulation tech-niques across four categories: Face Swapping (FS) , Face Reenact-ment (FR) , Complete Face Synthesis (EFS) and Face Editing (FE) . Each category comprises multiple specific manipulation tech-niques. See Table 4 for the full list. Following the standard protocol, we use the FF domain, where authentic data originates from Face-Forensics++ [ 32 ] with the official split of 720 videos for training and 140 for validation/testing. To evaluate generalization under distribution shift, we construct three training sets, each containing a single category of forgery methods from the FF domain. For testing, we evaluate all models on the FF domain across all four forgery categories, covering 32 distinct manipulation methods. This setup allows us to measure per-formance when training and testing forgery types are (i) identical (in-domain), (ii) distinct (cross-domain). 
+
+4.1.2 Baselines. We compare against twelve representative mod-els, spanning both fundamental feature extractors and special-ized forensic detectors. This includes four widely adopted back-bones—Xception [ 7], ResNet50 [ 15 ], EfficientNet - B4[ 38 ], and CLIP (ViT - B/16) [ 30 ]—as well as eight state -of - the -art deepfake detectors: F3Net [ 28 ], SPSL [ 23 ], SRM [ 20 ], RECCE [ 6 ], UCF [ 45 ], FreqNet [ 37 ], Deepspace [ 33 ], and SpecXNet [ 3]. This diverse selection provides a thorough benchmark for assessing both the effectiveness and generalization capability of our approach. 
+
+4.1.3 Evaluation Metric. Following prior work, we adopt the Area Under the Curve (AUC) as the primary evaluation metric. 
+
+4.1.4 Implementation Details. Our implementation builds on Deep-fakeBench [ 46 ], with adaptations to accommodate our proposed modules. All experiments run on a single NVIDIA RTX 4090 GPU (24 GB memory) using PyTorch. Unless constrained by memory or convergence, we use a unified configuration: batch size 128, back-bone initialized with pre -trained weights, and the Adam optimizer with a warmup schedule followed by cosine annealing for learning rate decay. 
+
+4.2 Main Results 
+
+4.2.1 Quantitative Comparison. When training and test forgery types diverge, baseline detectors often collapse—but our methods consistently recover performance. Table 1 compares NSP and NAE against twelve baselines under three single -forgery training regimes (FS, FR, EFS). The key observation: cross - domain performance gains are largest precisely where baselines struggle most. For instance, training on FS and testing on FR—a distribution shift that drops Xception from 0.9832 (in -domain FS) to 0.8708—NSP raises this to 0.9067, a 4.12% relative improvement. Similarly, NAE proves espe-cially effective when baselines catastrophically fail: trained on FR and tested on FE, Xception achieves only 0.3774; NAE boosts this to 0.9066, a 140% gain. These results directly validate our core hy-pothesis: suppressing method - specific shortcuts—whether during training or at inference—forces the model to rely on transferable forensic cues. 
+
+4.2.2 Generalization across Backbones. The effectiveness of NSP and NAE extends beyond Xception to diverse architectures. Ta-ble 2 shows results across ResNet50, EfficientNet -B4, and CLIP (ViT-B/16), with three consistent patterns. 
+
+Architecture - agnostic gains. Both modules improve cross - domain performance across all backbones, with the most dramatic gains under severe distribution shifts. For ResNet50 trained on FR and tested on EFS, NSP improves AUC from 0.6767 to 0.7604 (+12.4%); while NAE achieves a modest gain to 0.7001 (+3.5%). These improve-ments are not Xception specific—they reflect a general mechanism for decoupling method -specific shortcuts from decision - critical fea-tures. 
+
+Complementary roles. NSP acts as a proactive regularizer, consistently improving cross-domain performance across most set-tings. NAE, by contrast, is a post-hoc remedy which typically yields smaller gains than NSP. When combined, NSP+NAE does not al-ways outperform either alone, as shown in Tables 1 and 2. For in-stance, on FE the AUC drops from 0.9066 with NAE alone to 0.7636 with the combination when trained on FR, suggesting the two Conference’17, July 2017, Washington, DC, USA Yihui Wang et al. 
+
+Table 1: Performance comparison of different methods under various training sets Training Set FS(FF) FR(FF) EFS(FF) Methods FS FR EFS FE Avg. FS FR EFS FE Avg. FS FR EFS FE Avg.                                                                                                                                                                                     
+
+> Xception (ICCV2019) 0.9832 0.8708 0.8615 0.9801 0.9239 0.8619 0.9979 0.6772 0.3774 0.7286 0.7697 0.8221 0.9988 0.9912 0.8955 F3Net (ECCV2020) 0.9487 0.7482 0.7648 0.8508 0.8281 0.7267 0.9686 0.6422 0.2935 0.6577 0.6651 0.7251 0.9742 0.9763 0.8352 SPSL (CVPR2021) 0.9772 0.8545 0.7834 0.9666 0.8954 0.8527 0.9957 0.6656 0.7354 0.8123 0.7761 0.8615 0.9965 0.9896 0.9059 SRM (CVPR2021) 0.9713 0.8497 0.8117 0.9586 0.8978 0.8489 0.9972 0.6932 0.6953 0.8087 0.7906 0.8878 0.9976 0.9923 0.9171
+> RECCE (CVPR2022) 0.8637 0.7250 0.6894 0.8943 0.7931 0.8087 0.9837 0.6893 0.5174 0.7498 0.6987 0.7068 0.9450 0.9498 0.8251 UCF (ICCV2023) 0.9766 0.8413 0.8632 0.9558 0.9092 0.8512 0.9961 0.7028 0.4003 0.7376 0.6896 0.7279 0.9969 0.9947 0.8523 FreqNet (AAAI2024) 0.8458 0.9389 0.6306 0.8990 0.8286 0.8520 0.9904 0.7161 0.9217 0.8701 0.5940 0.6845 0.8955 0.8659 0.7600 Deepspace (VISIGRAPP2025) 0.9839 0.8911 0.8487 0.9587 0.9206 0.8698 0.9977 0.7060 0.5144 0.7720 0.7686 0.8120 0.9989 0.9961 0.8939 SpecXNet (ACMMM2025) 0.8956 0.6762 0.6303 0.8317 0.7584 0.6897 0.9597 0.5200 0.2893 0.6147 0.6397 0.6152 0.9731 0.9779 0.8015 S3-NSP (Ours) 0.9858 0.9067 0.8841 0.9686 0.9363 0.8692 0.9974 0.7609 0.6738 0.8253 0.8021 0.8352 0.9985 0.9988 0.9087 S3-NAE (Ours) 0.9840 0.8711 0.8611 0.9817 0.9245 0.8761 0.9973 0.8366 0.9066 0.9042 0.7668 0.8293 0.9985 0.9912 0.8965 S3-NSP+NAE (Ours) 0.9856 0.9060 0.8837 0.9679 0.9358 0.8464 0.9916 0.7403 0.7636 0.8355 0.7967 0.8351 0.9981 0.9983 0.9071
+
+Table 2: Generalization analysis of different models under various training and testing forgery types. Backbone Variant FS train FR train EFS train FS test FR test EFS test FE test FS test FR test EFS test FE test FS test FR test EFS test FE test Xception baseline 0.9832 0.8708 0.8615 0.9801 0.8619 0.9979 0.6772 0.3774 0.7697 0.8221 0.9988 0.9912 +NSP 0.9858 0.9067 0.8841 0.9686 0.8692 0.9974 0.7609 0.6738 0.8021 0.8352 0.9985 0.9988 
+
++NAE 0.9840 0.8711 0.8611 0.9817 0.8761 0.9973 0.8366 0.9066 0.7668 0.8293 0.9985 0.9912 +NSP+NAE 0.9856 0.9060 0.8837 0.9679 0.8464 0.9916 0.7403 0.7636 0.7967 0.8351 0.9981 0.9983 ResNet baseline 0.9892 0.9093 0.8592 0.9617 0.8601 0.9985 0.6767 0.4025 0.7601 0.8391 0.9992 0.9983 
+
++NSP 0.9890 0.9089 0.8626 0.9606 0.8840 0.9989 0.7604 0.6047 0.7853 0.8392 0.9996 0.9959 +NAE 0.9894 0.9103 0.8610 0.9621 0.8582 0.9985 0.7001 0.4061 0.7605 0.8415 0.9992 0.9982 +NSP+NAE 0.9888 0.9162 0.8695 0.9533 0.8850 0.9990 0.7784 0.6395 0.7609 0.8209 0.9996 0.9953 EfficientNet baseline 0.9867 0.9136 0.8657 0.9803 0.8901 0.9997 0.5992 0.7184 0.7982 0.8634 0.9998 0.9980 +NSP 0.9840 0.9264 0.8748 0.9942 0.9012 0.9998 0.6288 0.7455 0.8249 0.8918 0.9999 0.9998 
+
++NAE 0.9866 0.9108 0.8632 0.9793 0.8890 0.9996 0.6273 0.7171 0.8006 0.8658 0.9998 0.9977 +NSP+NAE 0.9838 0.9214 0.8730 0.9940 0.9015 0.9998 0.6330 0.7532 0.8338 0.8955 0.9999 0.9996 CLIP baseline 0.9804 0.8398 0.7921 0.8806 0.8742 0.9990 0.7145 0.6707 0.7469 0.8682 0.9980 0.9997 
+
++NSP 0.9836 0.8723 0.8095 0.9049 0.8683 0.9988 0.7244 0.6994 0.7526 0.8590 0.9980 0.9991 +NAE 0.9806 0.8584 0.8000 0.8967 0.8765 0.9990 0.7165 0.6866 0.7542 0.8747 0.9980 0.9997 
+
++NSP+NAE 0.9839 0.8798 0.8201 0.9237 0.8677 0.9988 0.7244 0.7030 0.7522 0.8596 0.9980 0.9991 
+
+mechanisms suppress overlapping shortcut directions and cause over - attenuation. Under EFS training, however, they complement each other, raising the FE AUC from 0.9912 with NAE alone to 0.9983 with the combination. This domain -dependent interaction shows that training - time and inference -time suppression are not always additive; their compatibility hinges on how strongly the model relies on method-specific shortcuts. 
+
+Modest in - domain trade - off. When training and test forgery types match, baseline AUCs already exceed 0.98. Adding NSP or NAE yields minor fluctuations ( ≤ 0.3% decrease). This slight in -domain cost is expected: suppressing method - specific features intentionally sacrifices capacity to exploit patterns that are effective only within the training distribution. The resulting cross-domain gains—often exceeding 10 × the in -domain loss—demonstrate a favorable trade -off for real - world deployment where forgery methods are rarely known in advance. 
+
+4.2.3 Efficiency Analysis. Our methods add minimal computational overhead. NSP introduces 30 seconds per epoch (42% increase) with no extra GPU memory. NAE requires a one -time probe training of 16 seconds (1.74 GB). At inference, both add <0.12 ms per image and 18.5K parameters (0.09% of the backbone). In contrast, competing detectors like SRM and UCF exceed 24 GB memory under the same batch size, and SpecXNet is 9 × slower. Table 3 summarizes the key comparisons; the full results and architecture - specific details are deferred to Appendix E.1. 
+
+Table 3: Efficiency comparison (abridged). Full results in Ap-pendix E.1. Method Train time (s/epoch) GPU mem (GB) Infer time (ms/img) Params Xception (baseline) 72 12.27 5.57 20.8M + NSP (ours) 73+30 12.27 5.64 +18.5K + NAE (ours) 0+16 1.74 5.69 +18.5K SRM — >24 10.22 53.2M SpecXNet 330 16.57 51.70 53.8M 
+
+4.3 Ablation Study 
+
+4.3.1 Impact of NSP Hyperparameters. The subspace rank 𝑟 and suppression strength 𝛼 jointly control the trade - off between re-moving method - specific shortcuts and preserving generalizable cues. The rank 𝑟 determines the dimensionality of the suppressed subspace; 𝛼 scales the gradient projection along those directions. 
+
+Effect of rank 𝑟 . Cross - domain performance is sensitive to the choice of 𝑟 (Figure 6). Values in the range 𝑟 = 2 or 3 yield the highest accuracy; decreasing 𝑟 to 1 leaves insufficient suppression of method - specific signals, while increasing 𝑟 to 4 or higher risks suppressing generalizable forgery cues. 
+
+Effect of suppression strength 𝛼 . Performance also exhibits clear sensitivity to 𝛼 . Even a modest value like 𝛼 = 0.1 improves Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection Conference’17, July 2017, Washington, DC, USA 1/128 
+
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+> 0.865
+> 0.870
+> 0.875
+> FR
+> FS
+> baseline
+> alpha=0.25
+> alpha=0.5
+> alpha=0.75
+> alpha=1
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+> 0.9974
+> 0.9976
+> 0.9978
+> 0.9980
+> 0.9982
+> Performance
+> FR
+> baseline
+> alpha=0.25
+> alpha=0.5
+> alpha=0.75
+> alpha=1
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+> 0.70
+> 0.75
+> 0.80
+> Performance
+> EFS
+> baseline
+> alpha=0.25
+> alpha=0.5
+> alpha=0.75
+> alpha=1
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> Performance
+> FE
+> baseline
+> alpha=0.25
+> alpha=0.5
+> alpha=0.75
+> alpha=1
+
+Figure 5: NAE hyperparameter sensitivity. Cross - domain AUC (trained on FR, tested on EFS) varies with suppression ratio 𝜌 
+
+and strength 𝛼 . Optimal performance lies at 𝜌 ∈ [ 1/4, 1/2] and 𝛼 = 1.0.
+
+over the baseline, indicating that the suppression mechanism mean-ingfully influences gradient dynamics. Performance remains robust across a broad range ( 𝛼 = 0.1 to 0.9), with extreme values causing noticeable degradation. Optimal configurations lie around 𝑟 = 3 and 𝛼 = 0.7. The sensitiv-ity to these choices reflects training - time dynamics, where gradient projection amplifies even small changes in subspace alignment. 0.1 0.3 0.5 0.7 0.9 
+
+Suppression strength α
+
+> 1234
+> Subspace rank  r
+> 0.9087 (+1.48%) 0.9024 (+0.78%) 0.8884 (-0.78%) 0.9042 (+0.98%) 0.9040 (+0.95%) 0.9029 (+0.83%) 0.8983 (+0.32%) 0.8971 (+0.18%) 0.8936 (-0.20%) 0.9077 (+1.36%) 0.9006 (+0.58%) 0.8957 (+0.02%) 0.9031 (+0.86%) 0.9071 (+1.30%) 0.9049 (+1.06%) 0.8979 (+0.27%) 0.8947 (-0.08%) 0.9074 (+1.34%) 0.8950 (-0.05%) 0.8920 (-0.39%)
+
+EFS (Baseline: 0.8955) 
+
+> 0.885 0.890 0.895 0.900 0.905
+> Average AUC
+
+Figure 6: Impact of NSP hyperparameters. Cross - domain AUC (trained on FS, tested on EFS) varies with subspace rank 
+
+𝑟 and suppression strength 𝛼 .
+
+4.3.2 Impact of NAE Hyperparameters. NAE introduces two hy-perparameters: the suppression ratio 𝜌 (proportion of neurons sup-pressed) and the suppression strength 𝛼 (scaling factor applied to selected neuron activations). We fix the method -sensitive sub-space rank to 𝑟 = 1 and the localization layer to the last pointwise convolution; Appendix C.3 validates these choices. 
+
+Effect of suppression ratio 𝜌 and strength 𝛼 . The two pa-rameters interact (Figure 5). Optimal performance occurs at 𝜌 ∈[1/4, 1/2] and 𝛼 = 1.0. Larger 𝜌 (e.g., 1) expands suppression to neurons carrying generalizable cues, hurting performance. Smaller 
+
+𝜌 (e.g., 1/16 ) removes too few method -sensitive signals, leaving the model vulnerable to shortcuts. Complete removal ( 𝛼 = 1.0)works best; lower values ( 𝛼 = 0.25 ) weaken the intervention and reduce gains. Overall, NAE remains stable within this well - defined region, and deviations in either direction degrade performance, underscoring the need for joint calibration. 0.0 0.1 0.2 0.3 0.4 0.5  
+
+> Method Sensitivity sr/fi
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> Decision Contribution  smi
+> Baseline
+> Baseline 80% ellipse
+> Baseline mean
+> Baseline top 25% centroid
+> NSP
+> NSP 80% ellipse
+> NSP mean
+> NSP top 25% centroid
+> NAE 80% ellipse
+> NAE mean
+> NAE top 25% centroid
+> NAE threshold
+
+Figure 7: Neuron-level analysis: decision contribution 𝑠 rf 
+
+𝑖 vs. method sensitivity 𝑠 m
+
+𝑖 . Confidence ellipses (one standard de-viation) summarize each model’s distribution. NSP reduces method sensitivity while preserving decision contribution; NAE directly eliminates the most offending neurons. 
+
+4.4 Mechanism Analysis 
+
+The generalization gains from NSP and NAE stem from a single cause: suppressing method - specific shortcuts. Three lines of evi-dence support this claim. 
+
+4.4.1 Neuron-Level Decoupling. We analyze individual neurons in the final pointwise convolution layer, computing for each its deci-sion contribution 𝑠 rf 
+
+𝑖 and method sensitivity 𝑠 m
+
+𝑖 . Figure 7 visualizes the distribution. NSP shifts the distribution downward along the method sensi-tivity axis while preserving decision contribution. The mean and top-25% mean of 𝑠 m
+
+𝑖 decrease noticeably, and the confidence ellipse contracts vertically—a structural reshaping that suppresses method-specific shortcuts without severely sacrificing discriminative power. NAE, by contrast, directly targets the most offending neurons. It suppresses the top 𝜌 neurons with highest method sensitivity among those with above-median decision contribution (the neurons in the upper right corner of the threshold line are suppressed). This Conference’17, July 2017, Washington, DC, USA Yihui Wang et al. 
+
+(a) Xception (b) 𝑆 3-NSP (c) 𝑆 3-NAE VQGAN 
+
+> StyleGAN2
+> StyleGAN3
+> StyleGANXL
+> sd2.1
+> ddim
+> RDDM
+> pixart
+> DiT
+> SiT
+
+Figure 8: Features from an EFS - trained model, colored by forgery method. Baseline (a) forms distinct method clusters; NSP (b) reconstructed feature distribution; NAE (c) substan-tially weakens them, though residual grouping remains. 
+
+post-hoc correction removes extreme outliers rather than reshaping the overall distribution. 
+
+4.4.2 Features Cluster by Forgery Method—Until Suppressed. When trained on EFS, the baseline Xception organizes its feature space by manipulation method, despite having no access to method labels during training (Figure 8, a). This confirms that the model learns method -specific artifacts rather than generalizable forensic cues. Applying NSP disrupts this structure: method clusters become less distinct, though partial separability remains (Figure 8, b). NAE weakens the clustering further, blurring method boundaries while leaving residual grouping (Figure 8, c). Together, these results show that both strategies suppress method - specific features, with NAE acting as a stronger post-hoc intervention. 
+
+4.4.3 Shortcut Suppression Enables Cross - Domain Transfer. If method specific features are indeed non - transferable, then suppressing them should improve real -fake separation on unseen forgeries. This is exactly what we observe. An Xception trained on FR and evaluated on EFS fails to separate real from fake in the baseline (Figure 9, a). The model simply does not know what to look for. NSP produces a cleaner, better - defined decision boundary (Figure 9, b): suppressing method - specific fea-tures during training forces the model to capture transferable forgery cues. NAE also improves over the baseline, yielding a more struc-tured distribution (Figure 9, c), though the separation is less pro-nounced—consistent with its inference-time operation. Together, these neuron-level changes explain the t-SNE obser-vations: both methods decouple decision-critical features from method-specific artifacts, but through distinct mechanisms—NSP via learning dynamics that discourage shortcut formation, and NAE via direct attenuation at inference. 
+
+5 Related Works 5.1 Generalizable Deepfake Detection 
+
+Early deepfake detectors identified forgery via low-level artifacts: frequency anomalies [ 28 ], blending boundaries [ 10 , 21 ], warping traces [ 22 ], or texture irregularities [ 23 , 40 ]. These artifacts inherent to specific generation pipelines serve as discriminative cues. How-ever, on unseen forgeries where such artifacts change or disappear, performance collapses. 
+
+(a) Xception (b) 𝑆 3-NSP (c) 𝑆 3-NAE fake real 
+
+Figure 9: Features from an FR - trained model tested on EFS, colored by real/fake. Baseline (a) shows no separation; NSP (b) establishes a clear boundary; NAE (c) improves but less than NSP. 
+
+To move beyond fixed artifacts, later efforts expanded training diversity through data synthesis [ 14 , 34 , 42 ] or learned invariant representations via reconstruction [ 45 ], frequency constraints [ 37 ], identity disentanglement [ 9], temporal consistency [ 12 , 36 , 51 ], and self-supervision [ 19 , 26 , 29 , 50 , 52 ]. More recently, vision foundation models (VFMs) like CLIP have been adapted [ 8 , 35 , 48 ], leveraging their rich semantic priors to improve generalization. Despite the diversity of these approaches, they share a common thread: they implicitly assume that generalization will emerge from more data, better invariance, or stronger priors, without ever iden-tifying which feature dimensions actually cause the failure. As a result, the model may still rely on spurious method-specific short-cuts that remain embedded in its representations. Our work takes a different stance: we explicitly localize the shortcut subspace via a lightweight probe and suppress it—either during training or at inference—rather than hoping it will not be learned. 
+
+5.2 Disentanglement and Subspace Methods 
+
+A more targeted line of work attempts to separate forensic cues from confounding factors by learning disentangled representations. UCF [ 45 ] decomposes features into forgery - irrelevant, method -specific, and common forgery components, using only the common part for detection. CADDM [ 9] targets identity leakage as a confounder. Effort [ 43 ] applies SVD to pre - trained weights and updates only the residual subspace, preserving pre -trained knowledge while learning forgery patterns. Low - rank adaptation (LoRA) [ 17 ] injects trainable low-rank matrices into frozen backbones. The common philosophy here is to learn around shortcut in-formation—by isolating a “safe” subspace or confining updates to a low -rank manifold. However, these methods do not explic-itly remove the shortcut components from the representation; the shortcuts remain present and can still influence the final deci-sion. The question of which directions in the feature space en-code non - transferable shortcuts—and how to suppress them di-rectly—remains unanswered. In contrast, our framework (i) explic-itly constructs the shortcut subspace via a lightweight probe, (ii) projects it out during training, and (iii) provides a training - free inference -time suppression that also reveals which neurons encode the shortcuts. Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection Conference’17, July 2017, Washington, DC, USA 
+
+6 Conclusion 
+
+In this work, we identify and suppress a key cause of poor cross-method generalization in deepfake detection: method-specific short-cuts . Our core insight is that transferable forensic cues and method-specific shortcuts occupy complementary subspaces. To address this, we propose the Shortcut Subspace Suppression ( 𝑆 3) frame-work , which explicitly characterizes these shortcuts as a low-dimensional subspace. The framework provides two complemen-tary strategies: Nullspace Projection (NSP) suppresses shortcut-aligned gradients during training, steering the model toward gen-eralizable features; Neuron Activation Editing (NAE) attenuates shortcut-sensitive neurons at inference without retraining, offering a plug-and-play boost. Extensive experiments on DF40 demonstrate consistent gains across backbones and forgery types with negligible overhead. Explicitly suppressing the shortcut subspace forces de-tectors to rely on transferable evidence, opening new directions for deepfake detection and broader out-of-distribution generalization tasks. 
+
+References 
+
+[1] Darius Afchar, Vincent Nozick, Junichi Yamagishi, and Isao Echizen. 2018. Mesonet: a compact facial video forgery detection network. In 2018 IEEE in-ternational workshop on information forensics and security (WIFS) . IEEE, 1–7. [2] Guillaume Alain and Yoshua Bengio. 2016. Understanding intermediate layers using linear classifier probes. arXiv preprint arXiv:1610.01644 (2016). [3] Inzamamul Alam, Md Tanvir Islam, and Simon S. Woo. 2025. SpecXNet: A Dual-Domain Convolutional Network for Robust Deepfake Detection. In Proceedings of the 33rd ACM International Conference on Multimedia (Dublin, Ireland) (MM ’25) . Association for Computing Machinery, New York, NY, USA, 11667–11676. doi:10.1145/3746027.3755707 [4] David Bau, Bolei Zhou, Aditya Khosla, Aude Oliva, and Antonio Torralba. 2017. Network dissection: Quantifying interpretability of deep visual representations. In Proceedings of the IEEE conference on computer vision and pattern recognition .6541–6549. [5] Yonatan Belinkov. 2022. Probing classifiers: Promises, shortcomings, and ad-vances. Computational Linguistics 48, 1 (2022), 207–219. [6] Junyi Cao, Chao Ma, Taiping Yao, Shen Chen, Shouhong Ding, and Xiaokang Yang. 2022. End-to-End Reconstruction-Classification Learning for Face Forgery Detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . 4113–4122. [7] Francois Chollet. 2017. Xception: Deep Learning With Depthwise Separable Convolutions. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) .[8] Davide Cozzolino, Andreas Rossler, Justus Thies, Matthias Nießner, and Luisa Verdoliva. 2024. Raising the bar of ai-generated image detection with clip. arXiv preprint arXiv:2405.13122 (2024). [9] Shichao Dong, Jin Wang, Renhe Ji, Jiajun Liang, Haoqiang Fan, and Zheng Ge. 2023. Implicit identity leakage: The stumbling block to improving deepfake detection generalization. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 3994–4004. [10] Ricard Durall, Margret Keuper, and Janis Keuper. 2020. Watch your up-convolution: Cnn based generative deep neural networks are failing to reproduce spectral distributions. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 7890–7899. [11] Ian J Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. 2014. Generative adversarial nets. Advances in neural information processing systems 27 (2014). [12] Alexandros Haliassos, Konstantinos Vougioukas, Stavros Petridis, and Maja Pan-tic. 2021. Lips don’t lie: A generalisable and robust approach to face forgery detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition (CVPR) . 5039–5049. [13] Erik Härkönen, Aaron Hertzmann, Jaakko Lehtinen, and Sylvain Paris. 2020. Ganspace: Discovering interpretable gan controls. Advances in neural information processing systems 33 (2020), 9841–9850. [14] Ahmed Abul Hasanaath, Hamzah Luqman, Raed Katib, and Saeed Anwar. 2024. FSBI: Deepfakes Detection with Frequency Enhanced Self-Blended Images. ArXiv 
+
+abs/2406.08625 (2024). https://api.semanticscholar.org/CorpusID:270440586 [15] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. Deep Residual Learning for Image Recognition. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) .[16] Jonathan Ho, Ajay Jain, and Pieter Abbeel. 2020. Denoising diffusion probabilistic models. Advances in neural information processing systems 33 (2020), 6840–6851. [17] Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. 2021. LoRA: Low-Rank Adaptation of Large Language Models. arXiv preprint arXiv:2106.09685 (2021). [18] Been Kim, Martin Wattenberg, Justin Gilmer, Carrie Cai, James Wexler, Fernanda Viegas, et al . 2018. Interpretability beyond feature attribution: Quantitative testing with concept activation vectors (tcav). In International conference on machine learning . PMLR, 2668–2677. [19] Nicolas Larue, Ngoc-Son Vu, Vitomir Struc, Peter Peer, and Vassilis Christophides. 2023. Seeable: Soft discrepancies and bounded contrastive learning for exposing deepfakes. In Proceedings of the IEEE/CVF international conference on computer vision (ICCV) . 21011–21021. [20] HyunJae Lee, Hyo-Eun Kim, and Hyeonseob Nam. 2019. SRM: A Style-Based Recalibration Module for Convolutional Neural Networks. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) .[21] Lingzhi Li, Jianmin Bao, Ting Zhang, Hao Yang, Dong Chen, Fang Wen, and Bain-ing Guo. 2020. Face x-ray for more general face forgery detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition (CVPR) .5001–5010. [22] Yuezun Li and Siwei Lyu. 2019. Exposing deepfake videos by detecting face warping artifacts. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition workshops (CVPRW) . 46–52. [23] Honggu Liu, Xiaodan Li, Wenbo Zhou, Yuefeng Chen, Yuan He, Hui Xue, Weiming Zhang, and Nenghai Yu. 2021. Spatial-phase shallow learning: rethinking face forgery detection in frequency domain. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 772–781. [24] Iacopo Masi, Aditya Killekar, Royston Marian Mascarenhas, Shenoy Pratik Guru-datt, and Wael AbdAlmageed. 2020. Two-branch recurrent network for isolating deepfakes in videos. In European conference on computer vision . Springer, 667–684. [25] Yisroel Mirsky and Wenke Lee. 2021. The creation and detection of deepfakes: A survey. ACM computing surveys (CSUR) 54, 1 (2021), 1–41. [26] Yunsheng Ni, Depu Meng, Changqian Yu, Chengbin Quan, Dongchun Ren, and Youjian Zhao. 2022. Core: Consistent representation learning for face forgery detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition workshops (CVPRW) . 12–21. [27] Utkarsh Ojha, Yuheng Li, and Yong Jae Lee. 2023. Towards universal fake image detectors that generalize across generative models. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 24480–24489. [28] Yuyang Qian, Guojun Yin, Lu Sheng, Zixuan Chen, and Jing Shao. 2020. Think-ing in frequency: Face forgery detection by mining frequency-aware clues. In 
+
+European conference on computer vision . Springer, 86–103. [29] Tong Qiao, Shichuang Xie, Yizhi Chen, Florent Retraint, and Xiangyang Luo. 2024. Fully unsupervised deepfake video detection via enhanced contrastive learning. In Proceedings of the IEEE/CVF winter conference on applications of computer vision (WACV) . 4691–4700. [30] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, and Ilya Sutskever. 2021. Learning Transferable Visual Models From Natural Language Supervision. In Proceedings of the 38th Inter-national Conference on Machine Learning (Proceedings of Machine Learning Research, Vol. 139) , Marina Meila and Tong Zhang (Eds.). PMLR, 8748–8763. https://proceedings.mlr.press/v139/radford21a.html [31] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. 2022. High-resolution image synthesis with latent diffusion models. In 
+
+Proceedings of the IEEE/CVF conference on computer vision and pattern recognition .10684–10695. [32] Andreas Rössler, Davide Cozzolino, Luisa Verdoliva, Christian Riess, Justus Thies, and Matthias Nießner. 2019. FaceForensics++: Learning to Detect Manipulated Facial Images. In International Conference on Computer Vision (ICCV) .[33] Ayush Roy, Sk Mohiuddin, Maxim V. Minenko, Dmitrii I. Kaplun, and Ram Sarkar. 2025. DeepSpace: Navigating the Frontier of Deepfake Identification Using Attention-Driven Xception and a Task-Specific Subspace. In VISIGRAPP : VISAPP .https://api.semanticscholar.org/CorpusID:276760616 [34] Kaede Shiohara and Toshihiko Yamasaki. 2022. Detecting deepfakes with self-blended images. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 18720–18729. [35] Stefan Smeu, Elisabeta Oneata, and Dan Oneata. 2025. DeCLIP: Decoding CLIP representations for deepfake localization. In 2025 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) . IEEE, 149–159. [36] Zekun Sun, Yujie Han, Zeyu Hua, Na Ruan, and Weijia Jia. 2021. Improving the efficiency and robustness of deepfakes detection through precise geometric features. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition (CVPR) . 3609–3618. [37] Chuangchuang Tan, Yao Zhao, Shikui Wei, Guanghua Gu, Ping Liu, and Yunchao Wei. 2024. Frequency-aware deepfake detection: Improving generalizability through frequency space domain learning. In Proceedings of the AAAI Conference on Artificial Intelligence , Vol. 38. 5052–5060. Conference’17, July 2017, Washington, DC, USA Yihui Wang et al. 
+
+[38] Mingxing Tan and Quoc Le. 2019. EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks. In Proceedings of the 36th International Conference on Machine Learning (Proceedings of Machine Learning Research, Vol. 97) , Kamalika Chaudhuri and Ruslan Salakhutdinov (Eds.). PMLR, 6105– 6114. https://proceedings.mlr.press/v97/tan19a.html [39] Ruben Tolosana, Ruben Vera-Rodriguez, Julian Fierrez, Aythami Morales, and Javier Ortega-Garcia. 2020. Deepfakes and beyond: A survey of face manipulation and fake detection. Information fusion 64 (2020), 131–148. [40] Chengrui Wang and Weihong Deng. 2021. Representative forgery mining for fake face detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition (CVPR) . 14923–14932. [41] Zhendong Wang, Jianmin Bao, Wengang Zhou, Weilun Wang, Hezhen Hu, Hong Chen, and Houqiang Li. 2023. Dire for diffusion-generated image detection. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision . 22445– 22455. [42] Zhiyuan Yan, Yuhao Luo, Siwei Lyu, Qingshan Liu, and Baoyuan Wu. 2024. Transcending forgery specificity with latent space augmentation for generalizable deepfake detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition . 8984–8994. [43] Zhiyuan Yan, Jiangming Wang, Peng Jin, Ke-Yue Zhang, Chengchun Liu, Shen Chen, Taiping Yao, Shouhong Ding, Baoyuan Wu, and Li Yuan. 2024. Orthogonal subspace decomposition for generalizable ai-generated image detection. arXiv preprint arXiv:2411.15633 (2024). [44] Zhiyuan Yan, Taiping Yao, Shen Chen, Yandan Zhao, Xinghe Fu, Junwei Zhu, Donghao Luo, Chengjie Wang, Shouhong Ding, Yunsheng Wu, and Li Yuan. 2024. DF40: Toward Next-Generation Deepfake Detection. In Advances in Neural Information Processing Systems , A. Globerson, L. Mackey, D. Belgrave, A. Fan, U. Paquet, J. Tomczak, and C. Zhang (Eds.), Vol. 37. Curran Associates, Inc., 29387–29434. doi:10.52202/079017-0925 [45] Zhiyuan Yan, Yong Zhang, Yanbo Fan, and Baoyuan Wu. 2023. Ucf: Uncovering common features for generalizable deepfake detection. In Proceedings of the IEEE/CVF international conference on computer vision . 22412–22423. [46] Zhiyuan Yan, Yong Zhang, Xinhang Yuan, Siwei Lyu, and Baoyuan Wu. 2023. Deepfakebench: A comprehensive benchmark of deepfake detection. arXiv preprint arXiv:2307.01426 (2023). [47] Kelu Yao, Jin Wang, Boyu Diao, and Chao Li. 2023. Towards understanding the generalization of deepfake detectors from a game-theoretical view. In Proceedings of the IEEE/CVF international conference on computer vision . 2031–2041. [48] Andrii Yermakov, Jan Cech, and Jiri Matas. 2025. Unlocking the hidden potential of CLIP in generalizable deepfake detection. arXiv preprint arXiv:2503.19683 
+
+(2025). [49] Zixin Yin, Jiakai Wang, Yisong Xiao, Hanqing Zhao, Tianlin Li, Wenbo Zhou, Aishan Liu, and Xianglong Liu. 2024. Improving deepfake detection generalization by invariant risk minimization. IEEE Transactions on Multimedia 26 (2024), 6785– 6798. [50] Tianchen Zhao, Xiang Xu, Mingze Xu, Hui Ding, Yuanjun Xiong, and Wei Xia. 2021. Learning self-consistency for deepfake detection. In Proceedings of the IEEE/CVF international conference on computer vision (ICCV) . 15023–15033. [51] Yinglin Zheng, Jianmin Bao, Dong Chen, Ming Zeng, and Fang Wen. 2021. Ex-ploring temporal coherence for more general video face forgery detection. In 
+
+Proceedings of the IEEE/CVF international conference on computer vision (ICCV) .15044–15054. [52] Wanyi Zhuang, Qi Chu, Zhentao Tan, Qiankun Liu, Haojie Yuan, Changtao Miao, Zixiang Luo, and Nenghai Yu. 2022. Uia-vit: Unsupervised inconsistency-aware method based on vision transformer for face forgery detection. In European conference on computer vision (ECCV) . Springer, 391–407. Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection Conference’17, July 2017, Washington, DC, USA 
+
+A Algorithm Overview 
+
+This appendix presents the complete procedure of our proposed S3 framework, as summarized in Algorithm 1. 
+
+Algorithm 1: S3: A Unified Framework for Shortcut Sub-space Suppression 
+
+Input: Training set Dtrain , test sample 𝑥 , feature extractor 
+
+𝜙 𝜃 , classifier 𝜓 , subspace rank 𝑟 , NSP strength 𝛼 nsp ,NAE strength 𝛼 nae , neuron ratio 𝜌 
+
+Output: Prediction ˆ𝑦  
+
+> 1
+
+Strategy I: Training-time Subspace Suppression (NSP)  
+
+> 2
+
+for each training iteration do  
+
+> 3
+
+if epoch ≥ 𝑇 1 then  
+
+> 4
+
+Train linear probe 𝑊 𝑚  
+
+> 5
+
+Perform SVD on 𝑊 𝑚 (Eq. 4) to update 𝑈 𝑟 and projection P = 𝑈 𝑟 𝑈 ⊤ 
+
+> 𝑟
+> 6
+
+Extract features, compute detection loss, and obtain gradient ∇L  
+
+> 7
+
+Apply gradient projection (Eq. 8)  
+
+> 8
+
+Update model parameters  
+
+> 9
+
+end  
+
+> 10
+
+Strategy II: Inference-time Neuron Suppression (NAE)  
+
+> 11
+
+Train linear probe 𝑊 𝑚  
+
+> 12
+
+Perform SVD on 𝑊 𝑚 to obtain 𝑈 𝑟  
+
+> 13
+
+Select localization layer and compute neuron scores 𝑠 r/f  
+
+> 𝑖
+
+, 𝑠 m
+
+> 𝑖
+
+(Eq. 10, 11)  
+
+> 14
+
+Identify shortcut neuron set I 
+
+> 15
+
+Extract activation tensor A from the localization layer  
+
+> 16
+
+for each 𝑖 ∈ I do  
+
+> 17
+
+A [ :, 𝑖 ] ← A [ :, 𝑖 ] · ( 1 − 𝛼 nae ) 
+
+> 18
+
+end  
+
+> 19
+
+Forward edited activations to obtain prediction ˆ𝑦 
+
+B Additional Details of NSP B.1 Theoretical Analysis 
+
+A natural concern is whether suppressing gradient components along span (U𝑟 ) harms the primary real/fake discrimination. We argue that it does not. Consider a first - order Taylor expansion of the detection loss L around the current feature representation Z:
+
+L(Z − 𝜂 ∇Z Lnew ) ≈ L(Z) − 𝜂 ⟨∇ Z L, ∇Z Lnew ⟩,
+
+where 𝜂 is the learning rate. Substituting 
+
+∇Z Lnew = ∇Z L − 𝛼 P∇Z L
+
+gives 
+
+⟨∇ Z L, ∇Z Lnew ⟩ = ∥∇ Z L∥ 2 
+
+> 𝐹
+
+− 𝛼 ∥U⊤ 
+
+> 𝑟
+
+∇Z L∥ 2 
+
+> 𝐹
+
+.
+
+Both terms are non - negative, so the inner product is non - negative. Thus, for sufficiently small 𝜂 , the loss does not increase—the pro-jection does not counteract the utility objective. The model can still learn from the residual component P⊥∇Z L, which captures gradients orthogonal to the method - sensitive subspace. This deriva-tion also implies that 𝛼 must satisfy 𝛼 ≤ 1 to ensure the inner product remains non -negative; larger values would risk reversing the gradient component along the shortcut subspace, potentially harming detection. Empirically, as shown in Sec. 4.3.1, in -domain performance remains virtually unchanged with 𝛼 ∈ [ 0, 1], confirm-ing that the suppressed directions are indeed shortcuts rather than generalizable forensic cues. 
+
+B.2 Training Schedule 
+
+To ensure accurate subspace construction while allowing the model to benefit from domain -sensitive cues in early training, we adopt a staged training schedule. 
+
+Stage I: Main Task Warm -up. In the first 𝑇 1 epochs, only the main real/fake classifier is trained. The method probe is frozen, and NSP is disabled. This stage allows the backbone to learn basic discriminative features, leveraging method - specific signals that help the model converge. 
+
+Stage II: Alternating Training for Probe Learning. After the warm - up, we enable the alternating freezing strategy described in Sec. 3.2. In each training iteration, we alternate between updating the real/fake classifier (with the probe frozen) and updating the method probe (with the real/fake head and backbone frozen). This alternating schedule ensures that the probe learns method - specific signals without interfering with the primary detection task, while keeping the probe weights informative for subspace construction. The subspace 𝑈 𝑟 is recomputed periodically after every probe train-ing epoch to reflect the evolving probe weights. 
+
+Stage III: Progressive NSP Activation. Once the alternating training is stable, we activate NSP while continuing the alternat-ing schedule. To avoid injecting a noisy subspace early, we em-ploy a warm -up strategy for the suppression strength: 𝛼 is set to 
+
+0 initially and linearly increased to its target value over 𝑇 3 epochs. This gradual ramp -up ensures that gradient suppression does not disrupt learning while gradually steering the model away from method-specific shortcuts. In our experiments, we set 𝑇 1 = 3 epochs, 𝑇 2 = 2 alternating updates, and 𝑇 3 = 5 epochs. These values can be adjusted based on dataset size and convergence behavior. 
+
+C Detailed Architecture Adaptation for NAE C.1 Detailed Derivation of the Linear Approximation in NAE 
+
+Let z ∈ R𝑑 be the feature representation before the classification layer, and let nr/f = W1 − W0 be the normal vector of the decision boundary, where W0, W1 ∈ R𝑑 are the binary classification head weights. The model’s confidence in classifying a sample as fake is proportional to n⊤
+
+> r/f
+
+z.In the backbone, z derives from the activations a ∈ Rℎ of an ear-lier layer through a sequence of transformations. For a localization layer where the mapping from a to z is approximately linear, we write: 
+
+z = Wloc a + b,
+
+where Wloc ∈ R𝑑 ×ℎ is the weight matrix and b ∈ R𝑑 is the bias. Each column w𝑖 ∈ R𝑑 corresponds to the weight vector of neuron Conference’17, July 2017, Washington, DC, USA Yihui Wang et al. 
+
+a𝑖 . The bias contributes a constant offset across samples and does not affect the relative influence of different input neurons on the decision. Substituting into the decision confidence: 
+
+n⊤
+
+> r/f
+
+z = n⊤ 
+
+> r/f
+
+(Wloc a + b) = (W⊤
+
+> loc
+
+nr/f )⊤a + n⊤
+
+> r/f
+
+b.
+
+Define c = W⊤
+
+> loc
+
+nr/f ∈ R𝑚 and const = n⊤
+
+> r/f
+
+b. Then: 
+
+n⊤
+
+> r/f
+
+z = c⊤a + const .
+
+Thus c𝑖 approximates the contribution coefficient of neuron a𝑖 
+
+to the final logit difference. Adjusting a𝑖 proportionally changes the decision value, justifying the neuron suppression strategy. 
+
+C.2 Principles for Localization Layer Selection 
+
+The effectiveness of Neuron Activation Editing (NAE) relies on choosing an appropriate localization layer—the layer whose activa-tions we directly attenuate. We follow three guiding principles. 
+
+Dimensionality Matching. To compute the decision contribution 
+
+𝑠 r/f  
+
+> 𝑖
+
+and method sensitivity 𝑠 m 
+
+> 𝑖
+
+for a neuron, its weight vector w𝑖 
+
+must reside in the same space as the decision normal vector nr/f 
+
+and the method-sensitive subspace U𝑟 . Concretely, if the feature representation before the classification head has dimension 𝑑 , the localization layer must output a tensor that is either directly the feature vector z ∈ R𝑑 or can be reshaped/aggregated into that dimension. Otherwise, the inner products are ill-defined, making neuron-level analysis impossible. Therefore, we restrict our choice to layers whose output dimension matches the input dimension of the classifier head. 
+
+Applicability of the Linear Assumption. Our theoretical derivation assumes a strictly linear transformation z = Wloc a. The closer the layer is to the classification head, the fewer subsequent non-linear transformations intervene, and thus the more accurate the linear approximation. Shallow layers, in contrast, require a to pass through many non-linear operations before reaching the head, weakening both the validity of the linear assumption and the interpretability of suppressing a directly. 
+
+Consideration of Residual Connections. In networks with residual connections, one should select a node that all subsequent compu-tations must pass through. For example, in residual networks, the activation between two residual blocks is such a bottleneck; if a branch inside a residual block is chosen, part of the information may bypass the intervention through other paths. Therefore, we prioritize linear layers where the intervened neurons lie on a path without bypass branches that all subsequent calculations depend on. Based on these principles, we select the last linear transformation layer in the backbone that is directly associated with the classifi-cation feature dimension as the localization layer. Empirical re-sults show that moving the localization layer forward significantly reduces the generalization improvement of NAE, validating the effectiveness of this choice. 
+
+C.3 Architecture-Specific Localization Layers 
+
+Following the principles outlined above, we provide the specific localization layer choices for four typical backbone architectures used in NAE. 
+
+• Xception After multiple SeparableConv blocks, the feature tensor passes through a pointwise convolution layer before global average pooling. This layer is a 1×1 convolution, with input shape (𝐵, 1536 , 𝐻,𝑊 ) and output shape (𝐵, 2048 , 𝐻,𝑊 ).The weight matrix has shape (2048 , 1536 ); we take the col-umn vectors w𝑖 ∈ R2048 as the weights for each input neuron (1536 in total). The input feature dimension for the method probe is 𝑑 = 2048 , so U𝑟 ∈ R2048 ×𝑟 can be directly multiplied with w𝑖 .
+
+• ResNet50 In the last Bottleneck, the downsampling con-volutional layer expands the input channels from 1024 to 2048 while changing the spatial size. This layer is a 1 × 1
+
+convolution, with input shape (𝐵, 1024 , 𝐻,𝑊 ) and output shape (𝐵, 2048 , 𝐻 /2,𝑊 /2). The weight matrix has shape 
+
+(2048 , 1024 ); the column vectors w𝑖 ∈ R2048 correspond to the weights of the 1024 input neurons. Here 𝑑 = 2048 ,matching the probe’s input dimension. However, this choice means that we can only intervene on the skip branch, and the effect is not as significant as that on Xception, which has also been confirmed in our experiments (see Section 4.2.2). 
+
+• EfficientNet-B4 The convolutional layer before global av-erage pooling (conv_head) is a 1 × 1 convolution, with input shape (𝐵, 448 , 𝐻,𝑊 ) and output shape (𝐵, 1792 , 𝐻,𝑊 ). The weight matrix has shape (1792 , 448 ); the column vectors 
+
+w𝑖 ∈ R1792 correspond to the weights of the 448 input neu-rons. Here 𝑑 = 1792 , matching the probe’s input dimension. 
+
+• CLIP (ViT) In the Vision Transformer, no single deep layer places the intervened neurons at a clear information bottle-neck; therefore we select an alternative location. The MLP module of the last encoder layer consists of two fully con-nected layers: fc1 expands the feature dimension from 768 to 3072, and fc2 compresses it back to 768. We choose fc2 as the localization layer; its weight matrix has shape (768 , 3072 ),and the input neurons correspond to the 3072 neurons in the MLP intermediate layer. The output dimension 𝑑 = 768 
+
+matches the classification feature dimension. We take the column vectors w𝑖 ∈ R768 as the weights for each MLP in-termediate neuron, and the method probe’s U𝑟 ∈ R768 ×𝑟 can be directly aligned with them. Suppressing these neurons ef-fectively weakens method-sensitive intermediate features in the MLP, thereby indirectly affecting the final classification. 
+
+C.4 Empirical Validation of Localization Layer Selection 
+
+To verify that the chosen localization layer (the final MLP layer in CLIP) yields the best cross-domain generalization, we conduct an ablation study across all 12 transformer blocks of CLIP (ViT-B/16). For each block, we treat its output features as the localization layer and apply NAE with the same hyperparameters ( 𝜌 = 1/4, 𝛼 = 1.0). All models are trained on FR(FF) and tested on FS, FR, EFS, and FE subsets of DF40. Figure 10 visualizes the average AUC for each block. As the block index increases (moving from early to late layers), cross-domain performance generally improves. Blocks 2–4 show the poorest generalization, especially on EFS and FE. Block 1 yields slightly higher AUC than Blocks 2–4. This pattern reflects a key insight: in Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection Conference’17, July 2017, Washington, DC, USA 
+
+shallow layers, the linearity assumption in Eq. (8) does not hold—the weights of the real/fake classifier and method probe are not aligned with these early features. Consequently, the neurons selected for suppression are not genuinely decision-critical or method-sensitive; suppressing them introduces near-random perturbations that have limited impact on the final output. In Blocks 2–4, the features begin to partially align with the classification heads but remain misaligned enough that suppression causes unintended interference, degrading performance further. From Block 8 onward, the features become sufficiently aligned, allowing NAE to effectively remove shortcut neurons and improve generalization. The deepest blocks (11–12) achieve the highest and most stable AUC, confirming our three design principles mentioned before. Based on these results, we fix the localization layer as the last MLP layer (fc2) of the final transformer block for CLIP, and as the last pointwise convolution layer for CNNs. The subspace rank is set to 𝑟 = 1 for all architectures, as further ablation confirms that a single principal direction already captures the dominant method-sensitive subspace. 1 2 3 4 5 6 7 8 9 10 11 12 
+
+> CLIP Block Index (1 = early, 12 = last)
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> 1.0
+> AUC
+> Effect of Localization Layer Position on Cross-Domain AUC (trained on FR)
+> FS
+> FR
+> EFS
+> FE
+> Avg
+
+Figure 10: Average AUC as a function of CLIP block index. The dashed line indicates the baseline (no suppression). 
+
+D Additional Information on Dataset 
+
+While the main text presents an overview of the datasets used, this appendix provides a more comprehensive description of the data processing and sampling strategies adopted to ensure a fair and rigorous evaluation. 
+
+Clarification of Forgery Categories. Throughout this paper, we refer to FS (Face Swapping), FR (Face Reenactment), EFS (Entire Face Synthesis), and FE (Face Editing) as broad categories of forgery techniques. Each category contains multiple specific manipulation methods, as enumerated in Table 4. For example, FS includes FSGAN, FaceSwap, SimSwap, InSwapper, and others; FR includes FOMM, Wav2Lip, SadTalker, and others; EFS includes StyleGAN2, SD-2.1, DDPM, and others; FE includes e4e. This categorization follows the standard protocol of DF40. When the paper states “training on FS” or “testing on FR”, it means training or testing on all methods belonging to that category. 
+
+Video - Level Splitting. All experiments are conducted on the FF domain of DF40, which uses the original real videos from Face-Forensics++ (FF++) as the source of authentic content. To prevent any information leakage between training and testing, the split is performed at the video level. Specifically, the official FF++ video split (720 videos for training, 140 for validation/testing) is used, and all forged samples are generated from the corresponding real videos in the respective split. Consequently, no real video—or any of its associated forged variants—appears in both the training and testing sets. 
+
+Controlling per - Video Sampling. A single video typically contains hundreds of frames, and consecutive frames often exhibit high visual similarity. Sampling too many frames from the same video would effectively present the model with highly correlated samples within a single epoch, which could bias the learning pro-cess. To mitigate this, we limit the number of frames sampled per video. Specifically, for each manipulation method, we randomly select a maximum of 10 frames per video. This constraint ensures that the training set covers a diverse set of video content without over-representing any particular video. 
+
+Balanced Sampling Across Forgery Methods. The DF40 dataset provides an imbalanced number of samples across different manipulation techniques. To prevent the model from learning a bias toward methods with larger data volumes, we adopt a balanced sam-pling strategy. For each training set (FS, FR, or EFS), we uniformly sample a fixed number of real–fake pairs from each forgery method. The sampling is performed across different videos to maximize content diversity. Specifically, we sample: 
+
+• Training set: 1,000 real–fake pairs per forgery method. 
+
+• Validation set: 200 real–fake pairs per forgery method. 
+
+• Testing set: 400 real–fake pairs per forgery method. Each pair consists of a fake image and its corresponding source real image. This paired structure is essential for the reconstruction and contrastive losses used in our framework. 
+
+Avoiding Shortcut Learning via Batch - Level Pairing. When training with paired real–fake samples, a naive implementation could allow the model to rely on trivial correlations, such as re-membering the identity or background from the real image and simply comparing it with the fake image. To prevent such shortcut learning, we ensure that for every real–fake pair used in the loss computation, the corresponding real sample is guaranteed to ap-pear in the same training batch. However, we do not expose the model to the exact paired real image at the input level; instead, the pair is used internally for the reconstruction and contrastive objectives. This design forces the model to learn the actual forgery traces rather than exploiting simple identity correspondences. These processing choices collectively ensure that our evaluation reflects the model’s true generalization capability, free from biases introduced by data leakage, imbalanced sampling, or unintended shortcut learning. 
+
+E Full Experiment Results 
+
+This appendix presents the complete experiment results for NSP and NAE, complementing the analyses in Section 4.3 of the main text. The additional experiments here confirm the robustness of our hyperparameter choices and further validate the core insight that method-specific features act as non-transferable shortcuts. 
+
+E.1 Detailed Efficiency Analysis 
+
+This section provides complete efficiency results omitted from the main text due to space constraints. All experiments are conducted Conference’17, July 2017, Washington, DC, USA Yihui Wang et al. 
+
+Table 4: Summary of the 32 deepfake methods from the DF40 dataset employed in this study 
+
+Type ID Method Sub-Types Venue Real Data Source Data Used 
+
+Face-swapping (FS) 1 FSGAN Parsing mask ArXiv 2019 FF++ Train & Test 2 FaceSwap Graphic based None FF++ Train & Test 3 SimSwap Disentangle ICCV 2019 FF++ Train & Test 4 InSwapper Used in Roop None FF++ Train & Test 5 BlendFace Disentangle ICCV 2023 FF++ Train & Test 6 UniFace Disentangle ECCV 2022 FF++ Train & Test 7 MobileSwap Lightweight AAAI 2022 FF++ Train & Test 8 e4s Disentangle CVPR 2023 FF++ Train & Test 9 FaceDancer Disentangle WACV 2023 FF++ Train & Test Face-reenactment (FR) 10 FOMM Image Driven NeurIPS 2019 FF++ Train & Test 11 FS_vid2vid Landmark Driven ArXiv 2019 FF++ Train & Test 12 Wav2Lip Audio Driven MM 2020 FF++ Train & Test 13 MRAA Image Driven CVPR 2021 FF++ Train & Test 14 OneShot Image Driven CVPR 2021 FF++ Train & Test 15 PIRender Image Driven ICCV 2021 FF++ Train & Test 16 TPSMM Image Driven CVPR 2022 FF++ Train & Test 17 LIA Image Driven ICLR 2022 FF++ Train & Test 18 DaGAN Image Driven CVPR 2022 FF++ Train & Test 19 SadTalker Audio Driven CVPR 2023 FF++ Train & Test 20 MCNet Image Driven ICCV 2023 FF++ Train & Test 21 HyperReenact Image Driven ICCV 2023 FF++ Train & Test Entire Face Synthesis (EFS) 22 VQGAN GAN based CVPR 2021 FF++ Train & Test 23 StyleGAN2 GAN based ArXiv 2019 FF++ Train & Test 24 StyleGAN3 GAN based NeurIPS 2021 FF++ Train & Test 25 StyleGAN-XL GAN based SIGGRAPH 2022 FF++ Train & Test 26 SD-2.1 Latent Diffusion CVPR 2022 FF++ Train & Test 27 DDPM Latent Diffusion NeurIPS 2020 FF++ Train & Test 28 RDDM Latent Diffusion ArXiv 2023 FF++ Train & Test 29 PixArt-𝛼 Latent Diffusion ICLR 2024 FF++ Train & Test 30 DiT-XL/2 Latent Diffusion ICCV 2023 FF++ Train & Test 31 SiT-XL/2 Latent Diffusion ArXiv 2024 FF++ Train & Test Face editing (FE) 32 e4e StyleGAN based SIGGRAPH 2021 FF++ Test Only 
+
+Table 5: Complete efficiency comparison on Xception backbone. 
+
+Method Train time (s/epoch) GPU mem (GB) Infer time (ms/img) Params 
+
+Xception (baseline) 72 12.27 5.57 20.8M Xception + NSP (Ours) 72+30 12.27 5.64 20.8M + 18.5K Xception + NAE (Ours) 0+16 1.74 5.69 20.8M + 18.5K F3Net 76 12.99 5.99 21.4M SPSL 73 12.32 5.76 20.8M SRM — >24 10.22 53.2M RECCE 410 19.20 50.43 23.8M UCF — >24 9.12 46.8M Deepspace 73 12.29 5.86 22.0M SpecXNet 330 16.57 51.70 53.8M 
+
+on a single NVIDIA RTX 4090 GPU (24 GB memory) with batch size 64 for training and batch size 1 for inference. Training time is reported as seconds per epoch; inference time is milliseconds per image; peak GPU memory usage is in GB. Table 5 lists all methods evaluated on the Xception backbone. Our methods (NSP and NAE) introduce negligible overhead while maintaining strong generalization. In contrast, several competing detectors either exceed memory capacity or incur significant la-tency. 
+
+E.2 Complete NSP Ablation 
+
+Figure 11 shows the full NSP ablation results across three training configurations (FS, FR, EFS) and all test sets. Each cell reports the average AUC across the four test categories. Consistent with the main text, NSP mostly outperforms the baseline across all three training domains, though the gains depend on the choice of 𝑟 and 𝛼 . The optimal configuration varies slightly across training domains, but the region around 𝑟 = 3 and 𝛼 = 0.5
+
+generally yields the strongest cross-domain generalization. Notably, when training on the FR domain, the improvement is particularly pronounced: across all parameter combinations, NSP achieves at least a 6.38% absolute AUC gain over the baseline. This reflects the fact that the FR domain contains especially strong method -specific shortcuts—models trained on FR heavily overfit to these patterns, leaving substantial room for improvement when Suppressing Forgery-Specific Shortcuts for Generalizable Deepfake Detection Conference’17, July 2017, Washington, DC, USA 0.1 0.3 0.5 0.7 0.9            
+
+> Suppression strength α
+> 1234
+> Subspace rank  r
+> 0.9204 (-0.37%) 0.9219 (-0.21%) 0.9302 (+0.69%) 0.9277 (+0.42%) 0.9211 (-0.30%) 0.9363 (+1.34%) 0.9278 (+0.42%) 0.9312 (+0.79%) 0.9320 (+0.88%) 0.9220 (-0.21%) 0.9255 (+0.17%) 0.9217 (-0.24%) 0.9200 (-0.42%) 0.9248 (+0.09%) 0.9269 (+0.32%) 0.9209 (-0.32%) 0.9239 (+0.00%) 0.9226 (-0.14%) 0.9234 (-0.05%) 0.9205 (-0.37%)
+> FS (Baseline: 0.9239)
+> 0.1 0.3 0.5 0.7 0.9
+> Suppression strength α
+> 1234
+> Subspace rank  r
+> 0.8235 (+13.02%) 0.8198 (+12.51%) 0.8140 (+11.73%) 0.8190 (+12.41%) 0.8175 (+12.21%) 0.8198 (+12.52%) 0.7751 (+6.38%) 0.8038 (+10.32%) 0.8151 (+11.87%) 0.8121 (+11.46%) 0.8229 (+12.94%) 0.8156 (+11.94%) 0.8203 (+12.59%) 0.8253 (+13.28%) 0.8170 (+12.13%) 0.8214 (+12.74%) 0.8233 (+12.99%) 0.8176 (+12.22%) 0.8218 (+12.79%) 0.7994 (+9.72%)
+> FR (Baseline: 0.7286)
+> 0.1 0.3 0.5 0.7 0.9
+> Suppression strength α
+> 1234
+> Subspace rank  r
+> 0.9087 (+1.48%) 0.9024 (+0.78%) 0.8884 (-0.78%) 0.9042 (+0.98%) 0.9040 (+0.95%) 0.9029 (+0.83%) 0.8983 (+0.32%) 0.8971 (+0.18%) 0.8936 (-0.20%) 0.9077 (+1.36%) 0.9006 (+0.58%) 0.8957 (+0.02%) 0.9031 (+0.86%) 0.9071 (+1.30%) 0.9049 (+1.06%) 0.8979 (+0.27%) 0.8947 (-0.08%) 0.9074 (+1.34%) 0.8950 (-0.05%) 0.8920 (-0.39%)
+> EFS (Baseline: 0.8955)
+> 0.915 0.920 0.925 0.930 0.935
+> Average AUC
+> 0.650 0.675 0.700 0.725 0.750 0.775 0.800 0.825
+> Average AUC
+> 0.885 0.890 0.895 0.900 0.905
+> Average AUC
+
+Figure 11: Complete NSP ablation. Each cell shows the average cross - domain AUC across all test sets. The model is trained on the indicated domain (FS, FR, or EFS) and evaluated with varying subspace rank 𝑟 and suppression strength 𝛼 . The baseline performance (no NSP) is marked for reference. 
+
+we suppress them. The consistent gains across all 𝑟 and 𝛼 choices further demonstrate that even suboptimal NSP configurations still effectively mitigate shortcut reliance in this challenging setting. 
+
+E.3 Complete NAE Ablation 
+
+Figure 12 presents the full NAE ablation results. We vary the sup-pression ratio 𝜌 across eight values (from 1/128 to 1, increasing by a factor of 2 each step) and the suppression strength 𝛼 from 0
+
+to 1 in increments of 0.25 , evaluating on three training domains and four test sets. Each curve represents the average cross -domain AUC for a given training domain. Several observations emerge from this full sweep. First, the opti-mal suppression ratio 𝜌 consistently falls within [1/4, 1/2] across all training domains, aligning with the analysis in the main text. Second, performance improves monotonically with 𝛼 : stronger suppression yields higher cross - domain accuracy. This trend di-rectly supports our core argument—method - specific features act as non-transferable shortcuts, and suppressing them more aggres-sively pushes the model toward more robust, generalizable cues. The FR training domain again exhibits a distinctive pattern. For models trained on FR, even a small amount of suppression yields a sharp performance increase, far exceeding the gains observed on FS or EFS. This sharp rise reflects the severity of shortcut re-liance in FR - trained models: their representations are so domi-nated by method -specific patterns that removing even a fraction of the associated neurons unlocks substantial generalization capacity. As 𝜌 increases beyond the optimal range, performance eventually declines—a pattern consistent across all domains, indicating that overly aggressive suppression risks removing generalizable cues. When 𝜌 is too small (e.g., 1/128 or 1/64 ), the model suppresses too few neurons, leaving method -specific shortcuts largely intact; performance therefore remains close to the baseline. When 𝜌 is too large (e.g., 1), suppression extends to neurons that may carry generalizable forensic information, causing accuracy to drop. These patterns hold consistently across all three training domains, demon-strating that NAE behaves predictably and that the identified hy-perparameter region generalizes across settings. Together, the full ablation results confirm that both NSP and NAE improve generalization by suppressing method - specific features, and that the hyperparameter choices reported in the main text are well-justified across diverse training configurations. Conference’17, July 2017, Washington, DC, USA Yihui Wang et al. 1/128 
+
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.9830 
+
+0.9835 
+
+0.9840 
+
+0.9845 
+
+FS 
+
+FS 
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.855 
+
+0.860 
+
+0.865 
+
+0.870 
+
+> Performance
+
+FR 
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.854 
+
+0.856 
+
+0.858 
+
+0.860 
+
+0.862 
+
+> Performance
+
+EFS 
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.980 
+
+0.982 
+
+0.984 
+
+> Performance
+
+FE 
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.865 
+
+0.870 
+
+0.875 
+
+FR 
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.9974 
+
+0.9976 
+
+0.9978 
+
+0.9980 
+
+0.9982 
+
+> Performance
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.70 
+
+0.75 
+
+0.80 
+
+> Performance
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.4 
+
+0.6 
+
+0.8 
+
+> Performance
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.755 
+
+0.760 
+
+0.765 
+
+0.770 
+
+EFS baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.8200 
+
+0.8225 
+
+0.8250 
+
+0.8275 
+
+0.8300 
+
+> Performance
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.9970 
+
+0.9975 
+
+0.9980 
+
+0.9985 
+
+0.9990 
+
+> Performance
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+> 1/128
+> 1/64
+> 1/32
+> 1/16
+> 1/8
+> 1/4
+> 1/2
+> 1
+
+rho 
+
+0.9905 
+
+0.9910 
+
+0.9915 
+
+0.9920 
+
+0.9925 
+
+> Performance
+
+baseline 
+
+alpha=0.25 
+
+alpha=0.5 
+
+alpha=0.75 
+
+alpha=1 
+
+Figure 12: Complete NAE ablation. Each subplot shows cross - domain AUC as a function of suppression ratio 𝜌 (doubling from 
+
+1/128 to 1) and strength 𝛼 , averaged over test sets. The model is trained on the indicated domain (FS, FR, or EFS). Baseline performance (no suppression) is marked by the dashed line.

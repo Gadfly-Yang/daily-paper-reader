@@ -1,0 +1,2385 @@
+Title: ExpSpeech-Net: Multimodal Fusion of Expression and Speech for Deepfake Detection
+
+URL Source: https://arxiv.org/pdf/2606.05760v1
+
+Published Time: Fri, 05 Jun 2026 00:42:38 GMT
+
+Number of Pages: 35
+
+Markdown Content:
+## Graphical Abstract 
+
+ExpSpeech-Net: Multimodal Fusion of Expression and Speech for Deepfake Detection 
+
+Ruchika Sharma, Rudresh Dwivedi Face Image 
+
+Speech Signal 
+
+▪ ISLBT 
+
+▪ MPNCC 
+
+▪ Hierarchical Feature 
+
+Selection with SASMA 
+
+Technique 
+
+▪ SqueezeNet+RNN 
+
+REAL 
+
+FAKE 
+
+> arXiv:2606.05760v1 [cs.CV] 4 Jun 2026
+
+## Highlights 
+
+ExpSpeech-Net: Multimodal Fusion of Expression and Speech for Deepfake Detection 
+
+Ruchika Sharma, Rudresh Dwivedi 
+
+• Proposed a robust deepfake detector fusing facial expressions with speech cues. 
+
+• Proposed ISLBT-based features using enhanced LBP over shape-free patches. 
+
+• Proposed MPNCC, a robust enhancement of PNCC tailored to noisy environments. 
+
+• Introduction of HFS-driven optimization incorporating a novel SASMA algorithm. ExpSpeech-Net: Multimodal Fusion of Expression and Speech for Deepfake Detection 
+
+Ruchika Sharma, Rudresh Dwivedi 
+
+> Department of Computer Science and Engineering, Netaji Subhas University of Technology, Dwarka, Delhi, 110078, NCT of Delhi, India
+
+Abstract 
+
+Deepfake videos are increasingly challenging the credibility of online content. Many existing de-tection methodology relies on complex, resource-intensive models, which limit their practical use. The study introduces the ExpSpeech-Net deepfake detection (SqN-R-DFD) model, which utilizes SqueezeNet and RNN (Recurrent Neural Network) as its backbone, providing a lightweight and efficient deepfake detection framework that simultaneously analyzes facial expressions and speech patterns. The approach incorporates advanced feature extraction, such as ISLBT-based features for image and MPNCC for signals, along with a smart feature-selection strategy using SASMA (Sandpiper-Assisted Slime Mould Algorithm), ensuring optimal and balanced input to the detec-tion models. By combining SqueezeNet and an RNN, subtle inconsistencies in deepfake videos are captured effectively. The framework achieves 94 .5% accuracy, precision of 99 .3% , and F-measure of 
+
+96 .8% , outperforming conventional methods. This demonstrates that integrating multiple modali-ties with intelligent preprocessing and feature selection enables practical, real-time deepfake detec-tion suitable for everyday applications. 
+
+Keywords: Deepfake Detection, DSN, ISLBT features, MPNCC-based features, and SASMA strategy. 
+
+1. Introduction 
+
+Over the last decade, there has been a significant shift in internet traffic from text-based content to multimedia files. The rise of expansive multimedia social platforms such as Instagram, TikTok, and WeChat has profoundly impacted our daily lives [1]. However, these platforms pose potential risks to public safety, political security, and personal privacy, which can harm their image. The amalgamation of forgery techniques and AI (Artificial Intelligence) advancements has significantly improved the difficulty of distinguishing genuine from manipulated digital media [2]. At its worst, it can incite organized and destabilizing public actions driven by distorted impressions or ideas. Deepfakes [3] refer to artificially created audio-visual representations of individuals, often produced without consent, that can defame public figures. Simultaneously, many detection methods have improved to detect subtle manipulations left inadvertently by recent generation techniques; however, many digital forensic methodologies fail to identify unseen forgeries. The emergence of Deepfake technology presents critical safety concerns, demanding the development of novel techniques for detection and mitigation. The methods proposed in [4] leverage DNNs (Deep Neural Networks) as a feature extractor to efficiently explore forensic clues in a data-centric approach, demonstrating significant potential in detection accuracy. However, the use of complex and deeper network architectures results in an extensive number of network parameters and FLOPs (Floating-Point Operations). Detecting deepfakes remains a challenging task for humans; however, recent studies indicate that a CNN (Convolutional Neural Network) trained specifically for this purpose can surprisingly achieve effective detection. A joint distillation-based compression framework proposed by Xu et al. [5] achieved competitive detection performance by reducing the computational cost. However, enhancing the suggested scheme for feature distillation with a heterogeneous framework in transitional layers is difficult. To address these challenges, a novel approach for effective deep-fake detection utilizing a multimodal data fusion approach is proposed and described in section 3. The major contribution of this work is as follows: 1. Proposed ISLBT-based features, in which the standard form of LBP (Local Binary Pattern) is performed on the shape-free patches to extract features from the preprocessed face image, are modified along with local and global features, DSBME, and deep features are extracted. 2. MPNCC-based features are extracted where approaches such as pre-emphasis, hamming win-dow, IMS (Improved Magnitude Squared), large time power calculation, channel bias minimiz-ing, DCT (Discrete Cosine Transform), and CMN (Cepstral Mean Normalization) are utilized in PNCC (Power Normalized Cepstral Coefficient) structure, together with the features such as MFCC (Mel-Frequency Cepstral Coefficients) and chroma-based features. 3. Proposed HFS technique that uses the SASMA strategy to select the features optimally. 4. Contributes the face cascade method and the DSN (Double Sigmoid Normalization) approach to pre-process the face image and the speech signal, respectively. 5. Contributing a hybrid detection phase model that adopts models such as SqueezeNet and RNN to train the features and provide an efficient detection outcome. The remainder of the manuscript is organized as follows: The literature review on video deepfake detection approaches is given in Section 2. The methodology of the approach, based on a multimodal approach based on multimodal data fusion, is given in Section 3. The experimental analysis on the proposed model over existing approaches is discussed in Section 4. Section 5 concludes our manuscript. 
+
+2. Literature Review 
+
+The literature review is organized into three sections. The first discusses general Deepfake detection methods that analyze inconsistencies over spatial, temporal, and frequency, and GAN-generated images. The second focuses on fusion-based approaches that integrate multi-modal or multi-domain cues for improved robustness. The final section reviews studies related to the proposed model, enabling a focused comparison of methodology, feature representation, and performance. Hu et al. [6] analyzed both the temporal aspects and individual frames of compressed Deepfake videos. Frame-level analysis reduces noise from video compression, preventing overfitting, while temporality-level analysis captures temporal relationships among features. By combining both approaches, the method outperforms existing techniques in accurately detecting compressed Deepfakes. Chintha et al. [7] introduced advanced techniques to detect audio spoofing and visual deepfakes using convolutional latent representations, bidirectional recurrent structures, and entropy-based cost functions, thereby detecting spatial and temporal patterns. Furthermore, the models demonstrated strong generalization across new domains, demonstrating the efficacy of these innovative approaches. Guarnera et al. [8] used the expectation maximization algorithm to 2extract a distinctive fingerprint that captures CT (convolutional Traces) left by GAN (Generative Adversarial Network) during image generation. The CTs demonstrated strong discriminative power, achieving over 98% classification accuracy across deepfakes from GAN architectures, including non-facial images. The method proved reliable and independent of the image semantics, outperforming existing detection techniques and showing resilience to various attacks. Xu et al. [5] presented an advanced framework for compressing models in deepfake detection. It involved a two-step process: pre-training a teacher network with labeled samples, followed by transferring knowledge to a lightweight student network. Moreover, a joint distillation loss comprising knowl-edge distillation, gradient-guided feature distillation losses, and cross-entropy ensured effective knowledge transfer. Additionally, a decayed teaching strategy fine-tuned characteristic distillation to minimize the risk of negative transfer. Rafique et al. [9] proposed an automated method to classify deep-fake images using DL (Deep Learning) and ML (Machine Learning). It performed ELA (Error Level Analysis) to detect modifications, then extracted features with CNNs. The features were classified using SVM (Support Vector Machines) and K-NN (K-Nearest Neighbors) with hyperparameter optimization. Dey et al. [10] demonstrated that GANs and diffusion models are utilized in deepfake medical imaging to create realistic synthetic images across modalities such as MRI, CT, and X-ray. Deep learning, transformer-based architectures, and frequency-domain analysis are come of the deep learning methodologies adopted to identify spatial and spectral inconsistencies. Though the approach faces challenges such as generalization and intrepretability issues. Das et al. [11] proposed HTMDF-DD (Hybrid Triple Modality–based Spatial–Temporal Early Fusion) that integrates spatial feature extraction, temporal modelling and hybrid fusion strategies to capture inconsistencies between frames. spatial artifacts, motion irregularities, and cross-modality corre-lations are key features of the proposed model. Though the model faces challenges due to limited multimodal datasets, generalization and synchronization issues. Eutamene et al. [12] proposed a model that utilizes multimodal fusion framework to integrate perceptual quality analysis with caption-based semantic features to detect deepfakes. Both low-level visual distortions and high-level semantic inconsistencies are captured between video content and captions generated. Though the model faced many challenges such as multimodal alignment and generalization to unseen deepfakes. Suganthi et al. [13] proposed a DL-based deepfake face detection and recognition model. This work detected deepfake face images using the FF-LBPH (Fisher Face algorithm with Local Binary Pattern Histogram) for face recognition. It reduced dimensions with LBPH (Local Binary Pattern Histogram) and applied a DBN (Deep Belief Network) with RBM (Restricted Boltzmann Machines) for classification. Tu et al. [14] proposed a model that utilizes an optical flow algorithm to extract expression key sequences. Further, a dual-branch network captures both spatial and temporal inconsistencies. Spatial branch and temporal branch incorporate a visual transformer and motion dynamics, respectively, thereby reducing redundancy and improving detection accuracy. However, it relies on precise key-sequence extraction, may struggle with low-quality or occluded faces, and can face limited generalization to unseen manipulation types. Table 1 shows the features and challenges of extant works on video-based Deepfake detection. The recurrent convolutional framework [7] conducts audio compression to validate the robustness of the system. Though using a larger dataset to acquire the benefits from the parameters of training samples is difficult. Using the CNN [8] approach, the proposed scheme attained 93% precision in deepfake detection. 3Author(s) Citation Methodology Features Challenges 
+
+Hu et al. [6] CNN Vigorous to the compressor factor Need to enhance the system ro-bustness to recognize numerous kinds of facial videos. Chintha et al. [7] Recurrent Con-volutional frame-work It conducts audio compression to val-idate robustness of the system Has to use a larger dataset to ac-quire the benefits from the pa-rameters of the training sample. Guarnera et al. [8] CNN It attained 93% of precision in detect-ing fake tasks It is necessary to examine on a popular real image dataset. Xu et al. [5] Compression framework based on joint distilla-tion It attained compet-itive detection per-formance through lowering the com-putation cost. Need to improve the suggested scheme for characteristic distilla-tion with a heterogeneous frame-work in transitional layers. Dey et al. [10] GAN- based models, Diffusion models Spatial artifacts, inconsistencies in the texture, and anomalies in fre-quency Cross-domain generalization is-sues and adversarial robustness. Das et al. [11] Hybrid triple-modality frame-work with early fusion Spatial and tempo-ral inconsistencies computational complexity is very high, generalization to unseen deepfakes. Eutamene et al. [12] Multimodal fu-sion framework integrating visual and textual repre-sentations Texture and com-pression artifacts Limited annotated datasets and generalization to unseen deep-fakes. Suganthi et al. [13] DBN It offered less ex-amination loss with better validation accuracy Different classifiers and distance metric measures were not ex-plored and integrated, leading to less precision in the detection of deepfake face images. Rafique et al. [9] DL It achieved better accuracy with max-imum performance It is essential to examine ad-ditional CNN architectures on video-based deepfake detection. Tu et al. [14] SVM Transformer and focal self-attention along with optical flow differences Generalization to unseen data. Certain conditions, such as oc-clusion, low resolution, and sub-tle expression, may deteriorate the performance. 
+
+> Table 1: Features and Challenges of Existing Deepfake Detection Techniques.
+
+43. Proposed Methodology 
+
+Section 3 demonstrates the multimodal data fusion approach adopted to detect deepfakes in the architecture, preprocessing phase, feature extraction phase, followed by the feature selection phase in subsections 3.1, 3.2, 3.3, and 3.4. Finally, the detection phase has been enclosed, with the detection stage proclaimed in subsection 3.5. 
+
+3.1. Proposed Architecture 
+
+In our work, we propose a novel approach for effective deep-fake detection, as illustrated in Figure 1, employing a multimodal data fusion technique that integrates information from two modalities: face images and speech signals extracted from input videos. The initial step involves pre-processing of face images and speech signals to enhance their quality, using the face cascade method for face images and the DSN approach for speech signals. Subsequently, feature extraction is carried out on the pre-processed face images, encompassing local and global features, as well as ISLBT, DSBME, and deep features. Similarly, features such as MPNCC, MFCC, and chroma features are extracted from the preprocessed speech signals. The Hierarchical Feature Selection (HFS) technique is then introduced to select features using the SASMA strategy optimally, and these selected features are balanced. Finally, in the detection phase, models such as SqueezeNet and RNN are used to train the selected features individually, resulting in an efficient and accurate detection output. However, the use of complex and deeper network architectures results in an increased computational cost. 
+
+3.2. Preprocessing for both face image and speech signal 
+
+Consider V inp as the input video, F img and Ssgl as the input face image and speech signal acquired from V inp that can be preprocessed at first to improve the quality of the image and signal, respectively. The pre-processing techniques used in this research for both F img and Ssgl are given below. 
+
+Face Image: Preprocessing of face image ( F img ) is performed using the face cascade method based on the Haar cascade classifier, a type of classifier introduced by Viola and Jones [15], which efficiently detects and isolates facial regions. This method applies a series of weak classifiers and fil-ters trained using the AdaBoost algorithm, progressively eliminating non-face regions and reducing false positives. The process enhances detection accuracy and computational efficiency, producing a refined facial image ( F pre ) suitable for further processing. 
+
+Speech signal: Preprocessing speech signals ( Ssgl ) involves the DSN approach [16] to stan-dardize amplitude variations and enhance signal quality. DSN applies two sigmoid functions to scale both positive and negative amplitude values, compressing extremes and ensuring a more uniform amplitude distribution. This reduces clipping and distortion, resulting in a normalized signal ( Spre )that improves learning stability and model performance in subsequent analysis. The formulation of DSN is expressed as in Eq. 1 
+
+DSN Nk =
+
+    
+
+> 11+exp −2Ssgl k−tr1
+> !!
+
+, if Ssgl k < t     
+
+> 11+exp −2Ssgl k−tr2
+> !!
+
+, if Ssgl k ≥ t (1) where r1 and r2 indicate the left and right edges of the region, and t indicates the reference operating point. Then, the normalized or preprocessed speech signal is denoted by Spre .5Input Image 
+
+Preprocessed Image 
+
+Input Video 
+
+Input Speech Signal 
+
+Preprocessed Speech Signal 
+
+Face Cascade Method 
+
+DSN 
+
+Face Image Features 
+
+> ISLBT,DSBME
+> Deep Features
+
+Signal Features 
+
+> MFCC
+> Chroma
+
+Optimal Feature Selection via HFS using SASMA Strategy 
+
+SqueezeNet  RNN 
+
+Detected Output 
+
+Real  Fake 
+
+> MPNCC
+> Local and Global Features
+
+Preprocessing phase 
+
+Feature Extraction phase 
+
+Detection phase Figure 1: Structural Framework of Proposed Method. 
+
+63.3. Feature Extraction from face image and speech signal 
+
+Feature extraction is a crucial step in both face image and speech signal processing, to represent relevant information in a compact form for subsequent analysis. In the context of face image processing, feature extraction techniques include local and global features, as well as SLBT (Shape Local Binary Texture), DSBME, and deep features illustrated in subsubsection 3.3.1. For speech signal processing, the features such as MPNCC, MFCC, and chroma are extracted as demonstrated in subsubsection 3.3.2. 
+
+3.3.1. Extraction of features from face image 
+
+Face image feature extraction involves capturing distinctive characteristics that can be used for face recognition, classification, or other computer vision tasks. Feature extraction methods can be broadly categorized into local and global features [17]. 
+
+Local Features: Local features focus on capturing detailed information from specific regions or key points within a face. Here, HOG (Histogram of Oriented Gradients) features are extracted. HOG represents the distribution of gradient orientations in an image, often being utilized for face detection. The extracted local feature is denoted by Lf .
+
+Global Features: Global features aim to represent the overall characteristics of the entire face. These features are often derived from the entire face region. Here, color histogram-based features are extracted. A color histogram is a representation of the distribution of colors in an image. It provides a quantitative summary of the color content, showing the frequency of each color or color bin present in an image. The histogram is constructed by dividing the color space into discrete bins and counting the number of pixels that fall into each bin. The extracted global features is denoted by Gf .Thereby, the extracted local and global features are denoted by LG f = [ Lf , Gf ]. 
+
+3.3.1.1 ISLBT Features (Improved shape local binary texture) 
+
+ISBLT is an extension of SLBT [18] that is equivalent to AAM (Active Appearance Model), but the only difference is that SLBT considers LBP texture features rather than intensity values for texture modeling. This feature merges both texture and shape details. The ISLBT-based texture and shape features are extracted from F pre . Consider the image F pre and Z=[ Z1, Z2,..., Zn] as its shape landmark points. Through aligning these landmark points, the shape variations are acquired. Following this, PCA (Principal Component Analysis) is applied to those points. The representation of any shape vector within the training set can be expressed as in Eq. 2 and Eq. 3. Here, Wv
+
+indicates the weight parameter, Ev indicates eigen vectors, and ¯Z indicates mean shape. 
+
+Z ≈ ¯Z + Ev W v (2) 
+
+Wv = ETv
+
+ Z − ¯Z (3) Texture modeling involves a process where training set images are transformed into a mean shape, creating shape-free patches. The size of these patches significantly influences performance, computational complexity, and processing time. In the context of AAM, the approach involves using the values of direct intensity from the shape-free patches to model texture. On the other hand, SLBT employs LBP on these shape-free patches to retrieve characteristics that are invariant to illumination variations. The utilization of LBP for feature extraction is preferred due to its faster computation and simplicity compared to existing methods, such as Gabor Wavelets. Assume (yc, z c) is the center pixel of 3 × 3 window and its intensity value is denoted as uc.Their local texture is denoted as P = p (ui), where ui (i = 0 , 1, 2, ... 7) is relevant to the grey values of 8 neighour pixels. Moreover, the neighbour pixels are thresholded with uc can be represented 7as p (c (u0 − uc) , ..., c (u7 − uc)) along with their function is expressed as in Eq. 4 and the LBP pattern is acquired using Eq. 5. 
+
+c(d) = 
+
+(
+
+1, d > 00, d ≤ 0 (4) 
+
+Lbp (yc, z c) = 
+
+> 7
+
+X
+
+> i=0
+
+c (ui − uc) 2 i (5) The above Eq. 5 is improved because LBP is typically defined on a fixed neighborhood size, which can make it sensitive to scale changes. Variations in scale might affect the performance of LBP-based methods in scenarios where objects can appear at different scales. To address this, the improved form of the LBP pattern is acquired using Eq. 6. 
+
+Lbp (yc, z c) = 
+
+
+
+> n
+> 2
+
+X
+
+> i=0
+
+c (ui − uc) ∗ σ (ui)
+
+ 2i +
+
+
+
+> n
+
+X  
+
+> i=n
+> 2+1
+
+c (ui − uc)
+
+ 2i (6) where, ui = 11+ e−(ui) ∗ | ui|, ui indicates neighbour pixel value, uc indicates centre pixel value and σ
+
+indicates standard deviation. Similarly, texture modeling is conducted using PCA according to Eq. 7. Here, Wt indicates the weight parameter of texture modeling, ¯Z indicates the mean vector, and Ev indicates the eigen vectors. 
+
+Wt = ETv =  Z − ¯Z (7) Thereby, the combined form of shape and texture constraint vector is acquired using Eq. 8. Also, the shape texture constraint controlling texture, local and global shape is acquired through conducting PCA over the merged constraint, is given in Eq. 9. Here, Dv indicates a diagonal matrix of weights for all shape constraints. V T indicates shape texture parameter, ¯Zvt indicates mean vector, and ETvt indicates eigen vectors. 
+
+Wvt =
+
+Dv Wv
+
+Wt
+
+
+
+(8) 
+
+V T = ETvt =  Zvt − ¯Zvt 
+
+ (9) Thereby, ISLBT-based features extracted from F pre are denoted by Slbt f .
+
+3.3.1.2 Diamond Search for block motion estimation 
+
+Block matching motion estimation [19] is used to find a block in the previous video frame that most closely matches a block in the current frame. To make this process faster and more efficient, the Diamond Search (DS) algorithm is used. Unlike traditional methods that rely on rectangular search areas, DS uses a diamond-shaped search pattern that reduces computational cost while maintaining high accuracy in motion detection. Thereby, DSBME-based features extracted from F pre are denoted by Dsbme f .8Algorithm 1 Diamond Search Block Motion Estimation (DSBME) Input: Current frame and previous frame 
+
+Output: Motion vector (MV) for each block  
+
+> 1:
+
+Start  
+
+> 2:
+
+Initialize a Large Diamond Search Pattern (LDSP) centered at (0 , 0) . 
+
+> 3:
+
+Compute the Mean Absolute Difference (MAD) for all nine points in the LDSP.  
+
+> 4:
+
+if the point with the smallest MAD value is at the center then  
+
+> 5:
+
+Proceed to Step 3.  
+
+> 6:
+
+else  
+
+> 7:
+
+Shift the diamond to the point with the smallest MAD value and repeat the search.  
+
+> 8:
+
+end if  
+
+> 9:
+
+Once the minimum MAD is found at the center, switch to a Small Diamond Search Pattern (SDSP) for refinement.  
+
+> 10:
+
+Evaluate the four points around the center.  
+
+> 11:
+
+Select the position with the lowest MAD as the final Motion Vector (MV).  
+
+> 12:
+
+End 3.3.1.3 Deep Features: 
+
+Deep features [20] are extracted using VGG16 and ResNet50 from F pre for efficient image detec-tion. VGG16 is a deep convolutional neural network with 16 layers, including 13 convolutional and 3
+
+fully connected layers. The preprocessed image is passed through several convolutional and pooling layers that use small ( 3 × 3) filters to capture fine details. These layers gradually learn more com-plex patterns, and the final, fully connected layers produce high-level features that are useful for identifying important image characteristics. The features obtained from VGG16 are represented as 
+
+V gg f .ResNet50 is another powerful deep learning model that uses special residual connections (or skip connections) to help the network learn efficiently and avoid problems such as vanishing gradients. The input first goes through convolution and pooling layers, followed by several residual blocks that extract deeper visual patterns. Instead of using large fully connected layers, ResNet50 ap-plies global average pooling (GAP) to summarize the learned features into a compact form. The resulting features are represented as Res f . Thus, the entire deep features extracted from F pre can be represented by Df =[ V gg f , Res f ]. All the features, such as local and global features, SLBT, DSBME, and deep features, are represented as F ace f =[ LG f , Slbt f , Dsbme f , Df ]. 
+
+3.3.2. Extraction of features from speech signal 
+
+The concerned subsection illustrates the various features and their purpose of extraction from the speech signal described in subsubsubsection 3.3.2.1, 3.3.2.2, and 3.3.2.3, respectively. 
+
+3.3.2.1 MPNCC 
+
+The MPNCC is an enhanced version of PNCC [21], designed to extract robust speech features even in noisy environments. The process involves three main stages: initial processing, environmental compensation, and final feature extraction, illustrated in Figure 2. In initial processing, the speech signal undergoes pre-emphasis to balance the frequency spectrum and is segmented into overlapping frames. Each frame is multiplied by a Hamming window to reduce spectral artifacts. The Short-Time Fourier Transform (STFT) computes the 9Gammaton Filter      
+
+> Improved Magnitude Squared
+> STFT Hamming Window Pre-emphasis
+> Initial Preprocessing
+> Large Time Power Calculation Channel Biasing
+> Asymetric Noise Suppression With Temporal Masking
+> Weight Smoothing
+> Environmental Compensation
+> Power Function Nonlinearity
+> Mean Power Normalization
+> Time Frequency Normalization
+> DCT CMN PNCC Coefficients
+> Final Processing
+
+Figure 2: Proposed Structure of MPNCC 
+
+frequency content, followed by an improved magnitude squared (IMS) operation to obtain a more accurate power spectrum. A gammatone filter bank models the human auditory system, and large-time power calculation captures long-term variations in spectral content. During environmental compensation, channel bias minimization reduces noise-induced biases across filter channels. Asymmetric noise suppression and temporal masking attenuate background noise, while weighted smoothing and time-frequency normalization ensure consistent spectral representation. Mean power normalization and a power function nonlinearity enhance relevant spectral components. In final feature extraction, the Discrete Cosine Transform (DCT) decorrelates features, and Cepstral Mean Normalization (CMN) stabilizes them across frames. The resulting MPNCC fea-tures are compact, informative, and robust, making them suitable for automatic speech recognition. The proposed process of MPNCC is explicated in Figure 2. Key improvements in MPNCC are that IMS reduces noise sensitivity in the power spectrum, and Large-time power calculation captures longer-term spectral trends. And Channel bias minimization corrects noise-induced distortions across channels. The description of the propposed structure of MPNCC is as follows: 1. IMS (Improved Magnitude Squared): In the standard PNCC, the power spectral density is acquired through estimating the magnitude square of the resultant frequencies. The major limitation lies in its sensitivity to noise. The squared magnitude can lead to a low signal-to-noise ratio. To address this, IMS adopts a method that multiplies the SNR by the power spectral density. 2. Large Time Power Calculation: The large time power filter is adopted as a mean low-pass average filter, and this is equivalent to a medium time power filter, but it performs over a higher number of frames. This filter is applied by estimating the running average power 
+
+P w [q, l ] for 2Q + 1 successive frames. The large time power calculation is computed using Eq. 10. Here, l indicates the Gammatone channel index, and q indicates the frame index. 
+
+Lt [q, l ] = 12Q + 1 Pq+Qq′ =q−Q
+
+P w [q′
+
+, l ] (10) 10 3. Channel Bias Minimizing: Speech information is concentrated in medium and low frequen-cies, while noise varies by type. After Gammatone filtering, PSD (Power Spectral Density) values are smoothed using the filter function. Due to differential smoothing in consecutive channels, noise energy spreads more than speech energy, creating a channel bias influenced by noise distribution. This bias varies across channels, especially in environmental noise. The channel bias minimizing is estimated using Eq. 11. 
+
+Lt [q, l ] = Lt [l] − b × min (Lt [q, l ]) (11) where b indicates a constant bias factor, and this is based on the coefficient value such that, 
+
+0 < b < 1. Thereby, MPNCC-based features extracted from Spre is denoted by M P N CC f .
+
+3.3.2.2 MFCC 
+
+MFCCs [22] are commonly used in speech recognition methods, especially for feature extraction to recognize speech. To uniquely identify and detect these sounds, a viable approach involves creating a mathematical framework that captures the underlying physical principles of spoken words, which is then encoded using the distinctive characteristics provided by MFCCs. It is worth noting that integrating more features generally enhances accuracy in these applications. Thereby, the MFCC-based feature extracted from Spre is denoted by M f cc f .
+
+3.3.2.3 Chroma 
+
+Chroma features [23], also referred to as chromatograms, correspond to 12 distinct pitch categories commonly found in music. These features, known as pitch class profiles, offer valuable insights into music analysis by categorizing pitches and melodies that follow the equal tempered scale. Chroma-based attributes effectively capture both the chromatic (related to pitch) and melodic elements in music, being sensitive to changes in timbre and accompaniment. They represent the tonal content of music, showcasing the variations and patterns in pitch classes, enabling a thorough assessment of musical compositions. The chroma-based feature extracted from Spre is denoted by 
+
+Cf . Thus, the overall features extracted from pre-processed speech signal Spre can be represented as Speech f =[ M pncc f , M f cc f , Cf ]. 
+
+3.4. Feature Selection 
+
+This section details a novel feature selection strategy for the following detection process. From the face feature F ace f and speech feature Speech f are extracted. Further, the features are selected using the HFS (Hierarchical Feature Selection) [24] approach. 
+
+Hierarchical Feature Selection (HFS): Figure 3 illustrates the proposed multimodal feature extraction, fusion, and selection framework designed to detect deepfakes by leveraging both Speech f
+
+(audio) and F ace f image features. The process consists of two main stages: feature extraction and feature selection, where a hierarchical SASMA-based Feature Selection (FS) method is applied at multiple levels to optimize the feature set. Initially, feature extraction is performed separately for both modalities. The Speech f signal is processed to extract three key feature types: MPNCC, MFCC, and chroma features, which capture frequency and tonal information, further undergoing an initial SASMA-based FS to remove redundant and less relevant features, resulting in F eature 1. Similarly, F ace f
+
+image features are extracted, including local and global features, ISLBT, DSBME, and deep features derived from deep learning models. These extracted F ace f features also go through SASMA-based FS producing F eature 2.Following feature extraction, a fusion mechanism is applied to combine information from both 11 modalities. The initially fused representation F eature 5 integrates the selected Speech f and F ace f .To further enhance the representation, F eature 5 undergoes an additional round of SASMA-based FS, resulting in F eature 6, which contains the most informative features from both sources. The refined multimodal feature set is then processed to form F eature 3, representing a more structured and optimized representation. Finally, an additional SASMA-based FS step is applied to derive F eature 4, which serves as the ultimate feature set used for deepfake detection. This approach helps to select the most pre-eminent features, reducing dimensionality while preserving critical information. The integration of 
+
+Speech f and F ace f helps to improve the accuracy of detecting deepfake manipulations effectively. The multi-stage feature selection process ensures that both modalities contribute meaningfully to the final classification model. Signal Features 
+
+> MPNCC
+> SASMA-Based FS
+> Feature 1
+> Face Image Features
+> Local and Global Features
+> MFCC
+> ISLBT , DSBME
+> Deep Features
+> SASMA-Based FS
+> Feature 5
+> Feature 2
+> Feature 6
+> Feature 3
+> Feature 4
+> SASMA-Based FS
+> CHROMA
+> SASMA-Based FS
+> Figure 3: Proposed HFS-Based Feature Selection using SASMA Strategy
+
+3.4.1. SASMA strategy for optimal feature selection 
+
+In the HSF technique, the near-optimal features are selected optimally by employing the SASMA strategy. SASMA strategy is a variant of SMA (Slime Mould Algorithm) [25], which is adopted by inspiring the searching behavior of food. The SMA draws inspiration from the intricate behaviors of real-world slime molds, particularly the species Physarum polycephalum. Slime molds, despite their simplicity, demonstrate sophisticated and adaptive behavior that provides a compelling basis for algorithmic models. Physarum polycephalum, in particular, exhibits the remarkable capability of discovering the shortest path between food sources in environments. However, they cannot process information or make decisions based on complex reasoning. To address this, the Sandpiper Optimization Algorithm (SOA) [26] is employed by inspiring the collective foraging behavior of 12 sandpipers. Hence, the proposed hybrid optimization is named as Sandpiper Assisted Slime Mould Algorithm (SASMA) strategy. 
+
+3.4.1.1 Solution encoding and objective Function 
+
+The solution encoded according to the SASMA strategy features includes F ace f and Speech f . The objective function for the SASMA strategy is the minimization of accuracy, as defined in Eq. 12. 
+
+Of = M in 
+
+ 1
+
+Accuracy 
+
+
+
+(12) 
+
+3.4.1.2 Mathematical Modelling Approach Food-Proposed phase: Slime mould can navigate towards food based on the scent in the air. The mathematical formulation of approaching behavior is defined in Eq. 13. Here, 
+
+−→pc indicates linearity from one to zero, −→
+
+Sb indicates individual position with the greatest order concentration, −→
+
+pb indicates parameters with the interval [-a, a], −→ω indicates slime mould’s weight, 
+
+t indicates current iteration, and −→
+
+SA, −→
+
+SB indicates two individual arbitrarily chosen from slime mould. 
+
+−−−−−→
+
+S(t + 1) = 
+
+
+
+−−−→
+
+Sb(t) + −→
+
+pb ·
+
+−→ω · −−−→
+
+SA(t) − −−−→
+
+SB (t)
+
+
+
+, r < k 
+
+−→pc · −−→
+
+S(t), r ≥ k (13) The procedure of p is p = p = tanh |A(i) − Bf |; Bf indicates best fitness of current iteration, A(i)
+
+indicates fitness of −→
+
+S as per Eq. 12 such that i ϵ 1,2,..n. The procedure of −→
+
+pb is −→
+
+pb =[-a,a]; here 
+
+a = arctanh 
+
+
+
+−
+
+ ttmax 
+
+
+
++ 1 
+
+
+
+. The procedure of −→ω is defined as in Eq. 14. Here, SmellIndex 
+
+indicates indicates sorted fitness value sequence and their value is SmellIndex = sort (A), oF 
+
+indicates optimal fitness, wF indicates worst fitness, condition indicates that A(i) ranks first half of the population. 
+
+−−−−−−−−−−−−−→
+
+ω(SmellIndex (i)) = 
+
+
+
+1 + r.log 
+
+ oF −A(i)  
+
+> oF −wF
+
++ 1 
+
+
+
+, condition 
+
+1 − r.log 
+
+ oF −A(i)  
+
+> oF −wF
+
++ 1 
+
+
+
+, Others (14) Eq. 13 is improved to address the issue of processing information or making decisions based on complex reasoning. The condition in Eq. 13 is combined into one formulation as in Eq. 15. 
+
+2−−−−−→
+
+S(t + 1) = −−−→
+
+Sb(t) + −→
+
+pb ·
+
+−→ω · −−−→
+
+SA(t) − −−−→
+
+SB (t)
+
+
+
++ −→pc · −−→
+
+S(t) (15) Then, adopt SOA and their updated position of search agent is given in Eq. 16 and it is reformulated as in Eq. 17. −−−−−→
+
+S(t + 1) = 
+
+−−→
+
+Dsp ×
+
+
+
+x′
+
++ y′
+
++ z′  
+
+× −−→
+
+Pbst (z) (16) 
+
+−−−−−→
+
+S(t + 1) = −−→
+
+Dsp × x′
+
+× −−→
+
+Pbst (z) + −−→
+
+Dsp × y′
+
+× −−→
+
+Pbst (z) + −−→
+
+Dsp × z′
+
+× −−→
+
+Pbst (z) (17) By adding Eq. 15 and Eq. 17, the new formulation is given in Eq. 18 
+
+3−−−−−→
+
+S(t + 1) = −−−→
+
+Sb(t)+ −−→
+
+Dsp ×x′
+
+×−−→
+
+Pbst (z)+ −→
+
+pb ·
+
+−→ω · −−−→
+
+SA(t) − −−−→
+
+SB (t)
+
+
+
++−−→
+
+Dsp ×y′
+
+×−−→
+
+Pbst (z)+ −−→
+
+Dsp ×z′
+
+×−−→
+
+Pbst (z)+ −→pc ·−−→
+
+S(t)
+
+(18) 13 Therefore, 
+
+−−−−−→
+
+S(t + 1) = 
+
+−−−→
+
+Sb(t) + −−→
+
+Dsp × x′
+
+× −−→
+
+Pbst (z) + −→
+
+pb ·
+
+−→ω · −−−→
+
+SA(t) − −−−→
+
+SB (t)
+
+
+
++ −−→
+
+Dsp × y′
+
+× −−→
+
+Pbst (z) + −−→
+
+Dsp × z′
+
+× −−→
+
+Pbst (z) + −→pc · −−→
+
+S(t)3 (19) Thus, Eq. 13 is replaced by using Eq. 19. In addition, −→
+
+SA and −→
+
+SB are improved by employing a cubic chaotic map, and it is expressed as in Eq. 20. 
+
+−−−−−−→
+
+S(A,B )+1 = γ · −−−−→
+
+S(A,B ) ·
+
+
+
+1 − −−−−→
+
+S(A,B )
+
+2
+
+(20) 
+
+Wrap Food: This section formulates the contraction behavior of venous tissue in slime mould when foraging, establishing a relationship between food concentration and the characteristics of the venous structure. The feedback loop between the vein width and the encountered food concentra-tion is given in Eq. 21. Moreover, the variable r in Eq. 14 accounts for the uncertainty in the vein contraction mode. The logarithmic term regulates the numerical fluctuations, ensuring stable con-traction frequencies, whereas condition indicates a factor that imitates how slime molds adapt their search patterns based on the food quality. Higher food concentrations increase guiding exploration, the local weight, whereas lower concentrations reduce the region’s influence, prompting exploration of other areas. As per the aforementioned principle, the updated position of slime mould is defined as in Eq. 14. Here, r and rand are random values in [ 0,1], and lb indicate lower boundaries, and 
+
+ub indicate upper boundaries. 
+
+−→
+
+S∗ =
+
+
+
+rand. (ub − lb ) + lb, rand < y 
+
+−−−→
+
+Sb(t) + −→
+
+pb ·
+
+−→ω · −−−→
+
+SA(t) − −−−→
+
+SB (t)
+
+
+
+, r < k 
+
+−→pc · −−→
+
+S(t), r ≥ k
+
+(21) 
+
+Grabble Food: The slime mould primarily relies on the propagation wave generated by its biological oscillator to alter the flow of cytoplasm in its veins. Moreover, this enables the slime mould to position itself more favourably about the concentration of food. The vector −→ω mathematically represents the oscillation frequency of slime mould in proximity to food. This enables the slime mould to expedite its approach to high-quality food sources and decelerate when encountering lower concentrations. By adjusting their speed based on food quality, slime moulds enhance their efficiency in selecting the optimal food source. Thereby, the features are selected optimally, and the labels of these features are balanced through balancing the minimal count label of features with the size of the maximum label count of features. The selected features are denoted as F eature 4.
+
+3.5. Detection Phase 
+
+After the feature selection process, the SqueezeNet-RNN-based deepfake detection (SqN-R-DFD) phase is initiated to determine whether the object in the video is real or fake. The detection model involves two classifiers, namely SqueezeNet and RNN. Both classifiers, SqueezeNet and RNN, take the selected features F eature 4 as input. These classifiers train these features F eature 4 to detect the deepfake. The outcome of both classifiers is subjected to take the average, and the analyzed results provide ′0′ and ′1′ as the outcome, where ′0′ indicates fake and ′1′ indicates real. 
+
+3.5.1. SqueezeNet 
+
+SqueezeNet [27] is a lightweight neural network designed for image classification that keeps accuracy high while using fewer parameters. Its main building block is the Fire Module, which first “squeezes” the input using a 1 × 1 convolution to reduce channels, then “expands” it with a mix 14 of 1 × 1 and 3 × 3 convolutions to capture more features. The network begins with a convolution and pooling layer, passes through several Fire Modules with occasional pooling and dropout, and ends with global average pooling and a softmax layer for classification. ReLU activation is applied throughout to introduce non-linearity. The final output from SqueezeNet provides the image-based predictions. Thereby, the outcome from the SqueezeNet model is denoted by Sqz out .
+
+3.5.2. RNN 
+
+RNNs [28] are a type of neural network designed to work with sequential data such as speech or text. They remember previous information through a hidden state, which helps the network understand patterns over time. The model is trained to classify inputs using a standard sparse categorical cross-entropy loss function, and an Adam optimizer ensures faster and more stable learning. Finally, the predictions from multiple RNN streams are combined to decide whether an input is ‘Real’ or ‘Fake’. Thereby, the outcome from the RNN model is denoted by RN N out .
+
+yt = ψ1ht + βy (22) By taking an average of both outcomes, such as Sqz out and RN N out , it provides the detected output as ’real’ or ’fake’. 
+
+4. Experimental Results and Findings 
+
+This section describes the experimentation followed by performance evaluations carried out on the World Leader Dataset (WLDR) [29] and the DeepfakeTIMIT dataset [30]. The description of the dataset is illustrated in subsections 4.2 and 4.3, respectively. 
+
+4.1. Simulation Procedure 
+
+The proposed deepfake detection with multimodalities was simulated using PYTHON, specif-ically version 3.7. The processor employed was Intel(R) Core(TM) I5-4210U CPU @ 1.70 GHz, and the installed RAM size was 8.00 GB. Furthermore, the deepfake detection was analyzed using WLDR (World Leader Dataset) [29], and the DeepfakeTIMIT Dataset [30]. 
+
+4.2. Dataset1 Desription (World Leader Dataset) 
+
+This compilation features extensive footage of authentic videos showcasing five U.S. political figures, their impressionists in the political realm, and deepfake videos employing a face-swapping approach to depict all political figures alongside their respective impersonators. For our investiga-tion, we employed a total of 1710 video samples with two diverse classes, such as Fake (Label 0)and Real (Label 1). Each class consists of 855 instances. 
+
+4.3. Dataset2 Description (DeepfakeTIMIT Dataset) 
+
+In this dataset, they had manually picked 16 similarly looking pairs of people from the VidTIMIT database. For each of 32 subjects, they trained two diverse strategies: a lower quality ( LQ ) with 
+
+64 ×64 input/output size model, and a higher quality ( HQ ) with 128 ×128 size model. Subsequently, there were 10 videos per person in the VidTIMIT database; hence, they created 320 videos consistent with a separate version, resulting in 620 total videos with faces swapped. Regarding audio, they sustained the original audio track of all videos, i.e., no experimentation was done to the audio channel. In this research, we employed a dataset containing 640 data, divided into two categories such as Fake (Label ′0′) and Real (Label ′1′). Further, each class contains 320 instances. 15 4.4. Performance Analysis 
+
+A comprehensive comparison was conducted between the SqN-R-DFD method and established techniques for multimodal deepfake detection. The assessment included various performance met-rics such as sensitivity, NPV, specificity, F-measure, FNR, precision, FPR, MCC, and accuracy. Furthermore, ablation tests, K-fold cross-validation, ROC curves, training and test loss, and sta-tistical analyses were conducted. The SqN-R-DFD approach is compared with state-of-the-art methods such as DBN [13], SVM [14], and traditional classifiers, including SqueezeNet, RNN, Bi-LSTM, LinkNet, and DCNN. Further, the SqN-R-DFD method and conventional approaches were evaluated using the World Leader, DeepfakeTIMIT datasets. Figures 4 and 5 display the original images alongside their respective face cascade outcomes using pre-processed images. Also, it includes noise case images (with Gaussian Noise applied), blurred case images (processed using the Gaussian method), compressed case images (compression quality = 10 ), face-swapped case images, and resized case images (scaled to a 64 × 64 resolution) employing the WLDR dataset (Dataset1) [29] and DeepfakeTIMIT dataset (Dataset2) [30] each.       
+
+> (a) (b) (c) (d) (e) (f) (g)
+> Figure 4: Images for Deepfake Detection using Dataset1 (a) Original Images (b) Face Cascade using Pre-processed Images (c) Noise Case Images (d) Blurred Case Images (e) Compressed Case images (f) Face Swapped Case images and (g) Resized Case Images
+> Figure 5: Images for Deepfake Detection using Dataset2 (a) Original Images (b) Face Cascade using Pre-processed Images (c) Noise Case Images (d) Blurred Case Images (e) Compressed Case images (f) Face Swapped Case images and (g) Resized Case Images
+
+4.5. Comparative Assessment for Dataset1 
+
+The following section demonstrates the comparative analysis among conventional approaches against seven deformation cases such as original, noise, blurred, compressed, wav2lip, faceswapped, 16 and resize for WLDR dataset [29] in terms of accuracy, F-measure, analysis based on the ROC curve, and training-testing loss curve discussed in subsubsection 4.5.1, 4.5.2 and 4.5.3 respectively. Further, in this study, we integrate seven different cases allowing us to perform a comprehensive analysis including statistical analysis, an ablation study to analyze the impact of each component, cross-dataset analysis, and K-fold cross-validation for model robustness, demonstrated in subsection 4.5.4, 4.5.5, 4.5.6, and 4.5.7, respectively. 
+
+4.5.1. Comparative Analysis 
+
+The performance of the proposed SqN-R-DFD model was evaluated across multiple scenarios: original, noisy, blurred, compressed, Wave2Lip, face-swapped, and resized cases. Accuracy and F-measure metrics were used to compare the method against conventional approaches, including SqueezeNet, RNN, Bi-LSTM, LinkNet, DCNN, DBN [13], and SVM [14]. 
+
+Accuracy: Upon analyzing Figure 6(b), which is a noise case, the SqN-R-DFD consistently outperforms the traditional approaches in terms of F-measure and Accuracy. At 90% training data, the SqN-R-DFD model accomplished the peak accuracy rate of 98 .765 , signifying enhanced perfor-mance in detecting deepfakes. In contrast, the conventional methods established moderately lower accuracy values. Further, for all the other cases also the proposed SqN-R-DFD model consistently outperforms all the existing methods. Thus, the HFS approach is introduced to optimally select features using the SASMA model, and these selected features are balanced. 
+
+F-measure: Observing the original case of Figure fig. 7(a), the SqN-R-DFD scheme obtained the highest F-measure rate of 90 .145 in the training data 60% , outperforming conventional methods. As the training data increased to 70% and 80% , the SqN-R-DFD scheme continues its lead with an F-measure value of 94 .256 and 95 .754 , again surpassing the traditional approaches. Finally, at 90% 
+
+training data, the highest F-measure value is achieved using the SqN-R-DFD approach is 97 .453 ,whereas the conventional methods attained the least F-measure values with SqueezeNet at 90 .543 ,RNN at 83 .621 , Bi-LSTM at 82 .156 , LinkNet at 84 .532 , DCNN at 85 .954 , DBN [13] at 88 .521 ,and SVM [14] at 87 .413 , respectively. From the examination, the SqN-R-DFD approach reliably outperforms the existing methods, accomplishing the highest F-measure values across all training data in all cases. As the training data improves, the performance of all algorithms enhances. However, the SqN-R-DFD scheme maintains a significant lead. This emphasizes the ability and generalization of the SqN-R-DFD approach in deepfake detection. 
+
+4.5.2. ROC Curve Analysis 
+
+A ROC curve is a graph that shows how well a model performs across different thresholds. The ROC curve is the plot of the TPR against the FPR at each threshold setting. Figure 8(a) depicts the ROC curve analysis on the SqN-R-DFD methodology compared with conventional methods such as SqueezeNet, RNN, Bi-LSTM, LinkNet, DCNN, DBN [13], and SVM [14] for deepfake detection with multimodalities. An AUC score of 0.7 to 0.8 is considered adequate, 0.8 to 0.9
+
+is reflected as exceptional, and greater than 0.9 is considered outstanding. More specifically, the SqN-R-DFD scheme achieved the highest AUC rate of 0.927 , suggesting outstanding performance. In comparison, the RNN, SVM [14], Bi-LSTM, and LinkNet all attained AUC rates exceeding 0.8,indicating excellent performance. The SqueezeNet and DCNN demonstrated a lower AUC rate of 
+
+0.781 and 0.793 , signifying acceptable performance. 
+
+4.5.3. Training-Testing Loss Analysis 
+
+Figure 9 shows the training and testing loss curves for the SqN-R-DFD approach in the context of Deepfake detection. This study exposes the learning performance of the SqN-R-DFD model over 
+
+50 epochs. Primarily, training and testing loss displays a severe decline, suggesting quick learning and adaptation to data. This decrease steadies nearby epoch 20 , demonstrating that the model has 17 converged and is no longer making substantial enhancements. The nominal gap among the training and testing loss curves throughout the procedure indicates the model is generalizing well to unseen data and non-overfitting. This indicates that the low values at the end of training recommend a well-performing model. This enhancement is largely due to the incorporation of ISLBT-based features, in which the standard form of LBP pattern is applied to the shape-free patches to extract features from the preprocessed face image, which are modified. A training and testing loss of the SqN-R-DFD model is depicted in Figure 9(b). Firstly, training and testing losses are moderately higher, starting at 0.42 and 0.35 . As the epochs advanced, a reduction in both training and testing was noticed. At the 10 th epoch, both losses have decreased signifi-cantly, converging below 0.1. The minor gap between the two curves specifies that the SqN-R-DFD approach is not overfitting the training data and preserves an effective generalization capability. 
+
+4.5.4. Comparative Analysis on Feature Selection 
+
+Table 2 presents a comparative analysis of the accuracy and F-measure of different feature se-lection methods on the WLDR Dataset [29]. This comparison includes SMA-SOA, PCA, RFE-RF (Recursive Feature Elimination with Random Forest), SOA, KOA (Kookubura Optimization Algo-rithm), and SMA feature selection methods for Deepfake detection with multimodalities, illustrated in Table 2. The Accuracy score achieved using the SMA-SOA approach is 0.945 , which is extremely higher compared to other models. In contrast, the KOA model obtained the least accuracy rate of 
+
+0.917 , RFE-RF and SOA scored the accuracies of 0.921 and 0.924 , respectively. Further, the PCA and SMA accomplished a slightly improved accuracy of 0.931 . However, the outcomes exhibit that the SMA-SOA surpasses all others in terms of accuracy metrics. 
+
+Methods accuracy F-measure 
+
+PCA 0.931 0.945 RFE-RF 0.921 0.928 SOA 0.924 0.942 KOA 0.917 0.922 SMA 0.931 0.928 SMA-SOA 0.945 0.968 
+
+> Table 2: Analysis on Feature Selection Methods for Dataset1
+
+4.5.5. Ablation Study 
+
+Table 3 describes the ablation assessment on the SqN-R-DFD scheme in comparison to distinct variants, such as SqN-R-DFD with existing SLBT and SqN-R-DFD with existing feature selection for deepfake detection. The least FPR value attained using the SqN-R-DFD model is 0.012 , signi-fying superiority in deepfake detection. Conversely, the SqN-R-DFD with existing feature selection and the SqN-R-DFD with existing PNCC attained the FPR values of 0.114 , and 0.112 , indicating higher error ratings. The SqN-R-DFD with existing SLBT recorded a slightly lower FPR score of 
+
+0.096 , but did not outperform the SqN-R-DFD approach. 18 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (a) Accuracy for Original Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+77.5 
+
+80.0 
+
+82.5 
+
+85.0 
+
+87.5 
+
+90.0 
+
+92.5 
+
+95.0 
+
+97.5 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (b) Accuracy for Noise Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(c) Accuracy for Blurred Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (d) Accuracy for Compressed Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(e) Accuracy for Wav2lip Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (f) Accuracy for Faceswapped Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(g) Accuracy for Resized Case using Dataset1 
+
+Figure 6: Comparison on SqN-R-DFD Versus Conventional Methods for Dataset1 (a) Accuracy for Original case (b) Accuracy for Noise Case (c) Accuracy for Blurred case (d) Accuracy for Compressed Case (e) Accuracy for Wav2lip Case (f) Accuracy for Faceswapped Case (g) Accuracy for Resized Case 
+
+19 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (a) F-measure for Original Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95  
+
+> F_measure (%)
+> SQUEEZENET
+> RNN
+> Bi-LSTM
+> LINKNET
+> DCNN
+> DBN
+> SVM
+> SqN-R-DFD
+
+(b) F-measure for Noise Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+> SQUEEZENET
+> RNN
+> Bi-LSTM
+> LINKNET
+> DCNN
+> DBN
+> SVM
+> SqN-R-DFD
+
+(c) F-measure for Blurred Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95  
+
+> F_measure (%)
+> SQUEEZENET
+> RNN
+> Bi-LSTM
+> LINKNET
+> DCNN
+> DBN
+> SVM
+> SqN-R-DFD
+
+(d) F-measure for Compressed Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(e) F-measure for Wav2lip Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95  
+
+> F_measure (%)
+> SQUEEZENET
+> RNN
+> Bi-LSTM
+> LINKNET
+> DCNN
+> DBN
+> SVM
+> SqN-R-DFD
+
+(f) F-measure for Faceswapped Case using Dataset1 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(g) F-measure for Resized Case using Dataset1 
+
+Figure 7: Comparison on SqN-R-DFD Versus Conventional Methods for Dataset1 (a) F-Measure for Original Case (b) F-Measure for Noisy Case (c) F-Measure for Blurred Case (d) F-Measure for Compressed Case (e) F-Measure for Wav2lip Case (f) F-Measure for Faceswapped Case (g) F-Measure for Resized Case 
+
+20 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (a) ROC Curve for Original case using Dataset1 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (b) ROC Curve for Noise case using Dataset1 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(c) ROC Curve for Blurred case using Dataset1 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (d) ROC Curve for Compressed case using Dataset1 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(e) ROC Curve for Wave2lip case using Dataset1 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (f) ROC Curve for Faceswapped case using Dataset1 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(g) ROC Curve for Resized Case using Dataset1 
+
+Figure 8: Comparison on SqN-R-DFD Versus Conventional Methods for Original Case on Dataset1 a) ROC Curve for Original case b) ROC Curve for Noise case c) ROC curve for Blurred case d) ROC Curve for Compressed case e) ROC Curve for Wav2lip case f) ROC curve for Face-swapped case g) ROC Curve for Resized case 
+
+21 0 10 20 30 40 50 
+
+> Epochs
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(a) Training-Testing Loss curve for Original case using Dataset1 0 10 20 30 40 50 
+
+> Epochs
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(b) Training-Testing Loss curve for Noise case using Dataset1 0 10 20 30 40 50 
+
+> Epochs
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(c) Training-Testing Loss curve for Blurred case using Dataset1 0 10 20 30 40 50 
+
+> Epochs
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(d) Training-Testing Loss curve for Compressed case us-ing Dataset1 0 10 20 30 40 50 
+
+> Epochs
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(e) Training-Testing Loss curve for Wav2lip case using Dataset1 0 10 20 30 40 50 
+
+> Epochs
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(f) Training-Testing Loss Curve for Faceswapped case using Dataset1 0 10 20 30 40 50 
+
+> Epochs
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(g) Training-Testing Loss curve for Resized case using Dataset1 
+
+Figure 9: Comparison on SqN-R-DFD Versus Conventional Methods for Training-Testing Loss Curve on Dataset1 a) Training-Testing Loss Curve for Original case b) Training-Testing Loss Curve for Noise case c)Training-Testing Loss Curve for Blurred case d)Training-Testing Loss Curve for Compressed case e) Training-Testing Loss Curve for Wav2lip case f)Training-Testing Loss Curve for Face-swapped case g) Training-Testing Loss Curve for Resized case 
+
+22 Metrics SqN-R-DFD with Existing PNCC SqN-R-DFD with Existing SLBT SqN-R-DFD with Existing Feature Selection SqN-R-DFD 
+
+Accuracy 0.924 0.934 0.931 0.945 FPR 0.040 0.037 0.024 0.012 F-Measure 0.922 0.932 0.928 0.968 Sensitivity 0.888 0.904 0.886 0.944 FNR 0.112 0.096 0.114 0.056 Specificity 0.960 0.963 0.976 0.988 NPV 0.895 0.908 0.896 0.932 Precision 0.959 0.962 0.973 0.993 MCC 0.871 0.894 0.866 0.894 
+
+> Table 3: Ablation Analysis on SqN-R-DFDApproach, SqN-R-DFD with Existing PNCC, SqN-R-DFD with Existing SLBT and SqN-R-DFD with Existing Feature Selection using Dataset1
+
+4.5.6. Comparison of SqN-R-DFD Model with Cross-Dataset Performance and Unbal-anced Data 
+
+The performance comparison of the SqN-R-DFD approach with cross-dataset analysis, where it is trained using Dataset1 and tested using Dataset2, as well as unbalanced data, is illustrated in Table 4. The SqN-R-DFD approach obtained the highest NPV score of 0.932 , while the cross dataset scored 0.921 and the unbalanced data acquired 0.914 . In this context, the SqN-R-DFD model, which we trained on the balanced dataset, surpasses both cross-dataset analysis and unbalanced data across all metrics. 
+
+Metrics Cross Dataset Analysis (Trained using Dataset1 and tested on Dataset2) Unbalanced Data SqN-R-DFD 
+
+Accuracy 0.937 0.943 0.945 Sensitivity 0.889 0.906 0.945 Specificity 0.972 0.980 0.988 Precision 0.966 0.978 0.993 F-Measure 0.926 0.941 0.968 MCC 0.871 0.889 0.894 NPV 0.921 0.914 0.932 FPR 0.028 0.020 0.013 FNR 0.111 0.094 0.056 
+
+> Table 4: Performance Analysis for SqN-R-DFD Model compared to Cross-Dataset Analysis and Unbalanced Data using Dataset1
+
+4.5.7. Analysis on K-Fold Cross Validation 
+
+In K-fold cross-validation, the data is initially divided into K uniform folds. Consequently, k iterations of training and validation are completed, such that within each iteration, an assorted fold of the data is held out for validation while the residual K − 1 folds are applied for learning. The K-fold cross-validation investigation on the SqN-R-DFD approach is contrasted with conventional methods for deepfake detection, as depicted in Table 5. The SqN-R-DFD approach acquired the 23 greatest accuracy values with 0.927 at 2nd fold, 0.949 at 3rd fold, 0.954 at 4th fold, 0.955 at 5th fold and 0.965 at 6th fold, respectively. The smaller variation in the SqN-R-DFD method’s accuracy values across folds signifies an enhanced generalization ability, demonstrating that it is less prone to overfitting. In comparison, traditional approaches such as SqueezeNet, RNN, Bi-LSTM, LinkNet, DCNN, DBN [13], and SVM [14] exhibit greater variations in accuracy between the folds.                                                 
+
+> K-Folds SqueezeNet RNN Bi-LSTM LinkNet DCNN DBN [13] SVM[14] Sqn-R-DFD
+> 20.869 0.779 0.783 0.797 0.769 0.793 0.786 0.927 30.870 0.803 0.792 0.798 0.775 0.810 0.807 0.949 40.879 0.808 0.831 0.807 0.789 0.830 0.834 0.954 50.888 0.822 0.850 0.811 0.794 0.859 0.862 0.955 60.909 0.873 0.851 0.846 0.835 0.868 0.864 0.965
+> Table 5: K-Fold Cross Validation on SqN-R-DFD and Conventional Methods in terms of Accuracy using Dataset1
+
+4.6. Comparative Assessment on Dataset2 
+
+This subsection presents a comparative analysis of the DeepfakeTIMIT dataset [30] for detecting deepfakes against various cases, such as original, noise, blurred, compressed, wav2lip, faceswapped, and resize demonstrated in Subsubsections 4.6.1, 4.6.2, and 4.6.3 respectively, in terms of accuracy, F-measure, analysis based on the ROC curve, and training-testing loss curve. In addition, to ensure a thorough evaluation, we combine seven different cases into a single study. This evaluation framework encompasses statistical analysis, an ablation study, cross-dataset analysis, and K-fold cross-validation, as illustrated in Subsections 4.6.4, 4.6.5, 4.6.6, and 4.6.7, respectively. 
+
+4.6.1. Comparative Analysis 
+
+Accuracy: Figure 10(a), the SqN-R-DFD model consistently achieved the highest accuracy of 
+
+97 .348 , whereas the SqueezeNet, RNN, Bi-LSTM, LinkNet, DCNN, DBN [13], and SVM [14] scored the least accuracy, ranging from 83 .845 to 89 .786 at 90% training data. This indicates the effective performance of the SqN-R-DFD approach in deepfake detection. In Figure 10(c), the SqN-R-DFD approach attained the accuracy score of 95 .473 in 80% training data, which is extremely higher than the conventional methods. The F-measure obtained by the SqN-R-DFD model is 98 .432 in 
+
+90% training data, while SqueezeNet, RNN, Bi-LSTM, LinkNet, DCNN, DBN [13], and SVM [14] generated the least F-measure values of 89 .543 , 86 .512 , 87 .845 , 83 .143 , 85 .917 , 83 .915 , and 84 .943 ,respectively, in Figure 11(f). 
+
+F-Measure: Regarding the F-measure metric at Figure 11(b), the conventional methods exhib-ited the least F-measure scores across all training data, while the SqN-R-DFD scheme recorded the F-measure of 93 .643 at 60% training data, 94 .845 at 70% training data, 96 .842 at 80% training data, and 98 .518 at 90% training data, respectively. In addition, the ROC achieved by the SqN-R-DFD strategy is higher than the conventional methods, signifying better classification performance. In the SqN-R-DFD approach, the proximity of training and testing loss signifies robust performance and good generalization ability. 
+
+4.6.2. ROC Curve Analysis 
+
+Figure 12(a) depicts the ROC curve analysis on the SqN-R-DFD scheme and conventional meth-ods for deepfake detection. The SqN-R-DFD approach recorded the highest AUC score of 0.917 ,signifying that it has a superior capability to differentiate between positive and negative classes. Conversely, the conventional methods such as SqueezeNet, RNN, Bi-LSTM, LinkNet, DCNN, DBN [13], and SVM [14] demonstrated an AUC score of greater than 0.7, indicating better classification but not surpassing the SqN-R-DFD scheme. The highest AUC value is achieved using the SqN-R-DFD model is 0.952 , indicating an excellent performance. In comparison, the SqueezeNet, RNN, 24 Bi-LSTM, LinkNet, DCNN, DBN [13], and SVM [14] demonstrated an AUC value ranging from 
+
+0.785 to 0.825 , signifying acceptable performance at Figure 12(d). 
+
+4.6.3. Training-testing loss Analysis 
+
+Figure 13(a) presents the training and testing loss analysis for the SqN-R-DFD scheme over 
+
+50 epochs. As the epochs increase, the training-testing loss gradually declines. Both training and testing loss reach a minimal loss value, signifying that the SqN-R-DFD approach generalizes well to unseen data and reduces overfitting. The slight gap between the training and testing loss curves indicates a steady and consistent model performance. 
+
+4.6.4. Comparative Analysis on Feature Selection 
+
+Table 6 explains the comparative evaluation of the SMA-SOA approach in comparison to con-ventional feature selection methods such as PCA, RFE-RF, SOA, KOA, and SMA feature selection methods for deepfake detection. The SMA-SOA strategy achieved the highest accuracy of 0.942 and F-measure of 0.972 , while the PCA, RFE-RF, SOA, KOA, and SMA attained the least accuracy and F-measure values. 
+
+Methods Accuracy F-measure 
+
+PCA 0.919 0.902 RFE-RF 0.924 0.919 SOA 0.918 0.901 KOA 0.922 0.913 SMA 0.921 0.903 SMA-SOA 0.942 0.972 
+
+> Table 6: Analysis on Feature Selection Methods for Dataset2
+
+4.6.5. Ablation Study 
+
+The ablation evaluation on the SqN-R-DFD strategy is compared with diverse variants such as SqN-R-DFD with existing PNCC, SqN-R-DFD with existing SLBT, and SqN-R-DFD with existing Feature Selection for deepfake detection, illustrated in Table 7. The SqN-R-DFD with existing feature selection accomplished the specificity values exceeding 90% . Nonetheless, the SqN-R-DFD approach achieved the greatest specificity score of 0.986 , indicating enhanced performance in deep-fake detection. 
+
+Metrics SqN-R-DFD with Existing PNCC SqN-R-DFD with Existing SLBT SqN-R-DFD with Existing Feature Selection SqN-R-DFD 
+
+Accuracy 0.926 0.915 0.921 0.942 FPR 0.046 0.056 0.037 0.014 F-Measure 0.911 0.899 0.903 0.972 Sensitivity 0.889 0.877 0.864 0.950 FNR 0.111 0.123 0.136 0.050 Specificity 0.954 0.944 0.963 0.986 NPV 0.920 0.911 0.904 0.929 Precision 0.935 0.922 0.946 0.995 MCC 0.849 0.827 0.839 0.882 
+
+> Table 7: Ablation Analysis on SqN-R-DFD approach, SqN-R-DFD with Existing PNCC, SqN-R-DFD with Existing SLBT and SqN-R-DFD with Existing feature selection using Dataset2
+
+25 60 70 80 90 
+
+Training Data (%) 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (a) Accuracy for Original Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (b) Accuracy for Noise Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(c) Accuracy for Blurred Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (d) Accuracy for Compressed Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(e) Accuracy for Wav2lip Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (f) Accuracy for Faceswapped Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> Accuracy (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(g) Accuracy for Resized Case using Dataset2 
+
+Figure 10: Comparison on SqN-R-DFD Versus Conventional Methods for Dataset2 (a)Accuracy for Original Case (b) Accuracy for Noise Case (c) Accuracy for Blurred Case (d) Accuracy for Compressed Case (e) Accuracy for Wav2lip Case (f) Accuracy for Faceswapped Case (g) Accuracy for Resized Case 
+
+26 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (a) F-measure for Original Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (b) F-measure for Noise Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+70 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(c) F-measure for Blurred Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (d) F-measure for Compressed Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(e) F-measure for Wav2lip Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (f) F-measure for Faceswapped Case using Dataset2 60 70 80 90 
+
+Training Data (%) 
+
+75 
+
+80 
+
+85 
+
+90 
+
+95 
+
+> F_measure (%)
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(g) F-measure for Resized Case using Dataset2 
+
+Figure 11: Comparison on SqN-R-DFD Versus Conventional Methods for Dataset2 (a) F-Measure for Original Case (b) F-Measure for Noisy Case (c) F-Measure for Blurred Case (d) F-Measure for Compressed Case (e) F-Measure for Wav2lip Case (f) F-Measure for Faceswapped Case (g) F-Measure for Resized Case 
+
+27 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (a) ROC Curve for Original Case using Dataset2 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (b) ROC Curve for Noise Case using Dataset2 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(c) ROC Curve for Blurred Case using Dataset2 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (d) ROC Curve for Compressed Case using Dataset2 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(e) ROC Curve for Wave2lip Case using Dataset2 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD (f) ROC Curve for Faceswapped Case using Dataset2 0.0 0.2 0.4 0.6 0.8 1.0 
+
+False Positive Rate 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> True Positive Rate
+
+SQUEEZENET 
+
+RNN 
+
+Bi-LSTM 
+
+LINKNET 
+
+DCNN 
+
+DBN 
+
+SVM 
+
+SqN-R-DFD 
+
+(g) ROC Curve for Resized Case using Dataset2 
+
+Figure 12: Analysis on ROC Curve using Dataset2 (a) ROC Curve for Original Case (b) ROC Curve for Noisy Case (c) ROC Curve for Blurred Case (d) ROC Curve for Compressed Case (e) ROC Curve for Wav2lip Case (f) ROC Curve for Faceswapped Case (g) ROC Curve for Resized Case 
+
+28 0 10 20 30 40 50 
+
+> Epochs
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(a) Training-Testing Loss Curve for Original Case using Dataset2 0 10 20 30 40 50 
+
+> Epochs
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(b) Training-Testing Loss Curve for Noise Case using Dataset2 0 10 20 30 40 50 
+
+> Epochs
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(c) Training-Testing Loss Curve for Blurred Case using Dataset2 0 10 20 30 40 50 
+
+> Epochs
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(d) Training-Testing Loss Curve for Compressed Case using Dataset2 0 10 20 30 40 50 
+
+> Epochs
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(e) Training-Testing Loss Curve for Wave2lip Case using Dataset2 0 10 20 30 40 50 
+
+> Epochs
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(f) Training-Testing Loss Curve for Faceswapped Case using Dataset2 0 10 20 30 40 50 
+
+> Epochs
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> Loss
+> Training and Testing loss
+> Training loss
+> Testing loss
+
+(g) Training-Testing Loss Curve for Resized Case using Dataset2 
+
+Figure 13: Analysis on Training-Testing Curve using Dataset2 (a) Training-Testing Loss for Original Case (b) Training-Testing Loss for Noisy Case (c) Training-Testing Loss for Blurred Case (d) Training-Testing Loss for Com-pressed Case (e) Training-Testing Loss for Wav2lip Case (f) Training-Testing Loss for Faceswapped Case (g) F-Measure for Resized Case 
+
+29 4.6.6. Comparison of SqN-R-DFD Model with Cross-Dataset Performance and Unbal-anced Data 
+
+Table 8 shows the performance comparison of the SqN-R-DFD strategy with cross-dataset anal-ysis and unbalanced data. The SqN-R-DFD model achieved the least FNR score of 0.050 , compared to cross-dataset ( 0.126 ) and unbalanced data ( 0.075 ). The outcomes signify that the SqN-R-DFD approach (balanced data) provides a significant enhancement in performance compared to cross-dataset and unbalanced data. 
+
+Metrics Cross Dataset Analysis (Trained using Dataset2 and tested on Dataset1) Unbalanced Data SqN-R-DFD 
+
+Accuracy 0.933 0.939 0.942 Sensitivity 0.874 0.925 0.950 Specificity 0.976 0.974 0.986 Precision 0.976 0.971 0.995 F-Measure 0.922 0.948 0.972 MCC 0.872 0.876 0.882 NPV 0.888 0.922 0.929 FPR 0.024 0.026 0.014 FNR 0.126 0.075 0.050 
+
+> Table 8: Performance Analysis for SqN-R-DFD Model compared to Cross-Dataset Analysis and Unbalanced Data using Dataset2
+
+4.6.7. Analysis on K-Fold Cross Validation 
+
+Table 9 explains the K-Fold cross-validation analysis on the SqN-R-DFD approach in compari-son to conventional methods such as SqueezeNet, RNN, Bi-LSTM, LinkNet, DCNN, DBN [13], and SVM [14] for deepfake detection. The SqN-R-DFD scheme exhibits higher performance with mini-mal variations across K-Folds, signifying reduced overfitting. Conversely, the conventional approach demonstrates the greater fluctuations in accuracy.                                                 
+
+> K-Folds SqueezeNet RNN Bi-LSTM LinkNet DCNN DBN [13] SVM[14] Sqn-R-DFD
+> 20.857 0.771 0.764 0.787 0.798 0.793 0.819 0.935 30.881 0.800 0.790 0.793 0.811 0.811 0.822 0.942 40.896 0.821 0.808 0.798 0.846 0.842 0.848 0.965 50.898 0.823 0.811 0.802 0.853 0.852 0.897 0.967 60.910 0.827 0.843 0.824 0.879 0.865 0.900 0.977
+> Table 9: K-Fold Cross Validation on SqN-R-DFD and Conventional Methods in terms of Accuracy using Dataset2
+
+5. Conclusion 
+
+Our research proposes a novel approach for the effective detection of deepfakes, employing a multimodal data fusion technique that integrates information from two modalities: face images and speech signals extracted from input videos. The initial step involved preprocessing the face images and speech signals to enhance their quality, employing the face cascade method for face images and the DSN approach for speech signals. Subsequently, feature extraction was performed on the pre-processed face images, encompassing both local and global features, as well as ISLBT, DSBME, and deep features. Similarly, features such as MPNCC, MFCC, and chroma features were extracted from preprocessed speech signals. The HFS technique was then introduced to optimally select features using the SASMA strategy. Finally, in the detection phase, models such as SqueezeNet and RNN 30 were used to train the selected features individually, resulting in an efficient and accurate detection output. At 90% training data, the highest F-measure value is achieved using the SqN-R-DFD approach is 97 .453 , whereas the conventional methods attained the least F-measure values with SqueezeNet at 90 .543 , RNN at 83 .621 , Bi-LSTM at 82 .156 , LinkNet at 84 .532 , DCNN at 85 .954 ,DBN [13] at 88 .521 , and SVM[14] at 87 .413 , respectively. In the near future, the model could be enhanced by testing on multilingual and diverse demographic datasets to ensure scalability and generalization across the globe. 
+
+References 
+
+[1] T. Wang, M. Liu, W. Cao, K. P. Chow, Deepfake noise investigation and detection, Forensic Science International: Digital Investigation 42 (2022) 301395. [2] R. Tolosana, S. Romero-Tapiador, R. Vera-Rodriguez, E. Gonzalez-Sosa, J. Fierrez, Deepfakes detection across generations: Analysis of facial regions, fusion, and performance evaluation, Engineering Applications of Artificial Intelligence 110 (2022) 104673. [3] F. Dong, X. Zou, J. Wang, X. Liu, Contrastive learning-based general deepfake detection with multi-scale rgb frequency clues, Journal of King Saud University-Computer and Information Sciences 35 (4) (2023) 90–99. [4] V.-N. Tran, S.-G. Kwon, S.-H. Lee, H.-S. Le, K.-R. Kwon, Generalization of forgery detection with meta deepfake detection model, IEEE Access 11 (2022) 535–546. [5] X. Xu, S. Tang, M. Zhu, P. He, S. Li, Y. Cao, A novel model compression method based on joint distillation for deepfake video detection, Journal of King Saud University-Computer and Information Sciences 35 (9) (2023) 101792. [6] J. Hu, X. Liao, W. Wang, Z. Qin, Detecting compressed deepfake videos in social networks using frame-temporality two-stream convolutional network, IEEE Transactions on Circuits and Systems for Video Technology 32 (3) (2021) 1089–1102. [7] A. Chintha, B. Thai, S. J. Sohrawardi, K. Bhatt, A. Hickerson, M. Wright, R. Ptucha, Recur-rent convolutional structures for audio spoof and video deepfake detection, IEEE Journal of Selected Topics in Signal Processing 14 (5) (2020) 1024–1037. [8] L. Guarnera, O. Giudice, S. Battiato, Fighting deepfake by exposing the convolutional traces on images, IEEE access 8 (2020) 165085–165098. [9] R. Rafique, R. Gantassi, R. Amin, J. Frnda, A. Mustapha, A. H. Alshehri, Deep fake detection and classification using error-level analysis and deep learning, Scientific reports 13 (1) (2023) 7422. [10] S. Dey, S. Das, P. Nani, Advancements and challenges in deepfake medical imaging: generation and detection techniques, Computers and Electrical Engineering 132 (2026) 111038. [11] A. K. Das, R. Naskar, Htmdf-dd: Hybrid triple modality based spatial–temporal features early fusion for deepfake detection, Computers and Electrical Engineering 130 (2026) 110860. [12] H. B. Eutamene, W. Hamidouche, M. Keita, A. Taleb-Ahmed, A. Hadid, Integrating perceptual quality analysis and caption-based features for robust deepfake video detection, Computers and Electrical Engineering 128 (2025) 110699. 31 [13] S. Suganthi, M. U. A. Ayoobkhan, N. Bacanin, K. Venkatachalam, H. Štěpán, T. Pavel, et al., Deep learning model for deep fake face recognition and detection, PeerJ Computer Science 8 (2022) e881. [14] Y. Tu, J. Wu, L. Lu, S. Gao, M. Li, Face forgery video detection based on expression key sequences, Journal of King Saud University-Computer and Information Sciences 36 (7) (2024) 102142. [15] N. T. Deshpande, S. Ravishankar, Face detection and recognition using viola-jones algorithm and fusion of pca and ann, Advances in Computational Sciences and Technology 10 (5) (2017) 1173–1189. [16] A. B. Khalifa, S. Gazzah, N. E. BenAmara, Adaptive score normalization: a novel approach for multimodal biometric systems, World Acad Sci Eng Technol Int J Comput Sci Eng 7 (3) (2013) 882–890. [17] M. Bosch, F. Zhu, N. Khanna, C. J. Boushey, E. J. Delp, Combining global and local features for food identification in dietary assessment, in: 2011 18th IEEE International Conference on Image Processing, IEEE, 2011, pp. 1789–1792. [18] N. Lakshmiprabha, S. Majumder, Face recognition system invariant to plastic surgery, in: 2012 12th International conference on intelligent systems design and applications (ISDA), IEEE, 2012, pp. 258–263. [19] J. Y. Tham, S. Ranganath, M. Ranganath, A. A. Kassim, A novel unrestricted center-biased diamond search algorithm for block motion estimation, IEEE transactions on Circuits and Systems for Video Technology 8 (4) (1998) 369–377. [20] Y. K. Bhatti, A. Jamil, N. Nida, M. H. Yousaf, S. Viriri, S. A. Velastin, Facial expression recognition of instructor using deep features and extreme learning machine, Computational Intelligence and Neuroscience 2021 (1) (2021) 5570870. [21] R. Thiruvengatanadhan, Speech/music classification using power normalized cepstral coeffi-cients and k-means, Int. J. Adv. Comput. Sci. Technol. 6 (1) (2016) 13–17. [22] A. Valiyavalappil Haridas, R. Marimuthu, V. G. Sivakumar, B. Chakraborty, Emotion recog-nition of speech signal using taylor series and deep belief network based classification, Evolu-tionary Intelligence 15 (2) (2022) 1145–1158. [23] P. Sandhya, V. Spoorthy, S. G. Koolagudi, N. Sobhana, Spectral features for emotional speaker recognition, in: 2020 third international conference on advances in electronics, computers and communications (ICAECC), IEEE, 2020, pp. 1–6. [24] S. Mohiuddin, K. H. Sheikh, S. Malakar, J. D. Velásquez, R. Sarkar, A hierarchical feature selection strategy for deepfake video detection, Neural Computing and Applications 35 (13) (2023) 9363–9380. doi:10.1007/s00521-023-08241-4. [25] S. Li, H. Chen, M. Wang, A. A. Heidari, S. Mirjalili, Slime mould algorithm: A new method for stochastic optimization, Future generation computer systems 111 (2020) 300–323. [26] A. Kaur, S. Jain, S. Goel, Sandpiper optimization algorithm: a novel approach for solving real-life engineering problems, Applied Intelligence 50 (2) (2020) 582–619. 32 [27] L. S. Bernardo, R. Damaševičius, S. H. Ling, V. H. C. de Albuquerque, J. M. R. Tavares, Modified squeezenet architecture for parkinson’s disease detection based on keypress data, biomedicines 10 (11) (2022) 2746. [28] V. J. Traver, D. Damen, Egocentric video summarisation via purpose-oriented frame scoring and selection, Expert Systems with Applications 189 (2022) 116079. [29] S. Agarwal, H. Farid, Y. Gu, M. He, K. Nagano, H. Li, Protecting world leaders against deep fakes., in: CVPR workshops, Vol. 1, 2019, pp. 38–45. [30] P. Korshunov, S. Marcel, Deepfaketimit dataset, dataset for deepfake detection research (2018). URL https://www.idiap.ch/en/dataset/deepfaketimit 
+
+33

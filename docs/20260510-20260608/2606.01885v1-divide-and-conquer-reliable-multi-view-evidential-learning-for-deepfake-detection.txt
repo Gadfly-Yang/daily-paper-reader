@@ -1,0 +1,612 @@
+Title: Divide and Conquer: Reliable Multi-View Evidential Learning for Deepfake Detection
+
+URL Source: https://arxiv.org/pdf/2606.01885v1
+
+Published Time: Tue, 02 Jun 2026 02:59:45 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+# Divide and Conquer: Reliable Multi-View Evidential Learning for Deepfake Detection 
+
+Xiaolu Kang 1 Zhongyuan Wang 1 Jikang Cheng 2 Baojin Huang 3 Zhanhe Lei 1 Gang Wu 4 Qin Zou 1
+
+Qian Wang 5
+
+## Abstract 
+
+With the evolution of generative models, deep-fakes have achieved near-perfect semantic real-ism, leaving forensic traces only in subtle struc-tural anomalies. However, existing single-view paradigms often fail to generalize, as dominant semantic features overwhelm subtle artifact cues within entangled representations. This imbalance leads to overconfident yet brittle predictions—a phenomenon we term the Semantic Masking Ef-fect . To address this challenge, we propose a reliable framework called Di vide-and-Co nquer Multi-View Evidential Learning (DiCoME ) for Deepfake Detection. In the “Divide” phase, we employ Geometric View Purification to decom-pose the entangled representation space through principled geometric projection. This process suppresses semantic interference within artifact-sensitive representations, forming the foundation for decorrelated yet complementary semantic and artifact views. In the “Conquer” phase, we lever-age Uncertainty-Aware Evidential Learning to synthesize these distinct views. By explicitly mod-eling the “epistemic conflict” between semantic and artifact cues, this mechanism provides cal-ibrated uncertainty estimates instead of forcing rigid deterministic decisions. Extensive experi-ments across multiple benchmarks demonstrate that our method consistently outperforms existing approaches in generalization performance, while providing reliable uncertainty estimation for trust-worthy deepfake detection. Code is available at https://github.com/kxl0825/DiCoME.git. 
+
+> 1
+
+School of Computer Science, Wuhan University, Wuhan, China 2School of Integrated Circuits, Peking University, Beijing, China 3School of Information, Huazhong Agricultural University, Wuhan, China 4College of Cyber Security, Tarim University, Alaer, China 5School of Cyber Science and Engineering, Wuhan Uni-versity, Wuhan, China. Correspondence to: Zhongyuan Wang 
+
+<wzy hope@163.com >.
+
+Proceedings of the 43 rd International Conference on Machine Learning , Seoul, South Korea. PMLR 306, 2026. Copyright 2026 by the author(s). (a) Baseline: Entangled &  Brittle  (b)  Ours: Purified & Reliable        
+
+> Real Fake
+> Ambiguous Uncertainty
+> Unreliable Decision Boundary
+> Unseen Fake Real Fake Unseen Fake
+> Structured Uncertainty
+> Robust Decision Boundary
+
+Figure 1. Feature entanglement vs. Our solution. (a) Dominant semantic features overshadow subtle artifact cues, causing unseen fake samples to entangle with real data. This leads to ambiguous uncertainty and unreliable decision boundaries that fail on new attacks. (b) Artifact features are isolated from semantic content. Hard unseen samples are captured in a structured uncertainty re-gion, enabling robust boundaries and superior generalization. 
+
+## 1. Introduction 
+
+The democratization of high-fidelity synthesis via GANs (Goodfellow et al., 2014) and Diffusion Models (Ho et al., 2020) has elevated deepfakes from a technological curiosity to a serious security threat, enabling large-scale misinfor-mation and financial fraud (Sunil et al., 2025). While gen-erative models continue to advance at a remarkable pace, deepfake detection methods still suffer from a fundamental generalization bottleneck, particularly when facing unseen manipulation techniques and cross-domain scenarios (Lin et al., 2024; Zhang et al., 2025a). This gap highlights the urgent need for detection methods that capture universal and transferable forensic cues, rather than overfitting dataset-specific patterns (Chandra et al., 2025). A fundamental challenge to robust generalization arises from the intrinsic conflict between high-level semantic re-alism and low-level structural anomalies. Most existing models adopt a single-view holistic processing paradigm (Rossler et al., 2019), employing monolithic backbones to indiscriminately encode both semantic content and forgery traces into an entangled representation. However, visual backbones are typically optimized for semantic invariance, causing high-magnitude identity features to inherently dom-1
+
+> arXiv:2606.01885v1 [cs.CV] 1 Jun 2026 DiCoME for Deepfake Detection
+
+inate the representation. Consequently, dominant semantic signals tend to overwhelm weak artifact cues within this entangled feature space, a phenomenon we term the Seman-tic Masking Effect . As illustrated in Fig. 1(a), such feature entanglement forces models to learn unreliable decision boundaries that lead to baseless overconfidence on realis-tic fakes. In contrast, an ideal detector should explicitly suppress semantic interference to isolate artifact-sensitive evidence. As shown in Fig. 1(b), our solution yields a robust decision boundary and establishes a structured uncer-tainty zone, enabling reliable decision-making even when the model faces unknown manipulation techniques. To address these challenges, we propose Reliable Multi-View Evidential Learning for Deepfake Detection , governed by a “Divide-and-Conquer” strategy. Departing from mono-lithic single-source reliance, we establish two complemen-tary expert perspectives collaborating within a trustworthy method: View I: The Semantic View (Content Expert). 
+
+Leveraging the universal priors of Vision Foundation Mod-els (e.g., CLIP (Radford et al., 2021)), this view evaluates high-level plausibility based on semantic consistency, an-swering “What you see”. View II: The Artifact View (Structure Expert). Grounded in intrinsic image forma-tion laws, this view scrutinizes the low-level signal domain to expose manifold irregularities, addressing “How it is generated”. However, naive fusion strategies of these two views overlook feature entanglement, rendering the two ex-perts highly correlated. Consequently, the “Structure Expert” merely echoes the “Content Expert” rather than offering dis-tinct corroboration. Such coupling not only undermines genuine multi-view complementarity but also breeds over-confidence in erroneous predictions due to the redundant accumulation of information. Our core insight establishes geometric orthogonality as an inductive bias encouraging view-level decorrelation and complementarity. We rigorously define artifacts not as noise, but as the orthogonal complement of the seman-tic space. By enforcing orthogonal projection as a geo-metric hard constraint, we empower the “Structure Expert” to mine manifold anomalies immune to semantic interfer-ence. We further introduce Multi-view Evidential Learn-ing for decision-level fusion. Treating views as decorre-lated yet complementary sources, this paradigm ensures that even faint orthogonal anomalies generate distinct evidence of fake. This mechanism effectively breaks the gradient monopoly of strong semantics, granting subtle artifact sig-nals equal voting rights in the final decision. Consequently, the final decision transcends simple probability averaging by synthesizing uncertainty-aware evidence reports. Cru-cially, inconsistencies between views allows the model to capture “epistemic conflict” (Kendall & Gal, 2017): discrep-ancies between experts (e.g., Semantic-“Real” vs. Artifact-“Fake”) trigger high-uncertainty warnings rather than blind misclassifications, ensuring trustworthy generalization to-wards unseen attacks. In summary, our contributions can be summarized as: • Geometric View Purification for Deepfake Detection: 
+
+We introduce a geometric projection mechanism that con-structs artifact representations within the learned orthog-onal complement of the semantic space, effectively miti-gating the Semantic Masking Effect and enabling decorre-lated yet complementary semantic and artifact views. • Uncertainty-Aware Multi-view Evidential Fusion: We employ Dempster-Shafer Theory for decision-level fu-sion, leveraging the decorrelation and complementarity of the two views. This mechanism effectively captures the “epistemic conflict” between experts, mitigating the blind overconfidence of traditional fusion methods and enabling precise trustworthiness quantification. • Superior Generalization and Trustworthiness: Exten-sive experiments confirm that our method achieves state-of-the-art performance on cross-domain benchmarks, en-suring both robust generalization and superior reliability. 
+
+Conflict of Interest Disclosure. The authors declare that they have no relevant interests to disclose. 
+
+## 2. Related Work 
+
+Deepfake Detection. Deepfake detection has evolved from mining low-level artifacts (Tan et al., 2024; Qian et al., 2020; Ciftci et al., 2020) and modeling face manifolds (Cao et al., 2022) to improving generalization under diverse and evolv-ing forgery distributions through multi-domain learning, explicit debiasing, progressive forgery modeling, diffusion-guided representation learning, and continual adaptation (Cheng et al., 2025a;b; 2024; Sun et al., 2024; Zhang et al., 2025b). Another line of research leverages Vision Founda-tion Models (VFMs) for deepfake detection. While VFM-based methods (Xu et al., 2023; Yermakov et al., 2026; Cui et al., 2025) utilize CLIP (Radford et al., 2021) for semantic consistency, they often suffer from feature entanglement, where subtle artifacts are overshadowed by semantic redun-dancy. Although recent works like FDML (Yu et al., 2024) attempt to distill artifacts via attention-guided fusion and data augmentation, relies on implicit soft constraints lack the geometric rigor to prevent semantic leakage. More recently, Effort (Yan et al., 2025) utilizes SVD-based orthogonal pro-jection but suffers from limitations due to its reliance on a global rank reduction strategy. First, this enforces a uniform low-rank assumption that ignores instance-specific nuances, inevitably discarding subtle forgery traces unique to indi-vidual samples. Furthermore, the rigidity of these fixed rank constraints restricts the model’s flexibility, hampering its generalization across varying data distributions. Finally, these methods mentioned above rely on deterministic infer-ence that overlooks “epistemic conflict” (Kendall & Gal, 2017), failing to quantify predictive uncertainty. 2DiCoME for Deepfake Detection Evidential Opinion Generation 1                                                              
+
+> Evidence e[,]=11112eee1
+> u11b12b1
+> T[,,]=111112Tbbu1
+> Opinion T
+> Opinion Fusion 2
+> Evidence e[,]=22212eee2
+> u21b22b2
+> T[,,]=222212Tbbu2
+> Opinion T−VAE
+> 
+> Manifold Construction
+> Multi -view Prior Extraction
+> LoRA -tuned
+> CLIP Encoder sfcfInput Images
+> Real Fake
+> Semantic Features
+> Geometric View Purification
+> Semantic View rfaf=−rscfffsfcf
+> View 1
+> Artifact View
+> View 2
+> Artifact Features afsfrf()=−sarfrffproj f
+> High Fake Evidence
+> High Real Evidence
+> Stable Decision
+> Boundary
+> Uncertainty
+> Area
+> Conflict -Aware Evidential Aggregation
+> 0.02(low)
+> Prediction
+> Real/Fake
+> Uncertainty
+> Trustworthy Decision u1b2bT[,,]=12TbbuOpinion T
+
+Figure 2. Overview of the proposed method. (1) Multi-view Prior Extraction: Semantic feature fs is established via a LoRA-tuned CLIP encoder to form the Semantic View, while a manifold-consistent feature ( fc) is reconstructed via a β-VAE. (2) Geometric View Purification: To generate the Artifact View constituted by fa, raw residuals ( fr = fs − fc) are projected onto the semantic orthogonal complement, effectively decoupling artifacts from semantic interference. (3) Evidential Opinion Generation: Disentangled views are mapped to Dirichlet distributions to yield Subjective Opinions ( T 1, T 2) parameterized by Belief ( b) and Uncertainty ( u). (4) Conflict-Aware Aggregation: Dempster-Shafer fusion integrates opinions to produce trustworthy predictions, explicitly leveraging “epistemic conflict” for uncertainty quantification. 
+
+Multi-view Learning. Multi-view Learning enhances ro-bustness by integrating diverse perspectives, such as “RGB + Frequency” (Tan et al., 2024; Qian et al., 2020) or “Global + Local” (Zhao et al., 2021). However, existing approaches typically presume implicit complementarity, often overlook-ing critical information redundancy. For instance, seman-tic features inevitably encode texture cues, hindering the learning of truly disentangled representations. Furthermore, standard deterministic fusion (e.g., Softmax) fails to resolve “epistemic conflict” (Kendall & Gal, 2017): when views yield contradictory predictions, naive aggregation masks the underlying uncertainty, causing overconfidence on hard sam-ples. In contrast, we employ Geometric View Purification to explicitly decouple artifacts via orthogonal projection and leverage Evidential Deep Learning (Sensoy et al., 2018) to quantify uncertainty, ensuring superior trustworthiness at both feature and decision levels. 
+
+## 3. Methodology 
+
+3.1. Motivation 
+
+Deepfake detection fundamentally entails identifying faint anomalies embedded within a strong semantic background. We formulate the feature representation of deepfake images as a superposition of a dominant semantic component fs and a subtle artifact component fa. Generative models prioritize optimizing fs to achieve high realism, creating a significant magnitude disparity ( ∥fs∥ ≫ ∥ fa∥) in the feature space. In traditional monolithic single-view paradigms, the optimizer is biased towards capturing these dominant semantic fea-tures as a shortcut for rapid loss minimization. This triggers a Semantic Masking Effect , where faint artifacts are over-shadowed by powerful semantic representations. Moreover, traditional feature extraction entangles semantic and arti-fact components, making it difficult to isolate manipulation traces without semantic contamination. As a result, models tend to overfit semantic regularities and fail to generalize to semantically realistic yet artifactually novel attacks. Although recent methods attempt to incorporate both se-mantic and artifact cues, they predominantly rely on feature-level fusion, which remains vulnerable to semantic leakage: artifact representations are still corrupted by residual se-mantic information. Consequently, fusion devolves into a superposition of entangled information dominated by strong semantics. More critically, the widely adopted Softmax clas-sifier enforces a deterministic decision under the assumption of mutual exclusivity, preventing the model from express-ing epistemic uncertainty when conflicting evidence arises across views, and leading to overconfident predictions on unseen attacks. To overcome these limitations, we propose a Reliable Multi-View Evidential Learning framework under a “Divide-and-Conquer” strategy. Specifically, we treat artifact representa-tions as the orthogonal complement of the semantic space and achieve inter-view decorrelation and complementar-ity via explicit geometric projection, thereby suppressing semantic interference by construction rather than through soft regularization. Building upon this disentanglement, we adopt Dempster–Shafer Theory to explicitly model “epis-temic conflict” between views. Unlike black-box fusion, our framework detects contradictory evidence (e.g., Semantic-“Real” vs. Artifact-“Fake”) and responds with elevated un-certainty, enabling robust rejection of unknown attacks in open-world deepfake detection scenarios. 
+
+3.2. Overview 
+
+As illustrated in Figure 2, the proposed framework follows a “Divide-and-Conquer” strategy to achieve reliable deep-fake detection. In the “Divide” phase, we construct two 3DiCoME for Deepfake Detection 
+
+decorrelated yet complementary views: a Semantic View 
+
+anchored by CLIP and an Artifact View obtained through our Geometric View Purification module, which enforces prin-cipled geometric decoupling to suppress semantic interfer-ence in artifact-sensitive representations. In the “Conquer” phase, we employ Uncertainty-Aware Evidential Learning to transform these decoupled features into subjective opin-ions (Content Expert vs. Structure Expert). Finally, we utilize Dempster-Shafer theory to synthesize these opinions, explicitly capturing “epistemic conflict” to enable robust cross-domain generalization and reliable rejection of un-known attacks. 
+
+3.3. Divide: Multi-View Construction 
+
+This phase constructs two geometrically decorrelated yet complementary evidence sources: a Semantic View an-chored by high-level priors, and an Artifact View purified via geometric projection. By isolating artifact residuals in the orthogonal complement of the semantic subspace, we effectively decouple artifacts from semantics to provide the decorrelated and complementary evidence streams required for multi-view reasoning. 
+
+Multi-View Prior Extraction. To capture the intrinsic opposition between high-level semantic consistency and low-level manifold anomalies at the feature level, we con-struct a dual-branch feature extraction mechanism. First, visual foundation models such as CLIP encode robust and transferable semantic priors, but suffer from domain shift when directly applied to specialized forensic tasks. Full fine-tuning risks catastrophic forgetting of these general priors. To address this, we employ Low-Rank Adaptation (LoRA) (Hu et al., 2022) to efficiently adapt the CLIP image encoder to the deepfake domain. Formally, given an input image x, the adapted encoder extracts a semantic feature representation fs ∈ Rd:
+
+fs = Eclip (x; θf rozen , θ lora ), (1) where fs serves as the anchor of “semantic view”, cap-turing identity-related and high-level semantic consistency while maintaining strong generalization capability of the pre-trained backbone. Simultaneously, to capture non-semantic anomalies intro-duced during generation, we adopt a manifold-based as-sumption: real faces approximately reside on a compact manifold in the semantic feature space, while deepfakes deviate from it. Instead of pixel-level reconstruction, we employ a lightweight β-VAE (Higgins et al., 2017) as a manifold projector directly operating on semantic features 
+
+fs. By reconstructing fs into a manifold-consistent feature 
+
+fc, the projector captures the dominant semantic structure of CLIP representations, forming a semantic-dominant man-ifold that preserves high-level identity information. As se-mantic components correspond to the principal directions of fs, manipulation-induced non-semantic perturbations are not faithfully reconstructed and instead emerge as feature-level deviations, which are subsequently isolated via explicit orthogonal projection. Finally, we compute the residual representation to capture these deviations: 
+
+fr = fs − fc, (2) This residual encapsulates preliminary anomalies unex-plained by the manifold projector. However, since semantic information may still leak into fr , it is treated as a raw residual and further refined through the proposed Geometric View Purification to obtain purified artifact representations. 
+
+Geometric View Purification. Although the residual fr
+
+captures preliminary anomalies, it remains inherently con-taminated by semantic leakage due to the limited recon-struction capacity of the manifold projector. As a result, 
+
+fr exhibits non-zero correlation with the semantic feature 
+
+fs, violating the requirement for decorrelated and comple-mentary evidence streams underlying multi-view evidential learning. To address this, we impose an explicit geometric orthogonality constraint to purify the artifact signal. Treat-ing fs as the semantic direction in the feature space, we decompose fr into two components: a parallel component (f ∥ 
+
+> r
+
+), which captures collinear semantic leakage, and an orthogonal component ( fa), which represents purified arti-fact signal. According to the vector projection theorem, the semantic leakage component is quantified as: 
+
+f ∥ 
+
+> r
+
+= proj fs (fr ) = ⟨fr , f s⟩∥fs∥22
+
+fs, (3) Consequently, the purified artifact feature is isolated by subtracting this component: 
+
+fa = fr − f ∥ 
+
+> r
+
+= fr − proj fs (fr ), (4) Geometrically, this operation projects the residual repre-sentation onto the orthogonal complement space S⊥) of the semantic direction, ensuring ⟨fa, f s⟩ = 0 . By enforc-ing geometric decorrelation, the proposed projection sup-presses the Semantic Masking Effect and enables fa and fs
+
+function as decorrelated evidence sources. This provides the necessary theoretical justification for subsequent Demp-ster–Shafer fusion to reliably distinguish between consistent and conflicting evidence across views. 
+
+3.4. Conquer: Uncertainty-Aware Evidential Learning 
+
+This phase synthesizes the decoupled views into a trustwor-thy global decision. We leverage Evidential Deep Learn-ing to transform features into subjective opinions and fuse them via Dempster-Shafer theory. By explicitly modeling “epistemic conflict” between experts, we enable dynamic uncertainty quantification to prevent overconfident failures on unseen attacks. 4DiCoME for Deepfake Detection 
+
+Evidential Opinion Generation. Standard Softmax classi-fiers produce point estimates that are unable to distinguish uncertainty arising from lack of evidence versus conflicting evidence. To address this, we adopt Subjective Logic (SL) (Jøsang, 2018) to map features into Dirichlet-parameterized subjective opinions. For each view index v ∈ { 1, 2}, where 
+
+v = 1 corresponds to the semantic view feature fs and 
+
+v = 2 to the artifact view feature fa. We project the feature 
+
+fv into a non-negative evidence vector ev ∈ RK through a dedicated evidential head. This head is implemented as a lightweight multi-layer perceptron (MLP) followed by a Softplus activation to ensure non-negativity: 
+
+ev = Softplus (W v fv + Cv ), (5) where evk ≥ 0 represents the observed support for class k
+
+(with K=2 corresponding to Real and Fake). The resulting evidence is associated with a Dirichlet distribution param-eterized by αvk = evk + 1 , from which a subjective opinion 
+
+T v = {bv , u v } is derived, consisting of belief masses bv
+
+and epistemic uncertainty uv . Letting Sv = P 
+
+> k
+
+αvk denote the Dirichlet Strength, we compute: 
+
+bvk = evk
+
+Sv , uv = KSv , (6) subject to the additivity constraint P 
+
+> k
+
+bvk + uv = 1 .This formulation yields two decorrelated evidential experts: (1) Content Expert ( T 1): derived from fs, reflecting beliefs based on high-level identity and semantic consistency. (2) 
+
+Structure Expert ( T 2): derived from fa, reflecting beliefs based on low-level manifold anomalies. Crucially, this evi-dential representation naturally captures ignorance. When a view lacks discriminative cues ( ek ≈ 0), the total strength 
+
+Sv decreases, causing the uncertainty uv → 1. This mecha-nism prevents blind overconfident predictions and provides a principled foundation for subsequent conflict-aware fusion. 
+
+Conflict-Aware Evidential Fusion. To exploit the comple-mentarity of the dual-view experts, we employ the Dempster-Shafer (DS) combination rule to produce a robust global decision. Unlike traditional averaging, which obscures po-tential risks by smoothing discrepancies, DS theory (Demp-ster, 1968) explicitly models inter-view consistency and conflict through orthogonal sum T = T 1 ⊕ T 2. For class 
+
+k ∈ { 1, 2}, the fused belief mass bk and uncertainty u are computed as: 
+
+bk = 11 − C 
+
+ b1
+
+> k
+
+b2 
+
+> k
+
++ b1
+
+> k
+
+u2 + b2
+
+> k
+
+u1 , u = 11 − C 
+
+ u1u2 ,
+
+(7) where C = P 
+
+> i̸=j
+
+b1 
+
+> i
+
+b2 
+
+> j
+
+denotes the conflict coefficient, quan-tifying the degree of inconsistency between the semantic and artifact views. The normalization factor (1 − C )−1 re-distributes belief mass associated with conflicting evidence, ensuring P bk + u = 1 .
+
+Why is this mechanism effective? The fusion strategy goes beyond numerical weighting by embedding a logic that explicitly handles three critical forensic scenarios: (1) 
+
+Consensus Amplification: When both experts agree with high confidence, the term b1
+
+> k
+
+b2 
+
+> k
+
+dominates, yielding a syn-ergistic increase in fused belief, while u decays rapidly (u ≈ u1u2), resulting in substantially strengthened confi-dence. (2) Knowledge Complementarity: When one view is confident (high b1
+
+> k
+
+, low u1) and the other is uncertain (high u2), the cross-term b1
+
+> k
+
+u2 allows the confident view to compensate for the ignorance of the other. This enables uni-lateral knowledge filling, preventing missed detections by single-view failure. (3) Conflict Awareness: When views contradict (e.g., Semantic=“Real” vs. Artifact=“Fake”), the coefficient C rises significantly. Instead of forcing a blind deterministic decision, the normalization suppresses belief mass and elevates epistemic uncertainty, producing a reli-able risk signal for rejecting ambiguous samples. 
+
+Inference. During testing, class probabilities are obtained via the Dirichlet mean pk = bk + u/K , while the fused uncertainty u serving as the epistemic confidence score. 
+
+3.5. Loss Function 
+
+To effectively optimize the proposed “Divide-and-Conquer” framework, we design a composite objective function that governs both feature decoupling and evidential reasoning. Specifically, the optimization is driven by two complemen-tary constraints: (1) Semantic Manifold Loss supervises the manifold projector in the “Divide” phase to ensure pre-cise view construction; (2) Uncertainty-Aware Evidential Loss guides the opinion generation in the “Conquer” phase to ensure reliable decision-making. 
+
+Semantic Manifold Loss. To reconstruct a continuous semantic manifold, we employ a β-VAE as the manifold projector to approximate the generative distribution of CLIP features ( fs → fc). Since CLIP embeddings are inherently hyperspherical and encode semantics primarily in angular directions rather than vector magnitudes, conventional ℓ2
+
+reconstruction objectives are suboptimal and may overfit non-semantic scale variations. We therefore adopt a cosine distance-based alignment loss, explicitly enforcing direc-tional consistency between the original and reconstructed features. The manifold loss Lvae is formulated as: 
+
+Lvae = Lalign + β · L kld , (8) To enforce directional consistency, we minimize the cosine distance between the original semantic features fs and the reconstructed features fc:
+
+Lalign = 1 − cos( fs, f c) = 1 − ⟨fs, f c⟩∥fs∥2∥fc∥2
+
+, (9) This constraint compels the manifold projector to prioritize semantic orientation over numerical magnitude. To ensure 5DiCoME for Deepfake Detection 
+
+Table 1. Quantitative comparison on cross-dataset and cross-manipulation benchmarks (best in bold).                                                                                                                                                                                                                                                
+
+> Methods Venue Cross-dataset Evaluation Cross-manipulation Evaluation
+> CDFv2 DFD DFDC DFo WDF CDFv3 Avg. UniFace BleFace MobSwap e4s FaceDan FSGAN InSwap SimSwap Avg. F3Net ECCV’20 0.789 0.844 0.718 0.730 0.728 0.736 0.758 0.809 0.808 0.867 0.494 0.717 0.845 0.757 0.674 0.746 SPSL CVPR’20 0.799 0.871 0.724 0.723 0.702 0.740 0.760 0.747 0.748 0.885 0.514 0.666 0.812 0.643 0.665 0.710 SRM CVPR’21 0.840 0.885 0.695 0.722 0.702 0.793 0.773 0.749 0.704 0.779 0.704 0.659 0.772 0.793 0.694 0.732 CORE CVPR’21 0.809 0.882 0.721 0.765 0.724 0.750 0.775 0.871 0.843 0.959 0.679 0.774 0.958 0.855 0.724 0.833 RECCE CVPR’22 0.823 0.891 0.696 0.784 0.756 0.809 0.793 0.898 0.832 0.925 0.683 0.848 0.949 0.848 0.768 0.844 SBI CVPR’22 0.886 0.827 0.717 0.899 0.703 0.738 0.795 0.724 0.891 0.952 0.750 0.594 0.803 0.712 0.701 0.766 UCF ICCV’23 0.837 0.867 0.742 0.808 0.774 0.761 0.798 0.831 0.827 0.950 0.731 0.862 0.937 0.809 0.647 0.824 IID CVPR’23 0.838 0.939 0.700 0.808 0.666 0.760 0.785 0.839 0.789 0.888 0.766 0.844 0.927 0.789 0.644 0.811 LSDA CVPR’24 0.875 0.881 0.701 0.768 0.797 0.727 0.792 0.872 0.875 0.930 0.694 0.721 0.939 0.855 0.793 0.835 ProDet NIPS’24 0.926 0.901 0.707 0.879 0.781 0.732 0.821 0.908 0.929 0.975 0.771 0.747 0.928 0.837 0.844 0.867 Effort ICML’25 0.956 0.965 0.843 0.977 0.848 0.850 0.907 0.962 0.873 0.953 0.983 0.926 0.957 0.936 0.926 0.940 GenD WACV’26 0.960 0.970 0.871 0.989 0.890 0.859 0.923 0.974 0.935 0.976 0.983 0.942 0.974 0.943 0.938 0.958
+> Ours –0.977 0.982 0.882 0.993 0.911 0.886 0.939 0.982 0.963 0.978 0.991 0.972 0.989 0.970 0.965 0.976
+
+manifold smoothness, we minimize the KL divergence be-tween the posterior distribution and a standard normal prior: 
+
+Lkld = DKL (q(z|fs)∥N (0 , I )) = − 12
+
+X (1 + log σ2 − μ2 − σ2), (10) where μ and σ2 denote the mean and variance of the output predicted by the encoder. 
+
+Uncertainty-Aware Evidential Loss. We leverage Evi-dential Deep Learning (Sensoy et al., 2018) to equip the model with uncertainty quantification capabilities. Instead of predicting point estimates, the network predicts the con-centration parameters αi of a Dirichlet distribution (Ng et al., 2011) D(pi|αi) over the K-dimensional probability simplex: 
+
+D(pi|αi) = 
+
+
+
+1
+
+B(αi)
+
+KQ
+
+k=1 
+
+pαi,k −1
+
+i,k for pi ∈ S K ,
+
+0 otherwise ,
+
+(11) To optimize the model parameters, we minimize the Bayes risk with respect to the cross-entropy loss. This objective en-courages the network to accumulate evidence for the ground-truth class: 
+
+Lf it (αi) = 
+
+Z " KX
+
+k=1 
+
+−yi,k log( pi,k )
+
+#
+
+1
+
+B(αi)
+
+KY
+
+k=1 
+
+pαi,k −1
+
+i,k dpi,
+
+(12) Analytically, this integral simplifies to a tractable form using the Digamma function ψ(·):
+
+Lf it (αi) = 
+
+KX
+
+k=1 
+
+yi,k (ψ(Si) − ψ(αi,k )) , (13) where Si = KP
+
+k=1 
+
+αi,k represents the total Dirichlet strength. To suppress misleading evidence for incorrect classes, we in-corporate a KL divergence regularization term that penalizes deviations from a uniform prior for non-target classes: 
+
+KL [D(pi | eαi)∥D(pi | 1)] = log 
+
+
+
+Γ( KP
+
+k=1 
+
+˜αi,k )Γ( K) KQ
+
+k=1 
+
+Γ(˜ αi,k )
+
+
+
++
+
+KX
+
+k=1 
+
+(˜ αi,k − 1) 
+
+ψ(˜ αi,k ) − ψ
+
+
+
+KX
+
+j=1 
+
+˜αi,j 
+
+ ,
+
+(14) Here, eαi = yi + (1 − yi) ⊙ αi is the masked parameter vector, which ensures that evidence for the ground-truth class is not penalized. The final evidential loss is defined as: 
+
+Ledl = 1
+
+N
+
+NX
+
+i=1 
+
+(Lf it (αi) + λt · KL [D(pi | eαi)∥D(pi | 1)]) ,
+
+(15) where λt = min(1 , t/T ) ∈ [0 , 1] is an annealing coeffi-cient that gradually increases the regularization weight over training epochs t.
+
+Total Objective. The complete training objective integrates evidential learning with semantic manifold regularization: 
+
+Ltotal = Ledl + λvae Lvae , (16) where λvae balances discriminative supervision against se-mantic structure preservation. 
+
+## 4. Experiments 
+
+4.1. Experimental Settings Implementation Details. We adopt CLIP ViT-L/14 (Rad-ford et al., 2021) as the backbone and follow the stan-dard preprocessing pipeline of DeepfakeBench (Yan et al., 2023b). All experiments are conducted on a single NVIDIA A100 GPU with a batch size of 128. The model is opti-mized using AdamW (Loshchilov & Hutter, 2017) with an initial learning rate of 1 × 10 −4. To improve robustness, we apply common data augmentations, including Gaussian blur, JPEG compression, and color jittering. Performance is reported using video-level AUC. 6DiCoME for Deepfake Detection 
+
+Evaluation Protocols and Datasets. For all experiments, the model is trained on FaceForensics++ (FF++) (Rossler et al., 2019) under the c23 compression setting. We evalu-ate performance under two standard protocols: (1) Cross-dataset evaluation , testing on six widely used benchmarks (CDFv2 (Li et al., 2020b), DFD (Google AI, 2020), DFDC (Deepfake Detection Challenge, 2020), DFo (Jiang et al., 2020), WDF (Zi et al., 2020), and CDFv3 (Li et al., 2025)) to assess domain generalization; and (2) Cross-manipulation evaluation , conducted on DF40 (Yan et al., 2024b), which shares the FF++ source domain but contains 40 distinct ma-nipulation types, isolating robustness to forgery diversity from domain shift. 
+
+4.2. Comparisons with Existing Methods 
+
+To establish a comprehensive benchmark, we compare our approach against 12 representative methods, ranging from classic baselines to the latest advances. These include F3Net (Qian et al., 2020), SPSL (Liu et al., 2021), SRM (Luo et al., 2021), CORE (Ni et al., 2022), RECCE (Cao et al., 2022), SBI (Shiohara & Yamasaki, 2022), UCF (Yan et al., 2023a), IID (Huang et al., 2023), LSDA (Yan et al., 2024a), ProDet (Cheng et al., 2024), Effort (Yan et al., 2025), and GenD (Yermakov et al., 2026) . As shown in Table 1, our method outperforms all baselines in the challenging ‘unseen do-mains + attacks’ setting, achieving the best performance across all benchmarks. Furthermore, even when domain gaps are minimized using DF40, our approach maintains su-perior detection rates. This confirms that our model captures universal manifold anomalies rather than overfitting specific patterns, ensuring robust generalization against both unseen domains and unknown attacks. 
+
+4.3. Visualization and Interpretability Uncertainty Estimation and Risk Rejection. To validate our uncertainty estimation, we analyze the epistemic un-certainty u in Figure 3 derived via EDL across FF++ and cross-domain benchmarks (CDFv2, DFDC, DFD). First, distribution analysis reveals a decisive separation: correct predictions are tightly clustered near u → 0, whereas mis-classifications predominantly populate the high-uncertainty spectrum. This confirms that the model successfully aligns high uncertainty with prediction error, effectively identify-ing its own knowledge boundaries. Second, risk-coverage analysis demonstrates a strictly monotonic increase in accu-racy as the retention ratio decreases. Notably, rejecting just the top 10% of uncertain samples on DFD yields substantial performance gains. This validates u as a robust indicator for risk-aware deployment. 
+
+Multi-view Complementarity. To verify that the fusion strategy captures heterogeneous and complementary feature representations, we visualize attention maps across views in Figure 4. The Semantic View focuses on global facial (b) CDFv2  (d) DFD (c) DFDC (a)  FF++        
+
+> Correct Predictions Misclassified Predictions
+> Figure 3. Evaluation of Uncertainty Effectiveness. Top: Un-certainty distributions clearly separate correct and misclassified predictions, with errors concentrated at high uncertainty. Bottom: Risk–coverage curves show monotonic accuracy gains when re-jecting uncertain samples, consistently outperforming the baseline. Input View 1 View 2 Final
+> Figure 4. Grad-CAM visualization. View 1 focuses on global semantics, while View 2 targets local artifacts. The final fusion effectively synergizes these complementary cues, which corrects single-view biases to achieve precise localization.
+
+structures, consistent with CLIP’s high-level semantic pri-ors. Conversely, the Artifact View specifically targets local anomalies. Crucially, the Final View is not a naive superpo-sition but a dynamic synthesis driven by adaptive evidential weighting. By integrating global semantics with local man-ifold anomalies, our model guarantees robust and precise decision-making. 
+
+4.4. Ablation Study and Analysis Analysis of Architectural Mechanisms. Table 2(a) pro-vides an in-depth analysis of the intrinsic mechanisms un-derlying our multi-view architecture and feature disentangle-ment strategy. First, regarding the necessity of the Artifact View (A), the single-stream baseline relying solely on CLIP features ( fs) suffers a significant performance drop, which confirms that pure semantics are insufficient for detecting high-fidelity deepfakes. This is visually corroborated by the 7DiCoME for Deepfake Detection 
+
+Table 2. Comprehensive ablation studies evaluated on CDFv2, DFDC, and MobileFaceSwap (MFS) from the CDFv3 dataset. 
+
+(a) Architectural mechanisms.                                     
+
+> Variant View Comp. Ortho. CDFv2 DFDC MFS Avg.
+> (A) fs-0.927 0.856 0.933 0.905 (B) fs+fs-0.954 0.867 0.929 0.917 (C) fs+fr×0.956 0.860 0.951 0.922
+> Ours fs+fa✓0.977 0.882 0.956 0.938
+
+(b) Decision logic and fusion strategy.                             
+
+> Variant Loss Fusion Unc. CDFv2 DFDC MFS Avg.
+> (D) Lce Mean ×0.956 0.874 0.942 0.924 (E) Ledl Mean ✓0.961 0.878 0.941 0.927
+> Ours Ledl DS-C. ✓0.977 0.882 0.956 0.938
+
+(c) Alignment and KL-divergence losses.                         
+
+> Variant Lalign Lkld CDFv2 DFDC MFS Avg.
+> (F) ×✓0.955 0.866 0.944 0.922 (G) ✓×0.948 0.872 0.944 0.921
+> Ours ✓✓0.977 0.882 0.956 0.938
+
+(d) Backbones and pre-training.                         
+
+> Backbone Pre-train Patch CDFv2 DFDC MFS Avg.
+> CLIP-B (H) Text-Img 16 0.886 0.811 0.790 0.829 DINO-L (I) Self-Sup. 14 0.856 0.796 0.773 0.808
+> CLIP-L Text-Img 14 0.977 0.882 0.956 0.938
+
+Figure 5. T-SNE Visualizations. (a) Baseline: Relying solely on CLIP semantics results in severe mixing of real and fake samples, indicating failure to distinguish deepfakes. (b) Ours: By employ-ing Geometric View Purification, our method effectively isolates artifacts from semantics. The resulting distributions form compact clusters separated by a wide decision margin, validating the dis-criminative power of the purified artifact view. 
+
+Figure 6. Feature Correlation Analysis. (a) Pronounced correla-tions between CLIP semantic features and raw residuals reveal severe semantic leakage in a strongly coupled regime. (b) The sparse heatmap confirms that our geometric projection substan-tially weakens the shared information pathway, achieving an ap-proximately decorrelated, complementary state for reliable fusion. 
+
+severe entanglement in the t-SNE plot (Figure 5(a). Sec-ond, to exclude ensemble effects (B), the inferiority of the homogeneous dual-stream variant ( fs + fs) confirms that performance gains stem from feature heterogeneity rather than increased model capacity or network depth. Finally, re-garding the importance of Orthogonal Disentanglement (C), removing the geometric constraint leads to generalization degradation. We attribute this to semantic leakage between CLIP semantics and original residual features, which is ex-plicitly visualized in Figure 6(a) as strong and structured cross-feature correlations that violate the requirement for view decorrelation and complementarity. In contrast, our or-thogonal projection effectively enforces feature decoupling, yielding a sparse, structure-free cross-correlation heatmap in Figure 6(b). This disentanglement is also observed in Figure 5(b), where distinct and compact clusters emerge, separated by a wide and well-defined decision margin, in-dicating that pure and discriminative forensic traces are successfully isolated from semantic content. 
+
+Table 3. Comparison of Expected Calibration Error (ECE) across different datasets. Lower is better. 
+
+Method CDFv2 DFD MFS Avg. 
+
+Baseline (D) 0.13 0.15 0.19 0.16 
+
+Ours 0.07 0.07 0.08 0.07 
+
+Analysis of Decision Logic and Fusion Strategy. We fur-ther analyze the impact of probabilistic modeling and fusion rules in Table 2(b). First, regarding mitigating overconfi-dence (D), we replace the proposed method with standard Cross-Entropy Loss ( Lce ), forcing the model into a deter-ministic point estimation regime. The performance drop confirms that deterministic methods suffer from severe over-confidence on unseen domains. As shown in Table 3, our method achieves substantially better calibration for more trustworthy predictions. Second, for handling “epistemic conflict” (E), while retaining the Dirichlet-based uncertainty modeling, we employ Naive Mean Fusion to integrate the two views by simply averaging their belief masses. The results prove that simple linear superposition fails to resolve inter-view contradictions, whereas Dempster-Shafer rule ex-plicitly manages “epistemic conflict”, ensuring robustness against ambiguous samples. 
+
+Analysis of Manifold Constraints. Table 2(c) further val-idates the necessity of internal constraints within the man-ifold view, relying on the synergy of Semantic Alignment Loss ( Lalign ) and KL Divergence ( Lkld ). First, regarding the necessity of semantic alignment (G), we remove Lalign ,forcing the model to optimize reconstruction relying solely on the standard MSE loss. The resulting performance drop confirms that Euclidean optimization is incompatible with CLIP’s hyperspherical geometry, inevitably introducing se-8DiCoME for Deepfake Detection 
+
+mantic bias into the residuals. Second, for the necessity of latent regularization (F), we exclude the KL divergence constraint, degenerating the β-VAE into a standard deter-ministic Autoencoder. The observed degradation verifies that regularization is vital to prevent rote memorization, en-suring the model learns a generalized normal distribution for robust detection. 
+
+Analysis of Backbone Adaptability. Table 2(d) examines backbone adaptability. First, regarding scale (H), the per-formance drop with ViT-B/16 confirms that larger capacity (ViT-L/14) is indispensable for resolving subtle artifacts. Second, regarding priors (I), the inferiority of DINOv2 un-derscores the value of CLIP. Unlike pure visual features, CLIP’s text-image alignment establishes a stable “semantic anchor”, which is critical for defining manifold anomalies. 
+
+## 5. Conclusion 
+
+In this paper, we tackle the challenge of trustworthy deep-fake detection by introducing a novel Divide-and-Conquer framework termed Reliable Multi-View Evidential Learn-ing. To mitigate the Semantic Masking Effect , we propose Geometric View Purification which projects residual repre-sentations onto the orthogonal complement of the semantic space, thereby explicitly disentangling forensic artifacts from semantic interference. Building upon this decoupling, we further develop Uncertainty-Aware Evidential Learning, leveraging Dempster–Shafer theory to model “epistemic conflict” and quantify predictive uncertainty in a principled manner. Extensive experiments across diverse benchmarks demonstrate that our framework not only improves cross-domain generalization but also yields reliable uncertainty estimates, highlighting its potential for deployment in safety-critical and open-world deepfake detection scenarios. 
+
+## Acknowledgements 
+
+This work was supported by the Key Science and Tech-nology Research Project of Xinjiang Production and Con-struction Corps under Grant No.2025AB029, and the Na-tional Natural Science Foundation of China under Grants No.62371350, No.62501248, and No.U2441240. 
+
+## Impact Statement 
+
+This work aims to mitigate deepfake threats and restore digital trust, protecting against identity theft and disinforma-tion. While acknowledging the dual-use risk where detec-tors could facilitate adversarial generation, we believe the defensive value of open-sourcing outweighs potential mis-use. Furthermore, we emphasize the importance of fairness; real-world deployment requires continuous monitoring to ensure the model remains unbiased across demographics. 
+
+## References 
+
+Cao, J., Ma, C., Yao, T., Chen, S., Ding, S., and Yang, X. End-to-end reconstruction-classification learning for face forgery detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pp. 4113–4122, June 2022. Chai, L., Bau, D., Lim, S.-N., and Isola, P. What makes fake images detectable? understanding properties that generalize. In European conference on computer vision ,pp. 103–120. Springer, 2020. Chandra, N. A., Murtfeldt, R., Qiu, L., Karmakar, A., Lee, H., Tanumihardja, E., Farhat, K., Caffee, B., Paik, S., Lee, C., et al. Deepfake-eval-2024: A multi-modal in-the-wild benchmark of deepfakes circulated in 2024. arXiv preprint arXiv:2503.02857 , 2025. Cheng, J., Yan, Z., Zhang, Y., Luo, Y., Wang, Z., and Li, C. Can we leave deepfake data behind in training deepfake detector? Advances in Neural Information Processing Systems , 37:21979–21998, 2024. Cheng, J., Yan, R., Yan, Z., Gan, Y., Zhang, X., Wang, Z., Peng, W., and Liang, L. A sanity check for multi-in-domain face forgery detection in the real world. arXiv preprint arXiv:2512.04837 , 2025a. Cheng, J., Zhang, Y., Zou, Q., Yan, Z., Liang, C., Wang, Z., and Li, C. Ed ˆ4: Explicit data-level debiasing for deep-fake detection. IEEE Transactions on Image Processing ,2025b. Ciftci, U. A., Demir, I., and Yin, L. Fakecatcher: Detection of synthetic portrait videos using biological signals. IEEE transactions on pattern analysis and machine intelligence ,2020. Cui, X., Li, Y., Luo, A., Zhou, J., and Dong, J. Forensics adapter: Adapting clip for generalizable face forgery detection. In Proceedings of the Computer Vision and Pattern Recognition Conference , pp. 19207–19217, 2025. Deepfake Detection Challenge. Deepfake detec-tion challenge. https://www.kaggle.com/c/ deepfake-detection-challenge , 2020. Ac-cessed: 2021-04-24. Dempster, A. P. A generalization of bayesian inference. 
+
+Journal of the Royal Statistical Society: Series B (Method-ological) , 30(2):205–232, 1968. Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A., and Bengio, Y. Generative adversarial nets. In Advances in Neural Information Processing Systems , volume 27, 2014. 9DiCoME for Deepfake Detection 
+
+Google AI. Contributing data to Deepfake detec-tion. https://ai.googleblog.com/2019/09/ contributing-data-to-deepfakedetection. html , 2020. Accessed: 2021-04-24. Haliassos, A., Vougioukas, K., Petridis, S., and Pantic, M. Lips don’t lie: A generalisable and robust approach to face forgery detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,pp. 5039–5049, 2021. Higgins, I., Matthey, L., Pal, A., Burgess, C., Glorot, X., Botvinick, M., Mohamed, S., and Lerchner, A. beta-vae: Learning basic visual concepts with a constrained variational framework. In International conference on learning representations , 2017. Ho, J., Jain, A., and Abbeel, P. Denoising diffusion proba-bilistic models. Advances in neural information process-ing systems , 33:6840–6851, 2020. Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., Chen, W., et al. Lora: Low-rank adaptation of large language models. ICLR , 1(2):3, 2022. Huang, B., Wang, Z., Yang, J., Ai, J., Zou, Q., Wang, Q., and Ye, D. Implicit identity driven deepfake face swapping detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 4490–4499, 2023. Jiang, L., Li, R., Wu, W., Qian, C., and Loy, C. C. Deeperforensics-1.0: A large-scale dataset for real-world face forgery detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,pp. 2889–2898, 2020. Jøsang, A. Subjective Logic: A formalism for reasoning under uncertainty . Springer Publishing Company, Incor-porated, 2018. Kendall, A. and Gal, Y. What uncertainties do we need in bayesian deep learning for computer vision? Advances in neural information processing systems , 30, 2017. Li, L., Bao, J., Zhang, T., Yang, H., Chen, D., Wen, F., and Guo, B. Face x-ray for more general face forgery detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 5001–5010, 2020a. Li, Y. and Lyu, S. Exposing deepfake videos by detecting face warping artifacts. In IEEE Conference on Computer Vision and Pattern Recognition Workshops (CVPRW) ,2019. Li, Y., Yang, X., Sun, P., Qi, H., and Lyu, S. Celeb-df: A large-scale challenging dataset for deepfake forensics. In 
+
+Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 3207–3216, 2020b. Li, Y., Zhu, D., Cui, X., and Lyu, S. Celeb-df++: A large-scale challenging video deepfake benchmark for general-izable forensics. arXiv preprint arXiv:2507.18015 , 2025. Lin, Y., Song, W., Li, B., Li, Y., Ni, J., Chen, H., and Li, Q. Fake it till you make it: Curricular dynamic forgery augmentations towards general deepfake detection. In 
+
+European conference on computer vision , pp. 104–122. Springer, 2024. Liu, H., Li, X., Zhou, W., Chen, Y., He, Y., Xue, H., Zhang, W., and Yu, N. Spatial-phase shallow learning: rethinking face forgery detection in frequency domain. In Proceed-ings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 772–781, 2021. Loshchilov, I. and Hutter, F. Decoupled weight decay regu-larization. arXiv preprint arXiv:1711.05101 , 2017. Luo, Y., Zhang, Y., Yan, J., and Liu, W. Generalizing face forgery detection with high-frequency features. In 
+
+Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 16317–16326, 2021. Ng, K. W., Tian, G.-L., and Tang, M.-L. Dirichlet and related distributions: Theory, methods and applications. 2011. Ni, Y., Meng, D., Yu, C., Quan, C., Ren, D., and Zhao, Y. Core: Consistent representation learning for face forgery detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 12–21, 2022. Qian, Y., Yin, G., Sheng, L., Chen, Z., and Shao, J. Thinking in frequency: Face forgery detection by mining frequency-aware clues. In European conference on computer vision ,pp. 86–103. Springer, 2020. Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., et al. Learning transferable visual models from natural language supervision. In International conference on machine learning , pp. 8748–8763. PmLR, 2021. Rossler, A., Cozzolino, D., Verdoliva, L., Riess, C., Thies, J., and Nießner, M. Faceforensics++: Learning to de-tect manipulated facial images. In Proceedings of the IEEE/CVF international conference on computer vision ,pp. 1–11, 2019. Sensoy, M., Kaplan, L., and Kandemir, M. Evidential deep learning to quantify classification uncertainty. Advances in neural information processing systems , 31, 2018. 10 DiCoME for Deepfake Detection 
+
+Shiohara, K. and Yamasaki, T. Detecting deepfakes with self-blended images. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,pp. 18720–18729, 2022. Sun, K., Chen, S., Yao, T., Liu, H., Sun, X., Ding, S., and Ji, R. Diffusionfake: Enhancing generalization in deepfake detection via guided stable diffusion. Advances in Neural Information Processing Systems , 37:101474– 101497, 2024. Sunil, R., Mer, P., Diwan, A., Mahadeva, R., and Sharma, A. Exploring autonomous methods for deepfake detection: A detailed survey on techniques and evaluation. Heliyon ,11(3), 2025. Tan, C., Zhao, Y., Wei, S., Gu, G., Liu, P., and Wei, Y. Frequency-aware deepfake detection: Improving gener-alizability through frequency space domain learning. In 
+
+Proceedings of the AAAI Conference on Artificial Intelli-gence , volume 38, pp. 5052–5060, 2024. Xu, Y., Liang, J., Jia, G., Yang, Z., Zhang, Y., and He, R. Tall: Thumbnail layout for deepfake video detection. In 
+
+Proceedings of the IEEE/CVF international conference on computer vision , pp. 22658–22668, 2023. Yan, Z., Zhang, Y., Fan, Y., and Wu, B. Ucf: Uncovering common features for generalizable deepfake detection. In 
+
+Proceedings of the IEEE/CVF international conference on computer vision , pp. 22412–22423, 2023a. Yan, Z., Zhang, Y., Yuan, X., Lyu, S., and Wu, B. Deep-fakebench: A comprehensive benchmark of deepfake detection. Advances in Neural Information Processing Systems , 36:4534–4565, 2023b. Yan, Z., Luo, Y., Lyu, S., Liu, Q., and Wu, B. Transcending forgery specificity with latent space augmentation for generalizable deepfake detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pp. 8984–8994, 2024a. Yan, Z., Yao, T., Chen, S., Zhao, Y., Fu, X., Zhu, J., Luo, D., Wang, C., Ding, S., Wu, Y., et al. Df40: Toward next-generation deepfake detection. Advances in Neu-ral Information Processing Systems , 37:29387–29434, 2024b. Yan, Z., Wang, J., Jin, P., Zhang, K.-Y., Liu, C., Chen, S., Yao, T., Ding, S., Wu, B., and Yuan, L. Orthogonal subspace decomposition for generalizable AI-generated image detection. In International Conference on Machine Learning (ICML) , pp. 70268–70288. PMLR, 2025. Yermakov, A., Cech, J., Matas, J., and Fritz, M. Deepfake detection that generalizes across benchmarks. In Proceed-ings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) , March 2026. Yu, M., Li, H., Yang, J., Li, X., Li, S., and Zhang, J. Fdml: Feature disentangling and multi-view learning for face forgery detection. Neurocomputing , 572:127192, 2024. Zhang, H., He, Q., Bi, X., Li, W., Liu, B., and Xiao, B. Towards universal ai-generated image detection by varia-tional information bottleneck network. In Proceedings of the Computer Vision and Pattern Recognition Conference ,pp. 23828–23837, 2025a. Zhang, X., Zhu, P., Zhang, C., Yan, Z., Cheng, J., Lao, M., Cai, S., and Guo, Y. Generalization-preserved learning: Closing the backdoor to catastrophic forgetting in contin-ual deepfake detection. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pp. 3798– 3808, 2025b. Zhao, H., Zhou, W., Chen, D., Wei, T., Zhang, W., and Yu, N. Multi-attentional deepfake detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 2185–2194, 2021. Zheng, Y., Bao, J., Chen, D., Zeng, M., and Wen, F. Ex-ploring temporal coherence for more general video face forgery detection. In Proceedings of the IEEE/CVF In-ternational Conference on Computer Vision , pp. 15044– 15054, 2021. Zi, B., Chang, M., Chen, J., Ma, X., and Jiang, Y.-G. Wild-deepfake: A challenging real-world dataset for deepfake detection. In Proceedings of the 28th ACM international conference on multimedia , pp. 2382–2390, 2020. 11 DiCoME for Deepfake Detection 
+
+## A. Appendix 
+
+This appendix provides detailed implementation settings, algorithmic procedures, and extensive experimental analysis to support the main paper. The content is organized as follows: • Implementation Details: Detailed hyperparameters and optimization settings (see Sec. A.1). • Training Algorithm: The complete pseudocode for the proposed framework (see Sec. A.2). • Extensive Experimental Analysis: A comprehensive evaluation including a comparative analysis of model effi-ciency (see Sec. A.3). • Limitations and Future Work: A discussion on the current limitations, potential future directions, and ethical considerations (see Sec. A.4). 
+
+A.1. Implementation Details 
+
+Our method is implemented in PyTorch on a single NVIDIA A100 GPU. We adopt the CLIP ViT-L/14 as the frozen backbone and apply LoRA ( r = 8 ) to the attention layers for parameter-efficient adaptation. The model is optimized using AdamW with cosine learning rate decay. For the loss balancing, we set λvae = 0 .7 and β = 2 .0 to regulate the manifold learning. Detailed hyperparameter settings are listed in Table 4. 
+
+Table 4. Hyperparameter Settings.                       
+
+> Category Hyperparameter Value Optimization
+> Input Resolution 224 ×224
+> Batch Size 128 Optimizer AdamW Betas (0.9, 0.999) Weight Decay 1×10 −2
+> Learning Rate 1×10 −4
+> Total Epochs 20
+> Model & PEFT
+> Backbone CLIP ViT-L/14 LoRA Rank ( r)8LoRA Alpha ( α)16 LoRA Dropout 0.1
+> Loss Coefficients KL Weight ( β)2.0 Global VAE Weight ( λvae )0.7
+
+A.2. Training Algorithm 
+
+We provide the detailed training procedure of our proposed framework in Algorithm 1 .
+
+A.3. Extensive experimental analysis Complexity Analysis. We present the comparison of train-able parameters in Table 5 and a supplementary efficiency profiling including GFLOPs, inference time, and FPS in Table 6. We notice that recent parameter-efficient works 
+
+Algorithm 1 Reliable Multi-View Evidential Learning Training Algorithm 
+
+Require: Training data D = {(xi, y i)}Ni=1 ; Pre-trained CLIP encoder Eclip ; Hyperparameters λvae , β .
+
+Ensure: Optimized model parameters θlora , θ vae , θ head .1: Initialization: 
+
+2: Freeze CLIP backbone parameters θfrozen .3: Initialize LoRA parameters θlora , β-VAE projector θvae , and evidential heads θhead .4: Training Loop: 
+
+5: for each epoch do 
+
+6: for each batch (x, y ) in D do 
+
+7: ▷ Phase 1: Divide (Multi-View Construction) 
+
+8: 1. Semantic View Extraction: 
+
+9: fs = Eclip (x; θfrozen , θ lora )
+
+10: 2. Manifold Projection: 
+
+11: fc, μ, σ = β-VAE (fs; θvae )
+
+12: Compute cosine alignment: Lalign = 1 − ⟨fs,f c⟩∥fs∥2∥fc∥2
+
+13: Lvae = Lalign + β · DKL (q(z|fs)∥N (0 , I )) 
+
+14: 3. Geometric View Purification: 
+
+15: Compute raw residual: fr = fs − fc
+
+16: Compute semantic leakage: f ∥ 
+
+> r
+
+= ⟨fr ,f s⟩∥fs∥22
+
+fs
+
+17: Obtain purified artifact view: fa = fr − f ∥
+
+> r
+
+18: ▷ Phase 2: Conquer (Evidential Learning) 
+
+19: 4. Opinion Generation: 
+
+20: Compute evidence for each view v ∈ { 1, 2}:21: ev = Softplus (W v fv + Cv )
+
+22: Derive Dirichlet parameters: αvk = evk + 1 
+
+23: Calculate Beliefs bv and Uncertainty uv
+
+24: 5. Conflict-Aware Fusion: 
+
+25: Fuse opinions via Dempster-Shafer rule: 26: bfused , u fused = DS Combine (b1, u 1, b 2, u 2)
+
+27: ▷ Optimization 
+
+28: 6. Loss Calculation & Update: 
+
+29: Compute EDL loss Ledl for views 1, 2 and fused output. 30: Total Loss: Ltotal = Ledl + λvae Lvae 
+
+31: Update θlora , θ vae , θ head via gradient descent. 32: end for 
+
+33: end for 
+
+34: return Trained model parameters. 
+
+like GenD (Yermakov et al., 2026) and Effort (Yan et al., 2025) achieve remarkable efficiency by tuning LayerNorm parameters ( 0.104 M) or adapting SVD residuals ( 0.199 M), respectively. While effective, these methods primarily rely on feature rescaling or linear weight decomposition. In contrast, our method ( 0.868 M) employs LoRA to in-troduce learnable transformation matrices. This additional capacity is architecturally necessary for our Geometric View Purification module, which requires explicitly rotating the residual features to the orthogonal complement of the se-mantic space to construct an artifact view. Although this geometric disentanglement incurs a slight increase in param-eters compared to GenD and Effort, Table 6 demonstrates that our model remains highly efficient during inference, operating at 47 .37 FPS with 156 .08 GFLOPs. Ultimately, we argue that 0.868 M represents an optimal ‘sweet spot’: 12 DiCoME for Deepfake Detection  
+
+> Figure 7. Robustness evaluation against common image perturbations. We compare the AUC performance of our method against state-of-the-art baselines under three types of distortions: Block-wise distortion, Contrast change, and JPEG compression, across five severity levels. The rightmost plot shows the average performance. Our method (red star) demonstrates superior stability, maintaining near-perfect detection performance even under severe degradations, significantly outperforming other forensic methods.
+
+it is substantial enough to support complex geometric dis-entanglement that simple rescaling cannot achieve, while remaining over 99% more parameter-efficient than tradi-tional full fine-tuning methods (e.g., 133 M for LSDA).                           
+
+> Table 5. Comparison of Trainable Parameters. Our method achieves a superior trade-off between efficiency and performance.
+> Method Backbone Trainable Param.
+> Full Fine-tuning Methods
+> F3Net Xception 22 M SPSL Xception 21 M SRM Xception 55 M RECCE Xception 48 M IID ResNet18 66 M ProDet EFNB4 96 M LSDA EFNB4 133 M
+> Parameter-Efficient Methods
+> Effort CLIP ViT-L/14 0.199 M GenD CLIP ViT-L/14 0.104 M
+> Ours CLIP ViT-L/14 0.868 M
+> Table 6. Efficiency comparison under a unified local profiling protocol. Our method maintains highly competitive inference speed, ensuring practical deployment efficiency.
+
+Method GFLOPs Time (ms/f) FPS 
+
+Effort 103.893 22.71 44.04 GenD 155.634 17.98 55.61 
+
+Ours 156.080 21.11 47.37 
+
+Robust Analysis. Real-world deepfake detection often faces low-quality inputs due to transmission compression or environmental noise. To evaluate the robustness of our model against these challenges, we benchmark it against seven representative state-of-the-art methods, including Ef-fort (Yan et al., 2025), Face X-ray (Li et al., 2020a), Patch-Forensics (Chai et al., 2020), SBI (Shiohara & Yamasaki, 2022), FWA (Li & Lyu, 2019), LipForensics (Haliassos et al., 2021), and FTCN (Zheng et al., 2021). We conducted experiments under three common perturbations: Block-wise distortion, Contrast change, and JPEG compression, with severity levels ranging from 1 to 5. As illustrated in Figure 7, most existing methods (e.g., PatchForensics, Face X-ray, and SBI) suffer from significant performance degradation as the perturbation level increases. For instance, in the challenging JPEG Compression scenario, pixel-dependent methods drop drastically because high-frequency artifact traces are destroyed by compression algorithms. In con-trast, our method (red line) exhibits remarkable stability, maintaining an AUC above 99% across all severity levels. Even compared to the recent SOTA method Effort (Yan et al., 2025), our approach shows superior resilience, par-ticularly in high-level degradations. This validates that our Geometric View Purification, anchored by robust semantic priors, successfully extracts stable forensic features that are invariant to low-level noise. 
+
+A.4. Limitation and Future Work 
+
+While the proposed framework demonstrates strong gener-alization and reliable uncertainty estimation across diverse benchmarks, several directions remain open for further ex-ploration. First, our formulation adopts CLIP as a semantic anchor to define the reference semantic space. This choice reflects a deliberate design trade-off between generality and inter-pretability. Investigating adaptive or jointly optimized se-mantic manifolds may further enhance the expressiveness of the purified artifact view. Second, Geometric View Purification enforces global or-thogonality between semantic and artifact representations. Although this constraint effectively suppresses semantic masking in practice, future work could explore finer-grained or region-adaptive projections to better accommodate in-13 DiCoME for Deepfake Detection 
+
+creasingly sophisticated forgeries. Finally, the current study focuses on image-level evidence aggregation. Extending the proposed uncertainty-aware multi-view evidential framework to temporal, cross-modal, or continual learning scenarios is a natural and promising direction toward large-scale, real-world deployment. 
+
+Ethics & Reproducibility. All of the facial images that are utilized are sourced from publicly available datasets and are accompanied by appropriate citations. This guarantees that there is no infringement upon per-sonal privacy. Codes and checkpoints are available at https://github.com/kxl0825/DiCoME.git. 14

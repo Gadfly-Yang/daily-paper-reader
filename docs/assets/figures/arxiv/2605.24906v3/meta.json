@@ -1,0 +1,96 @@
+{
+  "version": 2,
+  "extractor": "papercropper",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-001.webp",
+      "caption": "",
+      "page": 0,
+      "index": 1,
+      "width": 1717,
+      "height": 457,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-002.webp",
+      "caption": "",
+      "page": 0,
+      "index": 2,
+      "width": 1579,
+      "height": 756,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-003.webp",
+      "caption": "",
+      "page": 0,
+      "index": 3,
+      "width": 817,
+      "height": 273,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-004.webp",
+      "caption": "",
+      "page": 0,
+      "index": 4,
+      "width": 856,
+      "height": 323,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-005.webp",
+      "caption": "",
+      "page": 0,
+      "index": 5,
+      "width": 823,
+      "height": 413,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-006.webp",
+      "caption": "",
+      "page": 0,
+      "index": 6,
+      "width": 740,
+      "height": 493,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-007.webp",
+      "caption": "",
+      "page": 0,
+      "index": 7,
+      "width": 1744,
+      "height": 505,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-008.webp",
+      "caption": "",
+      "page": 0,
+      "index": 8,
+      "width": 1730,
+      "height": 332,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-009.webp",
+      "caption": "",
+      "page": 0,
+      "index": 9,
+      "width": 1665,
+      "height": 824,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/arxiv/2605.24906v3/fig-010.webp",
+      "caption": "",
+      "page": 0,
+      "index": 10,
+      "width": 1732,
+      "height": 689,
+      "label": "Figure"
+    }
+  ]
+}
