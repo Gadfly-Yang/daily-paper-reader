@@ -25,3 +25,65 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: deepfake-fsl
+      description: 深度伪造检测、AI生成图像检测、图像分类、少样本学习、特征对齐、细粒度分类相关论文
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: deepfake detection
+          keyword_cn: 深度伪造检测
+          query: detection of deepfake images and videos using machine learning models
+        - keyword: AI-generated image detection
+          keyword_cn: ''
+          query: detecting images created by generative AI models such as GANs and diffusion models
+        - keyword: image classification
+          keyword_cn: 图像分类
+          query: classifying images into categories using convolutional neural networks
+        - keyword: few-shot learning
+          keyword_cn: ''
+          query: training models with only a small number of labeled examples per class
+        - keyword: face forgery detection
+          keyword_cn: 面部伪造检测
+          query: detecting manipulated face images in multimedia forensics
+        - keyword: synthetic image detection
+          keyword_cn: 合成图像检测
+          query: distinguishing computer-generated images from real photographs
+      intent_queries:
+        - query: identifying AI generated or synthetic images with limited training data
+          query_cn: 在有限训练数据下识别AI生成或合成图像
+          enabled: true
+          source: manual
+          note: ''
+        - query: few shot learning approaches for face forgery detection and image classification
+          query_cn: 用于面部伪造检测和图像分类的少样本学习方法
+          enabled: true
+          source: manual
+          note: ''
+        - query: few shot deepfake detection using feature alignment
+          query_cn: 利用特征对齐的少样本深度伪造检测
+          enabled: true
+          source: manual
+          note: ''
+        - query: cross domain generalization for AI generated image detection
+          query_cn: AI生成图像检测的跨域泛化
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-06-08T11:25:33.688Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
