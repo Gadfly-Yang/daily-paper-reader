@@ -1,0 +1,345 @@
+Title: Discriminative Span as a Predictor of Synthetic Data Utility via Classifier Reconstruction
+
+URL Source: https://arxiv.org/pdf/2605.09697v2
+
+Published Time: Wed, 13 May 2026 00:28:21 GMT
+
+Number of Pages: 15
+
+Markdown Content:
+# DISCRIMINATIVE SPAN AS A PREDICTOR OF SYNTHETIC DATA 
+
+# UTILITY VIA CLASSIFIER RECONSTRUCTION 
+
+Radhika Amar Desai 
+
+School Of Computer Science Vellore Institute of Technology Chennai 
+
+radhikaamar.desai2022@vitstudent.ac.in 
+
+Modigari Narendra 
+
+School Of Computer Science Vellore Institute Of Technology Chennai 
+
+modigari.narendra@vit.ac.in 
+
+# ABSTRACT 
+
+In many real-world computer vision applications, including medical imaging and industrial inspection, binary classification tasks are characterized by a severe scarcity of positive samples. A widely adopted solution is to generate synthetic positive data using image-to-image transformations applied to negative samples. However, a fundamental challenge remains: how can we reliably assess whether such synthetic data will improve downstream model performance? In this work, we propose a geometry-driven metric that predicts the utility of synthetic data without requiring model training. Our approach operates in the embedding space of a pre-trained foundation model and represents the dataset through difference vectors between samples. We evaluate whether the weight vector of a linear classifier can be expressed within the subspace spanned by these variations by measuring the relative projection error. Intuitively, if the variations induced by synthetic data capture task-relevant directions, their span can approximate the classifier, resulting in low projection error. Conversely, poor synthetic data fails to span these directions, leading to higher error. Across multiple datasets and architectures, we show that this metric exhibits strong correlation with downstream classification performance of CNNs trained on mixtures of real negative and synthetic positive data. These findings suggest that the proposed metric serves as a practical and informative tool for evaluating synthetic data quality in data-scarce settings. 
+
+Keywords Synthetic Data Evaluation · Geometric Analysis · Discriminative Span · Difference Vectors · Linear Subspace Methods · Singular Value Decomposition (SVD) · Low-Rank Approximation · Ill-Conditioned Systems ·
+
+Ridge Regularization 
+
+# 1 Introduction 
+
+In many real-world computer vision applications, including medical imaging and industrial quality inspection, binary classification tasks are characterized by a severe scarcity of positive samples. This imbalance often limits the perfor-mance and reliability of trained models. A widely adopted approach to address this challenge is to generate synthetic data using image-to-image (I2I) transformation techniques, which have been used to translate samples across domains and support data augmentation in applications such as medical imaging [ 1, 2]. While such methods can increase data diversity, a fundamental question remains unanswered: how can we reliably determine whether synthetic data will improve downstream model performance? 
+
+Current evaluation strategies for synthetic data typically rely on training models on augmented datasets and assessing performance on held-out test sets, as noted in prior surveys on synthetic data generation and evaluation [ 3]. Such approaches are computationally expensive, sensitive to model and training choices, and provide limited insight into why 
+
+certain synthetic data improves performance while others do not. This motivates the need for principled methods that can predict the utility of synthetic data without requiring full model training. In this work, we propose a geometric perspective on this problem. Specifically, we investigate whether the variations induced by synthetic data capture task-relevant directions in representation space. Our key idea is to analyze the extent 
+
+> arXiv:2605.09697v2 [cs.CV] 12 May 2026
+
+to which the decision boundary of a target classification task can be reconstructed from the span of data-induced variations. Intuitively, if synthetic data introduces meaningful variations aligned with the classification task, these variations should collectively approximate the classifier direction. To formalize this intuition, we operate in the embedding space of a pre-trained foundation model and represent the dataset through difference vectors between samples. We then quantify how well the weight vector of a linear classifier aligns with the subspace spanned by these variations using a relative projection error. This leads to a metric we term 
+
+Discriminative Span , which measures the extent to which data-induced variations can explain the classifier. We empirically validate our approach across multiple datasets and architectures, showing that the proposed metric exhibits strong correlation with downstream performance of convolutional neural networks trained on mixtures of real and synthetic data. Our results suggest that Discriminative Span serves as a practical and predictive proxy for evaluating synthetic data quality in data-scarce settings. 
+
+Contributions. Our main contributions are as follows: • We introduce Discriminative Span , a geometry-driven metric for predicting the utility of synthetic data without requiring model training. • We propose a formulation based on reconstructing the classifier direction from the span of data-induced variations in representation space. • We demonstrate strong empirical correlation between the proposed metric and downstream classification performance across multiple datasets and architectures. • We provide ablation studies and analysis to validate the design choices and robustness of the proposed metric. 
+
+# 2 Literature Review 
+
+2.1 Overview of Synthetic Data Generation 
+
+Synthetic data generation has emerged as a critical solution to address data scarcity, privacy concerns, and regulatory barriers in domains such as machine learning and computer vision. By creating artificial datasets that preserve the statistical properties and utility of real data while minimizing the risk of exposing sensitive information, synthetic data enables broader data sharing, model training, and research without compromising individual privacy [4]. Early approaches relied on statistical and rule-based methods, but the advent of deep generative models, particularly Generative Adversarial Networks (GANs), has significantly improved the realism and utility of generated data. A foundational contribution in unpaired image-to-image translation is CycleGAN [ 1 ], which employs cycle-consistent adversarial networks to learn mappings between domains without paired training examples. Building upon CycleGAN, several studies have extended these architectures for image synthesis from unpaired data. Later works introduced enhancements such as structure-constrained losses and bidirectional learning to improve fidelity and reduce artifacts [5]. Comprehensive surveys have mapped the broader landscape of synthetic data techniques. Figueira and Vaz [ 3] provide an overview of generation methods, evaluation approaches, and the role of GANs. More recent reviews cover generative models (GANs, VAEs, diffusion models), emphasizing applications in data augmentation and privacy preservation, while noting gaps in standardized benchmarks and task-relevant validation [6, 7]. 
+
+2.2 Evaluation of Synthetic Data in Computer Vision 
+
+A key challenge in synthetic data research is rigorous, multi-dimensional evaluation. Dankar et al. [ 4 ] proposed a framework assessing generators along dimensions of data utility, privacy risk, and statistical fidelity, revealing important trade-offs for downstream applications. Evaluation of synthetic data in computer vision remains particularly active yet underdeveloped. Common metrics include reference-based measures such as Structural Similarity Index (SSIM) and Peak Signal-to-Noise Ratio (PSNR), along with distribution-based metrics like Fréchet Inception Distance (FID), and Inception Score (IS). These are often supplemented by task-specific utility evaluations, such as downstream classification or detection performance when models are trained on synthetic versus real data [8]. Surveys on synthetic data augmentation in computer vision highlight methods based on 3D graphics rendering, neural style transfer, and GANs, with effectiveness frequently measured via downstream task performance on standard 2benchmarks [ 9]. However, significant gaps persist. Many widely used metrics (especially FID and IS, originally designed for natural images) show poor correlation with semantic suitability. They are often insensitive to localized details, hallucinations, or subtle semantic changes, and lack robustness when applied to domain-specific data. Recent works emphasize the need for holistic frameworks that go beyond statistical fidelity to include utility, bias/fairness, and domain-expert subjective assessment. Despite these efforts, there remains a scarcity of standard-ized, domain-agnostic benchmarks that jointly evaluate fidelity, diversity, utility, and privacy for computer vision synthetic data—particularly in safety-critical applications. This frequently results in over-optimistic assessments based primarily on photorealism, while issues such as downstream generalization gaps and bias amplification stay under-explored [9, 10, 11]. 
+
+2.3 Controllable Synthetic Data Generation using Latent Difference Vectors 
+
+A growing body of work leverages difference vectors (or direction vectors) in the latent/representation space of generative models to enable interpretable and controllable image synthesis and editing. This approach allows semantic attribute manipulation through simple vector arithmetic, such as adding or subtracting learned directions corresponding to specific changes (e.g., style, expression, or other visual attributes). Such practices implicitly rely on the assumptions that difference vectors capture meaningful semantic transformations in an approximately linearized form and that variations in the data are consistently reflected as linear combinations in the embedding space. Early demonstrations of meaningful vector arithmetic in GAN latent spaces showed that operations like 
+
+smiling woman − neutral woman + neutral man ≈ smiling man could produce semantically coherent results [ 12 ]. In the context of image-to-image translation, DRIT and related disentangled representation frameworks use domain-specific attribute vectors and cross-cycle consistency to generate diverse outputs from unpaired data, where transferred or sampled attribute vectors guide the translation [13]. VecGAN [ 14 ] explicitly employs interpretable latent directions (regularized to be orthogonal) for precise facial attribute editing via vector arithmetic in the encoded latent space. SliderGAN [ 15 ] enables continuous control by sliding along statistical parameters (effectively difference vectors) in a blendshape-informed latent space. These techniques improve controllability and diversity in synthetic data generation. These works collectively demonstrate that assuming linearized semantic transformations via difference vectors in representation space is a widely adopted practice for controllable image synthesis. 
+
+2.4 Linear Separability, Transferability, and Alignment in Representation Spaces 
+
+Many studies on representation learning and synthetic data analysis operate under the assumptions that embedding spaces (especially from pre-trained foundation models) admit approximately linear decision boundaries for discriminative tasks and that data-induced variations align with classifier directions, enabling transferability to downstream models (e.g., CNNs). Linear probing — training a simple linear classifier on frozen embeddings — is a standard technique to evaluate representation quality precisely because it tests linear separability in the representation space. High linear separability in embeddings has been shown to correlate strongly with improved downstream performance across vision tasks [ 16 ]. Works on generative data augmentation in embedding spaces of vision foundation models further assume that synthetic variations introduced in the latent space transfer meaningfully to downstream classifiers when alignment between data variations and classifier directions is preserved. In domain adaptation and multi-source settings, alignment of domain-specific distributions and classifier outputs in representation space is commonly used to ensure transferability, with explicit modeling of decision boundaries and geometric constraints on difference vectors between pre-trained and fine-tuned embeddings. These established practices support the assumptions that linear separability holds sufficiently for analysis and that embedding-level alignments correlate with the behavior of downstream models trained on the synthetic data. Overall, while GAN-based unpaired translation methods like CycleGAN have proven effective for image synthesis, the field continues to evolve toward more robust multi-modal generative techniques, controllable latent-space manipu-lations, and standardized evaluation frameworks. The widespread adoption of vector arithmetic, linear probing, and representation alignment in prior works provides strong motivation for the assumptions underlying our analysis, while also highlighting opportunities to address remaining gaps in semantic fidelity and utility for computer vision synthetic data. 33 Method 
+
+3.1 Problem Setup 
+
+We consider a binary classification task in the embedding space of a pre-trained foundation model. Let x ∈ Rd denote the embedding of a data point, and let a linear classifier be defined as: 
+
+wT x + b = 0 ,
+
+where w ∈ Rd is the weight vector. The vector w is normal to the decision boundary and represents the direction along which perturbations can change the predicted class label. We interpret w as capturing the discriminative signal that separates the two classes. 
+
+3.2 Discriminative Span via Data-Induced Variations 
+
+Given a dataset consisting of real samples and synthetically generated samples (obtained via image-to-image transfor-mations), we construct a set of difference vectors: 
+
+di = x(s) 
+
+> i
+
+− x(r) 
+
+> i
+
+,
+
+where x(r) 
+
+> i
+
+and x(s) 
+
+> i
+
+denote corresponding real and synthetic samples, respectively. These difference vectors represent the variations induced by the transformation process. Let D ∈ Rn×d be the matrix whose rows are the difference vectors {di}ni=1 . We interpret the row space of D as capturing the set of representational directions (i.e., concepts) that are encoded by the transformations induced by the synthetic data, rather than the transformations themselves. Our central hypothesis is that synthetic data is useful for the classification task if the discriminative signal w lies within (or can be well-approximated by) the span of these data-induced variations. Formally, we assess whether w can be reconstructed from D.
+
+3.3 Metric Formulation 
+
+We quantify this idea by reconstructing the classifier direction w from the span of the rows of D. Specifically, we solve: 
+
+DT α ≈ w, 
+
+where α denotes the coefficients associated with the difference vectors. Using the estimated coefficients, we obtain the reconstructed classifier direction: 
+
+wproj = DT α. 
+
+We then define the relative projection error as: RPE = ∥w − wproj ∥2
+
+∥w∥2
+
+.
+
+Using this, we define the Discriminative Span as: DS = 1 − RPE .
+
+The Discriminative Span measures the fraction of the discriminative signal that can be explained by the span of data-induced variations. Higher values indicate that the synthetic data captures task-relevant directions in representation space. 
+
+3.4 Theoretical Justification 
+
+We provide a simple geometric justification for the proposed metric. 
+
+Proposition 1. Let D ∈ Rn×d be the matrix of difference vectors, and let w ∈ Rd be the weight vector of a linear classifier. Let wproj denote the orthogonal projection of w onto the row space of D. Then: 1. wproj = w if and only if w lies in the span of the rows of D.2. The relative projection error 
+
+∥w − wproj ∥2
+
+∥w∥2
+
+is zero if and only if w is exactly representable as a linear combination of the difference vectors. 4Proof Sketch. The result follows from standard properties of orthogonal projections in Euclidean space. The projection wproj is the closest vector to w within the subspace spanned by the rows of D. Therefore, wproj = w if and only if w belongs to this subspace. The residual w − wproj is orthogonal to the subspace, and its norm corresponds to the distance from w to the subspace. Normalizing by ∥w∥2 yields the relative projection error. 
+
+3.5 Assumptions and Limitations 
+
+We clarify the scope of the proposed metric and the assumptions underlying its use. 
+
+Necessary vs. Sufficient Condition. The proposed formulation evaluates whether the discriminative signal w lies within, or can be well-approximated by, the span of data-induced variations. This constitutes a necessary condition for synthetic data to be useful for the classification task. However, it is not a sufficient condition. Even if the span of difference vectors captures w, downstream models may fail to learn this signal due to factors such as limited model capacity, optimization challenges, or noise in the data. 
+
+Assumptions. Our approach relies on the following assumptions: • Vector arithmetic in representation space. We assume that difference vectors in the embedding space capture meaningful semantic transformations. For example, differences between samples (e.g., pathological vs. normal) are assumed to encode task-relevant concepts in a linearized form. • Consistency of transformation signals. We assume that the variations introduced by the synthetic data generation process are reflected in the embedding space and can be approximated through linear combinations of difference vectors. • Transferability across models. Our analysis is performed in the embedding space of a pre-trained foundation model. We assume that alignment between data-induced variations and the classifier direction in this space correlates with the behavior of downstream models (e.g., CNNs) trained on the same data. • Linear separability in representation space. The use of a linear classifier assumes that the embedding space admits a linear decision boundary that captures the discriminative signal between classes. 
+
+Discussion. Under these assumptions, the proposed metric provides a principled estimate of whether synthetic data encodes task-relevant directions. However, it does not account for the ability of specific learning algorithms to recover these directions, and should therefore be interpreted as a predictive proxy rather than a guarantee of performance. 
+
+3.6 Practical Fixes 
+
+The difference matrix D is often ill-conditioned due to strong correlations among difference vectors, which arise from structured and low-dimensional transformations in embedding space. In such settings, the singular value spectrum of D
+
+decays rapidly, leading to near-linear dependencies among its rows. As a result, directly solving D⊤α = w using least squares can be numerically unstable, as the pseudo-inverse amplifies noise along directions corresponding to small singular values. This motivates the use of low-rank approximations and regularized solvers to obtain stable and meaningful estimates. 
+
+3.6.1 Low-Rank Approximation of Difference Space 
+
+In practice, the matrix D can be full rank due to noise and variability in the embedding space, even when the underlying transformations are limited. Consequently, the span of D may trivially cover the ambient space, leading to an overestimation of the Discriminative Span. To address this, we compute a low-rank approximation of D using truncated singular value decomposition (SVD): 
+
+D ≈ Dk,
+
+where Dk retains the top-k singular components. The truncation level k is determined based on the effective rank of D,providing a principled mechanism to suppress noise and retain dominant transformation directions. All subsequent computations are performed using the reduced matrix Dk.53.6.2 Regularization and Solver Variants 
+
+To obtain a stable reconstruction of w, we solve for coefficients α in: 
+
+D⊤ 
+
+> k
+
+α ≈ w. 
+
+We consider multiple estimators, including least squares, ridge regression, ℓ1-regularized regression, and non-negative least squares (NNLS). Regularization controls the magnitude of α and mitigates sensitivity to noise in the difference vectors. Notably, allowing both positive and negative coefficients is critical for accurate reconstruction. Constraining α
+
+to be non-negative restricts the ability to cancel noise components across difference vectors, leading to systematically poorer estimates. This highlights the importance of signed combinations in capturing the discriminative signal. 
+
+# 4 Experiments 
+
+We design our experiments to address three key questions. First, we validate the core assumption underlying our method—namely, that visual transformations induce approximately consistent directional shifts in embedding space. Second, we analyze structural properties of the difference matrix D, including rank and conditioning, to under-stand whether global diversity metrics can explain downstream generalization. Finally, we evaluate the proposed Discriminative Span metric and assess its ability to predict model performance across datasets. Together, these experiments aim to disentangle three factors: (i) the validity of vector arithmetic in visual embeddings, (ii) the role of diversity and matrix structure, and (iii) the importance of alignment with the discriminative direction. 
+
+4.1 Experimental Setup 
+
+We evaluate the proposed Discriminative Span metric across five datasets spanning medical imaging and natural image classification: Pneumonia Chest X-ray (CXR), Skin Lesion, Horses ↔ Zebras, Apples ↔ Oranges, and a Toy Watermark dataset. The Toy Watermark dataset serves as a controlled benchmark in which synthetic samples are generated by superimposing a CONFIDENTIAL watermark on natural images, with variations in color and orientation. This results in a transformation that is consistent and intrinsically low-dimensional, providing a setting where the underlying transformation subspace is explicitly known. 
+
+Data Sources. For the Pneumonia CXR dataset, negative (healthy) samples are obtained from a publicly available dataset 1, while positive samples are generated internally using image-to-image transformation techniques. For the Skin Lesion dataset, negative samples are collected from publicly available sources, and positive samples are generated internally. For the Horses ↔ Zebras and Apples ↔ Oranges datasets, real images are obtained from standard benchmark datasets, and synthetic samples are generated using CycleGAN implementations 2.
+
+Model Training. For each dataset, we train three convolutional neural network (CNN) classifiers—ResNet-18, MobileNet-V2, and EfficientNet-B0—on mixtures of real negative and corresponding synthetic positive samples. Model performance is evaluated on held-out real test sets using accuracy and F1 score. 
+
+Embedding Spaces. Geometric analysis is performed in the embedding space of three pre-trained models: • ResNet-18 (supervised CNN) • CLIP (contrastive vision-language model) • DINOv2 (self-supervised vision transformer) 
+
+Metric Computation. For each dataset and embedding space, we construct a difference matrix D ∈ Rn×d from paired samples. To mitigate the effects of noise and redundancy, we compute a low-rank approximation Dk using truncated singular value decomposition (SVD), where k is chosen based on the effective rank of D (see Section 3.6.1). All subsequent computations are performed using Dk.
+
+> 1https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia
+> 2https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.git
+
+6We then solve the system D⊤ 
+
+> k
+
+α ≈ w using multiple estimators, including least squares, ridge regression, non-negative least squares (NNLS), and ℓ1-regularized regression. Here, w is obtained by training a linear classifier on embeddings of real data (both real positives and real negatives). This setup enables a direct comparison between geometric alignment in representation space and downstream general-ization performance. 
+
+4.2 Validation of Vector Arithmetic in Visual Embeddings 
+
+We begin by validating the core assumption underlying our approach: that visual transformations induce approximately consistent directional shifts in embedding space. This assumption is critical, as our method relies on representing transformations through linear combinations of difference vectors. 
+
+4.2.1 Experiment Design 
+
+We construct another controlled Toy dataset using chest X-ray (CXR) images, where each synthetic sample is generated by applying a consistent transformation—superimposing a red patch in the top-right quadrant of the image. This yields paired samples of the form (xsource  
+
+> i
+
+, x target  
+
+> i
+
+).For each pair, we extract embeddings using DINOv2, ResNet-18, and CLIP, and compute the corresponding difference vectors: 
+
+∆i = f  xtarget 
+
+> i
+
+ − f (xsource  
+
+> i
+
+) .
+
+To evaluate the consistency of the induced transformation in representation space, we quantify alignment using the following metrics: 1. Pairwise cosine similarity between difference vectors, 2. Cosine similarity between each vector and the mean direction μ,3. Variance explained by the first principal component (PCA), 4. Residual cosine similarity after subtracting the mean direction μ.
+
+4.2.2 Results 
+
+Table 1: Vector arithmetic alignment metrics on the Toy Watermark dataset. 
+
+Metric DINOv2 ResNet-18 CLIP 
+
+Mean cosine similarity 0.565 0.678 0.815 Alignment with mean vector 0.753 0.824 0.903 Variance explained by PC1 10.2% 10.3% 13.9% Variance explained by first 3 PCs 25.2% 23.1% 29.8% Residual cosine similarity −0.0029 −0.0037 −0.0032 Difference vectors exhibit substantially positive mean cosine similarity across all models, indicating that the patch transformation induces a consistent directional shift rather than random variation in embedding space. Alignment with the mean direction is particularly strong for CLIP (0.903), suggesting that its contrastive training objective encourages well-structured representations of visual changes. The near-zero residual cosine similarity across all models confirms that once the dominant transformation direction is removed, the remaining variation behaves as uncorrelated noise, consistent with the additive model ∆i ≈ μ + εi.The first principal component explains only 10–14% of variance, indicating that the transformation is not perfectly one-dimensional: the red patch interacts with background textures, brightness, and local receptive field activations in ways that introduce image-specific variation. Nevertheless, the strong directional alignment provides empirical support for the linear arithmetic assumption that underlies our metric. 
+
+4.3 Limitations of Rank-Based Diversity Metrics Downstream Performance Overview. Before analyzing structural properties of the difference matrix D, we briefly summarize downstream performance across datasets (Tables 2–6). A mild performance gradient is observed: the Toy 7Watermark and natural image datasets (Horses/Zebras, Apples/Oranges) achieve strong to near-ceiling test performance, while the Skin Lesion dataset also exhibits strong generalization. In contrast, the Pneumonia CXR dataset remains the most challenging, with test F1 scores ranging from approximately 0.45 to 0.64 across architectures. This ordering provides a reference point for evaluating whether geometric properties of D can explain differences in generalization. Table 2: Downstream performance — Pneumonia CXR. 
+
+Model Train Acc Train F1 Test Acc Test F1 
+
+ResNet-18 1.0000 1.0000 0.6490 0.6392 MobileNet-V2 1.0000 1.0000 0.5080 0.4547 EfficientNet-B0 1.0000 1.0000 0.6058 0.5895 Table 3: Downstream performance — Skin Lesion. 
+
+Model Train Acc Train F1 Test Acc Test F1 
+
+ResNet-18 1.0000 1.0000 0.9767 0.9767 MobileNet-V2 1.0000 1.0000 0.9535 0.9535 EfficientNet-B0 1.0000 1.0000 0.6744 0.6977 Table 4: Downstream performance — Toy Watermark. 
+
+Model Train Acc Train F1 Test Acc Test F1 
+
+ResNet-18 1.0000 1.0000 0.9889 0.9889 MobileNet-V2 1.0000 1.0000 0.9667 0.9668 EfficientNet-B0 1.0000 1.0000 0.9556 0.9557 Table 5: Downstream performance — Horses and Zebras. 
+
+Model Train Acc Train F1 Test Acc Test F1 
+
+ResNet-18 1.0000 1.0000 0.9750 0.9751 MobileNet-V2 1.0000 1.0000 0.9792 0.9812 EfficientNet-B0 1.0000 1.0000 0.9542 0.9543 Table 6: Downstream performance — Apples and Oranges. 
+
+Model Train Acc Train F1 Test Acc Test F1 
+
+ResNet-18 1.0000 1.0000 0.8785 0.8649 MobileNet-V2 1.0000 1.0000 0.8947 0.8850 EfficientNet-B0 1.0000 1.0000 0.8603 0.8571 
+
+Rank vs. Conditioning: Structure Beyond Diversity. We next investigate whether global diversity metrics derived from the difference matrix D can explain the effectiveness of synthetic data. Specifically, we analyze effective rank, stable rank, and the conditioning of D across datasets. As summarized in Tables 7–9, effective rank varies substantially across datasets, reflecting differences in overall representational diversity. However, it does not consistently explain downstream generalization. For example, Pneumonia CXR exhibits relatively high effective rank across embedding spaces, yet achieves only moderate performance. At the same time, natural image datasets and the Toy Watermark dataset achieve strong performance with comparable or higher rank values. A more nuanced pattern emerges when considering the conditioning of D. In CLIP and DINOv2 embedding spaces, datasets with strong downstream performance tend to exhibit higher condition numbers and smaller minimum singular 8values, indicating that their difference vectors lie in a low-dimensional subspace with strong linear dependencies. In contrast, the Skin Lesion dataset exhibits substantially better conditioning, suggesting that its variations are more distributed and less structured. However, this trend is less consistent in ResNet-18 embeddings, where certain high-performing datasets (e.g., Ap-ples/Oranges) remain relatively well-conditioned. This suggests that the relationship between conditioning and generalization is dependent on the geometry of the embedding space. These observations highlight an important distinction: high-performing datasets are not characterized by uniformly distributed diversity, but often by variation concentrated along a few dominant directions. These directions capture task-relevant transformations, while the remaining dimensions contribute comparatively little. 
+
+Key Insight. Global diversity alone is insufficient to characterize synthetic data quality. Even a low-dimensional transformation can be sufficient for strong generalization if it aligns with the discriminative direction, whereas high diversity that is misaligned with the task provides limited benefit. This motivates the need for metrics that explicitly measure alignment between data-induced variations and the classifier direction. Table 7: Rank and conditioning statistics of the difference matrix D (CLIP embedding). 
+
+Dataset Eff. Rank Stable Rank Cond. Number Min Singular 
+
+Pneumonia CXR 246.02 3.11 9.4 × 10 4 5e-4 Skin Lesion 191.6 2.79 3.1 × 10 2 1.8e-1 Toy Watermark 239.9 1.62 3.2 × 10 3 4.58e-2 Horses/Zebras 307.8 2.42 7.5 × 10 4 1.90e-3 Apples/Oranges 318.7 3.27 6.5 × 10 4 2.05e-3 Table 8: Rank and conditioning statistics of the difference matrix D (ResNet-18 embedding). 
+
+Dataset Eff. Rank Stable Rank Cond. Number Min Singular 
+
+Pneumonia CXR 298.09 5.25 2.65 × 10 2 5.8e-1 Skin Lesion 176.9 2.59 6.2 × 10 2 1.74e-1 Toy Watermark 265.3 2.33 1.5 × 10 3 1.87e-1 Horses/Zebras 320.5 2.38 1.7 × 10 2 2.19e+0 Apples/Oranges 327.9 6.48 9.8 × 10 1 2.31e+0 Table 9: Rank and conditioning statistics of the difference matrix D (DINOv2 embedding). 
+
+Dataset Eff. Rank Stable Rank Cond. Number Min Singular 
+
+Pneumonia CXR 232.33 3.65 1.8 × 10 7 1.87e-5 Skin Lesion 187.2 2.64 8.9 × 10 2 4.32e-1 Toy Watermark 249.9 4.27 5.1 × 10 7 6.82e-6 Horses/Zebras 263.4 2.00 5.8 × 10 7 1.85e-5 Apples/Oranges 267.7 2.95 6.2 × 10 7 1.64e-5 
+
+4.4 Discriminative Span as a Predictor of Generalization 
+
+Tables 2–6 report downstream classification performance across all datasets and architectures. As discussed earlier, we observe a clear performance gradient, with the Toy Watermark and natural image datasets achieving near-ceiling performance, while Pneumonia CXR exhibits significantly weaker generalization. 
+
+4.4.1 Diagnostic Metrics 
+
+Tables 10–14 report the Discriminative Span (Explained Fraction) and associated metrics for each dataset. 9Table 10: Embedding space diagnostics - Pneumonia CXR Dataset 
+
+Embedding Solver Eff. Rank Rel. Error Expl. Fraction Pairs Dim 
+
+resnet18 Least Squares 298 ≈ 0† ≈ 1 1036 512 resnet18 Ridge 298 0.620 0.380 1036 512 resnet18 NNLS 298 0.958 0.042 1036 512 resnet18 L1 298 0.952 0.048 1036 512 clip Least Squares 246 ≈ 0† ≈ 1 1036 512 clip Ridge 246 0.786 0.214 1036 512 clip NNLS 246 0.982 0.018 1036 512 clip L1 246 ≈ 1 ≈ 0† 1036 512 dinov2 Least Squares 232 ≈ 0† ≈ 1 1036 384 dinov2 Ridge 232 0.689 0.311 1036 384 dinov2 NNLS 232 0.972 0.028 1036 384 dinov2 L1 232 0.789 0.211 1036 384 Table 11: Embedding space diagnostics - Skin Lesion 
+
+Embedding Solver Eff. Rank Rel. Error Expl. Fraction Pairs Dim 
+
+resnet18 Least Squares 176 0.366 0.634 352 512 resnet18 Ridge 176 0.538 0.462 352 512 resnet18 NNLS 176 0.735 0.265 352 512 resnet18 L1 176 0.859 0.141 352 512 clip Least Squares 191 0.268 0.732 352 512 clip Ridge 191 0.365 0.635 352 512 clip NNLS 191 0.558 0.442 352 512 clip L1 191 ≈ 1 ≈ 0† 352 512 dinov2 Least Squares 187 0.156 0.844 352 384 dinov2 Ridge 187 0.360 0.640 352 384 dinov2 NNLS 187 0.637 0.363 352 384 dinov2 L1 187 0.662 0.338 352 384 Table 12: Embedding space diagnostics - Toy Watermark 
+
+Embedding Solver Eff. Rank Rel. Error Expl. Fraction Pairs Dim 
+
+resnet18 Least Squares 265 0.157 0.843 485 512 resnet18 Ridge 265 0.451 0.549 485 512 resnet18 NNLS 265 0.765 0.235 485 512 resnet18 L1 265 0.815 0.185 485 512 clip Least Squares 239 0.117 0.883 485 512 clip Ridge 239 0.348 0.652 485 512 clip NNLS 239 0.568 0.432 485 512 clip L1 239 0.880 0.120 485 512 dinov2 Least Squares 249 ≈ 0† ≈ 1 485 384 dinov2 Ridge 249 0.363 0.637 485 384 dinov2 NNLS 249 0.571 0.429 485 384 dinov2 L1 249 0.555 0.445 485 384 10 Table 13: Embedding space diagnostics - Horses And Zebra 
+
+Embedding Solver Eff. Rank Rel. Error Expl. Fraction Pairs Dim 
+
+resnet18 Least Squares 320 ≈ 0† ≈ 1 1117 512 resnet18 Ridge 320 0.424 0.576 1117 512 resnet18 NNLS 320 0.776 0.224 1117 512 resnet18 L1 320 0.810 0.190 1117 512 clip Least Squares 307 ≈ 0† ≈ 1 1117 512 clip Ridge 307 0.285 0.715 1117 512 clip NNLS 307 0.672 0.328 1117 512 clip L1 307 0.862 0.138 1117 512 dinov2 Least Squares 263 ≈ 0† ≈ 1 1117 384 dinov2 Ridge 263 0.321 0.679 1117 384 dinov2 NNLS 263 0.650 0.350 1117 384 dinov2 L1 263 0.606 0.394 1117 384 Table 14: Embedding space diagnostics - Apples And Oranges 
+
+Embedding Solver Eff. Rank Rel. Error Expl. Fraction Pairs Dim 
+
+resnet18 Least Squares 327 ≈ 0† ≈ 1 995 512 resnet18 Ridge 327 0.437 0.563 995 512 resnet18 NNLS 327 0.690 0.310 995 512 resnet18 L1 327 0.738 0.262 995 512 clip Least Squares 318 ≈ 0† ≈ 1 995 512 clip Ridge 318 0.335 0.665 995 512 clip NNLS 318 0.691 0.309 995 512 clip L1 318 0.847 0.153 995 512 dinov2 Least Squares 267 ≈ 0† ≈ 1 995 384 dinov2 Ridge 267 0.422 0.578 995 384 dinov2 NNLS 267 0.790 0.210 995 384 dinov2 L1 267 0.569 0.431 995 384 A key observation from Tables 10–14 is that Least Squares solutions frequently yield near-saturated explained fractions across multiple datasets. This behavior arises from the high effective rank of the difference matrix, which enables near-trivial reconstruction of the classifier direction even when true alignment is limited. Consequently, Least Squares fails to meaningfully distinguish between datasets with different levels of downstream performance. In contrast, regularized estimators such as Ridge regression provide more informative and discriminative measurements. Under Ridge, Pneumonia CXR consistently exhibits lower explained fractions (approximately 0.21–0.38), while higher-performing datasets such as Skin Lesion, Toy Watermark, and Horses/Zebras show substantially higher values (typically in the range of 0.56–0.71). This trend aligns more closely with downstream performance, indicating that regularization is essential for obtaining meaningful estimates of alignment. A further observation is that NNLS consistently yields lower explained fractions than unconstrained or regularized least-squares solutions. This behavior stems from the non-negativity constraint imposed on the coefficients, which restricts the ability to form signed linear combinations of difference vectors. In practice, each difference vector contains a mixture of task-relevant signal and noise. Accurate reconstruction of the discriminative direction therefore often requires combining vectors with both positive and negative coefficients, enabling partial cancellation of noise components. By prohibiting negative coefficients, NNLS limits this cancellation mechanism, leading to systematically lower explained fractions even when alignment is present. 
+
+4.4.2 Correlation Between Discriminative Span and Test Performance 
+
+To quantify the relationship between the proposed metric and downstream generalization, we compute Pearson and Spearman correlations between the explained fraction (under each solver) and the best test F1 score per dataset, separately for each embedding model. 11 Table 15: Correlation analysis — ResNet-18 embedding space. 
+
+Solver Pearson r p-value Spearman ρ Points 
+
+L1 0.604 0.2805 0.3 5Least Squares -0.497 0.3939 -0.1 5NNLS 0.774 0.1244 0.1 5Ridge 0.734 0.1583 0.5 5Table 16: Correlation analysis — CLIP embedding space. 
+
+Solver Pearson r p-value Spearman ρ Points 
+
+L1 0.441 0.4575 0.3 5Least Squares -0.5 0.3912 -0.1 5NNLS 0.958 0.0104 0.7 5Ridge 0.924 0.025 0.5 5Table 17: Correlation analysis — DINOv2 embedding space. 
+
+Solver Pearson r p-value Spearman ρ Points 
+
+L1 0.785 0.1157 0.7 5Least Squares -0.329 0.5888 -0.1 5NNLS 0.98 0.0035 0.9 5Ridge 0.981 0.0031 0.7 5Correlation analysis reveals a clear distinction between naive and regularized estimators. Least Squares exhibits weak or negative correlations across all embedding spaces (Pearson r ≈ − 0.33 to −0.50 , Spearman ρ ≈ − 0.1), indicating that it fails to capture meaningful relationships with downstream performance. This is consistent with earlier observations that Least Squares produces near-saturated explained fractions, rendering it non-discriminative across datasets. In contrast, regularized estimators such as Ridge and NNLS show consistently positive Pearson correlations. In particular, NNLS achieves high correlation in CLIP and DINOv2 embeddings ( r ≈ 0.96 –0.98 , p < 0.02 ), while Ridge also demonstrates strong linear agreement ( r ≈ 0.73 –0.98 across embeddings). However, NNLS consistently produces lower explained fractions due to its non-negativity constraint, which limits its ability to form signed combinations of difference vectors. As a result, while NNLS captures overall trends, Ridge provides more accurate and less constrained estimates of alignment. Overall, these results suggest that while naive estimation of Discriminative Span is unreliable, regularized estimators provide meaningful and predictive measures of alignment, with Ridge offering the most consistent and interpretable behavior across datasets. 
+
+# 5 Discussion 
+
+5.1 Alignment Drives Generalization 
+
+The central finding of this work is that alignment between the classifier direction and the span of data-induced difference vectors is a key factor governing downstream generalization. However, this relationship is only reliably captured when the Discriminative Span is estimated using appropriate regularization. Across all datasets, higher alignment—measured via regularized estimators such as Ridge— corresponds to better test performance. In contrast, naive estimation using Least Squares produces near-saturated explained fractions and fails to distinguish between datasets with different generalization behavior, highlighting the importance of stable estimation in high-dimensional settings. This relationship is supported by correlation analysis, which shows strong positive Pearson correlation between Discriminative Span and test F1 scores under regularized estimators (e.g., r ≈ 0.73 –0.98 depending on embedding space and solver). 12 The Pneumonia CXR dataset provides a representative case where alignment is weaker. It consistently achieves lower test performance compared to other datasets. Correspondingly, its Ridge-based Discriminative Span values remain lower, indicating that the synthetic transformations do not sufficiently capture task-relevant directions. This reflects a mismatch between the transformation process and the discriminative signal, which the proposed metric is able to detect without requiring full model training. 
+
+5.2 Beyond Diversity: The Role of Structure 
+
+Our experiments reveal that global diversity alone is insufficient to explain synthetic data quality. While effective rank captures the spread of variation in the difference matrix D, it does not account for how that variation is distributed across directions. In CLIP and DINOv2 embedding spaces, high-performing datasets tend to exhibit strong concentration of variation along a few dominant directions, resulting in ill-conditioned difference matrices. Rather than being detrimental, this structure reflects the presence of coherent, task-relevant transformations. In contrast, datasets such as Pneumonia CXR exhibit weaker alignment despite comparable or moderately high effective rank, suggesting that diversity alone is insufficient for strong generalization. At the same time, this trend is less consistent in ResNet-18 embeddings, indicating that the relationship between conditioning and downstream performance depends on the geometry of the representation space rather than conditioning alone. This observation reinforces a key distinction: 
+
+Generalization is governed not by the amount of variation, but by its alignment with the discriminative direction. 
+
+Rank-based metrics therefore serve as useful but incomplete diagnostics: they capture global diversity, but fail to distinguish between structured, task-aligned variation and unstructured variability. 
+
+5.3 The Role of the Embedding Space 
+
+The effectiveness of the Discriminative Span depends strongly on the geometry of the embedding space. Across the evaluated models, both CLIP and DINOv2 exhibit strong and consistent relationships between alignment and downstream performance under regularized estimators. In particular, Ridge and NNLS produce high Pearson correlations in both embedding spaces, indicating that these representations preserve discriminative structure in a form that is amenable to geometric analysis. At the same time, the two embedding spaces exhibit different numerical characteristics. CLIP generally provides stable and interpretable estimates, while DINOv2 frequently exhibits extreme ill-conditioning and numerical instability under Least Squares estimation. Nevertheless, regularized estimators remain highly effective in both spaces, suggesting that the underlying semantic structure is still strongly preserved. In contrast, ResNet-18 embeddings show weaker and less consistent relationships between Discriminative Span and downstream performance across solvers. Correlation trends are less pronounced, and the resulting estimates are generally less discriminative across datasets. This suggests that foundation-model embeddings, particularly contrastive and self-supervised representations, are better suited for geometric analysis of synthetic data than conventional supervised CNN features. Overall, these results indicate that the success of Discriminative Span depends not only on the transformations themselves, but also on the representation space in which those transformations are analyzed. 
+
+5.4 Solver Choice and Numerical Stability 
+
+Solver choice plays a critical role in reliably estimating the Discriminative Span. While Least Squares provides the minimum-norm solution in theory, it is highly sensitive to ill-conditioning in the difference matrix D. In datasets with strong linear dependencies among difference vectors, the pseudo-inverse amplifies noise along small singular directions, resulting in unstable estimates and artificially inflated explained fractions. Ridge regression mitigates this issue by regularizing the solution, effectively suppressing the influence of near-zero singular values. Across all datasets and embedding spaces, Ridge consistently provides stable and interpretable estimates, with strong correlation to downstream performance. 13 In contrast, NNLS and ℓ1-regularized solutions impose structural constraints that can hinder accurate reconstruction of the classifier direction. In particular, restricting coefficients to be non-negative prevents cancellation of noise components across difference vectors, leading to systematically lower explained fractions even in high-performing settings. 
+
+5.5 Implications 
+
+Taken together, our findings suggest that synthetic data quality is fundamentally a geometric problem. The critical question is not how much variation is present, but whether that variation spans the discriminative direction required for the task. This perspective has several implications: • Synthetic data generation should be evaluated in terms of alignment with task-relevant directions, rather than global diversity alone. • Embedding-space analysis provides a powerful and model-agnostic framework for diagnosing synthetic data quality. • Regularized geometric estimators, such as Ridge-based Discriminative Span, offer practical and stable tools for predicting generalization without training full models. 
+
+# 6 Conclusion 
+
+We proposed Discriminative Span, a geometry-driven metric that quantifies how well variations induced by synthetic data capture the discriminative signal required for a target classification task. The metric operates in the embedding space of a pre-trained foundation model and evaluates synthetic data without requiring full downstream model training. It measures the extent to which the classifier direction—obtained from real data—can be reconstructed from the subspace spanned by difference vectors between real and synthetic samples. Across five datasets spanning medical imaging and natural image classification, we observe a strong relationship between Discriminative Span and downstream generalization performance when alignment is estimated using appropriate regularization. In particular, Ridge- and NNLS-based estimators exhibit strong positive correlation with test F1 scores across multiple embedding spaces, while naive Least Squares estimation frequently fails due to numerical instability and rank saturation. These findings establish Discriminative Span as a practical and interpretable tool for evaluating synthetic data prior to downstream model training. Our results lead to three key insights. First, generalization is governed by alignment rather than diversity: synthetic data is effective when it spans task-relevant directions, even if the transformation space is low-dimensional. Second, the difference-vector representation induced by synthetic transformations often forms a highly structured and ill-conditioned subspace, indicating that meaningful variation is concentrated along a few dominant directions rather than uniformly distributed. Third, both embedding geometry and solver choice critically influence stability, with foundation-model embeddings and regularized estimators providing the most reliable behavior for geometric analysis. A key limitation of the proposed metric is that it provides a necessary but not sufficient condition for generalization. While high Discriminative Span indicates that the discriminative direction is representable within the transformation subspace, downstream performance may still depend on factors such as optimization dynamics, model capacity, and noise in the data. Future work can extend this framework in several directions. First, by incorporating additional measures of data quality—such as robustness, diversity, and sample efficiency—to better characterize sufficiency. Second, by using Discriminative Span as a feedback signal for synthetic data generation, for example by identifying underrepresented transformation directions and adapting generative models accordingly. Finally, extending the framework beyond linear reconstruction may enable analysis of more complex nonlinear transformation structures. Overall, this work reframes synthetic data evaluation as a geometric alignment problem, providing a simple and computationally efficient alternative to costly train-and-evaluate pipelines. 
+
+# References 
+
+[1] Zhu, Jun-Yan, et al. "Unpaired image-to-image translation using cycle-consistent adversarial networks." Proceed-ings of the IEEE international conference on computer vision. 2017. 14 [2] Wolterink, Jelmer M., et al. "Deep MR to CT synthesis using unpaired data." International workshop on simulation and synthesis in medical imaging. Cham: Springer International Publishing, 2017. [3] A. Figueira and B. Vaz, "Survey on Synthetic Data Generation, Evaluation Methods and GANs," Mathematics, vol. 10, no. 15, p. 2733, 2022, doi: 10.3390/math10152733. [4] Dankar, Fida K., Mahmoud K. Ibrahim, and Leila Ismail. "A multi-dimensional evaluation of synthetic data generators." IEEE Access 10 (2022): 11147-11158. [5] J. Wang et al., "DC-cycleGAN: Bidirectional CT-to-MR Synthesis from Unpaired Data," arXiv preprint arXiv:2211.01293, 2022. [6] Ibrahim, Mahmoud, et al. "Generative AI for synthetic data across multiple medical modalities: A systematic review of recent developments and challenges." Computers in biology and medicine 189 (2025): 109834. [7] Koetzier, Lennart R., et al. "Generating synthetic data for medical imaging." Radiology 312.3 (2024): e232471. [8] A. B. Abdusalomov et al., "Evaluating Synthetic Images Using Artificial Intelligence with the GAN Algorithm," Sensors, vol. 23, no. 7, p. 3440, 2023. [9] Alhassan, Mumuni, Fuseini Mumuni, and N. Gerrar. "A survey of synthetic data augmentation methods in computer vision." arXiv preprint (2024). [10] Zamzmi, Ghada, et al. "Scorecard for synthetic medical data evaluation." Communications Engineering 4.1 (2025): 130. [11] Sizikova, Elena, et al. "Synthetic data in radiological imaging: current state and future outlook." BJR| Artificial Intelligence 1.1 (2024): ubae007. [12] Radford, Alec, Luke Metz, and Soumith Chintala. "Unsupervised representation learning with deep convolutional generative adversarial networks." arXiv preprint arXiv:1511.06434 (2015). [13] Lee, Hsin-Ying, et al. "Diverse image-to-image translation via disentangled representations." Proceedings of the European conference on computer vision (ECCV). 2018. [14] Dalva, Yusuf, Said Fahri Altındi¸ s, and Aysegul Dundar. "Vecgan: Image-to-image translation with interpretable latent directions." European conference on computer vision. Cham: Springer Nature Switzerland, 2022. [15] Ververas, Evangelos, and Stefanos Zafeiriou. "Slidergan: Synthesizing expressive face images by sliding 3d blendshape parameters." International Journal of Computer Vision 128.10 (2020): 2629-2650. [16] Chen, Ting, et al. "A simple framework for contrastive learning of visual representations." International conference on machine learning. PmLR, 2020. 15
