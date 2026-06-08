@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-08T12:59:04.953341+00:00",
-  "updated_date": "20260510-20260608",
+  "generated_at": "2026-06-08T21:34:21.816846+00:00",
+  "updated_date": "20260608",
   "carryover_days": 9,
   "tag_states": {
     "deepfake-fsl": {
-      "updated_date": "20260510-20260608",
+      "updated_date": "20260608",
       "carryover_days": 9,
       "items": []
     }
