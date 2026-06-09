@@ -1,0 +1,351 @@
+Title: FADRW: A Feature-Aware Modulated and Dynamically Reweighted Loss for Few-Shot Linguistic Steganalysis
+
+URL Source: https://arxiv.org/pdf/2606.07655v1
+
+Published Time: Tue, 09 Jun 2026 00:04:54 GMT
+
+Number of Pages: 5
+
+Markdown Content:
+> IEEE SIGNAL PROCESSING LETTERS, VOL. XX, NO. X, MONTH 2026 1
+
+# FADRW: A Feature-Aware Modulated and Dynamically Reweighted Loss for Few-Shot Linguistic Steganalysis 
+
+Shuo Liu, Xianghong Lin, Yukun Wei, and Zhongliang Yang 
+
+Abstract —The ubiquity of social media platforms facilitates malicious linguistic steganography, posing significant security risks. However, detection is severely hampered by two fundamen-tal issues during model training. Firstly, extreme class imbalance (less than 1% steganographic samples) induces a strong decision bias. Secondly, the invisibility of generative steganography means its features are nearly indistinguishable from benign text; this similarity, compounded by their extreme rarity, leads to severe feature marginalization, where faint steganographic signals are completely overwhelmed. To directly address these optimization-level challenges, we propose FADRW (Feature-Aware Modulated and Dynamically Reweighted Loss), a novel loss function frame-work engineered for few-shot steganalysis. FADRW employs Dy-namic Reweighting to progressively counteract decision bias, and a Feature-Aware Modulation module to structurally reshape the feature space, preventing feature marginalization by enhancing the separability of these subtle features. Extensive experiments on datasets from three real-world social platforms demonstrate that FADRW significantly outperforms state-of-the-art methods, particularly in the challenging few-shot steganographic sample scenario. 
+
+Index Terms —Linguistic steganalysis, Linguistic steganogra-phy, Few shot learning 
+
+I. I NTRODUCTION 
+
+# STEGANOGRAPHY aims to hide secret information in seemingly ordinary carriers so that the existence of com-munication remains concealed [1]. Compared with encryption, which protects content while exposing the presence of a mes-sage, steganography attempts to make steganographic carriers indistinguishable from normal carriers. This property makes it attractive not only for privacy-preserving communication, but also for malicious uses such as covert coordination, data exfiltration, and cyberattacks [2]. Therefore, steganalysis, which aims to detect the presence of hidden payloads within seemingly benign cover media, is of great research significance for maintaining cyberspace security. Among various media, text is a particularly attractive carrier for steganography because it is ubiquitous, easy to dissemi-nate, and remains stable during online communication. The rapid growth of social media further amplifies this advan-tage by providing massive volumes of short, interactive, and highly diverse text, thereby creating favorable environments for covert communication. Recent linguistic steganography has 
+
+S. Liu is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. X. Lin, Y. Wei, and Z. Yang are with the School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing 100876, China (e-mail: yangzl@bupt.edu.cn). (*Corresponding author: Zhongliang Yang.) 
+
+evolved from early neural generative methods, such as RNN-Stega and VAE-Stega, to more advanced neural and LLM-based paradigms [3], [4], [5], [6], [7]. These methods embed secret information by modulating token selection during text generation, improving both linguistic fluency and payload flexibility. More recent studies have further moved toward provably secure linguistic steganography [8], [9], [10], [11], [12], where the generated stegotext is designed to better match the distribution of benign text. Consequently, modern stego-text becomes increasingly natural and statistically concealed, making reliable detection substantially more challenging. To detect such hidden communication, steganalysis models aim to capture subtle discrepancies between steganographic and normal texts. Early studies mainly relied on handcrafted statistical cues, such as lexical or synonym-based features [13], [14]. With the development of neural methods, deep models such as TS-RNN [15], TS-CSW [16], FastText-SM [17], TS-GNN [18], and HSL-DA [19] significantly improved single-text steganalysis by learning more discriminative represen-tations directly from text. However, isolated text analysis is often insufficient for social media, where messages are short, fragmented, and semantically sparse. To alleviate this issue, recent studies started to incorporate conversational and rela-tional context. LSTSN [20] showed that surrounding context can substantially improve detection in social networks. Subse-quent works further exploited interaction structures, external knowledge, and graph-based modeling, such as LINK [21], CATS [22], TGCA [23], STLC-KG [24], CASS-LS [25], UP4LS [26] and ATS-MPFF [27], achieving stronger context-aware steganalysis performance. Despite this progress, a critical challenge remains insuffi-ciently addressed: extreme class imbalance in real-world social platforms. In practice, steganographic texts are exceedingly rare, often accounting for less than 1% of all messages, which makes social media steganalysis essentially a few-shot detection problem. Under this setting, two optimization-level difficulties arise. First, the subtle features of steganographic texts are easily submerged by the overwhelming number of benign samples, leading to weak discriminability in the learned feature space. Second, the classifier is dominated by the majority class during training, which biases the decision boundary toward normal texts and weakens generalization to rare steganographic samples. Therefore, to build a robust steganalysis model for real-world imbalanced data, it is critical to tackle the problems of feature marginalization and decision bias at the optimization level. 
+
+> arXiv:2606.07655v1 [eess.SP] 3 Jun 2026
+
+IEEE SIGNAL PROCESSING LETTERS, VOL. XX, NO. X, MONTH 2026 2Social Media Data 
+
+> Cover Text (>99%)
+
+Graph Construction         
+
+> 𝐻 =(𝑉 ,𝐸 )
+> 𝑁𝑜𝑑𝑒 𝑣 𝑖 :𝑀𝑒𝑠𝑠𝑎𝑔𝑒𝑠 (𝑥 i)
+> 𝐸𝑑𝑔𝑒 𝑒 𝑖 :𝑅𝑒𝑝𝑙𝑦
+
+Feature Extraction        
+
+> Linguistic Feature
+> Word Embedding
+> BERT one -hot
+> Feature Extractor
+> ATT CNN …Message Aggregation
+> CNN ATT …
+> Graph Feature
+
+𝑓  𝑣 𝑖 = 𝑓 s (𝑥 𝑖 ) ⊕ 𝑓 𝑔 (𝑁 (𝑣 𝑖 ))
+
+Classification      
+
+> Decision Rule
+> IF𝑃 (𝑆 |𝑓 (𝑣 𝑖 ))>𝑃 (𝐶 |𝑓 (𝑣 𝑖 ))
+> Yes No
+> Stego Cover
+> How are
+> you ?
+> You are
+> right.
+> I don't
+> think so
+> I don't
+> like it
+> Are you
+> sure ?
+> OK, I
+> Sure !
+
+Steg Algo  
+
+> Stego Text (<1%)
+
+Few -Shot Sample 
+
+> Huffman Coding (HC)
+> Arithmetic Coding (AC)
+> Adaptive Dynamic
+> Grouping(ADG)
+
+Reweighting Module  Feature -Aware Modulation  Module   
+
+> Two -Stage Training Strategy
+> Epoch T
+> Cover Steg
+> 1/99
+> Num
+> Cover Steg
+> Loss Weight
+
+≈
+
+Start                            
+
+> w𝑖 =1−β𝑛 i−1
+> σ𝑗 =1
+> 21−β𝑛 𝑗 −1
+> ෥𝑤 𝑖 =2𝑤 𝑖
+> σ𝑗 =1
+> 2𝑤 𝑗
+> Weight
+> Normalization
+> Learn Robust
+> General Feature
+> Stage 1 Stage 2
+> Correct
+> Decision Bias
+> Cover Steg
+> 1/99
+> Logits Weight
+> Scaling Offset Raw
+> Cover Steg
+> Logits Weight
+> Cover Steg
+> Logits Weight
+> Two -Stage Logits Feature -Aware Modulation
+> Initial State
+> 𝑙𝑜𝑠𝑠 𝑐𝑒
+> Apply Scaling
+> 𝑧 ′=𝑧 /∆
+> Apply Scaling
+> 𝑧 ′′ =𝑧 ′+𝜄
+
+FADRW                 
+
+> 𝐿 =−1
+> N෍𝑘 =1
+> 𝑁 2
+> σj=1
+> 21−𝛽 𝑛 j−1
+> 1
+> 1−𝛽 𝑛 yk 𝑙𝑜𝑔 (exp (z𝑦𝑘
+> k
+> ∆𝑦𝑘
+> +𝜄 ))/෍j=1
+> 2
+> exp (z𝑗
+> k
+> ∆𝑗
+> +𝜄 ))
+
+Fig. 1. The FADRW framework for few-shot steganalysis. After constructing a graph from imbalanced social media data and extracting features, the model is optimized by our FADRW loss. Its Reweighting Module corrects decision bias through staged training, while its Feature-Aware Modulation Module prevents feature marginalization. The t-SNE visualization on the right confirms FADRW’s effectiveness in creating a more separable feature space. 
+
+To address these challenges about few-sample steganalysis, our main contributions are threefold: 
+
+• We identify decision bias, arising from extreme class imbalance, as a primary failure mode in few-shot ste-ganalysis. To counteract this, we propose a Dynamic Reweighting strategy, which utilizes a staged training process to progressively correct the model’s focus and refine its decision boundary. 
+
+• We identify feature marginalization, where the inherently subtle and rare features of steganographic text are over-whelmed, as the second key bottleneck. We introduce a novel Feature-Aware Modulation module that structurally reshapes the feature space by scaling and shifting logits, thereby enhancing the separability of these faint but critical signals. 
+
+• We conduct extensive experiments on datasets from three social platforms (Reddit, X, and Weibo). The results demonstrate that our FADRW Loss, which synergistically combines both contributions, significantly outperforms state-of-the-art methods, particularly in the most chal-lenging less than 1% steganographic sample scenarios. II. M ETHOD 
+
+A. Task Modeling and FADRW Overview 
+
+We model the social media conversation as a graph H =(V, E ), where V = {v1, v 2, . . . , v n} denotes the set of mes-sage nodes and E ⊆ V × V denotes the set of reply edges, with (vi, v j ) ∈ E iff vj is a direct reply to vi. Each node 
+
+vi ∈ V corresponds to a message text xi and is associated with a binary label yi ∈ {0, 1}, where yi = 1 denotes a steganographic text and yi = 0 denotes a normal cover text. The goal is to predict the label of each node by jointly exploiting its textual content and conversational context. As illustrated in Fig. 1, the feature extraction stage contains two parallel branches. In the linguistic branch, xi is mapped into word-level embeddings and encoded by an attention-enhanced CNN(ATT-CNN) to obtain the linguistic feature 
+
+fs(xi). In the graph branch, the neighborhood information of 
+
+vi is aggregated through a GNN-based message-aggregation module along the reply structure to produce the graph con-textual feature fg (N (vi)) . The final node representation is obtained by feature fusion: 
+
+f (vi) = fs(xi) ⊕ fg (N (vi)) , (1) where N (vi) denotes the set of neighboring nodes of vi, and 
+
+⊕ denotes concatenation along the feature dimension. However, directly optimizing the classifier on f (vi) is severely hindered by extreme class imbalance, which causes majority-induced decision bias and feature marginalization of subtle steganographic signals. To address these challenges, we propose FADRW, an optimization-level loss framework consisting of Dynamic Reweighting and Feature-Aware Modu-lation, which respectively alleviate classifier bias and enhance the separability of weak steganographic features. The detailed formulations are presented in the following subsections. 
+
+B. Dynamic Reweighting for Decision Bias 
+
+To counteract the decision bias in steganalysis, where the optimization is dominated by > 99% benign samples, pushing the decision boundary to misclassify rare stego examples, IEEE SIGNAL PROCESSING LETTERS, VOL. XX, NO. X, MONTH 2026 3
+
+FADRW employs a Dynamic Reweighting strategy. Our strat-egy mitigates this with a progressive, staged training scheme, rather than a fixed factor, allowing the model to first learn robust general features before shifting focus to the minority class. The reweighting intensity β is selected from a predefined schedule (β0, β 1, ... ) based on the current training stage: 
+
+β = βk where k = ⌊ epoch 
+
+T ⌋, (2) where T is the length of each training stage. This typically involves an initial stage with no reweighting (e.g., β0 = 0 )to learn robust initial features, followed by later stages with aggressive reweighting (e.g., β1 = 0 .999 ) to correct the bias. Using the selected β, we then calculate the final normalized weight ˜wi for class i. This weight is inversely proportional to the class’s effective number of samples, ensuring the minority steganographic class receives higher emphasis. For the binary steganalysis task, the weight is: 
+
+¯wi = 2(1 − βni )−1
+
+P1
+
+> j=0
+
+(1 − βnj )−1 , (3) where ni is the number of training samples in class i. By applying these progressively increasing weights, we force the model to refine its decision boundary, ensuring that the few, yet critical, steganographic samples contribute substantially to the total loss in the final training stages. 
+
+C. Feature-Aware Modulation for Feature Marginalization 
+
+To combat the feature marginalization endemic to im-balanced steganalysis, we introduce a Logits-based Feature-Aware Modulation module. Under a standard Cross-Entropy (CE) loss, the subtle, low-magnitude features characteristic of steganographic texts are overwhelmed by the gradients from the vast number of benign samples. Our module prevents this by structurally reshaping the feature space before the final loss calculation. This is achieved through a two-fold modulation of the model’s output logits. First, a class-aware scaling factor ∆i
+
+enforces a larger decision margin for the minority class. For our binary task, it is defined as: 
+
+∆i = n−γi
+
+min j∈{ 0,1} n−γj
+
+, (4) where ni is the sample count for class i, and the hyper-parameter γ controls the scaling intensity. Second, this is complemented by an additive shifting offset ιi that directly counterbalances the inherent class priors. By incorporating the class frequency directly, the offset is calculated as: 
+
+ιi = τ ln ni
+
+P1 
+
+> j=0
+
+nj
+
+!
+
+, (5) where the hyperparameter τ controls the shifting strength. These modulations act more strongly on the minority class, where a small sample count leads to a larger scaling factor and a stronger offset. As a result, the adjusted logits enlarge minority-class separability and compensate for its disadvan-taged prior. These two components are then integrated to produce the final modulated logits, which are used to compute the loss. The complete modulated logit for class i of a sample 
+
+k is given by: 
+
+˜z(k) 
+
+> i
+
+= z(k)
+
+> i
+
+∆i
+
++ ιi, (6) This allows us to formulate the loss for the feature modulation component as the cross-entropy over these adjusted logits: 
+
+Lmod = − 1
+
+N
+
+> N
+
+X
+
+> k=1
+
+log exp(˜ z(k) 
+
+> yk
+
+)
+
+P1 
+
+> l=0
+
+exp(˜ z(k) 
+
+> l
+
+) , (7) where N is the number of samples in the batch, and yk
+
+is the ground-truth label for the k-th sample. By substitut-ing the standard logits with these structurally adjusted ones, our method ensures that the features of rare steganographic samples are protected from marginalization and contribute meaningfully to the optimization process, a property not achievable with standard CE loss. By combining the dynamic reweighting term with the modulated logits, the final FADRW loss is formulated as 
+
+L = − 1
+
+N
+
+> N
+
+X
+
+> k=1
+
+"
+
+2
+
+P1
+
+> j=0
+
+(1 − βnj )−1
+
+11 − βnyk
+
+#
+
+× log 
+
+
+
+exp 
+
+ z(k)
+
+> yk
+> ∆yk
+
++ ιyk
+
+P1 
+
+> l=0
+
+exp 
+
+ z(k) 
+
+> l
+> ∆l
+
++ ιl
+
+ ,
+
+(8) where the reweighting term alleviates majority-induced deci-sion bias, while the modulation term improves the separability of weak steganographic features. III. E XPERIMENTS AND ANALYSIS 
+
+A. Data Preparation and Experimental Settings 
+
+We evaluate the proposed method on the Stego-Sandbox dataset [20], which contains real-world conversational data collected from three social media platforms, namely Reddit, X (dataset name Tweet in [20]), and Weibo (dataset name Sina in [20]). The dataset is generated using three representative generative linguistic steganographic algorithms, namely “Huff-man Coding” (HC) [31], “Arithmetic Coding” (AC) [4], and “Adaptive Dynamic Grouping” (ADG) [32], with embedding payloads controlled by bits per word (BPW), i.e., the average number of hidden bits per word. Following the original pro-tocol, the dataset is partitioned into training, validation, and test sets with a ratio of 75% / 12.5% / 12.5%. To simulate realistic social media scenarios where steganographic content is extremely rare, we further construct highly imbalanced subsets by random sampling while preserving the original con-versational graph structures, such that steganographic samples account for less than 1% of the training data. For a fair comparison, all methods are implemented on the same architectural backbone, LSTSN [20]. To evaluate the pro-posed loss, we compare it with imbalance-aware baselines, in-cluding LDAM [28] and Focal Loss [29]. We further introduce SAM [30] as an optimization baseline and combine it with CE, LDAM, and Focal Loss for comparison. Since the task is highly imbalanced, we report the positive-class F1-score for IEEE SIGNAL PROCESSING LETTERS, VOL. XX, NO. X, MONTH 2026 4
+
+TABLE I POSITIVE -CLASS F1 SCORES (%, 5-RUN AVERAGE ) ON THE REDDIT , S INA , AND TWEET DATASETS UNDER VARIOUS STEGANOGRAPHIC ALGORITHMS AND EMBEDDING PAYLOADS (BPW). 
+
+Dataset Algorithm AC (BPW) HC (BPW) ADG (BPW) 0.24 1.17 2.00 2.66 3.27 1.86 2.59 3.23 4.13 Reddit 
+
+LSTSN [20] 89.58 87.46 82.68 78.22 68.45 83.98 84.58 76.83 3.45 LDAM [28] 89.25 87.29 82.70 78.67 69.29 85.08 83.86 75.66 16.92 Focal [29] 89.64 87.45 84.19 76.74 65.03 84.39 83.61 76.04 0.93 CE+SAM [30] 88.75 86.92 83.34 77.44 65.63 84.18 81.73 74.94 20.64 FADRW(Proposed) 89.97 87.40 83.56 79.19 73.50 85.83 85.02 79.42 12.43 
+
+Sina 
+
+LSTSN [20] 73.94 52.07 41.03 17.98 20.87 57.17 21.05 23.65 4.66 LDAM [28] 73.29 52.69 39.79 18.21 16.62 57.44 27.86 25.05 14.54 Focal [29] 74.24 53.75 31.69 16.96 11.55 56.04 12.63 17.86 6.41 CE+SAM [30] 70.10 51.70 45.88 32.51 30.37 60.47 38.44 34.88 23.30 FADRW(Proposed) 77.27 62.22 50.37 36.48 35.15 67.16 42.93 43.96 22.67 
+
+Tweet 
+
+LSTSN [20] 64.33 64.90 67.01 66.85 58.69 66.25 69.44 67.48 0.95 LDAM [28] 67.52 67.83 66.29 66.61 59.90 67.84 68.60 66.21 17.31 Focal [29] 63.49 65.83 67.80 66.88 60.20 67.58 68.33 65.24 9.96 CE+SAM [30] 70.83 69.37 67.68 69.07 60.35 68.51 70.05 67.33 19.34 FADRW(Proposed) 73.50 71.35 68.47 68.06 63.73 69.99 70.15 68.31 15.69 TABLE II ABLATION STUDY OF FADRW COMPONENTS ON THE REDDIT , S INA , AND TWEET DATASETS . P OSITIVE -CLASS F1 (%, 5-RUN AVERAGE ) IS REPORTED FOR THE FULL MODEL (FADRW), W/O DYNAMIC REWEIGHTING , AND W /O FEATURE -A WARE MODULATION .
+
+Dataset Algorithm AC (BPW) HC (BPW) ADG (BPW) 3.27 3.76 4.20 4.52 4.88 1.86 3.23 3.82 4.13 Reddit FADRW (Full) 73.50 67.97 62.38 55.21 44.17 85.83 79.42 77.06 12.43 
+
+w/o Feature-Aware 68.56 64.28 45.98 35.26 15.78 84.56 76.25 71.16 8.76 
+
+w/o Reweighting 72.81 69.08 54.35 54.94 25.30 84.37 77.60 75.24 16.92 Sina FADRW (Full) 35.15 26.16 26.71 18.90 19.48 67.16 43.96 36.44 22.67 w/o Feature-Aware 18.09 7.79 8.56 5.91 5.98 60.83 25.99 22.61 7.01 
+
+w/o Reweighting 33.69 26.13 22.44 17.52 21.68 69.28 42.93 34.62 15.49 
+
+Tweet FADRW (Full) 63.73 67.71 64.52 52.20 47.32 69.99 68.31 66.84 15.69 w/o Feature-Aware 58.76 66.20 61.01 41.06 38.52 67.28 65.35 66.68 3.80 
+
+w/o Reweighting 60.75 65.94 59.76 49.69 43.43 69.95 67.66 66.02 15.33 
+
+the steganographic class as the main evaluation metric. All models are trained for 200 epochs, and all reported results are averaged over five independent runs. For our proposed FADRW, the optimal hyperparameters are empirically set to 
+
+γ = 0 .05 , τ = 0 .5, and T = 20 based on the validation set. 
+
+B. Evaluation Results and Discussion 
+
+The comparative results in Table I demonstrate the effec-tiveness of FADRW under the less-than-1% setting. FADRW outperforms the baseline methods in the majority of settings. It achieves the best performance in most configurations on the Reddit and Sina datasets, showing strong effectiveness under extreme class imbalance. The gains are particularly evident on the HC and AC generators, where the proposed loss is better able to preserve weak minority features and reduce the bias toward the dominant normal class. Tables I and II cover complementary BPW settings: Table I follows the configurations commonly used by the backbone method [20] for direct comparison, while Table II adds BPW settings for ablation analysis to examine each FADRW component under different payloads. The advantage of FADRW is more evident in low-payload settings, where steganographic signals are weaker. For exam-ple, on Sina with AC at 1.17 BPW, FADRW achieves an F1-score of 62.22, outperforming the baselines and showing its effectiveness in detecting subtle hidden signals. The ablation results in Table II validate the effective-ness of both FADRW components. Dynamic Reweighting and Feature-Aware Modulation improve performance in most cases, and the full model generally achieves the best overall results, confirming their complementarity. A few local rever-sals occur when one ablated variant slightly exceeds the full model, suggesting that the dominance of decision bias and feature marginalization varies across settings. For example, on Reddit under ADG, w/o Reweighting outperforms full FADRW (16.92 vs. 12.43), indicating possible over-correction by reweighting, while the drop of w/o Feature-Aware to 8.76 still confirms the necessity of feature modulation. IV. C ONCLUSION 
+
+This letter proposes FADRW to address extreme class imbalance in few-shot linguistic steganalysis. Combining Dy-namic Reweighting and Feature-Aware Modulation, FADRW mitigates decision bias and feature marginalization. Experi-ments on three real-world datasets show its superiority over existing methods, especially under 1% steganographic ratios. IEEE SIGNAL PROCESSING LETTERS, VOL. XX, NO. X, MONTH 2026 5
+
+REFERENCES [1] I. Cox, M. Miller, J. Bloom, J. Fridrich, and T. Kalker, Digital Water-marking and Steganography . Morgan Kaufmann, 2007. [2] J. Bieniasz and K. Szczypiorski, “Towards empowering cyber attack resiliency using steganography,” in Proc. 4th Int. Conf. Frontiers Signal Process. (ICFSP) , 2018, pp. 24–28. [3] Z.-L. Yang, X.-Q. Guo, Z.-M. Chen, Y.-F. Huang, and Y.-J. Zhang, “RNN-Stega: Linguistic steganography based on recurrent neural net-works,” IEEE Trans. Inf. Forensics Security , vol. 14, no. 5, pp. 1280– 1295, 2018. [4] Z. Ziegler, Y. Deng, and A. Rush, “Neural linguistic steganography,” in Proc. Conf. Empir. Methods Natural Lang. Process. Int. Joint Conf. Natural Lang. Process. (EMNLP-IJCNLP) , 2019, pp. 1210–1215. [5] Z.-L. Yang, S.-Y. Zhang, Y.-T. Hu, Z.-W. Hu, and Y.-F. Huang, “VAE-Stega: Linguistic steganography based on variational auto-encoder,” 
+
+IEEE Trans. Inf. Forensics Security , vol. 16, pp. 880–895, 2020. [6] K. Lin, Y. Luo, Z. Zhang, and P. Luo, “Zero-shot generative linguistic steganography,” arXiv preprint arXiv:2403.10856 , 2024. [7] J. Wu, Z. Wu, Y. Xue, J. Wen, and W. Peng, “Generative text steganog-raphy with large language model,” arXiv preprint arXiv:2404.10229 ,2024. [8] J. Ding, K. Chen, Y. Wang, N. Zhao, W. Zhang, and N. Yu, “Discop: Provably secure steganography in practice based on distribution copies,” in Proc. IEEE Symp. Secur. Privacy (SP) , 2023, pp. 2238–2255. [9] G. Liao, J. Yang, W. Shao, and Y. Huang, “A framework for designing provably secure steganography,” in Proc. 34th USENIX Secur. Symp. (USENIX Security 25) , 2025, pp. 6837–6856. [10] M. Bai, K. Pang, G. Liao, J. Yang, and Y. Huang, “Shimmer: A provably secure steganography based on entropy collecting mechanism,” in Proc. 34th USENIX Secur. Symp. (USENIX Security 25) , 2025, pp. 5949–5965. [11] Y. Wang, G. Pei, K. Chen, J. Ding, C. Pan, W. Pang, D. Hu, and W. Zhang, “SparSamp: Efficient provably secure steganography based on sparse sampling,” in Proc. 34th USENIX Secur. Symp. (USENIX Security 25) , 2025, pp. 6817–6835. [12] C. Pan, D. Hu, Y. Wang, K. Chen, Y. Peng, X. Rong, C. Gu, and M. Li, “Rethinking prefix-based steganography for enhanced security and efficiency,” IEEE Trans. Inf. Forensics Security , vol. 20, pp. 3287– 3301, 2025. [13] Z. Chen, L. Huang, H. Miao, W. Yang, and P. Meng, “Steganalysis against substitution-based linguistic steganography based on context clusters,” Comput. Electr. Eng. , vol. 37, no. 6, pp. 1071–1081, 2011. [14] L. Xiang, X. Sun, G. Luo, and B. Xia, “Linguistic steganalysis using the features derived from synonym frequency,” Multimedia Tools Appl. ,vol. 71, no. 3, pp. 1893–1911, 2014. [15] Z. Yang, K. Wang, J. Li, Y. Huang, and Y.-J. Zhang, “TS-RNN: Text steganalysis based on recurrent neural networks,” IEEE Signal Process. Lett. , vol. 26, no. 12, pp. 1743–1747, 2019. [16] Z. Yang, Y. Huang, and Y.-J. Zhang, “TS-CSW: Text steganalysis and hidden capacity estimation based on convolutional sliding windows,” 
+
+Multimedia Tools Appl. , vol. 79, no. 25, pp. 18 293–18 316, 2020. [17] Z. Yang, Y. Huang, and Y.-J. Zhang, “A fast and efficient text steganal-ysis method,” IEEE Signal Process. Lett. , vol. 26, no. 4, pp. 627–631, 2019. [18] H. Wu, B. Yi, F. Ding, G. Feng, and X. Zhang, “Linguistic steganalysis with graph neural networks,” IEEE Signal Process. Lett. , vol. 28, pp. 558–562, 2021. [19] W. Peng, S. Li, Z. Qian, and X. Zhang, “Text steganalysis based on hierarchical supervised learning and dual attention mechanism,” 
+
+IEEE/ACM Trans. Audio, Speech, Lang. Process. , vol. 31, pp. 3513– 3526, 2023. [20] J. Yang, Z. Yang, J. Zou, H. Tu, and Y. Huang, “Linguistic steganalysis toward social network,” IEEE Trans. Inf. Forensics Security , vol. 18, pp. 859–871, 2022. [21] J. Yang, Z. Yang, X. Ge, J. Zou, Y. Gao, and Y. Huang, “LINK: Linguistic steganalysis framework with external knowledge,” in Proc. IEEE Int. Conf. Acoust., Speech Signal Process. (ICASSP) , 2023, pp. 1–5. [22] K. Pang, J. Yang, Y. Gao, M. Bai, Z. Yang, M. Jiang, and Y. Huang, “CATS: Connection-aware and interaction-based text steganalysis in social networks,” in Proc. Int. Conf. Neural Inf. Process. , 2023, pp. 109–121. [23] J. Lu, Z. Yang, K. Huang, Z. Wang, Z. Zhou, and L. Zhou, “TGCA: A transformer GNN-based approach with cross-attention mechanism for steganographic text detection in social networks,” in Proc. IEEE Int. Conf. Acoust., Speech Signal Process. (ICASSP) , 2025, pp. 1–5. [24] Z. Wang, L. Zhou, X. Chen, Z. Zhou, and Z. Yang, “STLC-KG: A social text steganalysis method combining large-scale language models and common-sense knowledge graphs,” in Proc. AAAI Conf. Artif. Intell. ,vol. 39, no. 24, 2025, pp. 25 461–25 469. [25] Y. Jiang, Z. Yang, X. Xu, Q. Niu, and J. Zhao, “Context-aware and semantic-synergistic linguistic steganalysis for social networks,” IEEE Signal Process. Lett. , vol. 33, pp. 191–195, 2025. [26] Y. Wang, R. Song, L. Li, Y. Tang, R. Zhang, and J. Liu, “User profile constructed by multiple attributes for optimizing linguistic steganalysis in social networks,” Expert Syst. Appl. , vol. 297, p. 129311, Feb. 2026. [27] Q. Xu, R. Zhang, J. Liu, and Y. Huang, “Aggregated text steganaly-sis toward social network based on efficient multi-perspective feature fusion,” Knowl.-Based Syst. , vol. 334, p. 115129, Feb. 2026. [28] K. Cao, C. Wei, A. Gaidon, N. Arechiga, and T. Ma, “Learning imbalanced datasets with label-distribution-aware margin loss,” Adv. Neural Inf. Process. Syst. , vol. 32, 2019. [29] T.-Y. Lin, P. Goyal, R. Girshick, K. He, and P. Doll´ ar, “Focal loss for dense object detection,” in Proc. IEEE Int. Conf. Comput. Vis. (ICCV) ,2017, pp. 2980–2988. [30] P. Foret, A. Kleiner, H. Mobahi, and B. Neyshabur, “Sharpness-aware minimization for efficiently improving generalization,” arXiv preprint arXiv:2010.01412 , 2020. [31] Z. Yang, S. Jin, Y. Huang, Y. Zhang, and H. Li, “Automatically generate steganographic text based on markov model and huffman coding,” arXiv preprint arXiv:1811.04720 , 2018. [32] S. Zhang, Z. Yang, J. Yang, and Y. Huang, “Provably secure generative linguistic steganography,” in Findings Assoc. Comput. Linguistics: ACL-IJCNLP 2021 , 2021, pp. 3046–3055.

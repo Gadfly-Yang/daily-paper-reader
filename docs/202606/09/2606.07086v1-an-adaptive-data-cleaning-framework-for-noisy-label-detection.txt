@@ -1,0 +1,509 @@
+Title: Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000
+
+URL Source: https://arxiv.org/pdf/2606.07086v1
+
+Published Time: Mon, 08 Jun 2026 00:41:29 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+VOLUME XX, 2017 1
+
+> Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.
+> Digital Object Identifier 10.1109/ACCESS.2024.Doi Number
+
+# An Adaptive Data-cleaning Framework for Noisy-Label Detection 
+
+Chen-Hsuan Fang 1, Wei-Hsinag Chen 1 , Pin-Hsuan Yu 1, Jung-Hua Wang 1,2 , and Tsung-Wei Pan 1
+
+> 1
+
+Department of Electrical Eng. National Taiwan Ocean University, Keelung City 20224, Taiwan 
+
+> 2
+
+AI Research Center, National Taiwan Ocean University, Keelung City 20224, Taiwan 
+
+> 3
+
+Industrial Technology Research Institute (ITRI), Hsinchu, 310401, Taiwan 
+
+Corresponding author: Jung-Hua Wang (e-mail: jhwang@email.ntou.edu.tw). 
+
+This work was partially supported by the Ministry of Science and Technology of Taiwan under grant number MOST-110-2221-E-019 -062 
+
+and MOST-110-2634-F-019-001. 
+
+Corresponding author: Jung-Hua Wang (jhwang@email.ntou.edu.tw). 
+
+ABSTRACT Deep neural networks (DNNs) have demonstrated exceptional performance across computer vision tasks owing to large-scale annotated datasets. In real-world applications, however, labels are corrupted by annotation ambiguity, human error, or dynamically changing environments. Over-parameterized DNNs memorize these noisy labels during training, resulting in degradation of model accuracy and generalization. Existing data-cleaning and sample-selection strategies address this challenge, yet often rely on manually specified thresholds, prior knowledge of the noise ratio, or a single metric, either learning dynamics or geometric structure, rendering them unstable in complex data regimes. This paper proposes a self-adaptive data-cleaning framework that integrates local, global, and learning dynamics cues for robust noisy-label detection. Samples are mapped into a unified low-dimensional feature space through a modular feature concatenation paradigm. This paradigm provides two instantiations: a 2D metric integrating class-adaptive KNN-based local disagreement and k-means-based global centroid distance, and a 3D multi-metric that additionally incorporates a well-defined z-normalized score. Unlike conventional 1D Gaussian Mixture Models applied to a single scalar metric, the proposed framework performs multi-metric clustering on the feature space and adaptively partitions samples into clean-dominant and noise-dominant components without requiring manual filtering thresholds or noise-ratio priors. Experiments on CIFAR-10, MNIST, and ImageNet-100 with 5% to 40% symmetric label noise show high recall in most settings, including near-
+
+perfect recall (≥98%) on ImageNet -100 at 40% noise. Subsequent model training further shows accuracy gains in many evaluated settings, especially under severe corruption on ImageNet-100. These findings suggest that multi-metric integration provides a threshold-free, practical, and low-tuning strategy for noisy-label detection 
+
+INDEX TERMS : Noisy-label detection; Data cleaning; Label noise; Gaussian mixture model; Learning dynamics; VOLUME XX, 2017 7
+
+> I. INTRODUCTION
+
+Deep neural networks (DNNs) have achieved remarkable performance across a wide range of computer vision and machine learning tasks, largely owing to the availability of large-scale annotated datasets [1]. In practice, however, training labels are often corrupted by annotation ambiguity, human error, weak supervision, or dynamically changing environments. As a result, label noise has become a pervasive issue in real-world datasets [2], [3]. Because overparameterized DNNs can readily memorize incorrect labels during training, label noise can severely degrade model accuracy, robustness, and generalization [4]. Developing effective strategies for learning with noisy labels is therefore essential for building reliable deep learning systems [5]. To rigorously evaluate the proposed framework, this study specifically focuses on symmetric label noise. Under this setting, a predefined percentage of true labels from each class are randomly sampled and uniformly reassigned to all other available classes, thereby simulating a controlled and unbiased noise distribution for evaluation. 
+
+To address this challenge, a substantial body of research has focused on noisy-label detection and data cleaning. Existing approaches can be broadly categorized into three directions: learning dynamics-based methods, geometric-based methods, and probabilistic or statistical frameworks [6]. Here, learning dynamics is defined as sample-level error- or loss-related metric observed during training, reflecting how easily or reliably individual samples are learned by the model. These studies have established useful foundations for identifying unreliable samples and reducing the adverse effects of label noise. Nevertheless, their practical effectiveness remains limited in many realistic settings. 
+
+Two challenges are particularly important. First, many existing methods rely on manually specified thresholds, filtering ratios, or prior assumptions about the noise rate [7]. Such settings are often highly dataset-dependent and difficult to transfer across different architectures, datasets, and corruption conditions. Second, many methods rely primarily on a single source of evidence, which can lead to unstable detection performance in complex data regimes [8] . Recent pruning studies have further suggested that sample difficulty alone is insufficient for robust sample selection, highlighting the need to integrate complementary evidence such as prediction uncertainty [9] rather than relying on any single criterion for noisy-label detection. 
+
+To overcome these limitations, this paper proposes a self-adaptive, multi-metric data-cleaning framework specifically designed for robust noisy-label detection. The central idea is to integrate complementary local, global, and learning dynamics related cues into a unified low-dimensional feature space. Specifically, the framework projects samples into either a 2D feature space, which encodes class-adaptive KNN local disagreement ratio and k-means-based global centroid distance [10]-[13] or a 3D feature space that further incorporates an error metric to capture learning dynamics [14]. A Gaussian Mixture Model (GMM) is subsequently fitted to this feature space to perform adaptive clean-noise partitioning [15]. In contrast to existing methods that rely on isolated metrics or manually tuned cutoffs, this method is fully automated and threshold-free, eliminating the necessity for dataset-specific hyperparameters or prior knowledge of the noise ratio. By comprehensively multiple sources of evidence, the proposed approach establishes a highly transferable and practical solution for data refinement. 
+
+The main contributions of this paper are fourfold. First, we propose a threshold-free adaptive partitioning mechanism based on multi-dimensional GMM clustering, which identifies the noise-dominant component without requiring manually specified filtering thresholds or prior knowledge of the noise ratio. Second, we introduce a unified multi-metric for noisy-label detection that integrates local disagreement ratio, global centroid distance, and learning dynamics information. Third, we develop a modular data-cleaning framework with two variants: a 2D geometric metric based on local disagreement ratio and global centroid distance, and a 3D multi-metric that further incorporates a robust EL2N score. Fourth, we conduct comprehensive empirical validation on CIFAR-10, MNIST, and ImageNet-100 using ResNet50 and Vision Transformer backbones, demonstrating high noisy-label recall and improved downstream retraining performance in many evaluated settings. 
+
+> II. RELATED WORK
+
+Learning with noisy labels has motivated a broad range of data-cleaning and sample-selection methods aimed at identifying unreliable samples and reducing the adverse effects of corrupted labels during model training. It is well documented that overparameterized DNNs possess a strong propensity to memorize corrupted labels, causing noisy annotations to severely degrade model accuracy and generalization [4]. To address this fundamental challenge, existing literature has predominantly focused on data pruning and sample selection mechanisms [5]. This section reviews the prominent approaches in this domain—categorized into learning dynamics-based, geometric structure, and automated probabilistic frameworks—and critically analyzes their inherent limitations. 
+
+> A. Sample Selection via Learning Dynamics
+
+A substantial body of work leverages the learning dynamics of DNNs, predicated on the well-established small-loss phenomenon: clean and structurally simple samples are typically optimized earlier than their mislabeled counterparts [7], [16]. Among these approaches, the Error L2-Norm (EL2N) has emerged as a prominent metric for quantifying the learning difficulty of individual samples during the training epochs [14]. While EL2N provides valuable insights into the relationship between learning dynamics and sample importance, it was not originally designed as a dedicated noisy-label detector. A critical limitation of using EL2N as an independent noise-VOLUME XX, 2017 7
+
+filtering criterion is that structurally ambiguous but correctly labeled samples and genuinely mislabeled samples may both produce high EL2N scores during training. Consequently, applying a naive threshold solely to EL2N may discard informative hard samples together with corrupted ones, especially when the feature space contains overlapping or ambiguous class boundaries. 
+
+Recent pruning studies further suggest that example difficulty alone is insufficient for robust sample selection. In [9], example difficulty was combined with prediction uncertainty to demonstrate that these complementary metrics improve pruning robustness under challenging conditions, including label noise and image corruption. Although their objective is not direct noisy-label detection, this finding reinforces the view that EL2N-like difficulty scores should not be used as standalone criteria for label-noise refinement. In particular, relying solely on difficulty metrics risks conflating structural unreliability with learning difficulty, lacking the geometric context needed for adaptive data refinement. 
+
+> B. Geometric Feature Methods
+
+To circumvent the shortcomings of purely loss-based metrics, an alternative line of research exploits the topological and geometric structures of the learned deep feature space [17], [18] . These methodologies are anchored in the assumption that correctly labeled samples tend to map into dense, semantically coherent clusters, whereas mislabeled samples manifest as local or global outliers. For instance, K-Nearest Neighbors (KNN) approaches assess local neighborhood consistency by measuring label agreement between a sample and its adjacent neighbors[11],[19]. Concurrently, global structural deviations are captured via clustering algorithms, such as k-means, which construct class centroid distance and quantify the discrepancy between each sample and its assigned centroid [12],[13]. 
+
+However, both KNN-based and k-means-based geometric metrics exhibit limited efficacy in unconstrained, realistic conditions. They depend heavily on manually calibrated hyperparameters—such as neighborhood size k, distance thresholds, or fixed centroid definitions. This reliance renders them particularly brittle in the presence of severe class imbalance, multi-modal class distributions, or substantial inter-class overlap. 
+
+Lacking dynamic adaptation mechanisms, these geometric heuristics remain insufficiently automated and are highly susceptible to overfitting the noisy feature metrics formed during the initial training stages [16]. Furthermore, when these geometric indicators are used independently, they may not fully capture the learning dynamics of individual samples during training. These observations strongly motivate the integration of multiple complementary metrics rather than relying on a single geometric heuristic. 
+
+> C. Automated Probabilistic Frameworks
+
+To formalize noise detection, probabilistic and statistical frameworks have been proposed, with Confident Learning serving as a representative paradigm [16]. These methods estimate the joint distribution of noisy and true labels to systematically identify label errors and quantify model uncertainty. Despite offering a statistically principled foundation, such frameworks exhibit critical practical vulnerabilities. They rely heavily on the fidelity of out-of-sample predicted probabilities and typically incur substantial computational overhead due to cross-validation requirements [16]. More crucially, their performance is bottlenecked by the assumption that the underlying DNN produces well-calibrated confidence scores. When optimized on corrupted data, model calibration inevitably deteriorates, leading to skewed joint-distribution estimates and consequently suboptimal label cleaning outcomes [17]. 
+
+Recognizing these calibration issues, contemporary research has sought alternative validation strategies. For 
+
+example, Chen et al. [18] proposed ReCoV, a parameter -free label-noise detection method that identifies noisy samples by measuring how frequently they contribute to inferior cross-validation results. This approach avoids requiring prior knowledge of the noise ratio and provides a model-agnostic validation-based mechanism for noisy-label detection. However, repeated cross-validations can introduce substantial computational cost, especially in deep learning settings where iterative model training is expensive. These insights emphasize that while automated probabilistic frameworks represent a promising direction, their practical utility hinges on operating within a discriminative and computationally efficient feature space. 
+
+> D. Research Gaps and Contributions of the Proposed Framework
+
+The aforementioned limitations underscore that robust noisy-label detection necessitates the synergistic integration of complementary evidence, rather than reliance on a singular criterion. Our method directly addresses the critical gaps identified in the latest literature. To the best of our knowledge, no prior literature has systematically combined localized geometric consistency, global centroid distance, and learning dynamics metrics into a unified, fully adaptive feature space. The primary distinction of our work lies in the proposed modular multi-metric paradigm. We present two concrete instantiations within a unified end-to-end pipeline: a 2D geometric metric consisting of class-adaptive KNN-based local disagreement ratio and k-means -based global centroid distance, and a comprehensive 3D multi-metric that additionally incorporates a class-conditional, robust Z-normalized EL2N score. 
+
+Unlike existing probabilistic approaches that typically apply one-dimensional Gaussian Mixture Models (GMMs) solely to a single scalar metric, rely on model confidence calibration [20],[21], or require computationally heavy repeated cross-validations [22], our framework performs VOLUME XX, 2017 7
+
+multi-dimensional GMM clustering directly on the feature space. This architectural design eradicates the need for dataset-specific cutoff engineering and prior assumptions regarding noise ratios. Instead of predefining explicit scenarios for their application, these two variants are evaluated under the same experimental protocol to examine how geometric and learning dynamics metrics contribute to noisy-label data refinement across different datasets and backbone architectures. By validating both variants within the same empirical framework, the proposed approach demonstrates superior generalizability and establishes a robust, highly automated foundation for noisy-label data refinement. Based on the above research gaps and methodological distinctions, the main contributions of this study are summarized as follows:  
+
+> 1) THRESHOLD-FREE ADAPTIVE PARTITIONING:
+
+This study introduces a threshold-free adaptive partitioning mechanism based on multi-dimensional Gaussian Mixture Model clustering. Unlike existing approaches that require manually specified filtering thresholds, prior knowledge of the noise ratio, calibrated confidence scores, or repeated cross-validation, the proposed framework automatically identifies the noise-dominant component from the empirical distribution of the fused feature space. This mechanism reduces dataset-specific tuning and improves the practicality of noisy-label detection across different datasets, architectures, and corruption levels.  
+
+> 2) MULTI-METRIC FOR NOISY-LABEL DETECTION:
+
+This study proposes a unified multi-metric that integrates local disagreement ratio, global centroid distance, and Robust EL2N score for noisy-label detection. Instead of relying on a single indicator, such as loss values, neighborhood agreement, centroid distance, or model confidence alone, the proposed combines complementary evidence from different perspectives. This design enables the framework to distinguish noisy samples more robustly in complex feature spaces where individual metrics may be insufficient or unstable.  
+
+> 3) MODULAR DATA-CLEANING FRAMEWORK:
+
+This study develops two modular variants within the same adaptive data-cleaning pipeline. The 2D geometric metric combines class-adaptive KNN-based local disagreement ratio with k-means-based global centroid distance to capture both local and global structural inconsistency. The 3D multi-metric further incorporates a class-conditional robust Z-normalized EL2N score to include learning dynamics information. By evaluating both variants under the same protocol, this study systematically investigates how geometric and learning dynamics cues contribute to noisy-label data refinement.  
+
+> 4) COMPREHENSIVE EMPIRICAL VALIDATION:
+
+This study provides extensive empirical validation on CIFAR-10, MNIST, and ImageNet-100 under multiple symmetric label-noise ratios and two representative backbone architectures, including ResNet50 and Vision Transformer. The experimental results show that the proposed framework achieves consistently high noisy-label recall across most evaluated settings and improves downstream retraining performance in many cases, particularly under severe corruption and complex feature-space conditions. These findings demonstrate the effectiveness and generalizability of the proposed adaptive data-cleaning strategy. 
+
+> III. METHODOLOGY
+
+The proposed framework aims to partition a training dataset into clean and noisy subsets through a low-tuning, self-adaptive pipeline. The framework comprises three distinct feature extraction stages—Local disagreement ratio, Global centroid distance, and Robust EL2N score—followed by an automated, threshold-free partitioning mechanism utilizing a multi-dimensional Gaussian Mixture Model (GMM). Let 𝑥𝑥 𝑖𝑖 
+
+denote the feature embedding of sample 𝑖𝑖 , extracted from the penultimate layer of the backbone network at a pre-defined training epoch, and let represent its observed (potentially noisy) label. 
+
+Fig.1 illustrates the overall workflow of the proposed framework. Given an input dataset and a trained backbone, the framework first extracts feature embeddings and training-related scores. Three complementary indicators are then computed: local disagreement ratio, global centroid distance, and robust EL2N score. The 2D variant fuses the two geometric indicators, whereas the 3D variant further incorporates the learning dynamics metric. Finally, a two-component GMM is fitted to the metric to obtain an adaptive clean/noisy partition without requiring a manually specified cleaning threshold.  
+
+> Figure 1 Overall pipeline of the proposed adaptive data-cleaning framework. The framework extracts feature embeddings and learning dynamics-related scores from a trained backbone, computes local disagreement ratio, global centroid distance, and robust EL2N score, and applies a two-component GMM to partition clean and noisy subsets. VOLUME XX, 2017 7
+
+A. Local Disagreement Ratio 
+
+To quantify the local label consistency in the deep feature space, we employ a class-adaptive K-Nearest Neighbors (KNN) strategy and operationalize inconsistency as the local disagreement ratio. In contrast to conventional methods that utilize a fixed neighborhood size 𝐾𝐾 , which may fail to capture the local density variations in imbalanced datasets, our approach determines the neighborhood size 𝐾𝐾 𝑖𝑖 dynamically according to the population of the observed class 𝑦𝑦 𝑖𝑖 .Specifically, the neighborhood size is determined by the number of samples in the observed class, allowing the local consistency measurement to adapt to class-size variation while maintaining sublinear growth, we define 𝐾𝐾 𝑖𝑖 as: 
+
+𝐾𝐾 𝑖𝑖 = �𝑁𝑁 𝑦𝑦 𝑖𝑖 (1) 
+
+where 𝑁𝑁 𝑦𝑦 𝑖𝑖 denotes the total number of training samples associated with class 𝑦𝑦 𝑖𝑖 . Based on this adaptive neighborhood, the Local Disagreement Ratio 𝑟𝑟 𝑖𝑖 𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙 is computed as the proportion of neighbors that do not share the same observed label: 
+
+𝑟𝑟 𝑖𝑖 𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙 = 1 − 1
+
+𝐾𝐾 𝑖𝑖 � 𝐼𝐼�𝑦𝑦 𝑗𝑗 = 𝑦𝑦 𝑖𝑖 �𝑥𝑥 𝑗𝑗 ∈𝒩𝒩 𝒦𝒦 𝒾𝒾 (𝑥𝑥 𝑖𝑖 )(2) 
+
+where 𝒩𝒩 𝒦𝒦 𝒾𝒾 (𝑥𝑥 𝑖𝑖 ) represents the set of 𝐾𝐾 𝑖𝑖 nearest neighbors of 
+
+𝑥𝑥 𝑖𝑖 determined by cosine similarity, and 𝐼𝐼 (⋅) is the indicator function. A higher value of 𝑟𝑟 𝑖𝑖 𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙 indicates a greater degree of label disagreement between a sample and its local geometric neighborhood, suggesting a higher likelihood of label corruption. 
+
+B. Global Centroid Distance 
+
+To capture structural deviations that extend beyond local neighborhoods, we introduce a global centroid-based feature. We first apply k-means clustering to the feature embeddings across the entire dataset, with the number of clusters set to the total number of classes to obtain a coarse approximation of the global data structure. This process is strictly unsupervised; each sample 𝑥𝑥 𝑖𝑖 is assigned to its nearest centroid 𝑐𝑐 𝑘𝑘 𝑖𝑖 based solely on its position in the feature space, independent of its observed label. To measure the discrepancy between a sample and its assigned global centroid, we compute the cosine distance between the sample and its nearest k-means centroid: 
+
+𝑑𝑑 𝑖𝑖 𝑔𝑔 𝑙𝑙𝑙𝑙 𝑔𝑔 𝑙𝑙𝑙𝑙  = 1 − 𝑥𝑥 𝑖𝑖 ⊤ 𝑐𝑐 𝑘𝑘 𝑖𝑖 
+
+|𝑥𝑥 𝑖𝑖 || 𝑐𝑐 𝑘𝑘 𝑖𝑖 | (3) 
+
+A larger value of 𝑑𝑑 𝑖𝑖 𝑔𝑔 𝑙𝑙𝑙𝑙 𝑔𝑔 𝑙𝑙 𝑙𝑙 indicates that the sample is farther from its assigned global centroid in the learned feature space. Such structural deviation may be associated with potential label corruption or ambiguous visual content. 
+
+C. Robust EL2N Score 
+
+To incorporate the learning dynamics of the model, we utilize the Error L2-Norm (EL2N), which measures the L2 distance between the model's predicted probability vector and the one-hot encoded observed label. Specifically, for a given sample 𝑖𝑖 ,the raw EL2N score 𝑒𝑒 𝑖𝑖 is computed as: 
+
+𝑒𝑒 𝑖𝑖 = ‖𝑃𝑃 𝑖𝑖 − 𝑦𝑦 𝑖𝑖 ‖ 2 (4) 
+
+where 𝑃𝑃 𝑖𝑖 represents the model's predicted probability vector (typically the softmax output), and 𝑦𝑦 𝑖𝑖 denotes the one-hot encoded vector of the observed label. 
+
+While raw EL2N scores provide a snapshot of learning difficulty, they are sensitive to extreme outliers and varying convergence speeds across classes. We therefore apply a class-conditional robust Z-score transformation. Let 𝑒𝑒 𝑦𝑦 𝑖𝑖 be the set of raw EL2N scores for all samples with observed label 𝑦𝑦 𝑖𝑖 . For a sample with score 𝑒𝑒 𝑖𝑖 , the Robust EL2N Score 𝑠𝑠 𝑖𝑖 𝐸𝐸𝐸𝐸2𝑁𝑁 is defined as: 
+
+𝑠𝑠 𝑖𝑖 𝐸𝐸𝐸𝐸2𝑁𝑁 = 0.6745 ⋅ 𝑒𝑒 𝑖𝑖 − median �𝑒𝑒 𝑦𝑦 𝑖𝑖 �
+
+MAD �𝑒𝑒 𝑦𝑦 𝑖𝑖 � (5) 
+
+where MAD 
+
+(⋅
+
+) denotes the Median Absolute Deviation, and 0.6745 is the third quartile of the standard normal distribution [23], which acts as a scaling factor to make MAD a consistent estimator for the standard deviation. MAD is mathematically formulated as the median of the absolute deviations from the dataset's median: 
+
+MAD �𝑒𝑒 𝑦𝑦 𝑖𝑖 � = median ��𝑒𝑒 − median �𝑒𝑒 𝑦𝑦 𝑖𝑖 ��� (6) 
+
+This transformation effectively standardizes the learning dynamics metric across different classes, yielding a metric that is highly robust against outliers. 
+
+D. Multi-Metric and Adaptive GMM Data Cleaning 
+
+The proposed framework adopts a modular strategy that integrates the above indicators into a compact low-dimensional feature space. Two methods variants are considered in this study. The first variant uses only geometric information and constructs a 2D feature space from local disagreement ratio and global centroid distance. The second variant extends this method by incorporating the robust EL2N score, forming a 3D feature space that additionally reflects learning dynamics. These two variants are evaluated as practical alternatives under the same detection and retraining pipeline. 
+
+2D geometric metric: The framework focuses exclusively on the structural and local geometric consistency of the feature space. Each sample is represented by: 
+
+𝑧𝑧 𝑖𝑖  
+
+> (2𝐷𝐷 )
+
+= �𝑟𝑟 𝑖𝑖 𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙 , 𝑑𝑑 𝑖𝑖 𝑔𝑔 𝑙𝑙𝑙𝑙 𝑔𝑔 𝑙𝑙𝑙𝑙  � (7) 
+
+3D multi-metric: The framework extends the geometric metric by incorporating the learning dynamics related EL2N metric to provide a more comprehensive view of the learning dynamics: 
+
+𝑧𝑧 𝑖𝑖  
+
+> (3𝐷𝐷 )
+
+= �𝑟𝑟 𝑖𝑖 𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙 , 𝑑𝑑 𝑖𝑖 𝑔𝑔 𝑙𝑙𝑙𝑙 𝑔𝑔 𝑙𝑙𝑙𝑙  , 𝑠𝑠 𝑖𝑖 𝐸𝐸𝐸𝐸2𝑁𝑁 � (8) VOLUME XX, 2017 7
+
+Given the different numerical scales of these indicators, we apply standard scaling before fitting a two-component Gaussian Mixture Model (GMM) to the feature space. The GMM performs an unsupervised binary partition to isolate the noise-dominant component 𝐶𝐶 𝑛𝑛 𝑙𝑙𝑖𝑖 𝑛𝑛𝑛𝑛 . The identification of 
+
+𝐶𝐶 𝑛𝑛 𝑙𝑙𝑖𝑖 𝑛𝑛𝑛𝑛 depends on the chosen mode. 
+
+For the 2D feature space, since noisy samples typically exhibit higher structural deviation, the component with the higher mean along the Local disagreement dimension is identified as noise: 
+
+𝐶𝐶 𝑛𝑛 𝑙𝑙𝑖𝑖 𝑛𝑛𝑛𝑛 2𝐷𝐷 = 𝑎𝑎 𝑟𝑟 𝑎𝑎𝑎𝑎𝑎𝑎 𝑥𝑥 
+
+> 𝑙𝑙 ∈{1,2}
+
+𝜇𝜇 𝑙𝑙  
+
+> 𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙𝑙
+
+(9) 
+
+For the 3D feature space, the component with the higher mean along the Robust EL2N dimension is selected: 
+
+𝐶𝐶 𝑛𝑛 𝑙𝑙𝑖𝑖 𝑛𝑛𝑛𝑛 3𝐷𝐷 = 𝑎𝑎 𝑟𝑟 𝑎𝑎𝑎𝑎𝑎𝑎 𝑥𝑥 
+
+> 𝑙𝑙 ∈{1,2}
+
+𝜇𝜇 𝑙𝑙  
+
+> 𝐸𝐸𝐸𝐸2𝑁𝑁
+
+(10) 
+
+Finally, samples assigned to 𝐶𝐶 𝑛𝑛 𝑙𝑙𝑖𝑖 𝑛𝑛𝑛𝑛 under the GMM posterior partition are removed from the training set. Although this binary decomposition may not fully capture all ambiguous sample types, it provides a simple and adaptive mechanism for isolating dominant label noise without requiring dataset-specific cutoff selection.  
+
+> IV. Experimental results
+> A. Experimental Setup and Datasets
+> 1) COMPUTING SETUP
+
+All experiments were conducted on a workstation equipped with an Intel Core i7-11700 CPU, 32 GB DDR4 RAM, and an NVIDIA GeForce RTX 3090 GPU. The software environment consisted of Windows 11 24H2, Python 3.10.19, PyTorch 
+
+2.7.1+cu118, CUDA 11.8, and cuDNN 9.1.0.  
+
+> 2) IMPLEMENTATION DETAILS
+
+To extract deep feature spaces, we employed ResNet50 and Vision Transformer (ViT) architectures initialized with pre-trained weights [24],[25]. Specifically, the ViT backbone utilized the vit_base_patch16_224 pre-trained configuration. To satisfy the input dimensional requirements of these models and ensure spatial consistency, all original images across the evaluated datasets were uniformly resized to 224×224 pixels prior to training.  
+
+> 3) SYNTHETIC LABEL NOISE GENERATION:
+
+To rigorously evaluate the robustness of the proposed framework under varying corruption levels, we synthetically introduced label noise into the datasets at ratios of 5%, 10%, 20%, and 40%. The corruption was implemented following a symmetric noise injection strategy for a given noise ratio, we randomly sampled the corresponding percentage of instances from each individual class and uniformly reassigned their labels to all other available classes. This procedure ensures a controlled and unbiased noise distribution for our empirical validation.   
+
+> 4) DATASETS
+> a) CIFAR-10
+
+The CIFAR-10 dataset is a widely adopted benchmark for image classification, comprising 60,000 color images distributed equally across 10 mutually exclusive classes (such as airplanes, automobiles, birds, and cats) [26]. The original spatial resolution of these images is 32×32 pixels. In our experiments, we follow the standard evaluation protocol, utilizing exactly 50,000 images for the training set and reserving the remaining 10,000 images for testing. This diverse, real-world object dataset serves as a standard baseline to evaluate the generalizability of our noise-detection framework across complex feature spaces.  
+
+> b) MNIST Dataset:
+
+The MNIST dataset is a fundamental machine learning benchmark consisting of grayscale images of handwritten digits ranging from 0 to 9 [27]. The original spatial resolution 
+
+of the images is 28×28 pixels. For our empirical evaluation, 
+
+we employ the standard dataset split, which provides exactly 60,000 training samples and 10,000 testing samples. Given its relatively simple and highly separable feature space, MNIST serves as an ideal control dataset to validate the framework's baseline efficacy and its adaptive behavior under various noise conditions.  
+
+> c) ImageNet100 Dataset
+
+To further evaluate the scalability and robustness of our framework on more complex, high-resolution data, we utilize the ImageNet-100 dataset [28] . ImageNet-100 is a widely adopted 100-class subset of the large-scale ILSVRC-2012 benchmark, featuring a diverse array of real-world objects with highly complex backgrounds. In our empirical evaluation, we follow the standard subset split, which provides approximately 130,000 training samples and 5,000 testing samples. Compared to other dataset, ImageNet-100 presents a significantly more challenging feature space, serving as a rigorous testbed to validate the framework's adaptability and detection efficacy in large-scale scenarios.  
+
+> B. Baselines and Evaluation Metrics
+> 1) CLEANLAB (CONFIDENT LEARNING):
+
+To provide a representative comparison with an established probabilistic label-cleaning method, we employ Cleanlab, a widely used open-source implementation of Confident Learning, as the primary comparative baseline. Confident Learning estimates label issues from noisy labels and out-of-sample predicted probabilities, which are typically obtained via cross-validation or other holdout prediction strategies. By operating on model outputs rather than modifying a specific architecture or loss function, Confident Learning decouples the label-cleaning procedure from the final training model; any classifier capable of producing class-probability estimates can be used to generate the required predictions, and the cleaned dataset can subsequently be used to train another model. 
+
+In large-scale settings, however, obtaining out-of-sample predictions with high-capacity target architectures such as ResNet50 or ViT can be computationally expensive, VOLUME XX, 2017 7
+
+especially when k-fold cross-validation is used. Therefore, we implement Cleanlab under a practical proxy-model setting: a lightweight backbone is first used to generate out-of-sample probabilities for label-issue detection, and the resulting cleaned dataset is then used for downstream training with the target architecture. This setting reflects the practical advantage of Confident Learning as a model-agnostic data-cleaning strategy, while also highlighting the computational cost associated with producing reliable out-of-sample predictions. 
+
+In contrast, our proposed framework avoids iteration-heavy cross-validation during the noise-detection stage. Instead of relying on a lightweight proxy model, it directly leverages the target backbone used in downstream training. Specifically, our method combines learning dynamics information with geometric consistency in the learned feature space, allowing noise detection to be conditioned of the target model itself. This design enables our framework to exploit the discriminative feature extraction capability of modern deep architectures such as ResNet50 and ViT during the initial data-cleaning phase. 
+
+Moreover, rather than using manually specified filtering thresholds or requiring prior knowledge of the noise ratio, our framework employs a distribution-based partitioning strategy over multiple noise-related scores. As a result, the clean/noisy separation can adapt to the score distribution induced by each target backbone and corruption setting. This target-model-driven design provides an efficient and streamlined alternative to proxy-based cleaning, particularly when the objective is to improve the performance of a specific downstream architecture.  
+
+> 2) EVALUATION METRICS
+
+We evaluate the proposed framework from two perspectives. First, noisy-label detection efficacy is quantified using accuracy, precision, and recall, where synthetically corrupted samples are regarded as positive instances and clean 
+
+TABLE I
+
+DETECTION E FFICACY ON CIFAR-10 
+
+Detection Efficacy  Resnet50  Vit 
+
+Label error(%)  5%  10%  20%  40%  5%  10%  20%  40% 
+
+2D geometric metric 
+
+Accuracy  94.18%  95.38%  95.65%  96.30%  90.44%  92.73%  91.93%  89.39% 
+
+Precision  46.10%  69.40%  85.33%  95.82%  34.02%  58.37%  71.74%  83.85% 
+
+Recall  96.84%  96.24%  94.51%  94.91%  97.12%  96.39%  98.40%  91.00% 
+
+3D multi-metric 
+
+Accuracy  90.53%  93.44%  96.12%  96.32%  88.00%  98.74%  91.12%  89.66% 
+
+Precision  34.48%  60.62%  87.51%  95.84%  29.22%  49.10%  69.57%  84.62% 
+
+Recall  99.40%  98.10%  94.03%  94.92%  98.40%  89.64%  98.86%  90.61% 
+
+TABLE Ⅱ
+
+DETECTION E FFICACY ON MNIST 
+
+Detection Efficacy  Resnet50  Vit 
+
+Label error(%)  5%  10%  20%  40%  5%  10%  20%  40% 
+
+2D geometric metric 
+
+Accuracy  96.55%  99.83%  99.77%  99.69%  92.70%  92.42%  99.49%  99.28% 
+
+Precision  59.16%  98.89%  99.44%  99.58%  40.61%  56.86%  97.77%  98.52% 
+
+Recall  99.83%  99.45%  99.40%  99.64%  99.97%  99.98%  99.72%  99.70% 
+
+3D multi-metric 
+
+Accuracy  93.20%  99.82%  99.77%  99.69%  89.32%  88.91%  90.20%  96.55% 
+
+Precision  42.34%  98.63%  99.42%  99.58%  31.85%  47.39%  67.12%  92.07% 
+
+Recall  99.97%  99.57%  99.42%  99.65%  99.97%  100%  100%  99.97% 
+
+TABLE Ⅲ
+
+DETECTION E FFICACY ON I MAGENET 100 
+
+Detection Efficacy  Resnet50  Vit 
+
+Label error(%)  5%  10%  20%  40%  5%  10%  20%  40% 
+
+2D geometric metric 
+
+Accuracy  80.47%  81.67%  88.35%  97.50%  77.60%  77.79%  90.01%  96.03% 
+
+Precision  20.31%  35.29%  63.25%  95.75%  18.06%  31.01%  67.14%  92.64% 
+
+Recall  99.37%  99.87%  99.71%  98.11%  98.40%  99.66%  68.03%  97.86% 
+
+3D multi-metric 
+
+Accuracy  80.21%  83.81%  97.98%  97.69%  75.72%  79.02%  92.71%  96.18% 
+
+Precision  20.12%  38.17%  91.94%  95.70%  17.02%  32.25%  74.15%  92.62% 
+
+Recall  99.62%  99.83%  98.55%  98.65%  99.46%  99.75%  97.56%  98.29% VOLUME XX, 2017 7
+
+samples are regarded as negative instances. The detection results of the proposed 2D geometric metric and 3D multi-metric methods are reported in Tables I–III across CIFAR-10, MNIST, and ImageNet-100, while the Cleanlab baseline is reported in Table IV. 
+
+Second, downstream retraining performance is evaluated by removing the samples predicted as noisy, retraining the target backbone on the retained subset, and measuring the resulting test accuracy. In Fig. 6, retraining performance is presented as the accuracy improvement after data cleaning, defined as the percentage-point change in test accuracy relative to training on the original noisy dataset before cleaning. 
+
+C. Detection Efficacy  
+
+> 1) PROPOSED FRAMEWORK PERFORMANCE
+
+Tables I–III summarize the noisy-label detection performance of the proposed 2D geometric metric and 3D multi-metric across CIFAR-10, MNIST, and ImageNet-100. Noisy samples generated by the synthetic corruption process are treated as positive instances. Overall, the proposed methods maintain consistently high recall across most datasets and corruption levels, indicating that the majority of corrupted labels can be successfully isolated before retraining. 
+
+On CIFAR-10, recall is generally above 90% across backbones and noise ratios, while MNIST reaches 99.40%– 100% recall in all proposed configurations. ImageNet-100 presents a more challenging feature space: at 5% and 10% noise, precision is relatively low because noisy and hard clean samples overlap, but recall remains high in most settings and 
+
+reaches roughly 98% at 40% noise. This suggests that the proposed framework prioritizes the removal of potentially unreliable samples, which can be beneficial when the                                                          
+
+> TABLE Ⅳ
+> DETECTION EFFICACY OFTHE CLEAN LAB BASELINE
+> Label error(%) 5% 10% 20% 40%
+> CIFAR-10
+> Accuracy 95.51% 93.76% 89.55% 82.34%
+> Precision 52.87% 62.50% 67.26% 72.38%
+> Recall 93.72% 93.96% 93.07% 90.31%
+> MNIST
+> Accuracy 99.62% 99.57% 99.35% 99.10%
+> Precision 95.52% 97.66% 98.57% 99.13%
+> Recall 96.86% 98.07% 98.18% 98.62%
+> ImageNet100
+> Accuracy 86.92% 85.60% 84.45% 81.32%
+> Precision 25.41% 39.70% 57.41% 72.87%
+> Recall 83.43% 84.82% 86.19% 84.90%
+> Figure 2 Qualitative visualization of 2D GMM partitioning in the engineered feature space. The left panel shows the ground -truth clean/noisy labels, and the
+> right panel shows the GMM -predicted clean/noisy partition based on local disagreement ratio and global centr oid distance.
+> Figure 3 t-SNE visualization of the 2D metric . The GMM -predicted noisy region is largely consistent with the ground -truth corrupted region, indicating that the
+> engineered 2D metric preserves a distinguishable clean/noisy structure. VOLUME XX, 2017 7
+
+objective is to construct a cleaner subset for downstream retraining.  
+
+> 2) COMPARISON WITH CLEANLAB
+
+Table IV reports the detection efficacy of Cleanlab under the proxy-model setting described in the experimental protocol. Cleanlab achieves strong performance on MNIST, where precision ranges from 95.52% to 99.13% and recall ranges 
+
+from 96.86% to 98.62%. However, on CIFAR-10 and ImageNet-100, its recall and precision vary more substantially across noise ratios. ImageNet-100 recall remains within 
+
+83.43% –86.19%. Compared with this probability-based baseline, the proposed framework directly exploits the target backbone and integrates local, global, and learning dynamics cues, leading to more robust noise isolation in several high-corruption settings. 
+
+D. Qualitative Analysis of GMM Partitioning 
+
+To visually demonstrate the effectiveness of the proposed feature, the visualizations in Fig. 2 to Fig. 5 are generated based on the MNIST dataset using the ResNet50 backbone under 10% symmetric label noise.  
+
+> 1) 2D GEOMETRIC SPACE
+
+Fig. 2 provides a qualitative comparison between the synthetic ground-truth noise labels and the GMM-predicted partition in the 2D feature space. Samples with high local disagreement and large global centroid distance are concentrated in the noise-dominant region, and the GMM partition captures this distribution without using the true noise ratio. The remaining dense low-disagreement region is mostly retained as clean, visually supporting the effectiveness of combining local and global geometric cues for adaptive noisy-label detection. In addition, Fig. 3 shows a t-SNE visualization of the 2D metric. The GMM-predicted noisy region is largely consistent with the ground-truth corrupted region, indicating that the engineered 2D metric preserves a distinguishable 
+
+clean/noisy structure after nonlinear projection.  
+
+> 2) 3D MULTI-METRIC SPACE
+
+Fig. 4 visualizes the 3D multi-metric GMM partitioning in the fused multi-metric space. By incorporating the robust EL2N score, the 3D introduces an learning dynamics related axis in addition to local disagreement and global centroid distance. The resulting distribution shows that noisy samples tend to  
+
+> Figure 4 Qualitative visualization of 3D multi-metric GMM partitioning. The 3D metric consists of local disagreement ratio, global-centroid distance, and robust EL2N score. The left panel shows the ground-truth clean/noisy labels, and the right panel shows the GMM-predicted partition
+> Figure 5 t-SNE projection of the 3D multi-metric . The visualization shows that the GMM-predicted noisy component aligns with the high-risk region identified from the synthetic ground-truth labels. VOLUME XX, 2017 7
+
+form a distinguishable component in the feature space. Fig. 5 further presents the t-SNE projection of the 3D multi-metric, where the GMM-predicted noisy component aligns with the high-risk region identified by the synthetic ground-truth labels. 
+
+> E. Retraining Performance
+
+Fig. 6 reports the downstream retraining performance after applying different data-cleaning strategies. The improvement is measured as the percentage-point change in test accuracy relative to training on the original noisy dataset before cleaning. Overall, the proposed 2D geometric metric and 3D multi-metric methods improve downstream accuracy in many evaluated settings, especially under moderate and severe label-noise conditions. This result indicates that removing the samples identified as noise-dominant by the adaptive GMM partition can effectively reduce the negative influence of corrupted labels during subsequent model training. 
+
+On CIFAR-10, the proposed methods generally provide positive accuracy gains when the noise ratio increases, particularly under the ViT backbone at 20% and 40% label noise. This suggests that, when the feature becomes sufficiently discriminative, the proposed local-global geometric cues and the additional EL2N-based learning dynamics cue can identify noisy or highly unreliable samples that would otherwise degrade generalization. In contrast, Cleanlab exhibits less stable retraining behavior in several CIFAR-10 settings, especially under the ViT backbone, where the proxy-model-based cleaning result does not always translate into improved downstream performance. This comparison suggests that directly conditioning the cleaning process on the target backbone can be advantageous when the objective is to improve a specific downstream architecture. 
+
+On MNIST, all methods produce relatively small accuracy changes. This is mainly because MNIST is a simpler and highly separable dataset, and the baseline accuracy before cleaning is already close to saturation. Consequently, even when noisy labels are successfully detected, the available margin for further improvement is limited. In this setting, Cleanlab remains competitive because its probability-based label-issue estimation performs well on highly separable data, whereas the proposed methods achieve comparable retraining behavior with only minor fluctuations. 
+
+The advantage of the proposed framework becomes more evident on ImageNet-100, which presents a more complex feature space and stronger inter-class ambiguity. Under severe corruption, especially at 40% label noise, the proposed 3D multi-metric method with ViT achieves the largest improvement among the compared methods in Fig. 6. Although Cleanlab also improves retraining performance under high-noise ImageNet-100 settings, its gain is smaller than that of the proposed 3D multi-metric method. This result indicates that integrating local disagreement, global centroid distance, and robust EL2N score provides a more effective refinement signal for complex datasets, where probability estimates from a lightweight proxy model may not fully capture the noise structure relevant to the target backbone. 
+
+Negative improvements are observed in several low-noise or highly overlapping settings. These cases indicate that aggressive filtering may remove informative hard samples together with mislabeled samples, or reduce the representativeness of the retained subset. Therefore, the retraining results should be interpreted together with the detection results: the proposed framework prioritizes high-recall noise isolation and tends to construct a cleaner but sometimes more conservative training subset. Overall, Fig. 6 demonstrates that the proposed adaptive data-cleaning strategy is particularly beneficial when label corruption is severe and when the dataset contains complex visual structures. 
+
+> V. Discussion and Conclusion
+> A. Low-Noise Regime: Separability Rather Than Noise Ratio Alone
+
+In low-noise settings, the proposed framework does not necessarily exhibit weaker noisy-label detection performance. Instead, its behavior is strongly influenced by the separability of the learned feature and the interaction between the dataset  
+
+> Figure 6 Accuracy improvement after data cleaning across CIFAR-10, MNIST, and ImageNet-100. The y-axis reports the percentage-point change in test accuracy compared with training on the original noisy dataset before cleaning. VOLUME XX, 2017 7
+
+and backbone architecture. When clean and corrupted samples are not clearly separated in the feature space, the GMM partition may isolate not only mislabeled instances but also structurally ambiguous yet correctly labeled hard samples. This phenomenon can lead to relatively conservative precision in strict noisy-label detection, while still improving retraining performance by removing confusing boundary cases and producing a cleaner, more stable training subset. 
+
+Importantly, this conservative precision is accompanied by high recall rates across all evaluated noise ratios. As demonstrated in our experiments on each dataset, the recall performance of both 2D and 3D metric methods consistently remains outstanding, frequently exceeding 95% and reaching near 100% in many cases. This high recall ensures that the vast majority of genuine noisy labels are successfully identified and intercepted. Consequently, while the framework may aggressively prune some structurally ambiguous clean samples, it effectively minimizes the risk of missing hidden label corruption, thereby reducing the likelihood that noisy labels remain in the retained subset that drives the subsequent improvement in retraining performance. Therefore, the proposed framework should be interpreted as an adaptive data-refinement strategy rather than a strict label-error detector that perfectly separates clean and noisy instances. 
+
+However, the experimental results also show that low-noise conditions can yield excellent detection performance when the feature space is sufficiently discriminative. For example, on MNIST with ResNet50, both the 2D geometric metric and 3D multi-metric achieve near-perfect detection even under 10% label noise. This indicates that low noise ratio itself is not the direct cause of weaker detection. Rather, detection difficulty depends on whether noisy samples form a distinguishable distribution relative to clean samples. 
+
+Therefore, the role of the proposed framework in low-noise regimes should be interpreted as adaptive data refinement: in challenging feature spaces, it may filter both noisy and ambiguous hard samples, whereas in highly separable feature spaces, it can accurately isolate label errors with minimal confusion. 
+
+> B. High-Noise Regime: Stable Noise Isolation Through Multi-Metric
+
+Under high-noise conditions, the proposed framework generally demonstrates strong robustness because corrupted samples become more statistically visible in the feature space. As the noise ratio increases, mislabeled instances are more likely to form a sufficiently large and coherent noise-dominant component, allowing the Gaussian Mixture Model to estimate the corresponding distribution more stably. This explains the strong detection results observed in several high-noise experiments, and suggests that multi-metric can provide useful evidence for noisy-label detection when confidence-based estimates alone may become less reliable. 
+
+This robustness is further supported by the integration of complementary metrics. Unlike methods that rely primarily on predicted probabilities, the proposed framework combines local neighborhood disagreement, global centroid distance, and, in the 3D variant, robust EL2N-based learning dynamics. As a result, even when model confidence becomes unreliable under severe label corruption, the geometric structure of the feature space can still provide useful evidence for noisy-label detection. The 2D and 3D variants also exhibit complementary behavior: the 2D metric may provide greater stability when learning dynamics are noisy or unstable, whereas the 3D metric can offer finer discrimination when the EL2N metric is reliable. 
+
+> C. Overall Implications
+
+Overall, the experimental findings suggest that the effectiveness of noisy-label detection is not determined by the label-noise ratio alone. Instead, it depends on the joint effect of noise ratio, dataset complexity, backbone quality, and the separability of clean and noisy samples in the feature space. The proposed multi-dimensional GMM framework is therefore best characterized as an adaptive, threshold-free data refinement mechanism. In highly separable settings, such as MNIST with ResNet50, it can accurately detect noisy labels even at low corruption levels. In more complex or overlapping feature spaces, especially under low-noise conditions, it may also remove ambiguous hard samples that are not necessarily mislabeled but can still hinder generalization. 
+
+A defining strength of this adaptive refinement mechanism is its capacity to maintain consistently high recall across varying corruption levels. Empirical results indicate that across different datasets and noise ratios (e.g.,5%, 10%, 20%, and 40%), the proposed framework achieves remarkable recall rates, effectively preventing noisy labels from slipping through the detection process. By heavily penalizing potential noise and prioritizing high recall, the framework establishes a cleaner training subset. This extensive noise isolation fundamentally underpins the robust performance recovery observed in our retraining experiments, proving that removing ambiguous instances alongside genuine noise is a favorable trade-off for overall model robustness. Under severe noise, the multi-metric provides robust anchors for isolating dominant noisy components and mitigating performance degradation. 
+
+Furthermore, unlike traditional probabilistic methods that rely on computationally expensive k-fold cross-validation to obtain out-of-sample predictions, the proposed framework directly leverages the target backbone without requiring iteration-heavy cross-validation. This architectural advantage significantly reduces the overall computational overhead and training costs, making it highly efficient for large-scale applications. These results highlight the practical value of the proposed framework: it does not rely on a fixed assumption that low-noise or high-noise regimes are inherently easier or harder. Instead, it adapts to the empirical structure of the learned, enabling flexible noisy-label detection and data cleaning across different datasets, architectures, and corruption levels. VOLUME XX, 2017 7
+
+## REFERENCES 
+
+[1] Y. LeCun, Y. Bengio, and G. Hinton, “Deep learning,” Nature, vol. 521, no. 7553, pp. 436–444, May 2015. 
+
+[2] L. Jiang, D. Huang, M. Liu, and W. Yang, “Beyond Synthetic Noise: Deep Learning on Controlled Noisy Labels,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 
+
+2020, pp. 4804 –4815. 
+
+[3] N. Natarajan, I. S. Dhillon, P. K. Ravikumar, and A. Tewari, “Learning with Noisy Labels,” in Advances in Neural Information Processing Systems, Curran Associates, Inc., 2013. 
+
+[4] D. Arpit et al., “A Closer Look at Memorization in Deep Networks,” in Proceedings of the 34th International Conference on Machine Learning, PMLR, Jul. 2017, pp. 233–242. 
+
+[5] H. Song, M. Kim, D. Park, Y. Shin, and J.-G. Lee, “Learning From Noisy Labels With Deep Neural Networks: A Survey,” IEEE Trans. 
+
+Neural Netw. Learn. Syst., vol. 34, no. 11, pp. 8135 –8153, Jan. 2023. 
+
+[6] B. Han et al., “A Survey of Label-noise Representation Learning: Past, Present and Future,” Feb. 20, 2021, arXiv: arXiv:2011.04406. 
+
+[7] B. Han et al., “Co-teaching: Robust training of deep neural networks with extremely noisy labels,” in Advances in Neural Information 
+
+Processing Systems, Curran Associates, Inc., 2018. 
+
+[8] X. Xia et al., “Part-dependent Label Noise: Towards Instance-dependent Label Noise,” in Advances in Neural Information Processing Systems, Curran Associates, Inc., 2020, pp. 7597–7610. 
+
+[9] Y. Cho, B. Shin, C. Kang, and C. Yun, “Lightweight Dataset Pruning without Full Training via Example Difficulty and Prediction Uncertainty,” in Proceedings of the 42nd International Conference on Machine Learning, PMLR, Oct. 2025, pp. 10602–10643. 
+
+[10] C. M. Bishop, Pattern recognition and machine learning. in Information science and statistics. New York: Springer, 2006. 
+
+[11] T. Cover and P. Hart, “Nearest neighbor pattern classification,” IEEE Trans. Inf. Theory, vol. 13, no. 1, pp. 21–27, Jan. 1967. 
+
+[12] J. B. MacQueen, “Some methods for classification and analysis of multivariate observations”. 
+
+[13] S. Lloyd, “Least squares quantization in PCM,” IEEE Trans. Inf. Th eory, vol. 28, no. 2, pp. 129 –137, Mar. 1982. 
+
+[14] M. Paul, S. Ganguli, and G. K. Dziugaite, “Deep Learning on a Data Diet: Finding Important Examples Early in Training,” in Advances in Neural Information Processing Systems, Curran Associates, Inc., 2021, pp. 20596–20607. 
+
+[15] A. P. Dempster, N. M. Laird, and D. B. Rubin, “Maximum Likelihood from Incomplete Data via the EM Algorithm,” J. R. Stat. Soc. Ser. B Methodol., vol. 39, no. 1, pp. 1– 38, 1977. 
+
+[16] S. Liu, J. Niles-Weed, N. Razavian, and C. Fernandez-Granda, “Early-learning regularization prevents memorization of noisy labels,” in Proceedings of the 34th International Conference on Neural Information Processing Systems, in NIPS ’20. Red Hook, NY, USA: Curran Associates Inc., 6 2020, pp. 20331–20342. 
+
+[17] K. Lee, S. Yun, K. Lee, H. Lee, B. Li, and J. Shin, “Robust Inference via Generative Classifiers for Handling Noisy Labels,” in Proceedings of the 36th International Conference on Machine Learning, PMLR, May 2019, pp. 3763–3772. 
+
+[18] S. Li, X. Xia, S. Ge, and T. Liu, “Selective-Supervised Contrastive Learning with Noisy Labels,” in 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Jun. 2022, pp. 316–325. 
+
+[19] D. Bahri, H. Jiang, and M. Gupta, “Deep k-NN for Noisy Labels,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 540–550. 
+
+[20] C. Northcutt, L. Jiang, and I. Chuang, “Confident Learning: Estimating Uncertainty in Dataset Labels,” J Artif Int Res, vol. 70, pp. 1373–1411, Spring 2021. 
+
+[21] C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On Calibration of Modern Neural Networks,” in Proceedings of the 34th International Conference on Machine Learning, PMLR, Jul. 2017, pp. 1321–1330. 
+
+[22] J. Chen, V. Ramanathan, T. Xu, and A. L. Martel, “Detecting Noisy Labels with Repeated Cross-Validations,” in Medical Image Computing and Computer Assisted Intervention – MICCAI 2024, vol. 15010, M. G. Linguraru, Q. Dou, A. Feragen, S. Giannarou, B. Glocker, K. Lekadir, and J. A. Schnabel, Eds., in Lecture Notes in Computer Science, vol. 15010. , Cham: Springer Nature Switzerland, 2024, pp. 197–207. 
+
+[23] F. R. Hampel, “The Influence Curve and Its Role in Robust 
+
+Estimation,” J. Am. Stat. Assoc., vol. 69, no. 346, pp. 383 –393, 1974. 
+
+[24] K. He, X. Zhang, S. Ren, and J. Sun, “Deep Residual Learning for Image Recognition,” in 2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), Jun. 2016, pp. 770– 778. 
+
+[25] A. Dosovitskiy et al., “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale,” presented at the International Conference on Learning Representations, Oct. 2020. 
+
+[26] A. Krizhevsky, “Learning Multiple Layers of Features from Tiny Images”. 
+
+[27] Y. Lecun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based learning applied to document recognition”. 
+
+[28] O. Russakovsky et al., “ImageNet Large Scale Visual Recognition Challenge,” Int J Comput Vis., vol. 115, no. 3, pp. 211–252, Spring 2015.
