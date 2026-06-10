@@ -1,0 +1,220 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-10T22:42:40.096919+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2606.09881v1",
+      "source": "arxiv",
+      "title": "Toward Calibrated, Fair, and accurate Deepfake Detection",
+      "abstract": "Deepfake detectors show large performance gaps across demographic groups. Existing fairness approaches require demographic labels, retraining, or sacrifice accuracy. We introduce Face-Fairness (FF), a plug-and-play framework for bias mitigation. Our primary contribution, Face-Feature Tuning (FFT), is the first demographic label-free fairness method demonstrated for deepfake detection: a lightweight calibrator that performs a logit remapping conditioned on frozen face embeddings. We complement FFT with two variants: FF-Max, which maximizes worst-group accuracy when demographics are available, and FF-Discover, which does the same with embedding-discovered groups. Across in-domain and cross-dataset test settings, FF consistently reduces FPR/TPR gaps and improves minimum group accuracy while maintaining (often improving) overall accuracy. The approach is detector-agnostic, adds negligible runtime overhead, and requires no access to identity attributes.",
+      "authors": [
+        "Ryan Brown",
+        "Chris Russell"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CR",
+        "cs.CV"
+      ],
+      "published": "2026-06-03T05:44:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.09881v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "plug-and-play fairness framework for deepfake detection, first demographic label-free fairness method for deepfake",
+      "llm_evidence_cn": "即插即用的深度伪造检测公平性框架，首个无需人口统计标签的深度伪造公平性方法",
+      "llm_evidence": "即插即用的深度伪造检测公平性框架，首个无需人口统计标签的深度伪造公平性方法",
+      "canonical_evidence": "即插即用的深度伪造检测公平性框架，首个无需人口统计标签的深度伪造公平性方法",
+      "llm_tldr_en": "Proposes Face-Fairness, a bias mitigation framework for deepfake detection with a label-free calibrator, reducing performance gaps across demographic groups without sacrificing accuracy.",
+      "llm_tldr_cn": "针对深度伪造检测器在不同人口群体间性能差异大的问题，提出Face-Fairness框架，其中Face-Feature Tuning（FFT）无需人口标签即可通过冻结面部嵌入上的logit重映射实现公平性校准。实验表明该方法在域内和跨数据集设置下均能显著减小假阳性/真阳性率差距，并提升最差群体准确率。",
+      "llm_tldr": "针对深度伪造检测器在不同人口群体间性能差异大的问题，提出Face-Fairness框架，其中Face-Feature Tuning（FFT）无需人口标签即可通过冻结面部嵌入上的logit重映射实现公平性校准。实验表明该方法在域内和跨数据集设置下均能显著减小假阳性/真阳性率差距，并提升最差群体准确率。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.08033v1",
+      "source": "arxiv",
+      "title": "Balancing Real and Synthetic Data for CNN-based Masonry Crack Detection",
+      "abstract": "Cracks are a critical indicator of building health, and early stage identification is fundamental to prevent harmful damages. Advances in deep learning (DL), particularly convolutional neural networks (CNNs), have enabled scalable solutions for automated crack detection. However, CNN performance strongly depends on the availability of large and diverse datasets, which is particularly challenging for complex surfaces such as masonry. Collecting sufficient real data is time-consuming, while publicly available datasets may not be adequate. To address this limitation, we explored generating synthetic crack data, which complements real data and improves training effectiveness. The real dataset consists of masonry crack images collected from buildings in Bologna and surrounding areas. In contrast, the synthetic dataset was generated using a crack overlay tool that adds cracks to background images in a controlled orientation and placement. The real dataset was used to train several DL architectures, to identify the best-performing model (InceptionV4) employed for experiments with generated data. Six training scenarios were tested in InceptionV4 by varying the ratio of real and synthetic data, with evaluation performed on a test set composed of real images using the F1-score and mean Intersection over Union (mIoU) metrics. Results show that training on synthetic data plus a modest addition of 20% real data achieves results comparable to training on real data only. Moreover, the 20/80 scenario (synthetic/real) achieved an 76% F1-score and 80% mean IoU, outperforming the real-only case. As can be seen, the method demonstrates the potential of synthetic data to reduce collection efforts while enhancing crack detection accuracy.",
+      "authors": [
+        "Mattia Forlesi",
+        "Alfonso Esposito",
+        "Ivan Zyrianoff",
+        "Alessandro Marzani",
+        "Marco Di Felice"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-06T07:51:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.08033v1",
+      "tags": [
+        "keyword:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Uses CNNs for image classification of cracks, directly matching the requirement of classifying images into categories using CNNs.",
+      "llm_evidence_cn": "使用CNN进行裂缝图像分类，匹配图像分类需求",
+      "llm_evidence": "使用CNN进行裂缝图像分类，匹配图像分类需求",
+      "canonical_evidence": "使用CNN进行裂缝图像分类，匹配图像分类需求",
+      "llm_tldr_en": "Explores synthetic crack images to improve CNN-based masonry crack detection. Experiments show synthetic data boosts detection accuracy when combined with real data.",
+      "llm_tldr_cn": "针对砌体裂缝检测中真实训练数据稀缺的问题，本文探索利用扩散模型生成合成裂缝图像以扩充训练集。通过平衡真实与合成数据的混合训练策略，使用卷积神经网络进行图像分类，在建筑立面采集的砌体图像上实验表明，合成数据能有效提升裂缝检测的准确性，为数据受限下的视觉检测任务提供了可行方案。",
+      "llm_tldr": "针对砌体裂缝检测中真实训练数据稀缺的问题，本文探索利用扩散模型生成合成裂缝图像以扩充训练集。通过平衡真实与合成数据的混合训练策略，使用卷积神经网络进行图像分类，在建筑立面采集的砌体图像上实验表明，合成数据能有效提升裂缝检测的准确性，为数据受限下的视觉检测任务提供了可行方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.10309v1",
+      "source": "arxiv",
+      "title": "Dissect and Prune: Enhancing Robustness in AI-Generated Image Detection",
+      "abstract": "While existing AI-generated image detectors report high performance, we identify that this is largely driven by a critical prediction asymmetry: a bias toward the real class that severely limits sensitivity to generated content, especially under standard post-processing operations such as compression and resizing. We hypothesize that this stems from the model's reliance on spurious features, distracting signals that obscure true generative artifacts. To address this, we propose DEAR (Dissect and Prune), which leverages inpainted images to identify and prune these interfering components. Specifically, we find that features strongly aligned to either inpainted or non-inpainted regions are less robust to post-processing. By measuring the alignment between channel activations and inpaint masks, DEAR removes features at both extremes, retaining only those that capture genuine generative artifacts. Experimental results demonstrate that our approach significantly enhances robustness against unseen generators and post-processing, effectively mitigating the prediction asymmetry. Our code is available at https://github.com/dahyedahye/dear.",
+      "authors": [
+        "Dahye Kim",
+        "Jaehyun Choi",
+        "Hyun Seok Seong",
+        "Seongho Kim",
+        "Donghun Lee",
+        "Sungwon Yi",
+        "Jang-Ho Choi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-09T01:55:09+00:00",
+      "link": "https://arxiv.org/pdf/2606.10309v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Enhancing robustness in AI-generated image detection by pruning spurious features",
+      "llm_evidence_cn": "通过剪枝伪特征增强AI生成图像检测的鲁棒性",
+      "llm_evidence": "通过剪枝伪特征增强AI生成图像检测的鲁棒性",
+      "canonical_evidence": "通过剪枝伪特征增强AI生成图像检测的鲁棒性",
+      "llm_tldr_en": "The paper identifies prediction asymmetry bias in AI-generated image detectors and proposes DEAR, which uses inpainted images to measure feature alignment and prune spurious components, improving robustness under post-processing.",
+      "llm_tldr_cn": "该论文发现现有AI生成图像检测器存在预测不对称偏置，偏向真实类别，对生成内容不敏感，尤其在压缩和缩放等后处理下性能下降。为此提出DEAR方法，利用修复图像识别并剪枝与修复/非修复区域强对齐的脆弱特征，消除干扰伪影。实验表明该方法有效提升了检测鲁棒性，为通用的生成图像取证提供了新思路。",
+      "llm_tldr": "该论文发现现有AI生成图像检测器存在预测不对称偏置，偏向真实类别，对生成内容不敏感，尤其在压缩和缩放等后处理下性能下降。为此提出DEAR方法，利用修复图像识别并剪枝与修复/非修复区域强对齐的脆弱特征，消除干扰伪影。实验表明该方法有效提升了检测鲁棒性，为通用的生成图像取证提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.05455v1",
+      "source": "arxiv",
+      "title": "Disentangled Fine-Grained Prototype Learning for Incomplete Image-Tabular Classification",
+      "abstract": "The missing-modality problem poses a significant challenge in image-tabular multimodal learning across a wide range of multimedia applications, including product understanding, recommendation systems, and medical diagnosis. This challenge is particularly pronounced when the two modalities are highly heterogeneous, as images and tabular attributes differ substantially in their semantic granularity and data distributions. Existing methods learn modality-invariant representations through disentanglement and alignment over global token-averaged features, capturing only coarse cross-modal consistency and overlooking fine-grained semantic and distributional misalignment, which hampers the exploitation of complementary cues under missing modalities. To address this, we propose DFPL, a novel framework for fine-grained prototype learning. Specifically, Shared-Specific Prototype Modeling (SSPM) extracts compact and diverse shared and modality-specific prototypes, and further performs prototype-level disentanglement to suppress redundant intra-modality correlations. Additionally, we propose a Prototype-guided Fine-grained Alignment (PFA) module that jointly enforces prototype-level distribution matching and prototype-to-class semantic alignment within a unified prototype space, thereby preserving both fine-grained distributional and semantic consistency across modalities. We further introduce a Class-aware Multi-scale Aggregation (CMA) module to adaptively aggregate shared semantics and modality-specific characteristics from global and prototype levels for robust predictions. Extensive experiments on three diverse image-tabular benchmarks demonstrate the superiority of our method compared to the previous approaches under various missing-modality settings. Code will be made publicly available.",
+      "authors": [
+        "Feixiang Zhou",
+        "Jianyang Xie",
+        "Zhuangzhi Gao",
+        "Qinkai Yu",
+        "Fu Wang",
+        "Yuheng Fan",
+        "Jing Li",
+        "Zheheng Jiang",
+        "Yitian Zhao",
+        "Yanda Meng",
+        "He Zhao",
+        "Gregory Y. H. Lip",
+        "Yalin Zheng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-03T21:24:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.05455v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Fine-grained prototype learning with disentanglement addresses image classification under modality missing, relevant to fine-grained classification",
+      "llm_evidence_cn": "解耦细粒度原型学习处理模态缺失下的图像分类，与细粒度分类相关",
+      "llm_evidence": "解耦细粒度原型学习处理模态缺失下的图像分类，与细粒度分类相关",
+      "canonical_evidence": "解耦细粒度原型学习处理模态缺失下的图像分类，与细粒度分类相关",
+      "llm_tldr_en": "A disentangled fine-grained prototype learning method tackles missing modality in image-tabular classification by capturing fine-grained cross-modal alignment, improving robustness.",
+      "llm_tldr_cn": "多模态学习中模态缺失问题严重，图像与表格数据语义粒度不一，粗粒度对齐难以利用细粒度互补信息。本文提出解耦细粒度原型学习方法，在特征解耦后对细粒度语义进行对齐，克服模态异质性。实验表明，该方法在模态缺失情况下分类效果显著提升，为商品理解、医学诊断等应用提供了更鲁棒的多模态融合方案。",
+      "llm_tldr": "多模态学习中模态缺失问题严重，图像与表格数据语义粒度不一，粗粒度对齐难以利用细粒度互补信息。本文提出解耦细粒度原型学习方法，在特征解耦后对细粒度语义进行对齐，克服模态异质性。实验表明，该方法在模态缺失情况下分类效果显著提升，为商品理解、医学诊断等应用提供了更鲁棒的多模态融合方案。",
+      "llm_tags": [
+        "query:deepfake-fsl:composite"
+      ],
+      "matched_query_tag": "query:deepfake-fsl:composite",
+      "matched_query_text": "Papers central to 深度伪造检测、AI生成图像检测、图像分类、少样本学习、特征对齐、细粒度分类相关论文, especially work that connects or combines: detection of deepfake images and videos using machine learning models; detecting images created by generative AI models such as GANs and diffusion models; classifying images into categories using convolutional neural networks; training models with only a small number of labeled examples per class; detecting manipulated face images in multimedia forensics; distinguishing computer-generated images from real photographs; identifying AI generated or synthetic images with limited training data; few shot learning approaches for face forgery detection and image classification; few shot deepfake detection using feature alignment; cross domain generalization for AI generated image detection.",
+      "matched_requirement_id": "req-composite-deepfake-fsl",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.07646v1",
+      "source": "arxiv",
+      "title": "DOME: Learning Transferable Domain Variables from Sparse Supervision for Test-Time Adaptation",
+      "abstract": "Test-time adaptation (TTA) aims to align a model to shifting test domains using only unlabeled streaming data. Most existing methods implicitly infer a single global domain distribution, ignoring the multidimensional and sample-specific nature of real-world domain shifts, leading to fragile adaptation. We propose DOME, an effective domain encoder that explicitly models each sample's domain in a zero-shot manner. DOME leverages vision-language pretraining to extract dense, continuous representations, parameterizes domains as distributional variables, and introduces a momentum-updated sparse domain bank for disentangled supervision. By injecting these explicit domain cues into downstream models, even a basic entropy-minimization TTA strategy achieves state-of-the-art performance across ImageNet-C, ImageNet-R, and ImageNet-Sketch, outperforming complex TTA approaches. Our results demonstrate that robust adaptation stems not from intricate adaptation algorithms, but from explicit, structured domain representation.",
+      "authors": [
+        "Xiaoran Xu",
+        "Yifan Xu",
+        "Yupeng Wu",
+        "Xiaoshan Yang",
+        "Changsheng Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-02T03:24:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.07646v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "proposes domain encoder for test-time adaptation, enabling cross-domain generalization",
+      "llm_evidence_cn": "提出用于测试时适应的域编码器，支持跨域泛化",
+      "llm_evidence": "提出用于测试时适应的域编码器，支持跨域泛化",
+      "canonical_evidence": "提出用于测试时适应的域编码器，支持跨域泛化",
+      "llm_tldr_en": "DOME introduces a domain encoder that models sample-specific domain distributions in a zero-shot manner, improving test-time adaptation by injecting explicit domain cues. This could be applied to cross-domain generalization tasks like AI-generated image detection.",
+      "llm_tldr_cn": "DOME提出了一个零样本域编码器，显式建模每个样本的域分布，通过注入域线索改进测试时适应。该方法虽未直接针对AI生成图像检测，但其跨域适应能力可为此类任务提供技术基础。",
+      "llm_tldr": "DOME提出了一个零样本域编码器，显式建模每个样本的域分布，通过注入域线索改进测试时适应。该方法虽未直接针对AI生成图像检测，但其跨域适应能力可为此类任务提供技术基础。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
