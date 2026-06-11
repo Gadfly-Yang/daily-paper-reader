@@ -1,0 +1,39 @@
+{
+  "label": "2026-06-11",
+  "date": "2026-06-11",
+  "generated_at": "2026-06-11T21:01:14",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202606/11/2606.09474v1-training-free-generalized-few-shot-segmentation-through-open-vocabulary-semantic-arbitration",
+      "section": "deep",
+      "title_en": "Training-Free Generalized Few-Shot Segmentation through Open-Vocabulary Semantic Arbitration",
+      "authors": "Silas Kwabla Gah, Ebenezer Owusu",
+      "date": "2026-06-08",
+      "pdf": "https://arxiv.org/pdf/2606.09474v1",
+      "score": "8.0",
+      "evidence": "提出基于基础模型的免训练少样本分割方法，直接实现从少量标注样本中学习。",
+      "tldr": "传统广义小样本分割依赖任务特定训练来纳入新类，而现代基础模型（如SAM、CLIP）已展现强开放词汇分割能力，引发新问题：能否仅通过推理时协调冻结语义先验解决？本文提出Open-V，一种训练免费框架，组合SAM3的可提示概念分割（PCS）与K-shot CLIP支持质心，经校准逐像素仲裁，支持任意语义类别且无训练。在PASCAL-5i上，1-shot取得基类/新类/调和mIoU 78.4/77.5/77.9，比最强训练基线高+17.7 HM，并在COCO-20i与ADE-OW上成功泛化。同时揭示评估空间不匹配会隐秘扭曲性能，并确认支持信息可通过推理时语义接地融入，其贡献随文本先验减弱而增强。训练免费协调冻结基础模型先验能有效替代参数适应，超越传统训练方法，为GFSS开辟开放词汇新范式。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Generalized Few-Shot Semantic Segmentation (GFSS) has traditionally been approached as a representation-learning problem, requiring task-specific adaptation to incorporate novel classes from limited support examples. Recent foundation models, however, already exhibit strong open-vocabulary recognition and segmentation capabilities, raising a different question: can GFSS be solved through inference-time coordination of frozen semantic priors rather than parameter adaptation? We answer this question with Open-V, a training-free GFSS framework that combines Segment Anything (SAM3) Promptable Concept Segmentation (PCS) with a K-shot CLIP support centroid through calibrated per-pixel semantic arbitration. OpenV introduces no trainable components and supports arbitrary semantic categories at inference time. Beyond segmentation performance, our study contributes three broader findings. First, we show that support information can be incorporated through inference-time semantic grounding, and that its contribution increases as foundation-model text priors weaken on label-disjoint vocabularies. Second, we identify a reproducibility confound in foundationmodel segmentation, demonstrating that preprocessing and evaluation-space mismatches can silently distort reported performance. Finally, we validate Open-V across PASCAL5i, COCO-20i, and ADE-OW, showing that training-free coordination of foundation-model priors generalizes across both conventional GFSS and open-vocabulary evaluation settings. On PASCAL-5i (1-shot), Open-V attains base/novel/harmonic mIoU of 78.4/77.5/77.9, without GFSS-specific training surpassing the strongest trained baseline by +17.7 HM.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/11/2606.04528v1-optical-guided-neural-collapse-for-sar-few-shot-class-incremental-learning",
+      "section": "quick",
+      "title_en": "Optical-Guided Neural Collapse for SAR Few-Shot Class Incremental Learning",
+      "authors": "Fan Zhang, Sijin Zheng, Fei Ma, Qiang Yin, Yongsheng Zhou, Fei Gao, Xian Sun",
+      "date": "2026-06-03",
+      "pdf": "https://arxiv.org/pdf/2606.04528v1",
+      "score": "6.0",
+      "evidence": "针对SAR图像的少样本类增量学习，采用特征对齐方法",
+      "tldr": "SAR图像少样本类增量学习面临数据稀缺、方位敏感导致类内变化大和灾难性遗忘问题。本文提出光学引导神经坍缩框架，利用富数据光学ATR正交特征子空间作为几何先验，通过投影损失和冻结ETF分类器约束SAR特征。在24类SAR目标7次增量评估中，方法达到最高最终精度，且类内紧凑性与类间可分性显著提升。该框架有效缓解灾难性遗忘，为跨模态SAR增量学习提供了神经坍缩引导的新范式。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Few-shot class-incremental learning (FSCIL) in synthetic aperture radar imagery presents unique challenges due to severe data scarcity and SAR-specific variability. In particular, strong azimuth sensitivity in SAR induces large intra-class variation and inter-class confusion, and FSCIL sequential updates further lead to catastrophic forgetting of previously learned classes. Inspired by neural collapse, we propose an optical-guided SAR FSCIL framework, which derives orthogonal feature subspaces from a data-rich optical ATR dataset and uses them as geometric priors to guide SAR feature learning. SAR features are projected onto these orthogonal subspaces via principal angle constraints, effectively transferring discriminative structure from the optical to the SAR domain. Specifically, our projection loss and the classifier loss optimized with a frozen simplex-ETF geometry jointly induce neural collapse by concentrating features around class means while maintaining large inter-class angles. We evaluate the approach on a benchmark comprising an optical ATR dataset and a SAR ATR dataset with 24 target classes, organized into a base training session and seven incremental sessions. Compared with recent FSCIL methods including NCFSCIL and so on, our method achieves the highest final accuracy and a favorable trade-off between final performance and performance degradation. Moreover, neural collapse metrics show improved intra-class compactness and inter-class separability, indicating that the learned features more closely approximate the ideal simplex-ETF geometry.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
