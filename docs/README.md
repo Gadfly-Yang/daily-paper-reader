@@ -6,28 +6,22 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-11
-- 运行时间：2026-06-11 21:01:05 UTC
+- 最新运行日期：2026-06-12
+- 运行时间：2026-06-12 20:40:14 UTC
 - 运行状态：成功
-- 本次总论文数：2
-- 精读区：1
-- 速读区：1
+- 本次总论文数：0
+- 精读区：0
+- 速读区：0
 
 ### 今日简报（AI）
-今日聚焦少样本分割与增量学习，精读一篇无需训练的开放词汇语义仲裁方法，速览一种针对SAR图像的光学引导神经坍缩技术。  
-最值得关注：利用视觉-语言模型实现免训练泛化小样本分割，以及神经坍缩在SAR类别增量中的引导作用。  
-建议进一步关注预训练大模型在小样本任务中的零训练适配能力。
-- 详情：[/202606/11/README](/202606/11/README)
+> 今日无新推荐，系统未产出可展示论文。
+- 详情：[/202606/12/README](/202606/12/README)
 
 ### 精读区论文标签
-1. [Training-Free Generalized Few-Shot Segmentation through Open-Vocabulary Semantic Arbitration](/202606/11/2606.09474v1-training-free-generalized-few-shot-segmentation-through-open-vocabulary-semantic-arbitration)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：提出基于基础模型的免训练少样本分割方法，直接实现从少量标注样本中学习。
+- 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Optical-Guided Neural Collapse for SAR Few-Shot Class Incremental Learning](/202606/11/2606.04528v1-optical-guided-neural-collapse-for-sar-few-shot-class-incremental-learning)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：针对SAR图像的少样本类增量学习，采用特征对齐方法
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">
