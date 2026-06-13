@@ -1,0 +1,54 @@
+{
+  "label": "2026-06-13",
+  "date": "2026-06-13",
+  "generated_at": "2026-06-13T20:34:58",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202606/13/2606.08191v1-frequency-domain-latent-attention-gating-for-cross-domain-token-aggregation",
+      "section": "deep",
+      "title_en": "Frequency-Domain Latent Attention Gating for Cross-Domain Token Aggregation",
+      "authors": "Kewei Li, Rongying Zhang, Xueli Wang, Xiwen Gong, Zhongjian Wang, Lan Huang, Ruochi Zhang, Fengfeng Zhou",
+      "date": "2026-06-06",
+      "pdf": "https://arxiv.org/pdf/2606.08191v1",
+      "score": "8.0",
+      "evidence": "提出频域令牌聚合模块FLaG，在CIFAR-10/100图像分类上使用ResNet18评估",
+      "tldr": "Token聚合在序列模型中是常见瓶颈，现有方法大多仅在原始token域操作，缺乏频域信息利用。FLaG模块通过FFT变换将token转至频域，利用可学习潜查询总结频谱，经通道门控后重建时域token以增强聚合。在抗菌肽活性预测和CIFAR-100上取得显著提升，文本分类保持竞争力。分析表明低频成分贡献最大，门控作为共享重加权机制，交叉注意力呈样本特定性，为频域聚合提供了即插即用方案。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Token aggregation is a common bottleneck in models that map token representations to sample-level predictions, yet most pooling methods operate only in the original token domain. We propose FLaG, a plug-in aggregation module that transforms token representations with the real FFT, summarizes spectral components with learnable latent queries, applies a channel-wise gate, and reconstructs enhanced time-domain tokens for final pooling. We evaluate FLaG on antimicrobial peptide (AMP) activity prediction with ESM2, image classification with ResNet18 on CIFAR-10 and CIFAR-100, and text classification with RoBERTa on IMDB and GLUE. FLaG achieves its clearest gains on the ESM2-8M antimicrobial peptide tasks and on CIFAR-100, while remaining competitive with strong text baselines on IMDB and GLUE. Then we probe its behavior on the AMP setting with band knockouts, gate summaries, residue perturbations, latent-query readouts, and structure-proxy stratification. We find that low-frequency bands contribute the most overall, and the remaining higher-band pattern is more sample-specific. The gate acts as a broadly shared spectral reweighting stage and the cross-attention patterns are sample-specific with mild query-wise differentiation, and higher-helix peptides exhibit stronger average spectral sensitivity in both bacteria. The supplementary materials, source code and data are released at https://www.healthinformaticslab.org/supp/ and https://github.com/Kewei2023/AMPCliff/tree/FLaG.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/13/2606.08649v1-sample-efficient-llm-based-detection-of-malicious-web-server-logs-with-forensically-explainable-reasoning",
+      "section": "deep",
+      "title_en": "Sample-Efficient LLM-Based Detection of Malicious Web Server Logs with Forensically Explainable Reasoning",
+      "authors": "Bernhard Kneip, Nhien-An Le-Khac, Hong-Hanh Nguyen-Le",
+      "date": "2026-06-07",
+      "pdf": "https://arxiv.org/pdf/2606.08649v1",
+      "score": "8.0",
+      "evidence": "少样本学习，仅用四个示例进行检测",
+      "tldr": "网络服务器日志取证分析需高精度检测和法律可采信的解释，但传统机器学习模型的黑盒特性导致可解释性不足。为此，我们提出CEF-Log，一种上下文增强的少样本思维链提示策略，嵌入专家调查方法论的五步推理模板，引导LLM关注分析逻辑而非模式记忆。在CSIC 2010数据集上仅用4个示例即达到F1=0.99，样本效率较其他提示法提升10倍；同时发布包含真实攻击和多步序列的ForenWebLog数据集。定性分析表明CEF-Log生成可追溯、准确的法证解释，极大提升了日志取证的自动化与可信度。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Forensic analysis of web server logs demands both accurate detection and human-readable explanations that can satisfy legal requirements. We present CEF-Log, a context-enhanced few-shot chain-of-thought prompting strategy for Large Language Models that addresses this dual requirement. CEF-Log embeds expert investigative methodology through a structured five-step reasoning template, enabling the model to learn \\textit{how} to analyze logs rather than \\textit{what} patterns to memorize. Experimental evaluation demonstrates that CEF-Log achieves an F1-score of 0.99 on the CSIC 2010 dataset using only four examples while providing a $10\\times$ improvement in sample efficiency compared to other prompting-based methods. We also introduce ForenWebLog, a new dataset that incorporates real-world attacks and multi-step attack sequences for comprehensive evaluation. Qualitative analysis confirms that CEF-Log generates traceable, accurate explanations suitable for forensic documentation, addressing the critical \"black-box\" limitation of traditional machine learning approaches.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/13/2606.09928v1-forward-only-convolutional-neural-networks-with-learnable-channel-class-assignment",
+      "section": "quick",
+      "title_en": "Forward-Only Convolutional Neural Networks with Learnable Channel-Class Assignment",
+      "authors": "Mohammadnavid Ghader, Saeed Reza Kheradpisheh, Bahar Farahani, Mahmood Fazlali",
+      "date": "2026-06-07",
+      "pdf": "https://arxiv.org/pdf/2606.09928v1",
+      "score": "7.0",
+      "evidence": "提出基于前向-前向算法和可学习通道-类别分配的卷积神经网络图像分类方法",
+      "tldr": "前向-前向学习通过局部目标替代反向传播，但现有CNN扩展采用静态通道-类别分配，性能受限。本文引入可学习的通道-类别分配机制，结合熵与正交正则化，并设计损失感知层贡献加权策略。在CIFAR-10、CIFAR-100和Tiny-ImageNet上，该方法达前向模型最优，显著缩小与反向传播差距。工作表明，自适应通道特化与层加权有效提升了前向CNN表征能力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "The Forward-Forward (FF) algorithm offers a biologically inspired alternative to backpropagation by replacing gradient-based credit assignment with local, forward-only objectives. While recent extensions have adapted FF to convolutional neural networks (CNNs), existing formulations rely on static channel-class partitions and struggle to perform effectively in complex tasks. In this work, we introduce a learnable channel-class assignment mechanism that enables adaptive, data-driven specialization of convolutional channels, supported by entropy and orthogonality regularization to promote learning performance. We further propose a loss-aware layer contribution strategy that adaptively weights intermediate-layer predictions based on their validation performance, enhancing the effectiveness of forward-only inference. Integrated into residual CNNs, the proposed method achieves consistently superior performance across CIFAR-10, CIFAR-100, and Tiny-ImageNet compared to existing similar forward-only methods. Notably, it establishes new state-of-the-art performance among FF-based models, substantially narrowing the gap with backpropagation. These findings demonstrate that introducing learnable channel specialization and layer contribution weighting significantly enhances the representational capacity of forward-only learning in deep CNNs.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
