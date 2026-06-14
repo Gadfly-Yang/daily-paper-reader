@@ -1,0 +1,55 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-14T21:03:59.807569+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2606.12671v1",
+      "source": "arxiv",
+      "title": "SalArt-VQA: Diagnosing Whether VLMs Understand Salient Artifacts in Generated Images",
+      "abstract": "Vision-language models (VLMs) are increasingly used to detect whether AI-generated images contain visible artifacts, yet their ability to analyze such artifacts remains poorly understood. A correct image-level decision can still hide important failures: a model may correctly flag an artifact while relying on the wrong visual cue, selecting the wrong region, or describing a defect that the image does not support. To evaluate these behaviors directly, we introduce SalArt-VQA, a diagnostic benchmark for fine-grained SALient ARTifact understanding in AI-generated images. SalArt-VQA contains 950 images and 3,681 human-authored multiple-choice questions spanning artifact images, matched real reference images, and paired generated reference images. Four aligned question types evaluate presence detection, semantic localization, spatial grounding, and evidence-grounded defect identification, while the reference splits test calibration and abstention when the annotated defect is absent. Across 20 VLMs, SalArt-VQA reveals failures that image-level detection accuracy hides: the strongest model reaches 99.37% detection recall on artifact images but answers all four artifact-side questions correctly on only 53.26% of images. Comparing artifact images with artifact-free references reveals a sensitivity-calibration tradeoff: sensitive models often make unsupported artifact claims, while conservative models avoid false alarms largely by missing real artifacts. These results show that high artifact detection accuracy alone does not imply grounded artifact understanding. SalArt-VQA exposes these hidden failure modes and provides a fine-grained evaluation of whether VLM artifact claims are supported by local visual evidence.",
+      "authors": [
+        "Xiaoxiao Sun",
+        "Ruotian Zhang",
+        "Junzhe Huang",
+        "James Burgess",
+        "Serena Yeung-Levy"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T20:55:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.12671v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Directly evaluates VLM fine-grained understanding of artifacts in AI-generated images, crucial for detecting synthetic content.",
+      "llm_evidence_cn": "直接评估VLM对AI生成图像伪影的细粒度理解，有助于检测合成内容",
+      "llm_evidence": "直接评估VLM对AI生成图像伪影的细粒度理解，有助于检测合成内容",
+      "canonical_evidence": "直接评估VLM对AI生成图像伪影的细粒度理解，有助于检测合成内容",
+      "llm_tldr_en": "Introduces SalArt-VQA, a benchmark to diagnose VLMs' ability to analyze salient artifacts in AI-generated images, revealing failure modes beyond image-level decisions.",
+      "llm_tldr_cn": "本文提出SalArt-VQA基准，用于诊断视觉语言模型对AI生成图像中显著伪影的细粒度理解能力。包含950张生成图像、真实参考图像和3681个人工多选题，揭示仅依赖图像级决策可能隐藏的失败模式。实验发现主流VLM常因错误视觉线索、区域或描述而误判，该基准为提升AI生成图像检测的可靠性与可解释性提供了重要工具。",
+      "llm_tldr": "本文提出SalArt-VQA基准，用于诊断视觉语言模型对AI生成图像中显著伪影的细粒度理解能力。包含950张生成图像、真实参考图像和3681个人工多选题，揭示仅依赖图像级决策可能隐藏的失败模式。实验发现主流VLM常因错误视觉线索、区域或描述而误判，该基准为提升AI生成图像检测的可靠性与可解释性提供了重要工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}

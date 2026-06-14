@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-06-14 <!--dpr-date:20260614-->
+    * 精读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202606/14/2606.12671v1-salart-vqa-diagnosing-whether-vlms-understand-salient-artifacts-in-generated-images" data-sidebar-item="{&quot;title&quot;: &quot;SalArt-VQA: Diagnosing Whether VLMs Understand Salient Artifacts in Generated Images&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.12671v1-salart-vqa-diagnosing-whether-vlms-understand-salient-artifacts-in-generated-images&quot;, &quot;score&quot;: &quot;9.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;直接评估VLM对AI生成图像伪影的细粒度理解，有助于检测合成内容&quot;}">SalArt-VQA: Diagnosing Whether VLMs Understand Salient Artifacts in Generated Images</a>
   * 2026-06-13 <!--dpr-date:20260613-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202606/13/2606.08191v1-frequency-domain-latent-attention-gating-for-cross-domain-token-aggregation" data-sidebar-item="{&quot;title&quot;: &quot;Frequency-Domain Latent Attention Gating for Cross-Domain Token Aggregation&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.08191v1-frequency-domain-latent-attention-gating-for-cross-domain-token-aggregation&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;提出频域令牌聚合模块FLaG，在CIFAR-10/100图像分类上使用ResNet18评估&quot;}">Frequency-Domain Latent Attention Gating for Cross-Domain Token Aggregation</a>
