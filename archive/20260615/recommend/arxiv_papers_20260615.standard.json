@@ -1,0 +1,129 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-15T21:41:48.367999+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2606.14230v1",
+      "source": "arxiv",
+      "title": "A Multi-Domain Feature Fusion Framework for Generalizable Deepfake Detection Across Different Generators",
+      "abstract": "Deepfakes are artificially generated images, audio, or videos that threaten privacy, security, and information integrity. Detecting such content is crucial for countering disinformation, as the latest models generate highly realistic content. While spatial- or frequency-based approaches achieve good detection rates on Generative Adversarial Networks (GANs)-based generated deepfakes, they often struggle with recent diffusion model-generated images. In particular, existing approaches rarely exploit complementary multi-domain representations or systematically evaluate cross-generator robustness. To address these challenges, we propose a multi-domain deepfake detection framework called SGFF-Net (Spatial-Gradient-Frequency Fusion Network) that integrates spatial, gradient, and DWT (Discrete Wavelet Transform)-based frequency representations within a dual residual learning architecture. Experimental results show that the SGFF-Net achieves 98.95\\% accuracy in intra-dataset evaluation and improves performance in both cross-model (70.46\\%) and cross-paradigm (69.94\\%) settings. Incorporating multi-source training and data augmentation further enhances robustness, increasing accuracy from 70.46\\% to 79.80\\% in cross-model evaluation, from 69\\% to 78\\% in cross-paradigm evaluation, and from 61.50\\% to 75.80\\% on real-world data. Unlike single-domain detectors, the SGFF-Net learns complementary forensic cues across spatial, gradient, and wavelet-frequency domains, resulting in greater robustness under cross-generator and cross-paradigm evaluation. The results further show that combining multi-domain representations with data diversity and augmentation substantially improves generalization, providing practical insights for developing more reliable deepfake detection systems.",
+      "authors": [
+        "Amna Amjid",
+        "Sana Qadir",
+        "Mehwish Fatima",
+        "Raja Khurram Shahzad"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-06-12T08:12:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.14230v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Multi-domain deepfake detection combining spatial, gradient, and frequency features for GAN and diffusion model images",
+      "llm_evidence_cn": "多域深伪检测，结合空间、梯度和频率特征，用于GAN和扩散模型图像",
+      "llm_evidence": "多域深伪检测，结合空间、梯度和频率特征，用于GAN和扩散模型图像",
+      "canonical_evidence": "多域深伪检测，结合空间、梯度和频率特征，用于GAN和扩散模型图像",
+      "llm_tldr_en": "Proposes SGFF-Net, a multi-domain feature fusion framework that integrates spatial, gradient, and frequency representations to improve deepfake detection generalization across different generators, achieving robust performance on both GAN-based and diffusion model-generated deepfakes.",
+      "llm_tldr_cn": "针对现有深伪检测方法在GAN和扩散模型生成图像上的泛化能力不足，本文提出SGFF-Net多域特征融合框架，通过结合空间、梯度和频率特征，提升对跨生成器的深伪检测鲁棒性，在多种生成方式上取得高检测率，为通用深伪检测提供了有效方案。",
+      "llm_tldr": "针对现有深伪检测方法在GAN和扩散模型生成图像上的泛化能力不足，本文提出SGFF-Net多域特征融合框架，通过结合空间、梯度和频率特征，提升对跨生成器的深伪检测鲁棒性，在多种生成方式上取得高检测率，为通用深伪检测提供了有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14555v1",
+      "source": "arxiv",
+      "title": "Rethinking Global Average Pooling: Your Classifier Is Secretly a Multi-Instance Learner",
+      "abstract": "Modern image classifiers widely adopt global average pooling (GAP) followed by a linear classification head. This linearity ensures that the image-level logits equal the average of logits obtained by applying the classification head pointwise to the feature grid prior to GAP. Consequently, standard classifiers may inherently retain spatial class evidence that remains recoverable even when the image-level prediction is incorrect. This structure naturally suggests a multiple-instance learning (MIL) interpretation, where an image is viewed as a bag of spatial instances. Within this formulation, we demonstrate that standard classifiers trained with a single label per image can still learn the intended classification task in multi-object scenes. We further exploit this property to decompose image-level logits into a prediction grid, providing a post-hoc diagnostic to extract spatial class evidence that GAP otherwise obscures. Our systematic evaluation reveals that off-the-shelf models consistently recover the ground-truth class within foreground regions. The MIL interpretation further suggests that common classifier failures reflect known limitations of mean aggregation.",
+      "authors": [
+        "Aray Karjauv"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-12T15:35:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.14555v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "reinterprets CNN classifiers with GAP as multi-instance learners",
+      "llm_evidence_cn": "将带全局平均池化的CNN分类器重新解释为多实例学习器",
+      "llm_evidence": "将带全局平均池化的CNN分类器重新解释为多实例学习器",
+      "canonical_evidence": "将带全局平均池化的CNN分类器重新解释为多实例学习器",
+      "llm_tldr_en": "Shows that standard image classifiers with global average pooling inherently function as multi-instance learners, retaining spatial class evidence recoverable even with incorrect image-level predictions, enabling multi-label classification from single-label training.",
+      "llm_tldr_cn": "该论文揭示了采用全局平均池化的标准图像分类器本质上是一个多实例学习器，训练时仅用图像级标签，分类器也能保留空间类别证据并学习多标签分类任务，为弱监督学习和图像分类提供新的理论基础与解释视角。",
+      "llm_tldr": "该论文揭示了采用全局平均池化的标准图像分类器本质上是一个多实例学习器，训练时仅用图像级标签，分类器也能保留空间类别证据并学习多标签分类任务，为弱监督学习和图像分类提供新的理论基础与解释视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.14475v1",
+      "source": "arxiv",
+      "title": "Value-order Decomposition for Generalist Anomaly Detection",
+      "abstract": "Industrial anomaly detection suffers from limited data, making cross-domain generalization particularly challenging. Generalist Anomaly Detection (GAD) aims to train a unified model on a source domain that can effectively detect anomalies in unseen target domains. In the initial semantic feature space, strong entanglement between anomalies and object categories or defect types hinders effective generalization across domains. Recent works address this issue by projecting features into a residual space; however, such methods primarily increase cross-domain overlap for normal features, while anomalous features remain specific to object categories, defect types and data domains, leading to poor alignment and generalization. To address this limitation, we propose Value-order Decomposition (VOD), a simple yet effective technique that bridges \\textbf{three types of generalization gaps} across object categories, defect types (including real and synthetic defects), and data domains. VOD disentangles and suppresses object-category-, defect-type-, and domain-specific information, promoting alignment within normal and abnormal samples while preserving their separability, thereby enabling robust generalization across the three gaps. Leveraging the strong alignment between real and synthetic defects within the same object, we perform anomaly detection using only normal and synthetic-abnormal reference, and effectively generalize to unseen real defect types. Experiments on diverse industrial and medical benchmarks demonstrate that our method, using a simple cut-and-paste anomaly simulation strategy, achieves strong generalization across the three gaps.",
+      "authors": [
+        "Miaoyun Zhao",
+        "Jing Chen",
+        "Miaoni Zhao",
+        "Qiang Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-12T14:13:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.14475v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "cross-domain generalization for anomaly detection with limited data",
+      "llm_evidence_cn": "有限数据下异常检测的跨域泛化",
+      "llm_evidence": "有限数据下异常检测的跨域泛化",
+      "canonical_evidence": "有限数据下异常检测的跨域泛化",
+      "llm_tldr_en": "Proposes Value-order Decomposition to disentangle anomaly features from category/domain, improving cross-domain generalization in industrial anomaly detection with limited data.",
+      "llm_tldr_cn": "提出值阶分解方法，将异常特征与类别/域信息解缠，在有限数据下提升工业异常检测的跨域泛化能力。",
+      "llm_tldr": "提出值阶分解方法，将异常特征与类别/域信息解缠，在有限数据下提升工业异常检测的跨域泛化能力。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
