@@ -6,46 +6,37 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-16
-- 运行时间：2026-06-16 23:10:50 UTC
+- 最新运行日期：2026-06-17
+- 运行时间：2026-06-17 22:00:52 UTC
 - 运行状态：成功
-- 本次总论文数：8
-- 精读区：5
+- 本次总论文数：5
+- 精读区：2
 - 速读区：3
 
 ### 今日简报（AI）
-今日聚焦AI生成内容检测，涵盖视频伪造痕迹放大、知识蒸馏优化土地分类等前沿成果。
-最值得关注的是噪声放大揭示伪造视频伪影的新视角，以及解耦语义与失真评估AI图像质量的创新思路。
-建议读者优先研读噪声放大法如何成为鉴别工具，并关注知识蒸馏在遥感领域的实用进展。
-- 详情：[/202606/16/README](/202606/16/README)
+今日精读图神经网络半监督图像分类与多层无监督异常检测等5篇前沿论文，速览图像模型指纹与标注纠错。  
+图网络多特征融合在半监督分类中表现突出，而门控特征融合实现尺度不变的多层OOD检测。  
+建议关注图神经网络如何整合异构特征提升小样本识别，以及无监督门控机制在开放环境安全检测中的落地思路。
+- 详情：[/202606/17/README](/202606/17/README)
 
 ### 精读区论文标签
-1. [Revealing Artifacts via Noise Amplification: A Novel Perspective for AI-Generated Video Detection](/202606/16/2606.16742v1-revealing-artifacts-via-noise-amplification-a-novel-perspective-for-ai-generated-video-detection)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：通过放大噪声伪影检测AI生成视频
-2. [Improved Knowledge Distillation for Land-Use Image Classification](/202606/16/2606.14886v1-improved-knowledge-distillation-for-land-use-image-classification)  
+1. [Graph Neural Networks for Semi-Supervised Image Classification with Multi-Feature Aggregation](/202606/17/2606.17406v1-graph-neural-networks-for-semi-supervised-image-classification-with-multi-feature-aggregation)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：通过知识蒸馏使用CNN进行土地利用图像分类
-3. [Teacher-Student Structure for Domain Adaptation in Ensemble Audio-Visual Video Deepfake Detection](/202606/16/2606.15117v1-teacher-student-structure-for-domain-adaptation-in-ensemble-audio-visual-video-deepfake-detection)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：提出集成视听深度伪造检测，采用师生领域自适应方法
-4. [False Sense of Safety in Selective Signal Classification: Auditing Bound Tightness and Exchangeability for Risk Control](/202606/16/2606.15153v1-false-sense-of-safety-in-selective-signal-classification-auditing-bound-tightness-and-exchangeability-for-risk-control)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：审计AI生成图像取证检测器的风险控制
-5. [Deep Residual Injection for Full-Spectrum Forensic Signal Perception in Multimodal Large Language Models](/202606/16/2606.15880v1-deep-residual-injection-for-full-spectrum-forensic-signal-perception-in-multimodal-large-language-models)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：通过多模态大语言模型实现全谱取证信号感知以检测AI生成图像
+   evidence：利用CNN和ViT特征通过GNN聚合进行半监督图像分类
+2. [MM++: Unsupervised Scale-Invariant Multilayer OOD Detection via Top-K Gated Feature Fusion](/202606/17/2606.17352v1-mm-unsupervised-scale-invariant-multilayer-ood-detection-via-top-k-gated-feature-fusion)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：无监督OOD检测可直接用于识别计算机生成图像
 
 ### 速读区论文标签
-1. [What's Old is New Again: Classical Dimensionality Reduction for Efficient Saliency-Guided Biometric Attack Detection](/202606/16/2606.13528v1-whats-old-is-new-again-classical-dimensionality-reduction-for-efficient-saliency-guided-biometric-attack-detection)  
+1. [Efficient, Robust, and Anti-Collusion Fingerprinting of Image Diffusion Models](/202606/17/2606.12977v1-efficient-robust-and-anti-collusion-fingerprinting-of-image-diffusion-models)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：采用显著性引导训练进行生物特征呈现攻击检测，识别被操纵的人脸图像
-2. [Acoustic Prompting via Stage-wise Modulation for Few-Shot Learning in Audio Language Models](/202606/16/2606.15751v1-acoustic-prompting-via-stage-wise-modulation-for-few-shot-learning-in-audio-language-models)  
+   evidence：提出防共谋的扩散模型指纹方法，可识别AI生成图像。
+2. [Vision-Encoder Behavioral Fingerprints of Image-to-Image Generative Models: A Training-Paradigm-Driven Taxonomy of Six Commercial APIs](/202606/17/2606.14787v1-vision-encoder-behavioral-fingerprints-of-image-to-image-generative-models-a-training-paradigm-driven-taxonomy-of-six-commercial-apis)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：表征图生图生成模型的行为指纹，有助于区分AI生成图像
+3. [A Data-Centric Framework for Detecting and Correcting Corrupted Labels](/202606/17/2606.11699v1-a-data-centric-framework-for-detecting-and-correcting-corrupted-labels)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：通过可训练声学提示实现小样本音频分类
-3. [Decoupling Semantics from Distortions: Multi-Scale Two-Stream Vision-Language Alignment for AI-Generated Image Quality Assessment](/202606/16/2606.16799v1-decoupling-semantics-from-distortions-multi-scale-two-stream-vision-language-alignment-for-ai-generated-image-quality-assessment)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：AI生成图像质量评估通过双路径视觉语言对齐，可迁移用于合成图像检测
+   evidence：数据中心框架用于噪声标签修正，可提升图像分类训练数据质量
 
 
 <div class="dpr-home-promo-card">

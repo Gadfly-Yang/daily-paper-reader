@@ -1,0 +1,216 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-17T21:56:03.165611+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2606.17406v1",
+      "source": "arxiv",
+      "title": "Graph Neural Networks for Semi-Supervised Image Classification with Multi-Feature Aggregation",
+      "abstract": "Feature extraction involves the identification and extraction of salient characteristics or patterns, including edges, textures, shapes, and color attributes. Contemporary feature extractors predominantly leverage deep learning architectures, such as Convolutional Neural Networks (CNNs) and Vision Transformers (VITs). The availability of diverse feature extractors in the literature provides a wide range of feature representations. Features extracted from an image depend on the specific application, the chosen extractor, and its configuration. Therefore, integrating complementary information by combining distinct extractors offers a promising way to enhance performance. Graph Neural Networks (GNNs), particularly Graph Convolutional Networks (GCNs), have emerged as powerful and widely adopted approaches for semi-supervised image classification, as they effectively leverage both labeled and unlabeled data while exploiting the underlying graph structures that capture relationships among samples. This study proposes a novel approach for GNNs in scenarios where labeled data is scarce, by integrating diverse sets of feature and graph representations derived from various extractors in classification scenarios. Experimental investigations were conducted, encompassing combinations of distinct feature and graph extractors, as well as rank aggregation strategies. The primary contributions of this work are underscored by the experimental findings, which demonstrate that the strategic combination of feature and graph representations, coupled with the application of manifold learning for graph processing, leads to significant improvements in classification accuracy across the majority of experimental conditions. Furthermore, the utilization of rank aggregation techniques to integrate features from different extractors was shown to enhance classification accuracy.",
+      "authors": [
+        "Marina Chagas Bulach Gapski",
+        "Vinicius Atsushi Sato Kawai",
+        "Gustavo Rosseto Leticio",
+        "Lucas Pascotti Valem",
+        "Daniel Carlos Guimarães Pedronette",
+        "Mohand Said Allili"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-16T01:41:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.17406v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Semi-supervised image classification using CNN and ViT features aggregated via GNN",
+      "llm_evidence_cn": "利用CNN和ViT特征通过GNN聚合进行半监督图像分类",
+      "llm_evidence": "利用CNN和ViT特征通过GNN聚合进行半监督图像分类",
+      "canonical_evidence": "利用CNN和ViT特征通过GNN聚合进行半监督图像分类",
+      "llm_tldr_en": "Proposes GNN-based semi-supervised image classification method that aggregates multiple features from CNNs and ViTs, improving performance over single extractors.",
+      "llm_tldr_cn": "针对单一特征提取器可能无法全面捕捉图像特性的问题，提出一种基于图神经网络的半监督图像分类方法，通过聚合来自CNN和ViT等不同深度特征提取器的多尺度特征，增强特征表示，在多个数据集上验证了方法的有效性，为图像分类任务提供了一种多特征融合的新思路。",
+      "llm_tldr": "针对单一特征提取器可能无法全面捕捉图像特性的问题，提出一种基于图神经网络的半监督图像分类方法，通过聚合来自CNN和ViT等不同深度特征提取器的多尺度特征，增强特征表示，在多个数据集上验证了方法的有效性，为图像分类任务提供了一种多特征融合的新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.17352v1",
+      "source": "arxiv",
+      "title": "MM++: Unsupervised Scale-Invariant Multilayer OOD Detection via Top-K Gated Feature Fusion",
+      "abstract": "We introduce MM++ (Multilayer Mahalanobis++), a fully unsupervised, strictly post-hoc, and scale-invariant framework for Out-of-Distribution (OOD) detection. To address the trade-off between scale invariance and hierarchical expressivity, MM++ constructs a principled joint feature space. It first identifies discriminative intermediate layers by measuring entropy density drops, which mark the boundaries of sharp semantic compression. By fusing these selected layers with the terminal representation, the framework captures latent cross-layer correlations while mitigating early-layer noise. Crucially, a Ledoit-Wolf regularized tied covariance matrix stabilizes this unified space, enabling reliable distance estimation. Requiring no auxiliary OOD data, classifier fine-tuning, or architectural modifications, MM++ delivers robust performance across distinct architectures for both near- and far-OOD detection.",
+      "authors": [
+        "Rahim Hossain",
+        "Md Tawheedul Islam Bhuian",
+        "Md Farhan Shadiq",
+        "Kyoung-Don Kang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-06-15T22:52:54+00:00",
+      "link": "https://arxiv.org/pdf/2606.17352v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Unsupervised OOD detection directly applicable to identifying computer-generated images",
+      "llm_evidence_cn": "无监督OOD检测可直接用于识别计算机生成图像",
+      "llm_evidence": "无监督OOD检测可直接用于识别计算机生成图像",
+      "canonical_evidence": "无监督OOD检测可直接用于识别计算机生成图像",
+      "llm_tldr_en": "Proposes MM++, an unsupervised, scale-invariant multilayer OOD detection framework using top-k gated feature fusion, requiring no auxiliary data and achieving reliable outlier detection, suitable for distinguishing AI-generated images from real photographs.",
+      "llm_tldr_cn": "本文针对分布外（OOD）检测提出MM++框架，是一种完全无监督、尺度不变的后处理方法。通过测量中间层的熵密度下降来选取判别层，并将其与终端表示进行门控特征融合，缓解早期层噪声，利用正则化协方差矩阵计算马氏距离。该方法无需任何辅助数据即可实现可靠的OOD检测，可有效应用于区分真实照片与AI生成图像，为低资源下的合成图像识别提供了通用且鲁棒的解决方案。",
+      "llm_tldr": "本文针对分布外（OOD）检测提出MM++框架，是一种完全无监督、尺度不变的后处理方法。通过测量中间层的熵密度下降来选取判别层，并将其与终端表示进行门控特征融合，缓解早期层噪声，利用正则化协方差矩阵计算马氏距离。该方法无需任何辅助数据即可实现可靠的OOD检测，可有效应用于区分真实照片与AI生成图像，为低资源下的合成图像识别提供了通用且鲁棒的解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.12977v1",
+      "source": "arxiv",
+      "title": "Efficient, Robust, and Anti-Collusion Fingerprinting of Image Diffusion Models",
+      "abstract": "Model fingerprinting, embedding user-specific identifiers (fingerprints) into generated outputs, has recently emerged as a popular solution to protect the intellectual property rights (IPR) of generative text-to-image (T2I) models and prevent unauthorized redistribution. In this work, we reveal a previously unexplored systematic vulnerability in existing generative model fingerprinting methods: they lack robustness against collusion attacks, where multiple attackers combine their models to remove or obscure the fingerprints. To address this issue, we take the first step towards a robust fingerprinting method for T2I models with anti-collusion capabilities. The proposed method encodes strings of bits, namely fingerprints, into the coefficients of a personalized normalization module (PNM) incorporated into T2I models, so that fingerprints can be reliably recovered from any generated image. To defend against collusion attacks and prevent unauthorized model redistribution, we introduce an anti-collusion mechanism based on lossless function-invariant parameter transformations. This mechanism significantly degrades the image generation quality of colluded models, making them effectively unusable. Moreover, our method allows developers to efficiently create multiple copies of fingerprinted T2I models by reparameterizing the PNM without the need for retraining. We also introduce a worst-case optimization strategy to improve robustness against model-level attacks. Our experiments demonstrate that the proposed method achieves high fidelity and robustness across multiple T2I image generation and editing tasks, with fingerprint extraction accuracy exceeding 99.5%. Compared with existing methods, our method demonstrates, for the first time, a notable proactive robustness to collusion attacks by significantly increasing the FID of colluded models.",
+      "authors": [
+        "Jianwei Fei",
+        "Yunshu Dai",
+        "Zhihua Xia",
+        "Xiaochun Cao",
+        "Jiantao Zhou",
+        "Alessandro Piva",
+        "Benedetta Tondi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CR",
+        "cs.LG"
+      ],
+      "published": "2026-06-11T07:12:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.12977v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Proposes anti-collusion fingerprinting for diffusion models, enabling identification of AI-generated images.",
+      "llm_evidence_cn": "提出防共谋的扩散模型指纹方法，可识别AI生成图像。",
+      "llm_evidence": "提出防共谋的扩散模型指纹方法，可识别AI生成图像。",
+      "canonical_evidence": "提出防共谋的扩散模型指纹方法，可识别AI生成图像。",
+      "llm_tldr_en": "Proposes anti-collusion fingerprinting for diffusion models to protect IP, embedding fingerprints into outputs to enable tracing of AI-generated images.",
+      "llm_tldr_cn": "针对现有生成模型指纹方法易受共谋攻击的问题，提出防共谋的文本到图像扩散模型指纹方案，将比特串嵌入输出系数中，能抵抗多个攻击者合并模型的攻击。实验证明该方法显著提升了抗共谋鲁棒性，为AI生成图像的可追溯性和识别提供了有效手段，有助于版权保护和防止模型滥用。",
+      "llm_tldr": "针对现有生成模型指纹方法易受共谋攻击的问题，提出防共谋的文本到图像扩散模型指纹方案，将比特串嵌入输出系数中，能抵抗多个攻击者合并模型的攻击。实验证明该方法显著提升了抗共谋鲁棒性，为AI生成图像的可追溯性和识别提供了有效手段，有助于版权保护和防止模型滥用。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.11699v1",
+      "source": "arxiv",
+      "title": "A Data-Centric Framework for Detecting and Correcting Corrupted Labels",
+      "abstract": "The performance of machine learning and deep learning models largely depends on the quality of the training data. However, the quality of the real-world datasets is often compromised by noisy labels, which can substantially degrade model accuracy and reliability. To address this challenge, we propose Relabeler, an end-to-end data-centric framework for detecting and correcting corrupted labels. For corrupted label detection, Relabeler jointly leverages both local and global relationships among data instances to identify potentially noisy samples. After detecting suspicious instances, Relabeler further performs label correction by estimating the most probable clean label for each instance based on both its input features and observed noisy label. Extensive experiments across multiple datasets, noise types, and noise rates demonstrate that Relabeler consistently outperforms state-of-the-art baselines, achieving up to 58% improvement in label correction precision and 6% improvement in downstream task performance.",
+      "authors": [
+        "Ha-Linh Nguyen",
+        "Hong-Anh Nguyen",
+        "Minh-Duc La",
+        "Thu-Trang Nguyen",
+        "Son Nguyen",
+        "Hieu Dinh Vo"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-10T06:23:35+00:00",
+      "link": "https://arxiv.org/pdf/2606.11699v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Data-centric framework for noisy label correction, applicable to improving image classification training data",
+      "llm_evidence_cn": "数据中心框架用于噪声标签修正，可提升图像分类训练数据质量",
+      "llm_evidence": "数据中心框架用于噪声标签修正，可提升图像分类训练数据质量",
+      "canonical_evidence": "数据中心框架用于噪声标签修正，可提升图像分类训练数据质量",
+      "llm_tldr_en": "Proposes Relabeler, a framework to detect and correct corrupted labels using local-global relationships, improving model performance in image classification and other tasks with noisy data.",
+      "llm_tldr_cn": "针对数据集噪声标签降低模型性能的问题，提出Relabeler框架，联合利用数据实例的局部和全局关系检测可疑样本并修正标签，在图像分类等多个任务中验证了提升模型准确性和可靠性的效果，为数据中心AI提供了实用的数据清洗工具。",
+      "llm_tldr": "针对数据集噪声标签降低模型性能的问题，提出Relabeler框架，联合利用数据实例的局部和全局关系检测可疑样本并修正标签，在图像分类等多个任务中验证了提升模型准确性和可靠性的效果，为数据中心AI提供了实用的数据清洗工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.14787v1",
+      "source": "arxiv",
+      "title": "Vision-Encoder Behavioral Fingerprints of Image-to-Image Generative Models: A Training-Paradigm-Driven Taxonomy of Six Commercial APIs",
+      "abstract": "We study six production image-to-image AI systems (gpt-image-1, Gemini 2.5 Flash Image, Flux Kontext, SDXL img2img, SD3 img2img, and Qwen Image Edit) under a content-adaptive sub-JND adversarial perturbation pipeline, scoring all outputs by frozen DINOv2 ViT-B/14 token distances against clean references. Across a 3,588-call corpus spanning COCO photographs, CelebA-HQ portraits, and AI-generated inputs, the six systems partition into two image-invariant behavioral bands on a 2D (patch_mean, ssim_clean) plane: edit-trained models (Flux Kontext, Qwen Edit, Gemini) cluster in a tight band, while T2I-base models adapted at sampling time (SDXL, SD3, gpt-image-1) cluster in a drift band.",
+      "authors": [
+        "Hunter Hill"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CR"
+      ],
+      "published": "2026-06-10T17:38:54+00:00",
+      "link": "https://arxiv.org/pdf/2606.14787v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Characterizes behavioral fingerprints of image-to-image generative models, aiding in distinguishing AI-generated images",
+      "llm_evidence_cn": "表征图生图生成模型的行为指纹，有助于区分AI生成图像",
+      "llm_evidence": "表征图生图生成模型的行为指纹，有助于区分AI生成图像",
+      "canonical_evidence": "表征图生图生成模型的行为指纹，有助于区分AI生成图像",
+      "llm_tldr_en": "Analyzes six commercial image-to-image AI systems, identifying behavioral fingerprints via frozen DINOv2 token distances, partitioning them into training-paradigm-driven bands, which can inform AI-generated image detection and model attribution.",
+      "llm_tldr_cn": "针对图像到图像AI系统的检测与区分需求，通过对六款商业API进行大规模测试，使用冻结的DINOv2视觉编码器计算输出与参考图像的令牌距离，发现模型根据训练范式分为两个行为带隙，为AI生成图像的来源归属提供了可解释的行为指纹。",
+      "llm_tldr": "针对图像到图像AI系统的检测与区分需求，通过对六款商业API进行大规模测试，使用冻结的DINOv2视觉编码器计算输出与参考图像的令牌距离，发现模型根据训练范式分为两个行为带隙，为AI生成图像的来源归属提供了可解释的行为指纹。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
