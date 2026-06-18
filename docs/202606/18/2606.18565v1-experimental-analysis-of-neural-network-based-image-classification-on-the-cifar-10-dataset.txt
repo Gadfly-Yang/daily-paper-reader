@@ -1,0 +1,301 @@
+Title: Experimental Analysis of Neural Network-Based Image Classification on the CIFAR-10 Dataset
+
+URL Source: https://arxiv.org/pdf/2606.18565v1
+
+Published Time: Thu, 18 Jun 2026 00:19:11 GMT
+
+Number of Pages: 7
+
+Markdown Content:
+# Experimental Analysis of Neural Network-Based Image Classification on the CIFAR-10 Dataset 
+
+Necati Kagan Erkek, Emre Balci and Berkin Halay 
+
+Department of Electronics and Communication Engineering, Istanbul Technical University, Istanbul, Turkey Email: erkek17@itu.edu.tr, balcie17@itu.edu.tr, halay18@itu.edu.tr, 
+
+Abstract —An experimental investigation of neural image clas-sification on the CIFAR-10 benchmark is presented through fully connected and convolutional network formulations. The analysis emphasizes the complete learning pipeline: image vec-torization, normalization, one-hot class encoding, supervised loss minimization, learning-rate selection, mini-batch training, con-volutional feature extraction, max-pooling, and validation-based generalization assessment. A convolutional architecture with six convolutional layers and three max-pooling stages is evaluated for ten training epochs using a batch size of 128 and an Adam optimizer with a learning rate of 0.001. The validation accuracy reaches approximately 74.77%, while the validation loss begins to increase after the middle of training despite continued reduction in training loss. The resulting behavior illustrates the practical difference between representation learning and memorization, and it provides a compact experimental baseline for future studies on regularization, data augmentation, deeper architectures, and reproducible image-classification education. 
+
+Index Terms —CIFAR-10, convolutional neural network, multi-layer perceptron, image classification, supervised learning, over-fitting, hyperparameter tuning. 
+
+I. I NTRODUCTION 
+
+Image classification remains a central problem in computer vision because a classifier must transform raw pixels into se-mantic object labels under illumination, pose, background, and intra-class variation. Artificial neural networks offer a data-driven solution by learning nonlinear mappings between image measurements and target categories. Early multilayer percep-trons (MLPs) demonstrated the ability of back-propagation to optimize many connected parameters [3]. However, dense networks do not contain an explicit spatial prior and therefore treat neighboring pixels in the same manner as distant pixels after vectorization. Convolutional neural networks (CNNs) address the limitation through local receptive fields, weight sharing, and pooling operations, making them particularly suitable for images [2], [4]. The CIFAR-10 benchmark provides a compact yet chal-lenging environment for evaluating neural image classifiers [1]. Each image has only 32 × 32 pixels, causing fine details to be difficult to identify even by visual inspection. The low resolution produces an appropriate experimental setting for observing how representation learning, optimization, and validation behavior interact. A dense MLP can be used to expose the consequences of flattening the image into a vector, whereas a CNN can preserve local spatial information during feature extraction. The comparison is therefore pedagogically valuable as well as experimentally relevant. The presented investigation is designed as an academic reconstruction of an image-classification experiment using the IEEE conference format. The scope includes a formal description of the dataset, the theoretical basis of MLP and CNN classifiers, the learning objective, optimizer behavior, hyperparameter effects, and result interpretation. Special at-tention is given to the relation between training loss and vali-dation loss because that relation determines whether additional epochs are likely to improve generalization or merely increase memorization. The experimental log indicates that validation accuracy stabilizes near 75%, while validation loss increases after an initial decline. Such behavior is a practical example of overfitting and motivates future studies involving dropout, batch normalization, augmentation, and deeper residual archi-tectures [11], [12], [15]. The broader importance of the experiment lies in its repro-ducibility and extensibility. A small benchmark can be exe-cuted with limited computational resources, yet it exposes the same methodological questions encountered in larger visual-recognition systems: data partitioning, objective selection, learning-rate control, capacity selection, validation monitoring, and generalization analysis. Consequently, the experiment can serve as a baseline for future studies on robust low-resolution recognition, architecture search, educational laboratory design, and comparative evaluations of training strategies. II. D ATASET AND PRE -PROCESSING 
+
+A. CIFAR-10 Image Collection 
+
+CIFAR-10 contains 60,000 color images distributed over ten balanced classes: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, and truck [1]. The official partition includes 50,000 training images and 10,000 test images. In the experiment, 5,000 samples from the training partition are reserved for validation, while the remaining samples are used for parameter learning. Balanced labels are important because accuracy is then interpretable without major correction for class imbalance. A sample grid is shown in Fig. 1. The figure also illustrates the difficulty of assigning object categories from small images, especially for animal classes and visually similar vehicle classes. Each RGB image is represented by three channels with integer pixel intensities in [0 , 255] . For an image Ii ∈ { 0, . . . , 255 }32 ×32 ×3, preprocessing maps the data into a normalized tensor: 
+
+Xi = Ii
+
+255 , Xi ∈ [0 , 1] 32 ×32 ×3 (1)  
+
+> arXiv:2606.18565v1 [cs.CV] 17 Jun 2026 Fig. 1. Representative CIFAR-10 samples after visual enhancement of the supplied image grid. The small spatial resolution creates ambiguity, making the benchmark useful for comparing dense and convolutional representations.
+
+Normalization improves numerical conditioning by keeping input magnitudes within a range compatible with gradient-based optimization. For the MLP baseline, the tensor is reshaped into a vector xi ∈ R3072 , where 3072 = 32 · 32 · 3.For the CNN model, the spatial tensor form is preserved so that convolutional filters can exploit two-dimensional locality. 
+
+B. Label Encoding and Data Splits 
+
+The target label for each sample is encoded as a one-hot vector yi ∈ { 0, 1}10 with exactly one nonzero element. If class c is the correct category, the target vector satisfies 
+
+yi,k =
+
+(
+
+1, k = c, 
+
+0, k̸ = c, 
+
+> 10
+
+X
+
+> k=1
+
+yi,k = 1 . (2) The output layer also contains ten units, and each unit corre-sponds to a class. Table I summarizes the representation used by the supervised classifier. The validation subset is not used to update network parameters. Instead, it supplies an unbiased intermediate estimate for hyperparameter and epoch selection. The test subset is reserved for final generalization assessment after model selection. The separation of training, validation, and test data is essential for avoiding overly optimistic performance estimates. Training data determine the weights. Validation data guide design choices such as epoch count, architecture depth, and regularization strength. Test data provide the final estimate of how the selected model behaves on unseen inputs. Without the separation, a classifier could appear successful because it memorized the examples used for evaluation rather than learned a transferable visual representation.                                                                                                                       
+
+> TABLE I CIFAR-10 C LASS ENCODING USED BY THE OUTPUT LAYER
+> Index Class Target pattern 0Airplane [1 ,0,0,0,0,0,0,0,0,0]
+> 1Automobile [0 ,1,0,0,0,0,0,0,0,0]
+> 2Bird [0 ,0,1,0,0,0,0,0,0,0]
+> 3Cat [0 ,0,0,1,0,0,0,0,0,0]
+> 4Deer [0 ,0,0,0,1,0,0,0,0,0]
+> 5Dog [0 ,0,0,0,0,1,0,0,0,0]
+> 6Frog [0 ,0,0,0,0,0,1,0,0,0]
+> 7Horse [0 ,0,0,0,0,0,0,1,0,0]
+> 8Ship [0 ,0,0,0,0,0,0,0,1,0]
+> 9Truck [0 ,0,0,0,0,0,0,0,0,1]
+> Input
+> 3072 pixels
+> Hidden dense + ReLU
+> Hidden dense + ReLU
+> Output 10 classes
+> Flattened RGB vector
+> Dense connections learn global correlations but do not explicitly preserve image locality.
+> Fig. 2. Fully connected multilayer perceptron used as a conceptual baseline for CIFAR-10. Vectorization produces a 3072-dimensional input; dense layers learn nonlinear combinations before the ten-class output layer.
+
+III. N EURAL NETWORK FORMULATION 
+
+A. Fully Connected Multilayer Perceptron 
+
+A multilayer perceptron consists of an input layer, one or more hidden layers, and an output layer. In a dense layer, every unit in the current layer receives a weighted combination of all activations from the previous layer. For layer ℓ, the forward propagation equations are 
+
+z(ℓ) = W (ℓ)a(ℓ−1) + b(ℓ), (3) 
+
+a(ℓ) = ϕ
+
+
+
+z(ℓ)
+
+, (4) where W (ℓ) is the weight matrix, b(ℓ) is the bias vector, a(ℓ−1) 
+
+is the previous activation, and ϕ(·) is a nonlinear activation. Rectified linear units (ReLU) are widely used because they reduce saturation and support efficient gradient propagation [6]. Weight initialization also affects stability, and variance-preserving initializers reduce the risk of exploding or vanishing activations in deep networks [7], [8]. The dense architecture in Fig. 2 can approximate com-plicated decision boundaries, but the parameterization is not specialized for images. A connection from a pixel in the top-left corner is treated like a connection from a neighboring pixel or from a distant corner. Therefore, the MLP must learn spatial relationships from data alone. Such behavior increases parameter demand and reduces sample efficiency compared with convolutional processing. B. Capacity and Parameter Efficiency 
+
+Network capacity is determined not only by the number of layers but also by the way parameters are shared. For a dense layer with input dimension d and hidden width h, the parameter count is: 
+
+Ndense = ( d + 1) h, (5) where the additional term accounts for the bias parameters. With d = 3072 and h = 512 , a single first hidden layer already contains more than 1.57 million parameters. The large count can be appropriate when sufficient data are available, but it also increases memory cost and overfitting risk. For a convolutional layer with F filters, C input channels, and an r × r kernel, the parameter count is 
+
+Nconv = ( r2C + 1) F. (6) A 3×3 convolution with C = 3 and F = 64 has only 1,792 pa-rameters because the same kernel weights are reused at every spatial position. The reduction is not merely computational; it encodes the assumption that local visual patterns such as edges and corners can appear anywhere in an image. Parameter sharing therefore improves sample efficiency and provides a theoretical reason for the empirical success of CNNs on small image datasets [5]. The distinction also clarifies why MLP and CNN results should not be interpreted only through final accuracy. A dense classifier tests whether global nonlinear combinations can separate classes after flattening. A convolutional classifier tests whether learned local features and hierarchical composition improve generalization. For CIFAR-10, the second formulation is better aligned with the statistical structure of natural images. 
+
+C. Softmax Output and Cross-Entropy Loss 
+
+The final layer produces logits s ∈ R10 . Class probabilities are obtained with the softmax function 
+
+ˆpk = exp( sk)
+
+P10  
+
+> j=1
+
+exp( sj ) , k = 1 , . . . , 10 . (7) For a mini-batch of B samples, the categorical cross-entropy loss is 
+
+L = − 1
+
+B
+
+> B
+
+X
+
+> i=1 10
+
+X
+
+> k=1
+
+yi,k log (ˆ pi,k + ϵ) , (8) where ϵ is a small constant used for numerical stability. Minimizing (8) increases the predicted probability assigned to the correct class and decreases probabilities assigned to incorrect classes. Back-propagation computes gradients of the loss with respect to all trainable parameters, and an optimizer uses those gradients to update the weights. IV. T RAINING PROTOCOL AND HYPERPARAMETERS 
+
+A. Gradient-Based Learning 
+
+Let θ denote the collection of network weights and biases. In stochastic or mini-batch training, the parameter update has the generic form 
+
+θt+1 = θt − η g t, (9) 
+
+> Small steps: stable but slow
+> Large steps: oscillation or divergence
+
+Parameter value Loss  
+
+> Fig. 3. Conceptual effect of learning-rate selection during loss minimization. The learning rate controls the step size in parameter space and strongly affects convergence speed and stability.
+
+where gt is an estimate of the gradient at iteration t and η is the learning rate. A small learning rate produces stable but slow progress. A large learning rate can overshoot narrow minima or produce oscillatory behavior. Fig. 3 visualizes the qualitative effect. Adaptive methods such as Adagrad and Adam rescale updates by using historical gradient statistics, improving practical training stability for many neural-network problems [9], [10]. The experiment uses Adam with η = 0.001 , a value commonly adopted as a stable initial choice for deep learn-ing experiments. Adam maintains first- and second-moment estimates of the gradients, 
+
+mt = β1mt−1 + (1 − β1)gt, (10) 
+
+vt = β2vt−1 + (1 − β2)g2 
+
+> t
+
+, (11) and applies bias-corrected updates to each parameter. The method combines momentum-like smoothing with coordinate-wise scaling, allowing efficient progress even when gradient magnitudes differ across layers. 
+
+B. Mini-Batch Size and Validation Monitoring 
+
+The mini-batch size is set to 128. Mini-batches reduce the variance of gradient estimates compared with single-sample updates while retaining better hardware efficiency than full-batch optimization. Powers of two are often selected because they map efficiently to memory layouts and accelerator ker-nels. However, batch size is not merely an implementation detail. Very small batches can inject excessive gradient noise, whereas very large batches can reduce the beneficial stochas-ticity of training and may require learning-rate adjustment. Validation monitoring is required because training loss alone cannot determine generalization. A decreasing training loss indicates improved fit to the training samples. A decreasing validation loss indicates improved expected performance on unseen samples drawn from the same distribution. When training loss decreases while validation loss increases, the model has begun to fit sample-specific patterns or noise. Early stopping, weight decay, dropout, data augmentation, and batch normalization are standard remedies [11]–[13]. TABLE II REPORTED EXPERIMENTAL CONFIGURATION                    
+
+> Component Configuration Dataset CIFAR-10 RGB images, ten balanced classes Input size 32 ×32 ×3pixels Preprocessing Pixel normalization by division by 255 Label format Ten-dimensional one-hot vectors Training split CIFAR-10 training subset after validation holdout Validation split 5,000 images reserved from the training partition Optimizer Adam Learning rate 0.001 Mini-batch size 128 Epochs 10 CNN structure Six convolutional and three max-pooling layers Output activation Softmax over ten classes Evaluation metrics Cross-entropy loss and validation accuracy
+
+C. Implementation and Reproducibility Considerations 
+
+Reproducibility requires precise reporting of the data split, preprocessing operations, model configuration, opti-mizer, batch size, and number of epochs. Table II summa-rizes the experimental configuration. The implementation can be reproduced in modern deep-learning environments such as PyTorch, which provides automatic differentiation, GPU support, and modular neural-network layers [16]. Comparable results require the same normalization rule, the same validation protocol, and consistent logging of loss and accuracy after each epoch. The use of a validation holdout is especially important because the experiment is short and the architecture has enough capacity to memorize patterns quickly. A reproducible protocol should store the random seed used for splitting, the initialization rule, and the mini-batch ordering. Reporting only the final validation accuracy is insufficient for scientific comparison; the full learning curve is needed to identify the epoch at which validation loss begins to increase. A rigorous extension would repeat the same configuration over several random seeds and report the mean and stan-dard deviation of validation accuracy. Such reporting would separate genuine architectural improvements from random variation caused by initialization or mini-batch order. The requirement is modest for CIFAR-10 because training time is relatively low, making repeated runs feasible in an academic laboratory setting. V. C ONVOLUTIONAL FEATURE LEARNING 
+
+A. Convolutional Inductive Bias 
+
+A convolutional layer computes feature maps by sliding trainable kernels over local neighborhoods. For an input tensor 
+
+X and a kernel K, a simplified single-output-channel convo-lution can be expressed as 
+
+Z(u, v ) = 
+
+> C
+
+X
+
+> c=1
+> r
+
+X
+
+> i=1
+> r
+
+X
+
+> j=1
+
+K(c, i, j )X(c, u + i, v + j) + b, (12) where C is the number of input channels and r × r is the kernel size. The same kernel is reused across spatial locations,                               
+
+> Input
+> 32 ×32 ×3
+> Block 1 Conv-ReLU ×2
+> Max-pool
+> Block 2 Conv-ReLU ×2
+> Max-pool
+> Block 3 Conv-ReLU ×2
+> Max-pool
+> Flatten Dense Softmax
+> edges and color contrasts
+> textures and parts
+> class-relevant patterns
+> Fig. 4. Convolutional architecture evaluated in the experiment. The six convolutional layers are grouped into three Conv-ReLU pairs, and each group is followed by max-pooling before dense softmax classification.
+> 2273
+> 9461
+> 8524
+> 3126
+> 2×2max-pool, stride 2
+> 97
+> 86
+> Fig. 5. Max-pooling example. Each nonoverlapping 2×2region is replaced by its largest activation, reducing the feature-map size while retaining strong local evidence.
+
+leading to weight sharing. The resulting representation is translation-sensitive at early layers and increasingly abstract at deeper layers. Such inductive bias explains why CNNs are usually more effective than MLPs for image classification when training data are limited [4], [14]. The evaluated CNN contains six convolutional layers and three max-pooling layers, followed by flattening and dense classification. ReLU activations introduce nonlinearity after convolutional transformations. The output layer uses softmax to form a probability distribution over the ten categories. The organization is summarized in Fig. 4. Early layers are expected to capture edges, color transitions, and small textures; intermediate layers combine those primitives into object parts; final layers produce class-discriminative features for the dense classifier. 
+
+B. Pooling and Spatial Downsampling 
+
+Pooling reduces the spatial dimensions of a feature map while preserving prominent activations. Max-pooling with a 
+
+2 × 2 window and stride 2 is defined as 
+
+P (u, v ) = max   
+
+> 0≤i< 2,0≤j< 2
+
+Z(2 u + i, 2v + j). (13) Fig. 5 shows a numerical example. Pooling increases the recep-tive field of later layers and reduces memory and computation. It also provides limited tolerance to small translations because the maximum activation remains stable when the strongest local feature shifts slightly within the pooling window. Pooling also has limitations. Aggressive downsampling can discard location information that may be useful for fine-grained classes. For CIFAR-10, the input image is already small, and therefore the number and placement of pooling stages must be selected carefully. Three pooling stages reduce spatial resolution substantially; adding more stages would risk eliminating useful structure before sufficient high-level features are computed. TABLE III TRAINING AND VALIDATION LOG FOR THE CNN C LASSIFIER                                  
+
+> Epoch Training loss Validation loss Validation accuracy 01.8060 1.4998 0.4401 11.2761 1.1801 0.5688 20.9896 0.9389 0.6694 30.8062 0.8489 0.7079 40.6631 0.7718 0.7367 50.5319 0.8143 0.7340 60.4052 0.7733 0.7477 70.2986 0.8657 0.7445 80.2253 0.9494 0.7431 90.1598 1.1255 0.7360
+
+VI. E XPERIMENTAL RESULTS 
+
+A. Training Log 
+
+The CNN is trained for ten epochs. Table III reports the loss and validation accuracy recorded at each epoch. The values indicate rapid improvement during the first four epochs, fol-lowed by slower validation gains. The best validation accuracy is observed near epoch 6, with only small changes thereafter. Meanwhile, the validation loss decreases until approximately epoch 4 or 6 and then increases, while the training loss de-creases monotonically. The divergence between the two losses is a typical signal that additional epochs increase specialization to the training set. The improvement from 44.01% validation accuracy at epoch 0 to 74.77% at epoch 6 demonstrates that the model learns meaningful visual features within a small number of passes through the data. The decrease at epoch 9 indicates that higher training accuracy is not necessarily equivalent to better generalization. In low-resolution object recognition, mislead-ing details and background correlations can be learned by a sufficiently flexible model. Validation monitoring therefore becomes a necessary part of experimental interpretation. 
+
+B. Interpretation of Learning Curves 
+
+Fig. 6 presents a clearer visualization of the training dy-namics. The accuracy curve rises sharply in the early epochs and then enters a plateau. The loss plot provides additional information: training loss continues to fall from 1.8060 to 0.1598, but validation loss reaches a low range around epochs 4–6 and then rises to 1.1255. The pattern indicates that the model becomes increasingly confident on the training set while its probabilistic predictions on validation data become less calibrated. A model can therefore maintain similar validation accuracy while assigning excessive confidence to wrong vali-dation predictions, producing a larger validation loss. The result suggests that epoch selection should not be based solely on accuracy. Cross-entropy loss is sensitive to con-fidence and penalizes confident incorrect decisions strongly. Therefore, a validation-loss minimum often provides a better stopping point than a late epoch with marginally similar accuracy. In the recorded experiment, continuing from epoch 6 to epoch 9 reduces training loss by more than 60%, yet validation accuracy decreases from 74.77% to 73.60%. The gap supports early stopping around the best validation region. The conceptual relation in Fig. 7 explains why additional capacity or epochs must be balanced by regularization. Un-derfitting occurs when the model is too simple or has not trained long enough to capture the main patterns. Overfitting occurs when the model captures training-specific fluctuations that do not transfer to validation or test data. The observed curves place the evaluated CNN near the transition: a useful representation has been learned, but generalization starts to degrade as optimization continues. 
+
+C. MLP and CNN Comparison 
+
+A dense MLP remains a useful reference architecture be-cause it demonstrates the baseline capability of nonlinear supervised learning. Nevertheless, CIFAR-10 classification re-quires spatial feature extraction. A dense network processes a flattened input vector and must learn edge detectors, local tex-tures, and spatial hierarchies implicitly through its weights. A CNN encodes locality and translation-related structure directly through its architecture. Consequently, convolutional models usually reach stronger image-classification performance with fewer effective parameters and better sample efficiency [4], [14], [15]. The experimental behavior supports the suitability of con-volutional architectures for image classification. The CNN reaches a validation accuracy close to 75% after ten epochs without advanced regularization or pretrained features. The performance is reasonable for a compact architecture and a small input resolution. The remaining error indicates that object ambiguity, limited resolution, and class similarity still impose substantial difficulty. Cats and dogs, trucks and au-tomobiles, and birds and airplanes are common sources of confusion in CIFAR-like settings because the discriminative information can occupy only a few pixels. VII. D ISCUSSION AND FUTURE RESEARCH IMPORTANCE 
+
+A. Experimental Value 
+
+The experiment has value beyond the single reported accu-racy value. First, it demonstrates the entire supervised-learning pipeline from preprocessing to validation analysis. Second, it shows why loss curves and accuracy curves must be exam-ined together. Third, it exposes the practical consequences of architecture choice: dense layers can perform nonlinear classification, but convolutional feature extraction is more appropriate when image locality matters. Fourth, it produces a reproducible baseline that future studies can improve in controlled increments. For educational research, the setup is suitable for laboratory assignments in which students compare MLPs, shallow CNNs, and deeper CNNs under equal data splits. For engineering research, the same baseline can be extended with regulariza-tion and augmentation to quantify the contribution of each de-sign decision. For applied research, the low-resolution setting resembles edge-device or bandwidth-limited visual sensing, where compact models remain important. 0 2 4 6 8
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+Epoch 
+
+> Validation accuracy
+
+Validation 
+
+0 2 4 6 8
+
+0
+
+0.5
+
+1
+
+1.5
+
+Epoch 
+
+> Loss
+
+Training 
+
+Validation    
+
+> Fig. 6. Validation accuracy and loss curves redrawn from the experimental log. Accuracy stabilizes near 75%, while validation loss increases after the middle epochs even though training loss continues to decrease.
+> Underfitting Best validation region Overfitting
+> Training error
+> Validation error
+
+Training duration 
+
+> Error
+> Fig. 7. Generalization behavior reflected by training and validation errors. The optimal stopping region occurs before validation error rises due to overfitting.
+
+B. Recommended Extensions 
+
+Several extensions can improve the reported baseline. Data augmentation can create transformed training images through random cropping, horizontal flipping, color jittering, and cutout-like occlusion. Such transformations encourage invariance and reduce dependence on accidental backgrounds [13]. Mixup and automated augmentation-policy search offer stronger distribution-expansion strategies for future CIFAR-10 trials [20], [21]. Dropout can reduce co-adaptation among dense units by randomly disabling activations during training [11]. Batch normalization can stabilize intermediate activation distributions and permit faster training with less sensitivity to initialization [12]. Weight decay can penalize overly large parameters and improve smoothness of the learned function; decoupled weight decay is a relevant extension when Adam is retained as the optimizer [19]. Architecture design can also be improved. Modern CNNs such as AlexNet and residual networks demonstrated that depth and skip connections can improve representation learn-ing at scale [14], [15]. Very deep small-filter networks and densely connected models provide additional comparison points for future controlled experiments [17], [18]. For CIFAR-10, a residual architecture would allow deeper feature extrac-tion while reducing optimization difficulty. Transfer learning is another future direction, although small 32 × 32 images require careful resizing and preprocessing when pretrained models are used. Hyperparameter search over learning rate, batch size, optimizer, number of channels, kernel size, and regularization coefficients would produce a stronger empirical conclusion than a single configuration. Evaluation should also move beyond global accuracy. A confusion matrix would reveal which classes are most frequently confused. Per-class precision, recall, and F1-score would distinguish balanced performance from category-specific weakness. Calibration metrics would determine whether predicted probabilities reflect actual correctness fre-quencies. Finally, repeated runs with different random seeds would quantify statistical variability, which is important be-cause neural-network training is influenced by initialization, data ordering, and mini-batch composition. 
+
+C. Implications for Future Studies 
+
+Future studies can use the presented baseline to evaluate how architectural inductive bias and regularization interact. A promising sequence is to begin with the six-convolutional-layer model, add data augmentation, introduce dropout or weight decay, add batch normalization, and then compare a residual architecture under the same split. Such a sequence would make the contribution of each improvement measurable. The recorded overfitting behavior also makes the experi-ment suitable for studying early stopping and validation-based model selection. The experiment is important for future low-resource visual-recognition systems because CIFAR-10 forces models to make decisions under severe spatial compression. Many real de-ployments, including embedded cameras and communication-constrained sensors, encounter similarly limited resolution or restricted computation. A compact CNN that reaches moderate accuracy with few epochs provides a practical starting point for further compression, pruning, quantization, and deployment studies. Therefore, the experimental baseline can support fu-ture research connecting machine-learning theory, educational reproducibility, and efficient computer-vision implementation. 
+
+D. Future Experimental Protocol 
+
+A stronger follow-up protocol should be organized as a sequence of ablation experiments rather than as an isolated accuracy measurement. The baseline should first be trained under a fixed split and fixed seed. Each later experiment should introduce only one additional component, such as augmentation, mixup, dropout, decoupled weight decay, batch normalization, or a residual block. The resulting comparison would identify whether an accuracy gain is produced by addi-tional capacity, improved regularization, or better optimization conditioning [11]–[13], [15], [19], [20]. Future evaluation should include accuracy, loss, class-wise precision, class-wise recall, F1-score, a normalized confusion matrix, and repeated runs over several random seeds. These metrics would reveal whether errors are concentrated in vi-sually related categories such as cat and dog or automobile and truck, and they would separate robust methodological improvement from incidental variation caused by initialization, data ordering, or hardware-dependent implementation details. 
+
+E. Limitations and Threats to Validity 
+
+Several limitations should be considered when interpreting the results. The reported training log corresponds to one configuration and one validation split; therefore, the numerical accuracy should be treated as a baseline rather than a definitive performance limit. Exact replication would also require the full filter configuration, initialization seed, and mini-batch order. The absence of a confusion matrix restricts class-level interpretation, while the absence of strong regularization and augmentation means that the reported accuracy should not be interpreted as the highest achievable CIFAR-10 performance. The value of the baseline lies in clarity: the learning dynamics remain easy to inspect, and each future modification can be measured against a transparent starting point. VIII. C ONCLUSION 
+
+A formal reconstruction of CIFAR-10 image classification using neural networks has been developed with an emphasis on theoretical clarity, visual explanation, and experimental interpretation. The MLP formulation illustrates dense nonlin-ear classification after pixel vectorization, whereas the CNN formulation demonstrates the value of local receptive fields, shared filters, and pooling for visual data. The evaluated convolutional architecture reaches approximately 74.77% val-idation accuracy under a ten-epoch training protocol with Adam optimization and a learning rate of 0.001. The training log shows that validation accuracy plateaus while validation loss begins to rise after the middle epochs. The behavior indicates that continued optimization improves training-set fit but reduces probabilistic generalization on vali-dation data. Early stopping, regularization, augmentation, and deeper architectures are therefore appropriate next steps. The experimental baseline provides a useful academic reference for future studies on CIFAR-10, low-resolution image recognition, and reproducible neural-network education. The documented results also establish a foundation for controlled comparison with future compact vision models. Because the data split, optimizer, batch size, epoch count, and validation behavior are explicitly reported, later experiments can evaluate improvements through reproducible ablation rather than through isolated final scores. Future investigations should preserve the same reporting discipline while adding augmentation, regularization, and alternative CNN architec-tures one component at a time. Such a protocol would clarify whether improved accuracy is produced by stronger feature extraction, better optimization, or reduced overfitting. The significance of the experiment is therefore methodolog-ical as well as numerical. The learning curves, validation gap, and model-capacity analysis provide a transparent baseline for future studies on reliable model selection, efficient low-resolution recognition, class-level error diagnosis, and repro-ducible neural image-classification laboratories. The extended reference basis further connects the baseline to modern aug-mentation, optimization, and convolutional architecture re-search, enabling later studies to formulate stronger hypotheses before computationally expensive experimentation begins. REFERENCES
