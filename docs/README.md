@@ -6,49 +6,37 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-18
-- 运行时间：2026-06-18 21:15:37 UTC
+- 最新运行日期：2026-06-19
+- 运行时间：2026-06-19 20:41:19 UTC
 - 运行状态：成功
-- 本次总论文数：9
-- 精读区：6
-- 速读区：3
+- 本次总论文数：5
+- 精读区：4
+- 速读区：1
 
 ### 今日简报（AI）
-今日精读合成灾害检测基准与神经网络图像分类，速读涉及人脸攻击架构偏见、音频伪造解耦及第一视角动作识别。  
-最值得关注《Forged Calamity》揭示的扩散合成灾难跨域检测难点，以及《Dual-Granularity》用正交解耦提升音频深伪泛化能力。  
-建议读者从这两个方向切入，用跨域基准评估你的检测器，或尝试解耦表示来改进抗欺骗模型。
-- 详情：[/202606/18/README](/202606/18/README)
+今日聚焦AI视觉安全与数据增强，精读了4篇论文，重点解析了CUPID的UV纹理重建防伪技术和文生图增强场景识别新范式。  
+值得关注的是，CUPID通过可解释纹理地图让名人深度伪造无处遁形，而文生图作为语义数据增强在室内识别中效果显著。  
+建议从业者关注纹理级可解释防伪方案，并尝试将多模态生成融入小样本视觉任务。
+- 详情：[/202606/19/README](/202606/19/README)
 
 ### 精读区论文标签
-1. [Forged Calamity: Benchmark for Cross-Domain Synthetic Disaster Detection in the Age of Diffusion](/202606/18/2606.18554v1-forged-calamity-benchmark-for-cross-domain-synthetic-disaster-detection-in-the-age-of-diffusion)  
+1. [CUPID: Reconstructing UV Texture Maps for Interpretable Person-of-Interest Deepfake Detection](/202606/19/2606.20302v1-cupid-reconstructing-uv-texture-maps-for-interpretable-person-of-interest-deepfake-detection)  
    标签：评分：10.0/10、query:deepfake-fsl
-   evidence：跨域检测AI生成的合成灾害图像
-2. [Experimental Analysis of Neural Network-Based Image Classification on the CIFAR-10 Dataset](/202606/18/2606.18565v1-experimental-analysis-of-neural-network-based-image-classification-on-the-cifar-10-dataset)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：使用CNN在CIFAR-10上进行图像分类的直接实验研究
-3. [When AUC Misleads: Polarization-Aware Evaluation of Deepfake Detectors under Domain Shift](/202606/18/2606.19184v1-when-auc-misleads-polarization-aware-evaluation-of-deepfake-detectors-under-domain-shift)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：提出新的Cross-AUC指标评估深度伪造检测器在域偏移下的性能，解决按数据集衡量AUC的局限性
-4. [A Multi-Domain Benchmark for Detecting AI-Generated Text-Rich Images from GPT-Image-2](/202606/18/2606.19259v1-a-multi-domain-benchmark-for-detecting-ai-generated-text-rich-images-from-gpt-image-2)  
+   evidence：利用UV纹理图和掩码自编码器进行特定人物深度伪造检测，无需深度伪造视频训练
+2. [Rethinking Text-to-Image as Semantic-Aware Data Augmentation for Indoor Scene Recognition](/202606/19/2606.18555v1-rethinking-text-to-image-as-semantic-aware-data-augmentation-for-indoor-scene-recognition)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：检测AI生成的文本丰富图像的基准
-5. [FlexPooling with Simple Auxiliary Classifiers in Deep Networks](/202606/18/2606.14926v1-flexpooling-with-simple-auxiliary-classifiers-in-deep-networks)  
+   evidence：利用Stable Diffusion生成合成训练图像，直接支持使用卷积神经网络的图像分类。
+3. [How Fragile Are Training-Free AI-Generated Image Detectors? A Controlled Audit of Score Direction, Preprocessing, and Compression](/202606/19/2606.20488v1-how-fragile-are-training-free-ai-generated-image-detectors-a-controlled-audit-of-score-direction-preprocessing-and-compression)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：对无需训练的AI生成图像检测器的审计
+4. [CMDS-AD: Cross-Modal Dual-Stream Decoupling for Few-Shot Anomaly Detection](/202606/19/2606.20300v1-cmds-ad-cross-modal-dual-stream-decoupling-for-few-shot-anomaly-detection)  
    标签：评分：8.0/10、query:deepfake-fsl
-   evidence：提出一种新的池化方法和辅助分类器以提升CNN分类性能。
-6. [When Confidence Lacks Concepts: Interpretable OOD Detection via Representation Perturbations](/202606/18/2606.16196v1-when-confidence-lacks-concepts-interpretable-ood-detection-via-representation-perturbations)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：利用表示扰动和稀疏自编码器的可解释OOD检测方法，可用于检测生成图像
+   evidence：基于多模态数据和扩散模型数据增强的少样本异常检测
 
 ### 速读区论文标签
-1. [Architectural Bias in Face Presentation Attack Detection: A Comparative Study of Vision Transformers and Convolutional Neural Networks](/202606/18/2606.18510v1-architectural-bias-in-face-presentation-attack-detection-a-comparative-study-of-vision-transformers-and-convolutional-neural-networks)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：研究人脸呈现攻击检测，比较ViT和CNN，直接相关于检测被操控的人脸图像
-2. [Dual-Granularity Orthogonal Disentanglement for Generalizable Audio Deepfake Detection](/202606/18/2606.16532v1-dual-granularity-orthogonal-disentanglement-for-generalizable-audio-deepfake-detection)  
+1. [Label Shift Aware Adaptation for Online Zero-shot Learning with Contrastive Language-Image Pre-Training (CLIP)](/202606/19/2606.15169v1-label-shift-aware-adaptation-for-online-zero-shot-learning-with-contrastive-language-image-pre-training-clip)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：通过特征解耦实现泛化的音频深度伪造检测，可迁移至视觉深度伪造检测
-3. [From Frames to Temporal Graphs: In-Context Egocentric Action Recognition with Vision-Language Models](/202606/18/2606.15417v1-from-frames-to-temporal-graphs-in-context-egocentric-action-recognition-with-vision-language-models)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：使用少样本上下文学习进行动作识别
+   evidence：基于CLIP自适应的零样本学习方法直接应对有限标注数据下的学习问题。
 
 
 <div class="dpr-home-promo-card">
