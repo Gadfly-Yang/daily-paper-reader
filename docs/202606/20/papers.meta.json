@@ -1,0 +1,54 @@
+{
+  "label": "2026-06-20",
+  "date": "2026-06-20",
+  "generated_at": "2026-06-20T21:20:02",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202606/20/2606.15468v1-analyzing-visual-aircraft-representations-with-sparse-autoencoders",
+      "section": "deep",
+      "title_en": "Analyzing Visual Aircraft Representations with Sparse Autoencoders",
+      "authors": "Deepshik Sharma",
+      "date": "2026-06-13",
+      "pdf": "https://arxiv.org/pdf/2606.15468v1",
+      "score": "9.0",
+      "evidence": "使用ConvNeXt卷积神经网络进行细粒度飞机图像分类",
+      "tldr": "视觉模型在图像分类任务上表现优异，但其内部特征表征往往难以解释。本研究在FGVC-Aircraft飞机分类数据集上训练ConvNeXt模型，提取其末端特征级的空间激活，并利用稀疏自编码器学习出一组稀疏特征。通过可视化和分析这些特征对应的顶部激活图像块、激活强度分布以及对类别的偏向性，识别出多个对应飞机结构（如机头、机翼）的可解释模式。对选定的特征进行输入空间（图像块模糊）和特征空间（特征抑制）的消融实验，结果显示稀疏特征对分类逻辑和置信度有显著影响，证实其类别相关性；同时实验也揭示了特征存在多义性以及空间定位较粗的局限性。这表明稀疏自编码器可以为理解细粒度视觉模型的内部机制提供有价值的手段。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Vision models can achieve strong performance on classification tasks, but the internal representations supporting their predictions are often difficult to interpret. This work investigates whether sparse autoencoders can decompose intermediate representations of a vision model into interpretable features. We train a ConvNeXt classifier on the FGVC-Aircraft dataset, extract spatial activations from its final feature stage, and train a sparse autoencoder on these activations. The learned sparse features are analyzed using top-activating image patches, activation strength, and class selectivity. Qualitative visual inspection reveals that several features correspond to recognizable aircraft structures and visual patterns. We evaluate a subset of selected features using input-space and feature-space ablations, measuring how blurring image patches and suppressing sparse features affect class logits, classification margins, and prediction confidence. The results suggest that sparse autoencoders can reveal partially interpretable, class-relevant visual features associated with aircraft recognition, while also exposing limitations such as polysemanticity and coarse spatial localization.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/20/2606.15151v1-hiro-a-compact-four-directional-hierarchical-reservoir-token-mixer-for-efficient-image-classification",
+      "section": "quick",
+      "title_en": "HiRo: A Compact Four-Directional Hierarchical Reservoir Token-Mixer for Efficient Image Classification",
+      "authors": "Md Farhadul Islam, Ishan Thakkar, J. Todd Hastings",
+      "date": "2026-06-13",
+      "pdf": "https://arxiv.org/pdf/2606.15151v1",
+      "score": "7.0",
+      "evidence": "提出使用分层储备池令牌混合器的高效图像分类模型",
+      "tldr": "当前图像分类模型难以同时兼顾局部特征建模、跨窗口交互和参数效率。HiRo提出了一种紧凑的四方向层次化储备池token混合器，结合移位窗口分区和固定储备池进行多方向扫描与混合。模型在不到1M可训练参数下，于MNIST、CIFAR-10、CIFAR-100上分别达到99.46%、85.57%、59.10%的准确率，且计算开销显著低于Transformer基线。该方法为高效视觉识别提供了新思路。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Recent image classification models must balance local feature modeling, cross-window interaction, and parameter efficiency. Many high-performing architectures rely on fully trainable token-mixers, which improve representation learning but increase parameter count, optimization complexity and computational cost. We propose a parameter-efficient image classification model called HiRo that integrates shifted-window partitioning with multi-directional hierarchical reservoir computing. Images are divided into non-overlapping patches (treated as tokens), linearly projected, normalized, and enriched with 2D sinusoidal positional encodings, then processed within local windows. Inside each window, tokens are scanned in four directions and passed through a two-stage slice-and-mix reservoir module. In the first stage, directional sequences are split into contiguous slices, each processed by its own fixed reservoir with a trainable closed-loop readout. The resulting slice outputs are summarized using the start, end, and mean representations, and then mixed by a second-stage fixed reservoir for each direction. The mixed slice representations are expanded back to the token level and fused with the first-stage outputs, after which the four directional outputs are realigned and averaged. Consecutive blocks alternate between regular and shifted windows to enable cross-window interaction, followed by layer normalization, a residual feed-forward network, and global pooling for classification. This design combines regular and shifted window partitioning with hierarchical multi-directional reservoirs to make an efficient local-to-cross-window token-mixing framework for image classification. Despite using under 1M trainable parameters and significantly lower memory and time than transformer-style baselines, HiRo also achieves 99.46%, 85.57%, and 59.10% accuracy on MNIST, CIFAR-10, and CIFAR-100, respectively.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/20/2606.19053v1-benchmarking-large-vision-language-models-on-fine-grained-image-tasks-from-evaluation-to-diagnosis",
+      "section": "quick",
+      "title_en": "Benchmarking Large Vision-Language Models on Fine-Grained Image Tasks: From Evaluation to Diagnosis",
+      "authors": "Hong-Tao Yu, Chen-Wei Xie, Yuxin Peng, Serge Belongie, Xiu-Shen Wei",
+      "date": "2026-06-17",
+      "pdf": "https://arxiv.org/pdf/2606.19053v1",
+      "score": "6.0",
+      "evidence": "为细粒度图像任务提供综合基准，评估视觉语言模型",
+      "tldr": "现有大视觉语言模型（LVLMs）在多模态感知与推理上表现突出，但在细粒度图像任务上的能力评估尚不充分。为弥补这一不足，我们提出大型细粒度评测基准FG-BMK，涵盖101万道问题和28万张图像，从对话级语义识别和特征级视觉可辨别性两个维度，结合人机双范式进行诊断性评估。实验表明，当前LVLM在细粒度识别上存在视觉表征、语义接地、模态对齐等多重瓶颈。本研究为细粒度视觉任务中更可靠模型的开发提供了数据构建与模型设计指导。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Recent advancements in Large Vision-Language Models (LVLMs) have demonstrated remarkable multimodal perception and reasoning capabilities. While numerous benchmarks have evaluated LVLMs from holistic or task-specific perspectives, their capabilities on fine-grained image tasks-fundamental to computer vision-remain insufficiently understood. To address this gap, we introduce FG-BMK, a comprehensive fine-grained evaluation benchmark containing 1.01 million questions and 0.28 million images, covering diverse scenarios from common object-centric domains to specialized domains. FG-BMK jointly evaluates dialogue-level fine-grained semantic recognition and feature-level visual discriminability through human-oriented and machine-oriented paradigms, enabling diagnostic analysis of whether LVLM failures arise from insufficient visual representations, weak visual-to-semantic grounding, or limited fine-grained knowledge. Through extensive experiments on a diverse set of representative LVLMs/VLMs, we find that current LVLMs remain inadequate fine-grained recognizers, with failures arising from intertwined bottlenecks in visual representations, semantic grounding, modality alignment, and category-level knowledge. We further analyze training design factors for improving fine-grained capabilities and examine how visual and linguistic perturbations affect LVLM predictions. These findings provide diagnostic insights into the limitations of current LVLMs and offer guidance for future data construction and model design in developing more reliable LVLMs for fine-grained visual tasks. Our code is open-source and available at https://fg-bmk.github.io/.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

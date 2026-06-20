@@ -6,37 +6,31 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-19
-- 运行时间：2026-06-19 20:41:19 UTC
+- 最新运行日期：2026-06-20
+- 运行时间：2026-06-20 21:19:55 UTC
 - 运行状态：成功
-- 本次总论文数：5
-- 精读区：4
-- 速读区：1
+- 本次总论文数：3
+- 精读区：1
+- 速读区：2
 
 ### 今日简报（AI）
-今日聚焦AI视觉安全与数据增强，精读了4篇论文，重点解析了CUPID的UV纹理重建防伪技术和文生图增强场景识别新范式。  
-值得关注的是，CUPID通过可解释纹理地图让名人深度伪造无处遁形，而文生图作为语义数据增强在室内识别中效果显著。  
-建议从业者关注纹理级可解释防伪方案，并尝试将多模态生成融入小样本视觉任务。
-- 详情：[/202606/19/README](/202606/19/README)
+今日用稀疏自编码器深挖飞机视觉表征，并速览了高效图像分类架构与细粒度视觉语言模型诊断。
+最值得关注的是：自编码器能「拆开」飞机的学习特征，而VLM在细节任务上仍常摔在纹理混淆与实物误判。
+若想入门可解释性，可从那篇9分论文的实验复原入手；若关心模型效率，可翻看HiRo的层级token混合设计。
+- 详情：[/202606/20/README](/202606/20/README)
 
 ### 精读区论文标签
-1. [CUPID: Reconstructing UV Texture Maps for Interpretable Person-of-Interest Deepfake Detection](/202606/19/2606.20302v1-cupid-reconstructing-uv-texture-maps-for-interpretable-person-of-interest-deepfake-detection)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：利用UV纹理图和掩码自编码器进行特定人物深度伪造检测，无需深度伪造视频训练
-2. [Rethinking Text-to-Image as Semantic-Aware Data Augmentation for Indoor Scene Recognition](/202606/19/2606.18555v1-rethinking-text-to-image-as-semantic-aware-data-augmentation-for-indoor-scene-recognition)  
+1. [Analyzing Visual Aircraft Representations with Sparse Autoencoders](/202606/20/2606.15468v1-analyzing-visual-aircraft-representations-with-sparse-autoencoders)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：利用Stable Diffusion生成合成训练图像，直接支持使用卷积神经网络的图像分类。
-3. [How Fragile Are Training-Free AI-Generated Image Detectors? A Controlled Audit of Score Direction, Preprocessing, and Compression](/202606/19/2606.20488v1-how-fragile-are-training-free-ai-generated-image-detectors-a-controlled-audit-of-score-direction-preprocessing-and-compression)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：对无需训练的AI生成图像检测器的审计
-4. [CMDS-AD: Cross-Modal Dual-Stream Decoupling for Few-Shot Anomaly Detection](/202606/19/2606.20300v1-cmds-ad-cross-modal-dual-stream-decoupling-for-few-shot-anomaly-detection)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：基于多模态数据和扩散模型数据增强的少样本异常检测
+   evidence：使用ConvNeXt卷积神经网络进行细粒度飞机图像分类
 
 ### 速读区论文标签
-1. [Label Shift Aware Adaptation for Online Zero-shot Learning with Contrastive Language-Image Pre-Training (CLIP)](/202606/19/2606.15169v1-label-shift-aware-adaptation-for-online-zero-shot-learning-with-contrastive-language-image-pre-training-clip)  
+1. [HiRo: A Compact Four-Directional Hierarchical Reservoir Token-Mixer for Efficient Image Classification](/202606/20/2606.15151v1-hiro-a-compact-four-directional-hierarchical-reservoir-token-mixer-for-efficient-image-classification)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：基于CLIP自适应的零样本学习方法直接应对有限标注数据下的学习问题。
+   evidence：提出使用分层储备池令牌混合器的高效图像分类模型
+2. [Benchmarking Large Vision-Language Models on Fine-Grained Image Tasks: From Evaluation to Diagnosis](/202606/20/2606.19053v1-benchmarking-large-vision-language-models-on-fine-grained-image-tasks-from-evaluation-to-diagnosis)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：为细粒度图像任务提供综合基准，评估视觉语言模型
 
 
 <div class="dpr-home-promo-card">

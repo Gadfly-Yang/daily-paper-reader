@@ -1,0 +1,130 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-20T21:16:28.569415+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2606.15468v1",
+      "source": "arxiv",
+      "title": "Analyzing Visual Aircraft Representations with Sparse Autoencoders",
+      "abstract": "Vision models can achieve strong performance on classification tasks, but the internal representations supporting their predictions are often difficult to interpret. This work investigates whether sparse autoencoders can decompose intermediate representations of a vision model into interpretable features. We train a ConvNeXt classifier on the FGVC-Aircraft dataset, extract spatial activations from its final feature stage, and train a sparse autoencoder on these activations. The learned sparse features are analyzed using top-activating image patches, activation strength, and class selectivity. Qualitative visual inspection reveals that several features correspond to recognizable aircraft structures and visual patterns. We evaluate a subset of selected features using input-space and feature-space ablations, measuring how blurring image patches and suppressing sparse features affect class logits, classification margins, and prediction confidence. The results suggest that sparse autoencoders can reveal partially interpretable, class-relevant visual features associated with aircraft recognition, while also exposing limitations such as polysemanticity and coarse spatial localization.",
+      "authors": [
+        "Deepshik Sharma"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-13T20:54:42+00:00",
+      "link": "https://arxiv.org/pdf/2606.15468v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "uses ConvNeXt CNN for fine-grained aircraft image classification",
+      "llm_evidence_cn": "使用ConvNeXt卷积神经网络进行细粒度飞机图像分类",
+      "llm_evidence": "使用ConvNeXt卷积神经网络进行细粒度飞机图像分类",
+      "canonical_evidence": "使用ConvNeXt卷积神经网络进行细粒度飞机图像分类",
+      "llm_tldr_en": "Trains a ConvNeXt classifier on FGVC-Aircraft and uses sparse autoencoders to interpret learned features, revealing aircraft structures.",
+      "llm_tldr_cn": "训练ConvNeXt分类器对FGVC-Aircraft飞机图像进行分类，并利用稀疏自编码器分解模型内部表征，发现可解释的飞机部件和视觉模式特征，验证了稀疏自编码器在视觉模型可解释性中的有效性。",
+      "llm_tldr": "训练ConvNeXt分类器对FGVC-Aircraft飞机图像进行分类，并利用稀疏自编码器分解模型内部表征，发现可解释的飞机部件和视觉模式特征，验证了稀疏自编码器在视觉模型可解释性中的有效性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.15151v1",
+      "source": "arxiv",
+      "title": "HiRo: A Compact Four-Directional Hierarchical Reservoir Token-Mixer for Efficient Image Classification",
+      "abstract": "Recent image classification models must balance local feature modeling, cross-window interaction, and parameter efficiency. Many high-performing architectures rely on fully trainable token-mixers, which improve representation learning but increase parameter count, optimization complexity and computational cost. We propose a parameter-efficient image classification model called HiRo that integrates shifted-window partitioning with multi-directional hierarchical reservoir computing. Images are divided into non-overlapping patches (treated as tokens), linearly projected, normalized, and enriched with 2D sinusoidal positional encodings, then processed within local windows. Inside each window, tokens are scanned in four directions and passed through a two-stage slice-and-mix reservoir module. In the first stage, directional sequences are split into contiguous slices, each processed by its own fixed reservoir with a trainable closed-loop readout. The resulting slice outputs are summarized using the start, end, and mean representations, and then mixed by a second-stage fixed reservoir for each direction. The mixed slice representations are expanded back to the token level and fused with the first-stage outputs, after which the four directional outputs are realigned and averaged. Consecutive blocks alternate between regular and shifted windows to enable cross-window interaction, followed by layer normalization, a residual feed-forward network, and global pooling for classification. This design combines regular and shifted window partitioning with hierarchical multi-directional reservoirs to make an efficient local-to-cross-window token-mixing framework for image classification. Despite using under 1M trainable parameters and significantly lower memory and time than transformer-style baselines, HiRo also achieves 99.46%, 85.57%, and 59.10% accuracy on MNIST, CIFAR-10, and CIFAR-100, respectively.",
+      "authors": [
+        "Md Farhadul Islam",
+        "Ishan Thakkar",
+        "J. Todd Hastings"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-13T06:44:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.15151v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Proposes an efficient image classification model using hierarchical reservoir token-mixer",
+      "llm_evidence_cn": "提出使用分层储备池令牌混合器的高效图像分类模型",
+      "llm_evidence": "提出使用分层储备池令牌混合器的高效图像分类模型",
+      "canonical_evidence": "提出使用分层储备池令牌混合器的高效图像分类模型",
+      "llm_tldr_en": "HiRo is a compact image classification model combining shifted-window partitioning with multi-directional hierarchical reservoir computing, achieving strong accuracy with fewer parameters compared to fully trainable token-mixers.",
+      "llm_tldr_cn": "为了平衡图像分类模型中的局部特征建模、跨窗口交互和参数效率，HiRo提出将移位窗口分区与多向分层储备池计算相结合。模型将图像分块后，在局部窗口内进行四方向序列扫描，并利用储备池的非线性投影替代传统可训练令牌混合器，大幅减少参数量。在多个图像分类基准上，HiRo在保持竞争性准确率的同时，参数数量显著少于类似架构，展示了随机投射网络在视觉任务中的潜力。",
+      "llm_tldr": "为了平衡图像分类模型中的局部特征建模、跨窗口交互和参数效率，HiRo提出将移位窗口分区与多向分层储备池计算相结合。模型将图像分块后，在局部窗口内进行四方向序列扫描，并利用储备池的非线性投影替代传统可训练令牌混合器，大幅减少参数量。在多个图像分类基准上，HiRo在保持竞争性准确率的同时，参数数量显著少于类似架构，展示了随机投射网络在视觉任务中的潜力。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.19053v1",
+      "source": "arxiv",
+      "title": "Benchmarking Large Vision-Language Models on Fine-Grained Image Tasks: From Evaluation to Diagnosis",
+      "abstract": "Recent advancements in Large Vision-Language Models (LVLMs) have demonstrated remarkable multimodal perception and reasoning capabilities. While numerous benchmarks have evaluated LVLMs from holistic or task-specific perspectives, their capabilities on fine-grained image tasks-fundamental to computer vision-remain insufficiently understood. To address this gap, we introduce FG-BMK, a comprehensive fine-grained evaluation benchmark containing 1.01 million questions and 0.28 million images, covering diverse scenarios from common object-centric domains to specialized domains. FG-BMK jointly evaluates dialogue-level fine-grained semantic recognition and feature-level visual discriminability through human-oriented and machine-oriented paradigms, enabling diagnostic analysis of whether LVLM failures arise from insufficient visual representations, weak visual-to-semantic grounding, or limited fine-grained knowledge. Through extensive experiments on a diverse set of representative LVLMs/VLMs, we find that current LVLMs remain inadequate fine-grained recognizers, with failures arising from intertwined bottlenecks in visual representations, semantic grounding, modality alignment, and category-level knowledge. We further analyze training design factors for improving fine-grained capabilities and examine how visual and linguistic perturbations affect LVLM predictions. These findings provide diagnostic insights into the limitations of current LVLMs and offer guidance for future data construction and model design in developing more reliable LVLMs for fine-grained visual tasks. Our code is open-source and available at https://fg-bmk.github.io/.",
+      "authors": [
+        "Hong-Tao Yu",
+        "Chen-Wei Xie",
+        "Yuxin Peng",
+        "Serge Belongie",
+        "Xiu-Shen Wei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-17T13:23:26+00:00",
+      "link": "https://arxiv.org/pdf/2606.19053v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Provides a comprehensive benchmark for fine-grained image tasks, evaluating vision-language models",
+      "llm_evidence_cn": "为细粒度图像任务提供综合基准，评估视觉语言模型",
+      "llm_evidence": "为细粒度图像任务提供综合基准，评估视觉语言模型",
+      "canonical_evidence": "为细粒度图像任务提供综合基准，评估视觉语言模型",
+      "llm_tldr_en": "FG-BMK is a large-scale benchmark with over 1M questions and 0.28M images for evaluating fine-grained image understanding of LVLMs, covering both common and specialized domains, jointly assessing semantic recognition and visual discriminability.",
+      "llm_tldr_cn": "针对当前大视觉语言模型在细粒度图像任务上能力评估不足的问题，FG-BMK构建了包含百万级问答和28万张图像的综合性细粒度评估基准。该基准覆盖通用物体到专业领域多种场景，联合评测对话级细粒度语义识别和特征级视觉辨别力。通过系统诊断，揭示了现有模型在精细属性判定和视觉差异比较上的关键缺陷，为细粒度视觉理解研究提供了标准化测试平台。",
+      "llm_tldr": "针对当前大视觉语言模型在细粒度图像任务上能力评估不足的问题，FG-BMK构建了包含百万级问答和28万张图像的综合性细粒度评估基准。该基准覆盖通用物体到专业领域多种场景，联合评测对话级细粒度语义识别和特征级视觉辨别力。通过系统诊断，揭示了现有模型在精细属性判定和视觉差异比较上的关键缺陷，为细粒度视觉理解研究提供了标准化测试平台。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
