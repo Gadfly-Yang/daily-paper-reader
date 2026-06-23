@@ -1,0 +1,216 @@
+Title: Real-time pedestrian attribute recognition with YOLOv8 and ResNet18
+
+URL Source: https://arxiv.org/pdf/2606.21200v1
+
+Published Time: Tue, 23 Jun 2026 00:39:39 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+# Real-time pedestrian attribute recognition with YOLOv8 and ResNet18 
+
+Houssam El Mir ∗11College of Computer Science and Technology, Zhejiang University of Technology, Hangzhou, 310023, Zhejiang, China 
+
+Abstract 
+
+Pedestrian attribute recognition (PAR) assigns semantic labels to detected pedestrians and is useful in surveillance, video retrieval, and human-centred graphics applications. This paper presents a two-stage framework in which YOLOv8n detects pedestrians and ResNet18-based models classify gender, estimate apparent age, and predict 61 binary attributes from each pedestrian crop. PETA and PA-100K are combined through semantic attribute map-ping, producing a unified training corpus of more than 100,000 pedestrian images while retaining the PETA attribute space. On the reported test splits, the system obtains 99.89% gender classification accuracy, a 4.23-year apparent-age mean absolute error, and 89.96% multi-attribute accuracy with 36.32% macro F1-score and 58.80% micro F1-score. Runtime measurements indicate 25–30 FPS on an NVIDIA RTX 5060 GPU. The results show that a lightweight detector–classifier pipeline can support real-time PAR, while low macro F1 indicates that rare attributes remain challenging. 
+
+Keywords: Pedestrian attribute recognition; YOLOv8; ResNet18; Deep learning; Real-time detection; Multi-label classification 
+
+# 1 Introduction 
+
+Pedestrian attribute recognition (PAR) predicts semantic attributes, such as clothing type, car-ried objects, gender, and apparent age, from pedestrian images. PAR is relevant to surveillance, transportation analytics, human-computer interaction, and human-centred graphics applica-tions such as virtual try-on and avatar generation. In video analysis, these attributes convert unstructured frames into searchable metadata [1, 2]. Deep learning has substantially improved visual recognition since AlexNet [3]. Architectures including VGG [4], GoogLeNet [5], ResNet [6], DenseNet [7], and EfficientNet [8] provide strong feature extractors for PAR. However, practical PAR remains difficult because pedestrian crops vary in scale, viewpoint, illumination, and occlusion; labels are multi-valued; detection errors propagate to recognition; and many attributes are highly imbalanced [9, 10]. Compared with studies that focus only on attribute classification from pre-cropped pedestri-ans, this work evaluates a complete detection-to-attribute pipeline and documents the dataset mapping needed to train a 61-attribute classifier from heterogeneous PAR datasets. The empha-sis is therefore on a practical, reproducible computer-vision system rather than on introducing a new network architecture. This positioning is appropriate for an applied image-analysis contri-bution: the paper reports how standard components can be integrated, trained, and evaluated for real-time pedestrian attribute recognition. This paper presents an integrated YOLOv8n–ResNet18 framework with the following con-tributions: 
+
+> ∗Corresponding author. E-mail addresses: l202126100102@zjut.edu.cn; houssamelmir2020@gmail.com
+
+1
+
+> arXiv:2606.21200v1 [cs.CV] 19 Jun 2026
+
+• A two-stage detection and recognition pipeline combining YOLOv8n with ResNet18-based task heads. 
+
+• A dataset preparation strategy that maps PA-100K labels into the PETA 61-attribute space. 
+
+• Runtime evaluation showing 25–30 FPS on an NVIDIA RTX 5060 GPU. 
+
+• Task-level evaluation for gender classification, apparent-age estimation, and multi-attribute prediction. 
+
+# 2 Related Work 
+
+2.1 Pedestrian Detection 
+
+Early detection used HOG with SVM classifiers [11]. Deep learning methods like Faster R-CNN [12] improved accuracy but were computationally expensive. YOLO [13] revolutionized real-time detection. YOLOv8 [14] introduces anchor-free detection, ideal for surveillance. For a practical PAR system, detection quality is important because every downstream pre-diction depends on the crop produced by the detector. Missed detections remove pedestrians from the recognition stage, while loose or inaccurate bounding boxes may include background clutter that reduces attribute accuracy. The use of a lightweight YOLOv8n detector is therefore motivated by the need to balance localization quality, throughput, and ease of deployment in video streams. 
+
+2.2 Attribute Recognition 
+
+Early PAR approaches trained separate classifiers per attribute, ignoring correlations among clothing, carried objects, and demographic cues. Deep learning enables shared feature extrac-tion and joint multi-label learning. Recent work explores attention mechanisms [15], multi-task learning [16], imbalanced classification [9], and multi-attribute learning [10]. In computer graph-ics, attribute recognition can provide semantic inputs for style transfer, pose-aware rendering, and human-centric scene analysis. Modern PAR models usually share visual features across attributes because many labels are visually correlated. For example, lower-body clothing type, clothing colour, and carried-object labels can often be inferred from overlapping image regions. This motivates the ResNet18-based design used in this work, where a compact backbone extracts common pedestrian features while task-specific output heads adapt those features to gender classification, apparent-age regression, and multi-label attribute prediction. 
+
+2.3 Datasets 
+
+Key datasets include PETA (approximately 19k images, 61 attributes) [2] and PA-100K (100k images, 26 attributes) [1]. Related person re-identification datasets, such as Market-1501 and DukeMTMC, have also been used with attribute or identity supervision [17, 18]. This paper creates a combined PAR dataset by mapping PA-100K labels into the PETA attribute space where semantic correspondences are clear. The dataset combination is useful because PETA provides a richer attribute vocabulary, whereas PA-100K contributes substantially more training images. However, the two datasets were annotated under different protocols, so the mapping is restricted to labels with clear semantic agreement. This conservative strategy improves data volume without assuming that every source label has an exact counterpart in the target attribute space. 23 Methodology 
+
+3.1 System Architecture 
+
+The system follows the two-stage pipeline in Fig. 1. YOLOv8n [14] first detects pedestrians in each frame. Each detected crop is then resized to 224 × 224 pixels and processed by ResNet18-based classifiers [6].  
+
+> Figure 1: Two-stage PAR pipeline: YOLOv8n localizes pedestrians, and ResNet18-based heads classify each cropped pedestrian image.
+
+3.2 Implementation Workflow 
+
+The implementation is organized as a modular video-analysis pipeline. First, each input frame is passed to the YOLOv8n detector, which returns person bounding boxes and confidence scores. Second, each person box is cropped with boundary checks to avoid invalid image regions. Third, the crop is resized and normalized before being processed by the task-specific ResNet18 models. Finally, the predicted attributes and confidence scores are associated with the original bounding box. This modular design allows the detector or classifier to be replaced independently in future experiments. 
+
+3.3 Dataset Preparation 
+
+PETA [2] contains approximately 19,000 images with 61 binary attributes. PA-100K [1] con-tains 100,000 images with 26 attributes. Images are resized to 224 ×224 and normalized with Im-ageNet statistics: mean = [0 .485 , 0.456 , 0.406] and standard deviation = [0 .229 , 0.224 , 0.225] [3, 6]. 
+
+Combined Strategy: PA-100K attributes are mapped to PETA’s 61-attribute space via semantic matching, e.g., “LongSleeve” is mapped to “upperBodyLongSleeve”. This yields a unified corpus of more than 100,000 pedestrian images while preserving a consistent output 3space. Attributes without a clear semantic match are not forced into the target label space, which reduces the risk of introducing false negative labels.  
+
+> Table 1: Examples of PA-100K to PETA semantic attribute mapping.
+
+PA-100K label Mapped PETA label 
+
+LongSleeve upperBodyLongSleeve ShortSleeve upperBodyShortSleeve Trousers lowerBodyTrousers Skirt lowerBodySkirt Hat accessoryHat Backpack carryingBackpack ShoulderBag carryingMessengerBag 
+
+3.4 Model Architecture 
+
+YOLOv8n: The detector uses COCO-pretrained weights in inference mode. Frames are resized to 640 × 640 pixels, with a confidence threshold of 0.25 and a non-maximum-suppression IoU threshold of 0.45. 
+
+ResNet18: Three ImageNet-pretrained ResNet18 networks are fine-tuned for the down-stream tasks. The gender model uses two output neurons, the apparent-age model uses one regression output, and the multi-attribute model uses K sigmoid outputs with positive-class weighting. The implementation uses PyTorch [25]. 
+
+3.5 Training 
+
+Loss functions: 
+
+Lgender = −[y log( p) + (1 − y) log(1 − p)] (1) 
+
+Lage = ( ypred − ytrue )2 (2) 
+
+Lattr,i = −[wpos,i · yi log( σ(xi)) + (1 − yi) log(1 − σ(xi))] (3) where wpos,i = ( Nneg,i + ϵ)/(Npos,i + ϵ) handles class imbalance [9]. Optimization uses Adam with β1 = 0 .9, β2 = 0 .999, learning rate 0.001, batch size 32, and up to 50 epochs with early stopping patience of 10 epochs. Data augmentation includes random horizontal flip (50%), rotation ( ±15 ◦), resized crop with scale 0.8–1.0, and color jitter. For reproducibility, all reported classification metrics are computed on held-out test par-titions after dataset-specific train/validation/test assignment. Detection uses fixed YOLOv8n thresholds, and classification uses the same ImageNet normalization for all tasks. The final attribute mapping file, split identifiers, trained-model checkpoints, and implementation details can be released as supplementary material or through an external repository. 
+
+# 4 Experiments and Results 
+
+4.1 Experimental Setup 
+
+Hardware: workstation with an NVIDIA RTX 5060 GPU. Software: Python 3.8, PyTorch 1.12+ [25], and OpenCV 4.5+. Evaluation metrics include accuracy, precision, recall, and F1-score for gender; MAE, RMSE, and R2 for apparent age; and overall accuracy plus macro/micro F1-score for multi-attribute recognition. All experiments follow the same preprocessing pipeline used during inference. Pedestrian crops are resized to the ResNet18 input resolution, normalized with ImageNet statistics, and evaluated without training-time augmentation. This keeps the reported scores aligned with 4the intended real-time deployment setting, where predictions are made directly from detector-generated crops. 
+
+4.2 Dataset Splits and Statistics 
+
+The evaluation uses two large and widely used PAR datasets rather than a small private col-lection. For PETA [2], the standard train, validation, and test splits provided with the dataset are used. PA-100K [1] provides predefined splits, which are adopted without modification. When training on the combined dataset, PETA and PA-100K are merged while maintaining consistent train/validation/test definitions across both sources. This produces a training set of approximately 91,400 images and a test set of approximately 13,800 images before account-ing for task-specific label availability, making the evaluation suitable for large-scale pedestrian attribute recognition.  
+
+> Table 2: Large-dataset splits used in the experiments.
+
+Dataset Images Attributes Train Validation/Test 
+
+PETA ∼19,000 61 ∼11,400 ∼3,800 / ∼3,800 PA-100K 100,000 26 80,000 10,000 / 10,000 Combined mapped corpus >100,000 61 target labels ∼91,400 ∼13,800 test images 
+
+4.3 Evaluation Metrics 
+
+For gender classification, accuracy, precision, recall, F1-score, and a confusion matrix are com-puted. Apparent-age estimation is evaluated using MAE, RMSE, R2, and age-bin accuracy. For multi-attribute classification, overall accuracy and macro/micro F1-scores are reported, together with representative per-attribute metrics. The metric set is chosen to highlight different failure modes. Accuracy is intuitive for balanced binary recognition, but it can overstate performance in highly imbalanced multi-label settings. Macro F1 gives equal importance to each attribute and is therefore sensitive to rare categories, while micro F1 aggregates decisions across all attributes and better reflects frequent labels. For age estimation, MAE provides an interpretable error in years, while RMSE penalizes larger mistakes more strongly. 
+
+4.4 Comparison with State-of-the-Art Methods 
+
+The initial version of this work emphasized implementation of an end-to-end detection–recognition pipeline. To better position the method, Tables 3 and 4 compare the proposed framework with representative state-of-the-art approaches in pedestrian attribute recognition, gender classifi-cation, and apparent-age estimation. The comparison is not presented as a strict leaderboard because the evaluated datasets, annotation vocabularies, crop generation procedures, and target definitions differ across studies. Instead, it clarifies where the proposed system is competitive, how it differs from cropped-person classifiers, and why its large-scale PETA+PA-100K evalua-tion is relevant for practical PAR. In PAR, many state-of-the-art approaches evaluate recognition on manually cropped pedes-trian images and optimize only the multi-label attribute classifier. By contrast, the proposed system includes YOLOv8n detection, crop extraction, and three recognition heads in a single real-time workflow. This end-to-end setting is more deployment-oriented but also harder to compare directly because detector errors and crop quality affect the final predictions. The pro-posed ResNet18 model is therefore best interpreted as a lightweight baseline for real-time PAR rather than as a replacement for larger attention- or transformer-based PAR models. 5Table 3: Comparison with representative state-of-the-art PAR methods. Protocol differences mean that the comparison is indicative rather than a strict leaderboard. 
+
+Method Main idea Dataset focus Relation to this work 
+
+PETA baseline [2] Early far-distance PAR benchmark PETA Defines the original PETA attribute-recognition set-ting HydraPlus-Net [15] Multi-scale attention for cropped pedestrians PETA, PA-100K Strong classifier, but de-tection is not part of the pipeline JRL [16] Context and attribute-correlation learning PETA, PA-100K Models relationships among attributes Strong baseline [19] ResNet training refine-ments PETA, PA-100K Shows that careful CNN baselines are competitive Transformer PAR [20] Transformer-based attribute relation mod-elling PETA, PA-100K Uses stronger attention modelling for cropped-person PAR Proposed YOLOv8n– ResNet18 Detector plus lightweight recogni-tion heads PETA + PA-100K mapping Includes detection, 61 at-tributes, gender, age, and real-time throughput 
+
+For gender and age, most state-of-the-art models are trained on face-centric datasets such as IMDB-WIKI, Adience, MORPH, or ChaLearn apparent-age images. These data differ sub-stantially from surveillance-style pedestrian crops, where faces may be small, blurred, occluded, or absent. Therefore, the gender and age comparisons in Table 4 are used to contextualize the task rather than to claim superiority over face-specialized models. 
+
+Table 4: Comparison with representative gender-classification and age-estimation approaches. 
+
+Method Task / input Dataset / proto-col Relation to this work 
+
+Levi and Hassner [21] Age and gender from faces Adience Face-based CNN baseline, not pedestrian-crop recogni-tion DEX [22] Apparent age from faces IMDB-WIKI /ChaLearn Strong face-supervised apparent-age estimator SSR-Net [23] Age estimation from faces MORPH / IMDB-WIKI Compact face-age model FairFace [24] Age, gender, and race from faces FairFace Addresses demographic bal-ance in face analysis Proposed ResNet18 heads Gender and ap-parent age from pedestrian crops PETA / combined PAR split Evaluates demographic cues inside a full-body PAR pipeline 
+
+These comparisons indicate two important points. First, the proposed system covers a broader deployment pipeline than most PAR classifiers because it includes detection and real-time throughput. Second, the gender and age heads should be viewed as application-specific components trained for pedestrian crops; stronger accuracy may be possible by incorporating dedicated face detection, face-quality assessment, or larger age-estimation backbones when the surveillance resolution permits it. 
+
+4.5 Gender Classification 
+
+Gender classification is evaluated as a binary recognition task on cropped pedestrian images. This experiment verifies whether the shared detection and preprocessing pipeline preserves 6enough visual information for the ResNet18 classifier to distinguish the two annotated gender classes with high consistency across the held-out test split. Compared with face-based gender classifiers, this setting is more challenging because the network receives a full-body crop rather than a normalized face; however, clothing shape, body proportions, hairstyle, and contextual visual cues can still support the annotated binary decision.  
+
+> Table 5: Gender classification performance on the test split.
+
+Class Precision Recall F1 
+
+Female 99.94% 99.83% 99.88% Male 99.86% 99.95% 99.90%  
+
+> Figure 2: Gender classification confusion matrix on the test split. The model achieves 99.89% accuracy with 4 misclassifications among 3,800 samples.
+
+4.6 Age Estimation 
+
+Apparent age is treated as a regression task because pedestrian images rarely provide exact chronological-age evidence, especially under surveillance conditions. The reported metrics therefore evaluate how closely the ResNet18 age head approximates the visible age range of each pedestrian crop rather than assigning a discrete identity-related label. Unlike face-focused apparent-age estimators, the proposed head must infer age from full-body appearance and low-resolution visual cues, so the results should be interpreted as apparent-age estimation within a PAR pipeline rather than as face-level biometric age prediction.  
+
+> Table 6: Apparent-age estimation performance on the test split.
+
+Metric Result 
+
+MAE 4.23 years RMSE 5.87 years 
+
+R2 0.89 Age-bin accuracy 87.3% 74.7 Multi-Attribute Recognition 
+
+Multi-attribute recognition is formulated as a multi-label prediction problem in which each pedestrian can activate several clothing, accessory, and appearance attributes simultaneously. The evaluation reports both aggregate accuracy and F1-based measures because high over-all accuracy can be dominated by frequent negative labels, whereas macro F1 better reflects performance on rare attributes.  
+
+> Table 7: Overall multi-attribute performance on the test split.
+
+Metric Value 
+
+Overall Accuracy 89.96% Macro F1 36.32% Micro F1 58.80%  
+
+> Table 8: Representative high-F1 attributes on the test split.
+
+Attribute F1 Precision Recall Support 
+
+lowerBodyTrousers 0.811 0.901 0.737 7,862 lowerBodyBlack 0.782 0.652 0.978 1,825 footwearBlack 0.753 0.621 0.955 2,177 upperBodyBlack 0.742 0.596 0.981 1,652 upperBodyOther 0.721 0.595 0.914 1,731 carryingMessengerBag 0.519 0.590 0.463 4,691 upperBodyShortSleeve 0.471 0.669 0.364 522 
+
+4.8 Error Analysis 
+
+The difference between overall accuracy, macro F1, and micro F1 provides useful insight into the main failure modes of the system. Overall accuracy is high because many binary attributes are absent in most images, but the lower macro F1-score indicates that rare attributes remain difficult. This pattern is common in PAR because infrequent labels, such as specific accessories or less common clothing styles, provide fewer positive training examples and are more sensitive to threshold selection. The most likely errors occur in four situations. First, small or partially occluded pedestrians may lose fine details such as bags, hats, footwear type, or sleeve length. Second, visually similar colours can be confused under shadows, low illumination, or compression artifacts. Third, carried-object attributes are difficult when the object is behind the body, partially visible, or similar in colour to clothing. Fourth, apparent age and gender are estimated from full pedestrian crops rather than aligned faces, so predictions can depend on weak cues such as clothing, body shape, hairstyle, and image context. These observations explain why frequent and visually salient attributes obtain stronger F1-scores, while rare or small-region attributes remain challenging. 
+
+4.9 Ablation and Reproducibility Considerations 
+
+The present manuscript reports the final trained pipeline and does not claim a full controlled ablation study. The available project files, model configuration, trained checkpoints, and evalua-tion materials can support verification of the reported final system; however, additional ablation numbers are not introduced unless they were explicitly measured. Therefore, the reported re-sults should be interpreted as the performance of the final YOLOv8n–ResNet18 configuration 8trained with ImageNet initialization, data augmentation, semantic PA-100K to PETA mapping, and positive-class weighting for multi-label imbalance. The most useful future ablations are clear from the current design. A detector ablation would compare ground-truth or dataset crops against YOLOv8n-generated crops to isolate detection error. A dataset ablation would compare PETA-only training against combined PETA+PA-100K training to measure the value of semantic mapping. A loss ablation would compare standard binary cross-entropy against positive-class weighting to quantify its effect on rare attributes. Finally, a backbone ablation would compare ResNet18 with larger models such as ResNet50 or transformer-based PAR backbones to measure the trade-off between accuracy and real-time speed. 
+
+4.10 Performance 
+
+Runtime performance is measured for the complete detection-to-recognition pipeline rather than for the classifier alone. This evaluation reflects the intended deployment scenario, where each video frame must be processed by YOLOv8n, cropped into pedestrian regions, and passed through the relevant ResNet18 recognition heads before attributes can be displayed or indexed. The system achieves 25–30 FPS on an NVIDIA RTX 5060 GPU. YOLOv8n detection takes approximately 33.3 ms per frame, while ResNet18 inference adds a pedestrian-dependent cost. Because the number of detected people varies by frame, end-to-end latency is reported as a measured pipeline throughput rather than a fixed per-person sum. This runtime is suitable for interactive video-analysis pipelines in the tested setting. 
+
+4.11 Practical Use Cases 
+
+The system can be used as a prototype for searchable surveillance archives, pedestrian ana-lytics dashboards, and human-centred graphics tools. For example, detected pedestrians can be indexed by clothing colour, carried objects, or apparent demographic attributes to support retrieval from video streams. In graphics-oriented applications, the predicted semantic labels can provide weak cues for avatar customization or virtual try-on interfaces. These applications require careful privacy safeguards, but they illustrate the practical motivation for a lightweight end-to-end PAR pipeline. 
+
+4.12 Discussion of Main Findings 
+
+The expanded comparison shows that the main strength of the proposed framework is integra-tion rather than architectural novelty. The system combines real-time person detection, crop handling, gender classification, apparent-age regression, and 61-way multi-label recognition in one pipeline. The experiments are conducted on a large mapped corpus built from PETA and PA-100K, so the reported results are not based on a small-scale test set. This directly addresses the need for evaluation on large pedestrian datasets while preserving a unified 61-attribute output space. The results also clarify the trade-off between deployment practicality and state-of-the-art recognition accuracy. The gender head reaches 99.89% accuracy on the held-out PETA-style test split, the apparent-age head obtains 4.23-year MAE, and the multi-attribute head obtains 89.96% overall accuracy. However, the macro F1-score remains much lower than the micro F1-score, showing that rare attributes are still difficult even when training uses positive-class weighting. Thus, the proposed model is competitive as a lightweight real-time baseline, while specialized attention- and transformer-based PAR models remain stronger candidates for max-imizing benchmark accuracy on cropped pedestrian images. The comparison with face-based gender and age methods further clarifies the scope of the work. Methods such as DEX, SSR-Net, and FairFace are designed for face crops, whereas this 9system estimates gender and apparent age from full pedestrian crops inside a PAR pipeline. The results should therefore be compared as application-level pedestrian-crop recognition rather than as face-biometric recognition. A future extension can add face-specific branches when high-resolution face regions are available, but the present study focuses on end-to-end pedestrian analysis. 
+
+4.13 Limitations 
+
+The results should be interpreted with several limitations. First, the reported comparison with prior work is not a strict benchmark comparison because datasets, attribute definitions, and splits differ across studies. Second, although the experiments use large PETA and PA-100K data, the attribute mapping is semantic and may not capture all annotation-policy differences between datasets. Third, the low macro F1-score shows that rare attributes remain difficult despite positive-class weighting. Fourth, the gender and apparent-age heads are evaluated on pedestrian crops, so their results should not be conflated with face-based age and gender bench-marks. Finally, deployment in surveillance or graphics applications should consider privacy, consent, and potential demographic bias before real-world use. 
+
+# 5 Conclusion 
+
+This paper presented an integrated PAR framework combining YOLOv8n detection with ResNet18-based attribute prediction. The framework uses semantic mapping to combine PETA and PA-100K while retaining a 61-attribute output space, producing a large-scale evaluation corpus of more than 100,000 pedestrian images. The reported evaluation shows strong gender clas-sification, apparent-age estimation with 4.23-year MAE, and multi-attribute recognition with 89.96% overall accuracy and 58.80% micro F1-score. The expanded comparison with PAR, gender-classification, and age-estimation methods shows that the proposed model is best posi-tioned as a lightweight real-time baseline rather than a new state-of-the-art architecture. The added error analysis and reproducibility discussion clarify that rare attributes, small visual re-gions, occlusion, and full-body demographic cues remain the main challenges. Future work will investigate attention mechanisms, domain adaptation, calibrated thresholds for rare attributes, controlled ablations, supplementary code and checkpoint release, privacy-aware deployment, and integration with virtual try-on or character-animation pipelines. 
+
+# Acknowledgments 
+
+The author thanks Professor Weng Libo for valuable guidance, support, and mentorship through-out this research project. 
+
+# Funding 
+
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors. 
+
+# Data Availability 
+
+The PETA and PA-100K datasets are publicly available from their project pages: http:// mmlab.ie.cuhk.edu.hk/projects/PETA.html and https://github.com/xh-liu/HydraPlus-Net .The attribute-mapping file, preprocessing scripts, evaluation scripts, split information, trained-model checkpoints, model configuration, and related project materials are available from the 10 author upon reasonable request and can be prepared as supplementary material for an arXiv release. 
+
+# Declaration of Competing Interest 
+
+The author declares that there are no known competing financial interests or personal relation-ships that could have appeared to influence the work reported in this paper. 
+
+# References 
+
+[1] Li, D., Zhang, Z., Chen, X., Huang, K.: A richly annotated dataset for pedestrian attribute recog-nition. arXiv:1603.07054 (2016) [2] Deng, Y., Luo, P., Loy, C.C., Tang, X.: Pedestrian attribute recognition at far distance. In: ACM Multimedia, pp. 789-792 (2014) [3] Krizhevsky, A., Sutskever, I., Hinton, G.E.: ImageNet classification with deep convolutional neural networks. In: NIPS, pp. 1097-1105 (2012) [4] Simonyan, K., Zisserman, A.: Very deep convolutional networks for large-scale image recognition. arXiv:1409.1556 (2014) [5] Szegedy, C., Liu, W., Jia, Y., Sermanet, P., Reed, S., Anguelov, D., Erhan, D., Vanhoucke, V., Rabinovich, A.: Going deeper with convolutions. In: CVPR, pp. 1-9 (2015) [6] He, K., Zhang, X., Ren, S., Sun, J.: Deep residual learning for image recognition. In: CVPR, pp. 770-778 (2016) [7] Huang, G., Liu, Z., van der Maaten, L., Weinberger, K.Q.: Densely connected convolutional net-works. In: CVPR, pp. 4700-4708 (2017) [8] Tan, M., Le, Q.: EfficientNet: Rethinking model scaling for convolutional neural networks. In: ICML, pp. 6105-6114 (2019) [9] Sarafianos, N., Xu, X., Kakadiaris, I.A.: Deep imbalanced attribute classification using visual attention aggregation. In: ECCV, pp. 708-724 (2016) [10] Li, D., Chen, X., Huang, K.: Multi-attribute learning for pedestrian attribute recognition in surveil-lance scenarios. In: ACPR, pp. 111-115 (2015) [11] Dalal, N., Triggs, B.: Histograms of oriented gradients for human detection. In: CVPR, pp. 886-893 (2005) [12] Ren, S., He, K., Girshick, R., Sun, J.: Faster R-CNN: Towards real-time object detection with region proposal networks. In: NIPS, Vol. 28 (2015) [13] Redmon, J., Divvala, S., Girshick, R., Farhadi, A.: You only look once: Unified, real-time object detection. In: CVPR, pp. 779-788 (2016) [14] Ultralytics: YOLOv8 documentation. https://docs.ultralytics.com/ (2023) [15] Liu, X., et al.: HydraPlus-Net: Attentive deep features for pedestrian attribute recognition. In: ICCV, pp. 350-359 (2017) [16] Wang, J., Zhu, X., Gong, S., Li, W.: Attribute recognition by joint recurrent learning of context and correlation. In: ICCV, pp. 531-540 (2018) [17] Lin, Y., Zheng, L., Zheng, Z., Wu, Y., Hu, Z., Yan, C., Yang, Y.: Improving person re-identification by attribute and identity learning. Pattern Recognition 95, 151-161 (2019) 
+
+11 [18] Li, A., Liu, L., Wang, K., Liu, S., Yan, S.: Clothing attributes assisted person re-identification. IEEE Transactions on Circuits and Systems for Video Technology 27(4), 869-879 (2016) [19] Jia, J., Huang, H., Yang, X., Chen, K., Huang, K.: Rethinking of pedestrian attribute recognition: A reliable evaluation under the same protocol. arXiv:2005.11909 (2020) [20] Tang, S., Guo, S., Chen, R., Zhang, W.: Transformer-based pedestrian attribute recognition with attribute relation modeling. Pattern Recognition Letters 157, 32–39 (2022) [21] Levi, G., Hassner, T.: Age and gender classification using convolutional neural networks. In: IEEE Conference on Computer Vision and Pattern Recognition Workshops, pp. 34–42 (2015) [22] Rothe, R., Timofte, R., Van Gool, L.: Deep expectation of real and apparent age from a single image without facial landmarks. International Journal of Computer Vision 126, 144–157 (2018) [23] Yang, T.Y., Huang, Y.H., Lin, Y.Y., Hsiu, P.C., Chuang, Y.Y.: SSR-Net: A compact soft stagewise regression network for age estimation. In: IJCAI, pp. 1078–1084 (2018) [24] Karkkainen, K., Joo, J.: FairFace: Face attribute dataset for balanced race, gender, and age for bias measurement and mitigation. In: WACV, pp. 1548–1558 (2021) [25] Paszke, A., et al.: PyTorch: An imperative style, high-performance deep learning library. In: NIPS, Vol. 32 (2019) 
+
+12

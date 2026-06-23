@@ -1,0 +1,360 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-23T22:03:29.879779+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2606.22567v1",
+      "source": "arxiv",
+      "title": "Concept-Constrained Prompt Learning for Few-Shot CLIP Adaptation",
+      "abstract": "Few-shot prompt learning is an effective strategy for adapting CLIP to downstream tasks, but class-only prompt optimization can overfit base-class supervision and weaken transfer to unseen classes. We propose Concept-Constrained Prompt Learning (CCPL), a lightweight regularization framework that anchors learnable class prompts to frozen concept-level text prototypes without updating CLIP encoders. CCPL learns a set of shared context tokens, instantiates class prompts by appending class names, and constructs frozen concept prototypes from a class-level concept bank. During training, a text-space cosine consistency objective aligns learnable class-prompt embeddings with frozen concept prototypes; concept dropout provides additional regularization against over-reliance on fixed concept lists. At inference, CCPL optionally fuses class-prompt logits with concept-prototype logits using a controllable ensemble weight alpha. Our default configuration uses text-space concept regularization lambda = 0.5, concept dropout p = 0.3 and weak concept-guided fusion (alpha = 0.1), with no KL-based prediction consistency term. Experiments under identical automatically-generated fallback splits show that CCPL improves the base-to-new harmonic mean on DTD (+0.6) and EuroSAT (+2.9) compared with CoOp, while remaining near-neutral on OxfordPets (-0.1). Ablations indicate that text-space concept regularization is consistently beneficial, while the best concept-guided inference strength is dataset- and protocol-sensitive. These results suggest concept constraints are most effective when concept prototypes align naturally with dataset semantics, and identify fine-grained categories as a current boundary condition. The code is released at: https://github.com/richael-sang/concept-constrained-prompt-learning.",
+      "authors": [
+        "Na Sang",
+        "Ding Ma",
+        "Rui Sang",
+        "Yuxuan Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL",
+        "cs.GR"
+      ],
+      "published": "2026-06-21T16:09:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.22567v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Proposes few-shot prompt learning method for CLIP with concept constraints, enabling training with limited labeled examples, exactly matching the requirement of training with only a small number of labeled examples per class.",
+      "llm_evidence_cn": "提出概念约束的少样本提示学习方法，用于CLIP模型，仅需少量标注样本即可训练，完全符合每类仅使用少量标注样本进行训练的需求。",
+      "llm_evidence": "提出概念约束的少样本提示学习方法，用于CLIP模型，仅需少量标注样本即可训练，完全符合每类仅使用少量标注样本进行训练的需求。",
+      "canonical_evidence": "提出概念约束的少样本提示学习方法，用于CLIP模型，仅需少量标注样本即可训练，完全符合每类仅使用少量标注样本进行训练的需求。",
+      "llm_tldr_en": "Introduces Concept-Constrained Prompt Learning (CCPL) for few-shot CLIP adaptation, which regularizes learnable prompts with frozen concept prototypes to avoid overfitting and improve generalization to unseen classes. This effectively trains models with few labeled examples, a core need for few-shot learning.",
+      "llm_tldr_cn": "针对少样本学习中提示优化易过拟合的问题，提出概念约束提示学习（CCPL），通过冻结的概念原型正则化可学习提示，防止过拟合并提升未见类泛化。在少量标注下实现高效CLIP适配，为仅需少样本的图像分类提供了有效方案。",
+      "llm_tldr": "针对少样本学习中提示优化易过拟合的问题，提出概念约束提示学习（CCPL），通过冻结的概念原型正则化可学习提示，防止过拟合并提升未见类泛化。在少量标注下实现高效CLIP适配，为仅需少样本的图像分类提供了有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22772v1",
+      "source": "arxiv",
+      "title": "LoCC: Detection and Localization of Lip-Syncing Deepfakes via Counterfactual Frame Consistency",
+      "abstract": "Lip-syncing deepfakes are among the most challenging forms of manipulated media because their artifacts are localized almost exclusively to the mouth region and evolve dynamically over time. Detecting such deepfakes requires precise temporal and spatial modeling of lip motion. In this paper, we propose LoCC, a novel detection framework that performs fine-grained detection and localization of lip-syncing deepfakes at both segment and frame levels. Unlike prior approaches that analyze videos holistically, our method evaluates whether each frame aligns with a counterfactual estimate generated from its temporal neighbors. Real videos exhibit strong and stable consistency, whereas lip-sync deepfakes introduce localized inconsistencies. Following a teacher-student learning paradigm, our model effectively captures these frame-level discrepancies and achieves superior performance over state-of-the-art methods on multiple benchmark lip-syncing deepfake datasets, including LAV-DF, AVDF1M, FakeAVCeleb, and KODF, and generalizes well across compression levels and datasets.",
+      "authors": [
+        "Soumyya Kanti Datta",
+        "Shan Jia",
+        "Siwei Lyu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T02:19:39+00:00",
+      "link": "https://arxiv.org/pdf/2606.22772v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Proposes LoCC for detecting lip-syncing deepfakes using counterfactual frame consistency, directly addressing deepfake detection.",
+      "llm_evidence_cn": "提出LoCC，利用反事实帧一致性检测口型同步深伪，直接针对深度伪造检测。",
+      "llm_evidence": "提出LoCC，利用反事实帧一致性检测口型同步深伪，直接针对深度伪造检测。",
+      "canonical_evidence": "提出LoCC，利用反事实帧一致性检测口型同步深伪，直接针对深度伪造检测。",
+      "llm_tldr_en": "Presents LoCC, a framework that detects and localizes lip-syncing deepfakes by evaluating temporal consistency with counterfactual frame estimates. It achieves fine-grained detection, addressing a challenging type of deepfake with precise spatial-temporal modeling.",
+      "llm_tldr_cn": "针对口型同步深伪检测，提出LoCC框架，通过评估帧与反事实估计的时间一致性来检测和定位伪造。实现了细粒度的段级和帧级检测，为最难的伪造类型提供了精准的时空建模方案。",
+      "llm_tldr": "针对口型同步深伪检测，提出LoCC框架，通过评估帧与反事实估计的时间一致性来检测和定位伪造。实现了细粒度的段级和帧级检测，为最难的伪造类型提供了精准的时空建模方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21108v1",
+      "source": "arxiv",
+      "title": "SARIF: Segment Anything for Robust Image Forensics",
+      "abstract": "Image forgery localization remains challenging due to diverse manipulation techniques and distribution shifts. Existing forgery localization models achieve high accuracy on benchmarks but often struggle with cross-domain generalization and robustness. In this paper, we propose SARIF (Segment Anything for Robust Image Forensics), a framework that leverages the Segment Anything Model (SAM), which has a promptable architecture and strong generalization ability. SARIF introduces a feedback-guided mask decoder and a dual-encoder design that extracts forgery-specific information to capture forensic traces while exploiting the SAM architecture. To localize manipulated regions, we design a block-wise prompting mechanism that derives forgery-specific cues from residual features between an adapted encoder and its frozen counterpart. These features are fused with the previous mask prompt to drive a feedback-based mask refinement process, enabling automatic forgery segmentation without manual input. Extensive experiments on standard forgery-localization benchmarks show that SARIF achieves strong average cross-dataset performance and robustness to common image corruptions.",
+      "authors": [
+        "Dong-Hyun Moon",
+        "Ju-Hyeon Nam",
+        "Sang-Chul Lee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T05:21:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.21108v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "SARIF addresses cross-domain generalization in image forgery detection using SAM, directly matching the need for cross-domain generalization for AI-generated image detection.",
+      "llm_evidence_cn": "SARIF利用SAM解决图像伪造检测中的跨域泛化问题，直接对应用户关于AI生成图像检测跨域泛化的需求。",
+      "llm_evidence": "SARIF利用SAM解决图像伪造检测中的跨域泛化问题，直接对应用户关于AI生成图像检测跨域泛化的需求。",
+      "canonical_evidence": "SARIF利用SAM解决图像伪造检测中的跨域泛化问题，直接对应用户关于AI生成图像检测跨域泛化的需求。",
+      "llm_tldr_en": "Proposes SARIF, a robust image forensics framework that uses the Segment Anything Model (SAM) with a feedback-guided mask decoder and dual-encoder design to localize manipulated regions. It tackles cross-domain generalization, achieving strong forensic performance across diverse manipulations, making it directly applicable to cross-domain detection of AI-generated forgeries.",
+      "llm_tldr_cn": "针对图像伪造定位中跨域泛化难题，提出SARIF框架，基于分段任意模型（SAM）并引入反馈引导掩码解码器和双编码器设计。通过分块提示机制提取伪造痕迹，有效定位篡改区域，在多样伪造类型下展现鲁棒性，为AI生成图像的跨域检测提供了通用取证方案。",
+      "llm_tldr": "针对图像伪造定位中跨域泛化难题，提出SARIF框架，基于分段任意模型（SAM）并引入反馈引导掩码解码器和双编码器设计。通过分块提示机制提取伪造痕迹，有效定位篡改区域，在多样伪造类型下展现鲁棒性，为AI生成图像的跨域检测提供了通用取证方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21200v1",
+      "source": "arxiv",
+      "title": "Real-time pedestrian attribute recognition with YOLOv8 and ResNet18",
+      "abstract": "Pedestrian attribute recognition (PAR) assigns semantic labels to detected pedestrians and is useful in surveillance, video retrieval, and human-centered graphics applications. This paper presents a two-stage framework in which YOLOv8n detects pedestrians and ResNet18-based models classify gender, estimate apparent age, and predict 61 binary attributes from each pedestrian crop. PETA and PA-100K are combined through semantic attribute mapping, producing a unified training corpus of more than 100,000 pedestrian images while retaining the PETA attribute space. On the reported test splits, the system obtains 99.89% gender classification accuracy, a 4.23-year apparent-age mean absolute error, and 89.96% multi-attribute accuracy with a 36.32% macro F1-score and 58.80% micro F1-score. Runtime measurements indicate 25-30 FPS on an NVIDIA RTX 5060 GPU. The results show that a lightweight detector-classifier pipeline can support real-time PAR, while low macro F1 indicates that rare attributes remain challenging.",
+      "authors": [
+        "Houssam El Mir"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-19T08:11:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.21200v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Pedestrian attribute recognition classifies images into categories using CNNs (ResNet18)",
+      "llm_evidence_cn": "使用CNN (ResNet18) 将行人图像分类为属性类别",
+      "llm_evidence": "使用CNN (ResNet18) 将行人图像分类为属性类别",
+      "canonical_evidence": "使用CNN (ResNet18) 将行人图像分类为属性类别",
+      "llm_tldr_en": "Proposes a two-stage framework with YOLOv8 for pedestrian detection and ResNet18 for attribute classification, achieving high accuracy on gender, age, and multi-attribute recognition from images.",
+      "llm_tldr_cn": "针对行人属性识别任务，该文提出两阶段框架：先使用YOLOv8检测行人，再使用基于ResNet18的模型分类性别、年龄和61个二值属性。通过语义映射合并PETA和PA-100K数据集，构建超10万张图像的训练集。系统达到性别分类99.89%准确率，年龄估计平均误差4.23年，多属性识别准确率89.96%。研究工作为监控和视频检索等领域提供了高效实时的解决方案。",
+      "llm_tldr": "针对行人属性识别任务，该文提出两阶段框架：先使用YOLOv8检测行人，再使用基于ResNet18的模型分类性别、年龄和61个二值属性。通过语义映射合并PETA和PA-100K数据集，构建超10万张图像的训练集。系统达到性别分类99.89%准确率，年龄估计平均误差4.23年，多属性识别准确率89.96%。研究工作为监控和视频检索等领域提供了高效实时的解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21289v1",
+      "source": "arxiv",
+      "title": "Reconstructing Randomly Masked Spectra Helps DNNs Identify Discriminant Wavenumbers",
+      "abstract": "Nondestructive detection methods, based on vibrational spectroscopy, are vitally important in a wide range of applications including industrial chemistry, pharmacy and national defense. Recently, deep learning has been introduced into vibrational spectroscopy showing great potential. Different from images, text, etc. that offer large labeled data sets, vibrational spectroscopic data is very limited, which requires novel concepts beyond transfer and meta learning. To tackle this, we propose a task-enhanced augmentation network (TeaNet). The key component of TeaNet is a reconstruction module that inputs randomly masked spectra and outputs reconstructed samples that are similar to the original ones, but include additional variations learned from the domain. These augmented samples are used to train the classification model. The reconstruction and prediction parts are trained simultaneously, end-to-end with back-propagation. Results on both synthetic and real-world datasets verified the superiority of the proposed method. In the most difficult synthetic scenarios TeaNet outperformed CNN by 17%. We visualized and analysed the neuron responses of TeaNet and CNN, and found that TeaNet's ability to identify discriminant wavenumbers was excellent compared to CNN. Our approach is general and can be easily adapted to other domains, offering a solution to more accurate and interpretable few-shot learning.",
+      "authors": [
+        "Yingying Wu",
+        "Jinchao Liu",
+        "Yan Wang",
+        "Stuart Gibson",
+        "Margarita Osadchy",
+        "Yongchun Fang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-19T10:13:18+00:00",
+      "link": "https://arxiv.org/pdf/2606.21289v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes TeaNet to handle limited labeled data in vibrational spectroscopy via reconstruction-based augmentation.",
+      "llm_evidence_cn": "提出TeaNet通过重建增强处理振动光谱的有限标记数据",
+      "llm_evidence": "提出TeaNet通过重建增强处理振动光谱的有限标记数据",
+      "canonical_evidence": "提出TeaNet通过重建增强处理振动光谱的有限标记数据",
+      "llm_tldr_en": "Proposes TeaNet, a task-enhanced augmentation network that reconstructs randomly masked spectra to generate diverse training samples, enabling effective learning from limited labeled spectroscopic data.",
+      "llm_tldr_cn": "针对振动光谱数据标记有限的问题，提出任务增强型增强网络TeaNet。其核心是重建模块，通过随机遮挡光谱并重建出相似但包含学习变异的新样本，实现数据增强。实验表明TeaNet能有效利用少量标记数据训练深度网络，在化学、制药和国防检测中准确识别判别性波数。",
+      "llm_tldr": "针对振动光谱数据标记有限的问题，提出任务增强型增强网络TeaNet。其核心是重建模块，通过随机遮挡光谱并重建出相似但包含学习变异的新样本，实现数据增强。实验表明TeaNet能有效利用少量标记数据训练深度网络，在化学、制药和国防检测中准确识别判别性波数。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.23069v1",
+      "source": "arxiv",
+      "title": "Rethinking Prototype-based Similarity Learning for Few-Shot Object Detection",
+      "abstract": "Few-shot object detection aims to detect novel object categories from only a few labeled examples, avoiding costly large-scale annotation. Recent prototype-based similarity learning approaches enable training-free adaptation by matching query features with class prototypes. However, they suffer from two fundamental limitations: (i) class confusion arising from inter-class similarity margin collapse, and (ii) insufficient visual cues for precise localization, as similarity scores capture only class-level semantic affinity while providing limited spatial information. To address these issues, we introduce two complementary components. Text-Anchored Semantic Mask (TSMa) leverages class-level text features as semantic anchors to identify semantically aligned channels through channel-wise interaction between visual and text features. By suppressing style-induced spurious responses and emphasizing class-intrinsic signals, TSMa enlarges inter-class similarity margins and mitigates class confusion. We further propose Stage-Aligned Hierarchical Autoregressive Regression (SHARe), which reformulates localization as a hierarchical autoregressive process that progressively refines bounding boxes across multiple stages. SHARe leverages the layer-wise characteristics of ViT representations by aligning feature abstraction levels with regression stages: deeper layers guide early coarse localization, while shallower layers rich in edge and texture cues refine spatial details in later stages. Experiments on COCO demonstrate a new state of the art, outperforming the previous best by +10.1 nAP, with extensive analysis validating each component. The code is available at https://github.com/VisualScienceLab-KHU/ReSet.",
+      "authors": [
+        "KunHo Heo",
+        "Seungjae kim",
+        "Wongyu Lee",
+        "SuYeon Kim",
+        "MyeongAh Cho"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T09:18:00+00:00",
+      "link": "https://arxiv.org/pdf/2606.23069v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Few-shot object detection with prototype-based similarity learning, enabling training with few examples.",
+      "llm_evidence_cn": "基于原型相似学习的小样本目标检测，只需少量标注样本训练。",
+      "llm_evidence": "基于原型相似学习的小样本目标检测，只需少量标注样本训练。",
+      "canonical_evidence": "基于原型相似学习的小样本目标检测，只需少量标注样本训练。",
+      "llm_tldr_en": "Proposes improvements to prototype-based similarity learning for few-shot object detection, addressing class confusion and localization ambiguity with text-anchored masks and spatial guidance.",
+      "llm_tldr_cn": "针对小样本目标检测中类间混淆和定位不清的问题，提出文本锚定语义掩码和空间引导两种改进组件，提升了对新类别的检测精度，为数据稀缺场景提供了有效方案。",
+      "llm_tldr": "针对小样本目标检测中类间混淆和定位不清的问题，提出文本锚定语义掩码和空间引导两种改进组件，提升了对新类别的检测精度，为数据稀缺场景提供了有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.20300v2",
+      "source": "arxiv",
+      "title": "CMDS-AD: Cross-Modal Dual-Stream Decoupling for Few-Shot Anomaly Detection",
+      "abstract": "Few-shot anomaly detection remains challenging due to limited training data. Multi-modal anomaly detection (MAD) offers a viable solution, leveraging 3D geometric cues to enrich 2D RGB representations and compensate for this scarcity. However, existing MAD methods apply spatially uniform feature processing, conflating stable macroscopic structures with high-frequency localized defect signals, exacerbating cross-modal misalignment and inflating false-positive rates. To overcome this, we present CMDS-AD, a Cross-Modal Dual-Stream Anomaly Detection framework. A LoRA-guided diffusion model generates diverse RGB samples to mitigate extreme data scarcity. For 3D normal augmentation, we employ a pre-trained diffusion model as a normal estimator. Crucially, this estimator inherently acts as a non-linear low-pass filter, directly extracting low-frequency normal representations from RGB inputs. This establishes an auxiliary estimated stream of purely low-frequency information, anchoring robust structural templates and assisting the uncompressed real stream, containing coupled high- and low-frequency components, to precisely isolate micro-defects. A Coordinate-Aware Hierarchical Feature Mapper adaptively aligns cross-modal semantics, while a multiplicative scoring mechanism filters modality-specific noise. Under the extreme 1-shot setting, CMDS-AD achieves absolute performance gains of 5.7% (I-AUROC) and 2.0% (AUPRO) on MVTec 3D-AD, alongside 7.7% and 5.6% improvements on EyeCandies, establishing a new state-of-the-art. Code is available at https://github.com/Junhaocai27/CMDS-AD",
+      "authors": [
+        "Junhao Cai",
+        "Deyu Zeng",
+        "Junhao Pang",
+        "Junyu Chen",
+        "Qiwei Liang",
+        "Xiaopin Zhong",
+        "Zongze Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T14:36:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.20300v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "few-shot anomaly detection with cross-modal feature alignment",
+      "llm_evidence_cn": "少样本异常检测与跨模态特征对齐",
+      "llm_evidence": "少样本异常检测与跨模态特征对齐",
+      "canonical_evidence": "少样本异常检测与跨模态特征对齐",
+      "llm_tldr_en": "This paper proposes CMDS-AD, a few-shot anomaly detection framework using cross-modal dual-stream decoupling and feature alignment, achieving lower false positive rates on industrial datasets.",
+      "llm_tldr_cn": "少样本异常检测任务面临标注数据稀缺且多模态方法存在特征错位的挑战。本文提出CMDS-AD框架，通过LoRA引导扩散模型生成多样化的RGB样本来缓解数据稀缺，同时设计双流解耦结构分离宏观背景与高频缺陷信号，并利用跨模态特征对齐提升检测精度。在工业异常检测数据集上的实验表明，该方法有效降低了误报率，显著优于现有方法。该工作为少样本多模态异常检测提供了新的思路，其生成增强与对齐策略可推广至其他少样本视觉检测任务。",
+      "llm_tldr": "少样本异常检测任务面临标注数据稀缺且多模态方法存在特征错位的挑战。本文提出CMDS-AD框架，通过LoRA引导扩散模型生成多样化的RGB样本来缓解数据稀缺，同时设计双流解耦结构分离宏观背景与高频缺陷信号，并利用跨模态特征对齐提升检测精度。在工业异常检测数据集上的实验表明，该方法有效降低了误报率，显著优于现有方法。该工作为少样本多模态异常检测提供了新的思路，其生成增强与对齐策略可推广至其他少样本视觉检测任务。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.21287v1",
+      "source": "arxiv",
+      "title": "Unsupervised Domain Adaptation for Sim-to-Real Object Pose Estimation with Contrastive Alignment and Pseudo-Label Refinement",
+      "abstract": "Unsupervised domain adaptation (UDA) enables robust transfer of knowledge from simulated to real environments while exploiting a subset of unlabeled target data to improve real-world performance. Existing UDA methods for Object pose estimation often rely on global feature matching, multi-stage larger frameworks, or image translation pipelines, which tend to overlook the pose-specific information embedded in feature representations. To bridge this limitation, we introduce CAPLR that targets the adaptation of pose-sensitive features in localized regions, ensuring that domain alignment preserves the geometric cues essential for accurate pose estimation. CAPLR achieves UDA with three key components: (1) Efficient Cross-Domain Pairing strategy leveraging intermediate features to identify pose similar image pairs across domains without supervision; (2) Contrastive Alignment to perform feature alignment at localised regions in both intermediate and task-specific representations; and (3) Consistency-Based Pseudo-Label Refinement to improve reliability by encouraging stable target predictions. Extensive experiments demonstrate that CAPLR achieves state-of-the-art performance across multiple well-known object pose estimation benchmarks featuring diverse and challenging scenarios.",
+      "authors": [
+        "Nidhal Eddine Chenni",
+        "Arunkumar Rathinam",
+        "Djamila Aouada"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T10:11:17+00:00",
+      "link": "https://arxiv.org/pdf/2606.21287v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Contrastive alignment for feature alignment, applicable to few-shot deepfake detection.",
+      "llm_evidence_cn": "对比对齐用于特征对齐，可应用于少样本深度伪造检测",
+      "llm_evidence": "对比对齐用于特征对齐，可应用于少样本深度伪造检测",
+      "canonical_evidence": "对比对齐用于特征对齐，可应用于少样本深度伪造检测",
+      "llm_tldr_en": "Proposes CAPLR, an unsupervised domain adaptation method for object pose estimation using contrastive alignment and pseudo-label refinement, which could be bridged to few-shot deepfake detection via feature alignment.",
+      "llm_tldr_cn": "该论文针对从仿真到现实的目标姿态估计中的无监督域适应问题，提出了CAPLR方法，通过对比对齐和伪标签细化来适配姿态敏感特征。该方法的核心是对齐局部区域的特征表示，保持几何线索，可迁移至少样本深度伪造检测中的特征对齐任务。实验表明其在姿态估计上的有效性，但其技术框架也为跨域深度伪造检测提供了方法论桥梁。",
+      "llm_tldr": "该论文针对从仿真到现实的目标姿态估计中的无监督域适应问题，提出了CAPLR方法，通过对比对齐和伪标签细化来适配姿态敏感特征。该方法的核心是对齐局部区域的特征表示，保持几何线索，可迁移至少样本深度伪造检测中的特征对齐任务。实验表明其在姿态估计上的有效性，但其技术框架也为跨域深度伪造检测提供了方法论桥梁。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot deepfake detection using feature alignment",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.21700v1",
+      "source": "arxiv",
+      "title": "VT-DUDA: Visual Token Conditioning for Diffusion-guided Unsupervised Domain Adaptation",
+      "abstract": "Unsupervised domain adaptation (UDA) aims to learn a target-domain classifier from labeled source data and unlabeled target data under distribution shift. Recent diffusion-based UDA methods approach this problem by synthesizing labeled target-style images and training on the resulting synthetic data. However, their performance depends heavily on the conditioning design: class prompts provide only coarse guidance, while domain adaptation modules mainly control appearance, which may leave target-style synthesis insufficiently specified. We propose VT-DUDA, a visual-token conditioning framework for diffusion-guided UDA. Instead of relying only on text prompts, VT-DUDA uses source images to provide additional instance-level visual context for target-style synthesis. Specifically, VT-DUDA maps each source image to a compact sequence of visual tokens and forms a hybrid conditioning context by concatenating these tokens with the corresponding text embeddings along the cross-attention context dimension of a latent diffusion model. This provides instance-dependent conditioning beyond text alone, while synthesis is performed with the target-domain adapter branch. Because guidance is represented explicitly as a token sequence, the same interface also permits inference-time manipulation of the conditioning signal through token selection and token-strength adjustment. The proposed method preserves the standard diffusion objective and can be integrated into existing adapter-based diffusion frameworks without modifying the backbone. Across Office-31, Office-Home, and VisDA-2017, VT-DUDA improves average target-domain accuracy over strong discriminative and diffusion-based UDA baselines. The results suggest that, in generation-based UDA, a stronger conditioning interface can improve the downstream usefulness of synthetic target-style data.",
+      "authors": [
+        "Xuan Qi",
+        "Daniele Berardini",
+        "Dario Serez",
+        "Vito Paolo Pastore",
+        "Vittorio Murino"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T19:17:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.21700v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Diffusion-guided unsupervised domain adaptation method that could enable cross-domain generalization for AI-generated image detection.",
+      "llm_evidence_cn": "基于扩散引导的无监督域适应方法，可用于AI生成图像检测的跨域泛化。",
+      "llm_evidence": "基于扩散引导的无监督域适应方法，可用于AI生成图像检测的跨域泛化。",
+      "canonical_evidence": "基于扩散引导的无监督域适应方法，可用于AI生成图像检测的跨域泛化。",
+      "llm_tldr_en": "Proposes VT-DUDA, a visual token conditioning framework for diffusion-guided UDA, improving target-style image synthesis and domain adaptation, which could benefit cross-domain AI-generated image detection.",
+      "llm_tldr_cn": "提出VT-DUDA框架，利用视觉令牌条件引导扩散模型合成目标域风格图像，实现无监督域适应，提升了跨域分类性能，为AI生成图像检测的跨域泛化提供了潜在技术基础。",
+      "llm_tldr": "提出VT-DUDA框架，利用视觉令牌条件引导扩散模型合成目标域风格图像，实现无监督域适应，提升了跨域分类性能，为AI生成图像检测的跨域泛化提供了潜在技术基础。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
