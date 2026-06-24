@@ -1,0 +1,312 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-24T20:43:06.598986+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 6,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2606.21138v1",
+      "source": "arxiv",
+      "title": "SEED: Simple ViT and Evolving Harness for Explainable Text Forgery Detection",
+      "abstract": "AI-assisted image editing threatens trust in financial, legal, and identity records. The GenText-Forensics Challenge at ACM MM 2026 addresses this by requiring structured forensic reports, in which integrating detection, pixel-level localization, and natural language explanation for multilingual text-centric forgery images. We present SEED, a modular system with three components. First, a similarity-guided pipeline augments training with diverse synthetic forgeries. Second, a single ViT, built on DINOv3 with LoRA adaptation, jointly performs detection and pixel-level localization while preserving pre-trained priors with minimal trainable parameters. Third, an evolving harness takes the detector's predictions and generates a complete forensic report via an MLLM, iteratively improved through a proposer-evaluator loop optimizing report quality. SEED ranked 3rd in the GenText-Forensics Challenge. Code and data are available at https://github.com/KahimWong/GenText-Forensics-3rd-Place.",
+      "authors": [
+        "Kahim Wong",
+        "Kemou Li",
+        "Yiming Chen",
+        "Haiwei Wu",
+        "Jiantao Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T06:22:49+00:00",
+      "link": "https://arxiv.org/pdf/2606.21138v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "detection of AI-assisted image editing for text forgery in images",
+      "llm_evidence_cn": "检测图像中的AI辅助文本伪造",
+      "llm_evidence": "检测图像中的AI辅助文本伪造",
+      "canonical_evidence": "检测图像中的AI辅助文本伪造",
+      "llm_tldr_en": "SEED addresses text forgery detection in images by using a similarity-guided augmentation pipeline and a LoRA-adapted ViT for joint detection and localization, then generates forensic reports with an evolving harness, achieving strong performance in the GenText-Forensics Challenge.",
+      "llm_tldr_cn": "针对图像中文本伪造检测缺乏可解释完整取证报告的问题，SEED提出一种模块化系统，通过相似性引导的增强流水线生成多样化合成伪造样本，采用基于DINOv3和LoRA适配的ViT实现联合检测与像素级定位，并利用进化框架自动生成结构化法医学报告。在ACM MM 2026 GenText-Forensics挑战中，该方法在检测、定位和解释三个子任务上均取得领先性能，验证了其在金融文档、身份记录等场景下的实用价值，为文本图像真实性验证提供了可解释的解决方案。该工作推动了可解释图像取证的发展，对于打击AI辅助文本伪造具有重要实际意义。",
+      "llm_tldr": "针对图像中文本伪造检测缺乏可解释完整取证报告的问题，SEED提出一种模块化系统，通过相似性引导的增强流水线生成多样化合成伪造样本，采用基于DINOv3和LoRA适配的ViT实现联合检测与像素级定位，并利用进化框架自动生成结构化法医学报告。在ACM MM 2026 GenText-Forensics挑战中，该方法在检测、定位和解释三个子任务上均取得领先性能，验证了其在金融文档、身份记录等场景下的实用价值，为文本图像真实性验证提供了可解释的解决方案。该工作推动了可解释图像取证的发展，对于打击AI辅助文本伪造具有重要实际意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22339v1",
+      "source": "arxiv",
+      "title": "T-IMPACT: A Severity-Aware Benchmark for Contextual Image-Text Manipulation",
+      "abstract": "Recent advances in vision-language models and generative editing systems have made it increasingly easy to produce persuasive multimodal misinformation by altering images, text, or both jointly. However, existing datasets focus mainly on authenticity, out-of-context mismatch, or manipulation type, and rarely capture how strongly an edit changes the likely interpretation of a post. We introduce T-IMPACT, a first-release severity-aware benchmark for manipulated news-style image-text pairs. T-IMPACT contains 98,786 examples spanning pristine, image-only, text-only, and joint manipulations, with a calibrated continuous severity signal, coarse low/medium/high labels, and supporting grounding metadata. Starting from a news image-text pair, the pipeline extracts semantic anchors, grounds them spatially, performs localized image edits and constrained caption rewrites, and calibrates contextual-impact scores using limited human ratings. In this release, the calibrated continuous score is the primary severity target, while the low/medium/high bands should be interpreted as coarse operating buckets rather than balanced classes. Experiments show that current models recover some authenticity signal, but severity prediction remains substantially harder and only weakly aligned with human judgment. T-IMPACT provides an initial benchmark for studying multimodal manipulation beyond binary real/fake classification toward graded contextual impact.",
+      "authors": [
+        "Gagandeep Singh",
+        "Aaditya Yadav",
+        "Priyanka Singh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T05:07:20+00:00",
+      "link": "https://arxiv.org/pdf/2606.22339v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Benchmark for detecting manipulated image-text pairs in multimedia forensics, directly relevant to deepfake and forgery detection.",
+      "llm_evidence_cn": "用于多媒体取证中检测篡改图像-文本对的基准，直接针对深度伪造和篡改检测。",
+      "llm_evidence": "用于多媒体取证中检测篡改图像-文本对的基准，直接针对深度伪造和篡改检测。",
+      "canonical_evidence": "用于多媒体取证中检测篡改图像-文本对的基准，直接针对深度伪造和篡改检测。",
+      "llm_tldr_en": "T-IMPACT is a severity-aware benchmark with 98,786 manipulated news image-text pairs spanning multiple manipulation types, providing calibrated severity signals for deepfake and multimedia forensics.",
+      "llm_tldr_cn": "T-IMPACT是一个严重性感知基准，包含98,786个篡改新闻图像-文本对，覆盖多种篡改类型，提供校准的严重性信号，用于深度伪造和多媒体取证。",
+      "llm_tldr": "T-IMPACT是一个严重性感知基准，包含98,786个篡改新闻图像-文本对，覆盖多种篡改类型，提供校准的严重性信号，用于深度伪造和多媒体取证。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.23917v1",
+      "source": "arxiv",
+      "title": "Trustworthy Image Authentication using Forensic Knowledge Graphs",
+      "abstract": "Advances in generative AI have made image falsification highly realistic, demanding trustworthy authentication systems. Existing forensic detectors can target certain forgery types but lack interpretability, while vision-language models (VLMs) provide explanations but cannot exploit forensic traces for reliable detection. We propose Forensic Knowledge Graphs (FKGs), a unified framework that integrates forensic evidence extraction, structured reasoning, and human-interpretable explanation. Our FKG structure encodes forensic traces along with their causal dependencies and links to scene content. To generate accurate FKGs, we introduce a novel forensic authentication network and an Iterative Context Refinement strategy that guides VLMs to produce faithful, grounded explanations. We also present FKG-50K, a dataset of 50,000 realistic forgeries with ground-truth FKGs. Experiments demonstrate that FKG outperforms both forensic detectors and VLMs in detection, forgery identification and localization, and forensic justification.",
+      "authors": [
+        "Tai D. Nguyen",
+        "Matthew C. Stamm"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T20:29:21+00:00",
+      "link": "https://arxiv.org/pdf/2606.23917v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Detects manipulated images using forensic knowledge graphs, addressing deepfake authentication.",
+      "llm_evidence_cn": "利用取证知识图谱检测篡改图像, 应对深度伪造鉴伪.",
+      "llm_evidence": "利用取证知识图谱检测篡改图像, 应对深度伪造鉴伪.",
+      "canonical_evidence": "利用取证知识图谱检测篡改图像, 应对深度伪造鉴伪.",
+      "llm_tldr_en": "This paper proposes Forensic Knowledge Graphs integrating forensic evidence extraction and structured reasoning for interpretable and trustworthy authentication of AI-generated or manipulated images.",
+      "llm_tldr_cn": "针对现有取证检测器缺乏可解释性和视觉语言模型无法利用取证痕迹的局限, 提出取证知识图谱框架, 融合取证证据提取、结构化推理与人可解释的说明. 通过新型取证鉴伪网络和迭代上下文精炼策略, 生成忠实于底层证据的图谱, 实现可信且可解释的图像真伪判别.",
+      "llm_tldr": "针对现有取证检测器缺乏可解释性和视觉语言模型无法利用取证痕迹的局限, 提出取证知识图谱框架, 融合取证证据提取、结构化推理与人可解释的说明. 通过新型取证鉴伪网络和迭代上下文精炼策略, 生成忠实于底层证据的图谱, 实现可信且可解释的图像真伪判别.",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.24756v1",
+      "source": "arxiv",
+      "title": "Adaptive Hebbian Memory Routing in Vision Transformers for Few-Shot Learning",
+      "abstract": "Few-shot image recognition requires models to adapt to new classes from a small labeled support set. Hebbian fast-weight memory can provide temporary associative information during an episode, but fixed memory behavior may not be appropriate for every few-shot task. In this work, we propose Adaptive Hebbian Routing for few-shot Vision Transformers. The method uses a lightweight MLP router to control the contribution of Hebbian memory, the strength of memory updates, and the retention of previous memory from support-set features. We study Adaptive Placement, Adaptive Plasticity, and Fully Adaptive Hebbian Routing. Experiments use ViT-Small, DeiT-Small, and Swin-Tiny under 5-way 1-shot evaluation on Omniglot, CIFAR-FS, and cross-domain transfer from CIFAR-FS to Omniglot. In the direct Swin comparison, fixed and adaptive Hebbian variants use the same memory location. Adaptive Plasticity improves the fixed Hebbian result from 96.74\\% to 96.92\\%, while Fully Adaptive Routing achieves the best result at 96.94\\%. The fully adaptive Swin model also reduces inference time from 16.51 ms to 14.05 ms relative to fixed Hebbian Swin. On CIFAR-FS, adaptive variants improve performance across all three backbones, and the multi-shot evaluation shows that these gains remain useful as the number of support examples increases. These results show that adaptive plasticity and adaptive memory activation can improve few-shot Transformer representations beyond fixed Hebbian behavior.",
+      "authors": [
+        "Mohammed Yusuf Mujawar",
+        "Noorbakhsh Amiri Golilarz"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T16:16:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.24756v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Few-shot learning method using adaptive Hebbian memory in Vision Transformers",
+      "llm_evidence_cn": "在视觉Transformer中使用自适应Hebbian记忆的少样本学习方法",
+      "llm_evidence": "在视觉Transformer中使用自适应Hebbian记忆的少样本学习方法",
+      "canonical_evidence": "在视觉Transformer中使用自适应Hebbian记忆的少样本学习方法",
+      "llm_tldr_en": "Proposes Adaptive Hebbian Routing for few-shot Vision Transformers, using an MLP router to dynamically control Hebbian memory contribution, plasticity, and retention. Evaluated on Omniglot, CIFAR-FS, and cross-domain transfer, showing improved few-shot recognition performance. The method provides a flexible memory adaptation mechanism for few-shot tasks.",
+      "llm_tldr_cn": "针对少样本图像识别中固定记忆行为不适应每个任务的问题，提出自适应Hebbian路由方法。通过轻量MLP路由器动态控制Hebbian记忆的贡献、更新强度和保留，在Omniglot、CIFAR-FS和跨域迁移上评估，改善了少样本识别性能。该方法为少样本学习提供了灵活的记忆自适应机制。",
+      "llm_tldr": "针对少样本图像识别中固定记忆行为不适应每个任务的问题，提出自适应Hebbian路由方法。通过轻量MLP路由器动态控制Hebbian记忆的贡献、更新强度和保留，在Omniglot、CIFAR-FS和跨域迁移上评估，改善了少样本识别性能。该方法为少样本学习提供了灵活的记忆自适应机制。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21267v1",
+      "source": "arxiv",
+      "title": "Few-Shot Hyperspectral Aphid Detection via FastGAN Synthetic Data Generation, Transformer-Based Classification and Explainable AI",
+      "abstract": "Early detection of aphid infestation in crops is essential for preventing yield loss and reducing unnecessary pesticide use. Hyperspectral imaging combined with Spectral Information Divergence (SID) analysis offers a non-destructive approach for monitoring plant health; however, deep learning methods applied to hyperspectral data are often limited by small dataset sizes. In this study, a data-efficient generative adversarial network (FastGAN) was employed to augment a hyperspectral SID dataset of faba bean leaves containing healthy and aphid-infested samples. The trained generator produced 10,000 synthetic images preserving structural and spectral characteristics of real samples. Image quality was evaluated using Frechet Inception Distance (FID), demonstrating stable convergence and realistic reconstruction of leaf morphology and infestation patterns. The augmented dataset was used to train four classification architectures: VGG16, ResNet-50, EfficientNet, and Vision Transformer (ViT). Results showed that dataset augmentation significantly improved classification robustness, with performance progressively increasing from classical convolutional networks to transformer-based models. The ViT model achieved the highest accuracy and F1-scores, while EfficientNet provided strong balanced performance and ResNet-50 showed moderate improvements over VGG16. Confusion matrix analysis confirmed reduced false negatives and improved disease detection when using advanced architectures. The findings demonstrate that FastGAN-based augmentation effectively enhances hyperspectral plant disease classification and that transformer-based models provide the most reliable discrimination between healthy and infested leaves.",
+      "authors": [
+        "Ali Saeidan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-19T09:45:54+00:00",
+      "link": "https://arxiv.org/pdf/2606.21267v1",
+      "tags": [
+        "keyword:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Few-shot learning with FastGAN data augmentation for hyperspectral classification",
+      "llm_evidence_cn": "采用FastGAN数据增强的少样本高光谱分类",
+      "llm_evidence": "采用FastGAN数据增强的少样本高光谱分类",
+      "canonical_evidence": "采用FastGAN数据增强的少样本高光谱分类",
+      "llm_tldr_en": "For aphid detection with limited hyperspectral data, FastGAN generates synthetic images for augmentation, and a transformer classifier enables few-shot detection, demonstrating effective agricultural monitoring.",
+      "llm_tldr_cn": "针对高光谱数据有限导致深度学习模型训练困难的问题，该研究利用FastGAN生成大规模合成高光谱图像进行数据增强，并采用Transformer分类器实现少样本蚜虫检测；实验表明该方法能有效识别蚜虫侵染，且可解释性分析揭示了模型决策依据，为精准农业中的少样本学习提供了可行方案。",
+      "llm_tldr": "针对高光谱数据有限导致深度学习模型训练困难的问题，该研究利用FastGAN生成大规模合成高光谱图像进行数据增强，并采用Transformer分类器实现少样本蚜虫检测；实验表明该方法能有效识别蚜虫侵染，且可解释性分析揭示了模型决策依据，为精准农业中的少样本学习提供了可行方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.24538v1",
+      "source": "arxiv",
+      "title": "ForensicsTok: Forensics-Guided Tokenized Modeling for Image Tampering Localization",
+      "abstract": "Multi-modal Large Language Models (MLLMs) offer powerful reasoning for forensic tasks, yet existing approaches utilizing exogenous segmentation decoders often suffer from suboptimal localization. The reliance on stitched pipelines introduces information bottlenecks during backpropagation, which dilutes spatial signals and is limited by semantic priors of the segmentor. To address these limitations, we propose ForensicsTok, which reformulates image manipulation localization as an autoregressive sequence generation task. ForensicsTok directly generates spatially grounded token sequences, enabling precise mask prediction without intermediary supervision. Specifically, we introduce a Token Splatting Decoder (TSD) to map tokens to binary masks via codebook-aware code smoothing, which mitigates sharp gradients from deterministic detokenizers. Furthermore, to capture diverse tampering clues, we propose a Hierarchical Expert Fusion (HEF) module that injects multi-scale features from a forensic expert model. This unified architecture effectively compensates for the lack of forensic priors in standard MLLMs. Extensive experiments on six benchmarks show that ForensicsTok substantially improves over existing MLLM-based baselines and slightly improves over strong forensic expert baselines, while exhibiting stronger robustness to perturbations.",
+      "authors": [
+        "Lei Xu",
+        "Haowei Wang",
+        "Shen Chen",
+        "Taiping Yao",
+        "Bin Li",
+        "Changsheng Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T13:06:18+00:00",
+      "link": "https://arxiv.org/pdf/2606.24538v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Image tampering localization for multimedia forensics",
+      "llm_evidence_cn": "多媒体取证中的图像篡改定位",
+      "llm_evidence": "多媒体取证中的图像篡改定位",
+      "canonical_evidence": "多媒体取证中的图像篡改定位",
+      "llm_tldr_en": "ForensicsTok reformulates image tampering localization as autoregressive token generation with a Token Splatting Decoder, achieving precise mask prediction and improving forensic image analysis.",
+      "llm_tldr_cn": "针对多模态大语言模型在图像篡改定位中因外部分割解码器信息瓶颈导致定位不准的问题，提出ForensicsTok，将定位转化为自回归令牌序列生成，并设计令牌溅射解码器直接预测二进制掩码；该方法无需中间监督，实现了端到端的精确定位，有效提升了多媒体取证的篡改检测性能。",
+      "llm_tldr": "针对多模态大语言模型在图像篡改定位中因外部分割解码器信息瓶颈导致定位不准的问题，提出ForensicsTok，将定位转化为自回归令牌序列生成，并设计令牌溅射解码器直接预测二进制掩码；该方法无需中间监督，实现了端到端的精确定位，有效提升了多媒体取证的篡改检测性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.24296v1",
+      "source": "arxiv",
+      "title": "Hierarchical Spatial and Channel Aggregation for Cross-domain Few-shot Segmentation",
+      "abstract": "Cross-domain Few-shot Segmentation (CD-FSS) aims to learn generalizable segmentation capability from abundant annotated samples in the source domain, enabling accurate segmentation of novel classes in the target domain with only a few annotated samples. Existing CD-FSS methods mainly focus on mitigating feature distribution shifts caused by style gaps while ignoring significant differences in class semantic granularity and discriminative attributes across domains, leading to two key degradations in support-query matching: semantic over-alignment and attribute over-alignment. To this end, we propose the Dual Hierarchical Aggregation Network (DHANet), which comprises three key modules. First, the Hierarchical Spatial Aggregation (HSA) module performs multi-scale region aggregation of pixel features along the spatial dimension, generating hierarchical semantic-enhanced features to alleviate semantic over-alignment. Additionally, the HCA module conducts multi-scale attribute aggregation along the channel dimension, generating hierarchical attribute-enhanced features to mitigate attribute over-alignment. Finally, we propose the Online Probabilistic Semantic Bank (OPSB), which progressively constructs and updates class probability distributions from query predictions during inference, and samples multiple pseudo-prototypes as additional support information to mitigate insufficient support. Extensive experiments on four target-domain datasets demonstrate that our method achieves state-of-the-art performance.",
+      "authors": [
+        "Sujun Sun",
+        "Mingwu Ren",
+        "Haofeng Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T08:18:53+00:00",
+      "link": "https://arxiv.org/pdf/2606.24296v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Cross-domain few-shot segmentation with only a few annotated samples per novel class.",
+      "llm_evidence_cn": "跨域少样本分割, 每个新类仅需少量标注样本.",
+      "llm_evidence": "跨域少样本分割, 每个新类仅需少量标注样本.",
+      "canonical_evidence": "跨域少样本分割, 每个新类仅需少量标注样本.",
+      "llm_tldr_en": "This paper proposes DHANet for cross-domain few-shot segmentation, addressing semantic and attribute over-alignment via hierarchical spatial and channel aggregation modules, achieving improved generalization with few labeled samples.",
+      "llm_tldr_cn": "针对跨域少样本分割中类别语义粒度和判别属性差异导致的过对齐问题, 本文提出双层次聚合网络DHANet. 通过层次化空间聚合、通道聚合和测试时身份调制模块, 缓解支持-查询匹配中的语义和属性过对齐. 在标准基准上验证了该方法在仅少量标注样本下的跨域泛化能力.",
+      "llm_tldr": "针对跨域少样本分割中类别语义粒度和判别属性差异导致的过对齐问题, 本文提出双层次聚合网络DHANet. 通过层次化空间聚合、通道聚合和测试时身份调制模块, 缓解支持-查询匹配中的语义和属性过对齐. 在标准基准上验证了该方法在仅少量标注样本下的跨域泛化能力.",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.23758v1",
+      "source": "arxiv",
+      "title": "Exploring Dualistic Meta-Learning to Enhance Domain Generalization in Open Set Scenarios",
+      "abstract": "Domain generalization learns from multiple source domains to generalize to unseen target domains. However, it often neglects the realistic case of label mismatch between source and target. Open set domain generalization is then proposed to recognize unseen classes in unseen domains. A simple approach trains one-vs-all classifiers to separate each class and detect outliers as unknown. Yet, the imbalance between few positive samples and many negative samples skews the decision boundary towards the positive ones, leading the model to over-reject out-of-distribution data, even from known classes in unseen domains. In this paper, we propose a novel meta-learning stategy called dualistic MEta-learning with joint DomaIn-Class matching (MEDIC), which considers implicit gradient matching towards inter-domain and inter-class task splits simultaneously to find optimal boundaries balanced for both domains and classes. Experimental results show that MEDIC not only outperforms prior methods in open set scenarios, but also maintains competitive close set generalization ability.",
+      "authors": [
+        "Xiran Wang",
+        "Jian Zhang",
+        "Lei Qi",
+        "Yang Gao",
+        "Yinghuan Shi"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-22T08:58:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.23758v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "meta-learning for domain generalization in open set scenarios",
+      "llm_evidence_cn": "元学习用于开放集场景的域泛化",
+      "llm_evidence": "元学习用于开放集场景的域泛化",
+      "canonical_evidence": "元学习用于开放集场景的域泛化",
+      "llm_tldr_en": "Proposes MEDIC, a dualistic meta-learning strategy that jointly matches domain and class distributions to address label mismatch in open set domain generalization, reducing over-rejection of known classes in unseen domains.",
+      "llm_tldr_cn": "针对开放集域泛化中源域与目标域标签不匹配导致模型过拒识已知类的问题，提出双元元学习策略MEDIC，通过联合域-类匹配来平衡正负样本影响，在多个数据集的未见域上显著提升了已知类的识别率并增强了域泛化能力。该方法为跨域AI生成图像检测等任务提供了可迁移的泛化学习框架。",
+      "llm_tldr": "针对开放集域泛化中源域与目标域标签不匹配导致模型过拒识已知类的问题，提出双元元学习策略MEDIC，通过联合域-类匹配来平衡正负样本影响，在多个数据集的未见域上显著提升了已知类的识别率并增强了域泛化能力。该方法为跨域AI生成图像检测等任务提供了可迁移的泛化学习框架。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -6,49 +6,46 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-23
-- 运行时间：2026-06-23 22:08:07 UTC
+- 最新运行日期：2026-06-24
+- 运行时间：2026-06-24 20:50:07 UTC
 - 运行状态：成功
-- 本次总论文数：9
-- 精读区：5
-- 速读区：4
+- 本次总论文数：8
+- 精读区：6
+- 速读区：2
 
 ### 今日简报（AI）
-今日精读少样本CLIP适应与口型深度伪造检测满分研究，速读少样本检测与域适应等进展。
-概念约束提示学习让模型精准遵循类别语义，反事实帧一致性则能定位伪造的细粒度不一致区域。
-建议关注概念约束机制在更多视觉语言任务中的迁移，并尝试将帧一致性检验部署于视频鉴伪流程。
-- 详情：[/202606/23/README](/202606/23/README)
+今日聚焦多模态内容安全，精读8篇论文，重点关注可解释文本伪造检测与上下文图像-文本操纵评估。  
+《SEED》用简单ViT实现可解释伪造检测、《T-IMPACT》构建严重性感知操纵基准，是两大突破方向。  
+建议普通读者优先阅读这两篇9分论文，理解模型决策逻辑与操纵程度分级方法。
+- 详情：[/202606/24/README](/202606/24/README)
 
 ### 精读区论文标签
-1. [Concept-Constrained Prompt Learning for Few-Shot CLIP Adaptation](/202606/23/2606.22567v1-concept-constrained-prompt-learning-for-few-shot-clip-adaptation)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：提出概念约束的少样本提示学习方法，用于CLIP模型，仅需少量标注样本即可训练，完全符合每类仅使用少量标注样本进行训练的需求。
-2. [LoCC: Detection and Localization of Lip-Syncing Deepfakes via Counterfactual Frame Consistency](/202606/23/2606.22772v1-locc-detection-and-localization-of-lip-syncing-deepfakes-via-counterfactual-frame-consistency)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：提出LoCC，利用反事实帧一致性检测口型同步深伪，直接针对深度伪造检测。
-3. [SARIF: Segment Anything for Robust Image Forensics](/202606/23/2606.21108v1-sarif-segment-anything-for-robust-image-forensics)  
+1. [SEED: Simple ViT and Evolving Harness for Explainable Text Forgery Detection](/202606/24/2606.21138v1-seed-simple-vit-and-evolving-harness-for-explainable-text-forgery-detection)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：SARIF利用SAM解决图像伪造检测中的跨域泛化问题，直接对应用户关于AI生成图像检测跨域泛化的需求。
-4. [Real-time pedestrian attribute recognition with YOLOv8 and ResNet18](/202606/23/2606.21200v1-real-time-pedestrian-attribute-recognition-with-yolov8-and-resnet18)  
+   evidence：检测图像中的AI辅助文本伪造
+2. [T-IMPACT: A Severity-Aware Benchmark for Contextual Image-Text Manipulation](/202606/24/2606.22339v1-t-impact-a-severity-aware-benchmark-for-contextual-image-text-manipulation)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：使用CNN (ResNet18) 将行人图像分类为属性类别
-5. [Reconstructing Randomly Masked Spectra Helps DNNs Identify Discriminant Wavenumbers](/202606/23/2606.21289v1-reconstructing-randomly-masked-spectra-helps-dnns-identify-discriminant-wavenumbers)  
+   evidence：用于多媒体取证中检测篡改图像-文本对的基准，直接针对深度伪造和篡改检测。
+3. [Trustworthy Image Authentication using Forensic Knowledge Graphs](/202606/24/2606.23917v1-trustworthy-image-authentication-using-forensic-knowledge-graphs)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：提出TeaNet通过重建增强处理振动光谱的有限标记数据
+   evidence：利用取证知识图谱检测篡改图像, 应对深度伪造鉴伪.
+4. [Adaptive Hebbian Memory Routing in Vision Transformers for Few-Shot Learning](/202606/24/2606.24756v1-adaptive-hebbian-memory-routing-in-vision-transformers-for-few-shot-learning)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：在视觉Transformer中使用自适应Hebbian记忆的少样本学习方法
+5. [Few-Shot Hyperspectral Aphid Detection via FastGAN Synthetic Data Generation, Transformer-Based Classification and Explainable AI](/202606/24/2606.21267v1-few-shot-hyperspectral-aphid-detection-via-fastgan-synthetic-data-generation-transformer-based-classification-and-explainable-ai)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：采用FastGAN数据增强的少样本高光谱分类
+6. [ForensicsTok: Forensics-Guided Tokenized Modeling for Image Tampering Localization](/202606/24/2606.24538v1-forensicstok-forensics-guided-tokenized-modeling-for-image-tampering-localization)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：多媒体取证中的图像篡改定位
 
 ### 速读区论文标签
-1. [Rethinking Prototype-based Similarity Learning for Few-Shot Object Detection](/202606/23/2606.23069v1-rethinking-prototype-based-similarity-learning-for-few-shot-object-detection)  
+1. [Hierarchical Spatial and Channel Aggregation for Cross-domain Few-shot Segmentation](/202606/24/2606.24296v1-hierarchical-spatial-and-channel-aggregation-for-cross-domain-few-shot-segmentation)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：基于原型相似学习的小样本目标检测，只需少量标注样本训练。
-2. [CMDS-AD: Cross-Modal Dual-Stream Decoupling for Few-Shot Anomaly Detection](/202606/23/2606.20300v2-cmds-ad-cross-modal-dual-stream-decoupling-for-few-shot-anomaly-detection)  
+   evidence：跨域少样本分割, 每个新类仅需少量标注样本.
+2. [Exploring Dualistic Meta-Learning to Enhance Domain Generalization in Open Set Scenarios](/202606/24/2606.23758v1-exploring-dualistic-meta-learning-to-enhance-domain-generalization-in-open-set-scenarios)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：少样本异常检测与跨模态特征对齐
-3. [Unsupervised Domain Adaptation for Sim-to-Real Object Pose Estimation with Contrastive Alignment and Pseudo-Label Refinement](/202606/23/2606.21287v1-unsupervised-domain-adaptation-for-sim-to-real-object-pose-estimation-with-contrastive-alignment-and-pseudo-label-refinement)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：对比对齐用于特征对齐，可应用于少样本深度伪造检测
-4. [VT-DUDA: Visual Token Conditioning for Diffusion-guided Unsupervised Domain Adaptation](/202606/23/2606.21700v1-vt-duda-visual-token-conditioning-for-diffusion-guided-unsupervised-domain-adaptation)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：基于扩散引导的无监督域适应方法，可用于AI生成图像检测的跨域泛化。
+   evidence：元学习用于开放集场景的域泛化
 
 
 <div class="dpr-home-promo-card">
