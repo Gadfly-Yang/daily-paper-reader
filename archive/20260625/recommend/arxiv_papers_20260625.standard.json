@@ -1,0 +1,414 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-25T22:05:24.390958+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 7,
+    "quick_skim_target": 11,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2606.25375v1",
+      "source": "arxiv",
+      "title": "Beyond Visual Forensics: Auditing Multimodal Robustness for Synthetic Medical Image Detection",
+      "abstract": "With the rapid adoption of generative AI, synthetic medical images pose growing risks, including diagnostic deception and insurance fraud. Although prior work has explored vision-language model (VLM)-based synthetic image detection, these evaluations typically consider images in isolation. In clinical practice, however, images are interpreted alongside structured records and metadata, and VLMs are increasingly deployed under joint image-record inputs. We uncover a previously underexamined multimodal vulnerability: when given both modalities, VLMs may overweight record context in authenticity judgments, such that the same image receives different predictions solely due to changes in its accompanying text. This raises concerns about robustness in real-world deployment. To systematically characterize this effect, we reformulate synthetic medical image detection as an audit of multimodal robustness at the image-record interface and introduce a paired benchmark that holds the image fixed while swapping controlled metadata variants. Across multiple imaging modalities, we evaluate diverse open-weight and frontier API VLMs and quantify how metadata alone shifts authenticity predictions. Our benchmark provides a standardized tool for assessing and improving multimodal robustness beyond image-only settings. The code is available at https://github.com/chiuhaohao/Beyond-Visual-Forensics.",
+      "authors": [
+        "Ching-Hao Chiu",
+        "Hao-Wei Chung",
+        "Gelei Xu",
+        "Xueyang Li",
+        "Pin-Yu Chen",
+        "John Kheir",
+        "Meysam Ghaffari",
+        "Carlos Morato",
+        "Ahmed Abbasi",
+        "Yiyu Shi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-24T04:08:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.25375v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Directly addresses synthetic medical image detection, which is detecting images created by generative AI.",
+      "llm_evidence_cn": "直接针对合成医学图像检测，即检测生成式AI创建的图像。",
+      "llm_evidence": "直接针对合成医学图像检测，即检测生成式AI创建的图像。",
+      "canonical_evidence": "直接针对合成医学图像检测，即检测生成式AI创建的图像。",
+      "llm_tldr_en": "Audits multimodal robustness in synthetic medical image detection, revealing that vision-language models can be misled by accompanying text, causing inconsistent authenticity judgments.",
+      "llm_tldr_cn": "本文发现多模态（图像+病历）场景下，视觉语言模型在判定合成医学图像真伪时易受文本上下文影响，导致相同图像因文本变化而获得不同预测。作者通过审计实验揭示了这一多模态脆弱性，并呼吁在设计检测系统时重视文本偏差问题，为医疗AI伪造检测提供了新的安全视角。",
+      "llm_tldr": "本文发现多模态（图像+病历）场景下，视觉语言模型在判定合成医学图像真伪时易受文本上下文影响，导致相同图像因文本变化而获得不同预测。作者通过审计实验揭示了这一多模态脆弱性，并呼吁在设计检测系统时重视文本偏差问题，为医疗AI伪造检测提供了新的安全视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.25297v1",
+      "source": "arxiv",
+      "title": "Minimalist Preprocessing Approach for Image Synthesis Detection",
+      "abstract": "Generative models have significantly advanced image generation, resulting in synthesized images that are increasingly indistinguishable from authentic ones. However, the creation of fake images with malicious intent is a growing concern. Low-configured smart devices have become highly popular, making it easier for deceptive images to reach users. Consequently, the demand for effective detection methods is increasingly urgent. In this paper, we introduce a simple yet efficient method that captures pixel fluctuations between neighboring pixels by calculating the gradient, which highlights variations in grayscale intensity. This approach functions as a high-pass filter, emphasizing key features for accurate image distinction while minimizing color influence. Our experiments on multiple datasets demonstrate that our method achieves accuracy levels comparable to state-of-the-art techniques while requiring minimal computational resources. Therefore, it is suitable for deployment on low-end devices such as smartphones. The code is available at https://github.com/vohoaidanh/adof.",
+      "authors": [
+        "Hoai-Danh Vo",
+        "Trung-Nghia Le"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-24T01:59:12+00:00",
+      "link": "https://arxiv.org/pdf/2606.25297v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes gradient-based preprocessing to distinguish synthesized from authentic images",
+      "llm_evidence_cn": "提出基于梯度的预处理方法区分合成图像与真实图像",
+      "llm_evidence": "提出基于梯度的预处理方法区分合成图像与真实图像",
+      "canonical_evidence": "提出基于梯度的预处理方法区分合成图像与真实图像",
+      "llm_tldr_en": "Introduces a lightweight gradient-based method that acts as a high-pass filter on pixel differences to effectively detect AI-synthesized images.",
+      "llm_tldr_cn": "针对生成式模型产生的难以分辨的合成图像，提出一种基于像素间梯度波动的最小化预处理方法，通过高通滤波捕捉关键特征，实现高效真伪鉴别。该方法计算简单，适合低配置设备，为图像真实性验证提供了轻量级解决方案。",
+      "llm_tldr": "针对生成式模型产生的难以分辨的合成图像，提出一种基于像素间梯度波动的最小化预处理方法，通过高通滤波捕捉关键特征，实现高效真伪鉴别。该方法计算简单，适合低配置设备，为图像真实性验证提供了轻量级解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21838v1",
+      "source": "arxiv",
+      "title": "Beyond Flat Labels: Level-Restricted Contrastive Learning for Hierarchical Fine-Grained Vision Classification",
+      "abstract": "Multimodal contrastive learning has enabled zero-shot visual classification by aligning images with textual categories. However, in hierarchically structured label spaces, existing methods often produce predictions that are inconsistent across taxonomic levels. For example, a model may predict a fine-grained category whose parent category contradicts its simultaneously predicted higher-level label. By analysis, the issue originates from false negative labels when contrastive comparison involves multiple taxonomic levels. To this end, we propose to restrict contrastive comparisons to categories within the same taxonomic level. In addition, we adopt a group-balanced design, ensuring each taxonomic level receives adequate optimization. As a result, the proposed framework improves both hierarchical consistency and classification accuracy from coarse to fine granularity. We train our model with TreeOfLife-10M based on BioCLIP and evaluate it across multiple hierarchical classification benchmarks, where the model demonstrates significantly improved hierarchical consistency in both Euclidean and hyperbolic spaces. Notably, on iNaturalist 2021 (iNat21), our method improves average accuracy across levels by 30.47% over the baseline, highlighting its effectiveness for hierarchical zero-shot classification.",
+      "authors": [
+        "Zhiyuan Tao",
+        "Srikumar Sastry",
+        "Matthew J Thompson",
+        "Elizabeth G Campolongo",
+        "Net Zhang",
+        "Ziheng Zhang",
+        "Hilmar Lapp",
+        "Yu Su",
+        "Tanya Berger-Wolf",
+        "Nathan Jacobs",
+        "Wei-Lun Chao",
+        "Jianyang Gu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-20T02:12:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.21838v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Proposes level-restricted contrastive learning for hierarchical fine-grained vision classification, applicable to CNN-based image classification.",
+      "llm_evidence_cn": "提出针对层次化细粒度视觉分类的层级限制对比学习，适用于基于CNN的图像分类。",
+      "llm_evidence": "提出针对层次化细粒度视觉分类的层级限制对比学习，适用于基于CNN的图像分类。",
+      "canonical_evidence": "提出针对层次化细粒度视觉分类的层级限制对比学习，适用于基于CNN的图像分类。",
+      "llm_tldr_en": "This paper addresses prediction inconsistency across taxonomic levels in fine-grained classification by restricting contrastive comparisons within the same level and using group-balanced training, improving hierarchical classification accuracy.",
+      "llm_tldr_cn": "针对现有对比学习在层次化标签空间下预测不一致的问题，本文提出层级限制对比学习，通过将正负样本对比限制在同一分类层级内，并引入组平衡策略，有效消除跨级伪负标签影响。在多个细粒度基准数据集上的实验表明，该方法显著提升了各级分类准确率及跨级一致性，为大规模层次化图像分类提供了可靠方案。",
+      "llm_tldr": "针对现有对比学习在层次化标签空间下预测不一致的问题，本文提出层级限制对比学习，通过将正负样本对比限制在同一分类层级内，并引入组平衡策略，有效消除跨级伪负标签影响。在多个细粒度基准数据集上的实验表明，该方法显著提升了各级分类准确率及跨级一致性，为大规模层次化图像分类提供了可靠方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.24297v1",
+      "source": "arxiv",
+      "title": "Training-free Cross-domain Few-shot Segmentation via Robust Semantic Representation and Matching",
+      "abstract": "Cross-domain Few-shot Segmentation (CD-FSS) aims to transfer knowledge learned from source domain to distinct target domains, segmenting unseen target classes with only a few annotated samples. Although existing methods have made significant progress, they still rely on training or fine-tuning processes, which incur high computational costs and risk overfitting. We observe that when powerful and general-purpose vision foundation models are incorporated into these methods, their performance shows only marginal improvement or even degrades due to overfitting. To address this, we eliminate trainable parameters and propose a training-free framework to avoid both training overhead and overfitting. Built upon the self-supervised vision encoder DINOv3, our framework addresses cross-domain challenges through three core modules. First, the Semantic-aware Feature Re-fusion (SAFR) module identifies and re-fuses features that emphasize semantic patterns, generating representations with enhanced semantic discriminability. Additionally, the Adaptive Support Enhancement (ASE) module narrows semantic gaps between support and query through robust query information aggregation. Finally, the Hybrid Prototype Matching (HPM) module integrates matching results from diverse prototypes to adapt to varying semantic complexity across domains. Extensive experiments on four target domain datasets demonstrate that our method achieves state-of-the-art performance in CD-FSS without any training.",
+      "authors": [
+        "Sujun Sun",
+        "Mingwu Ren",
+        "Haofeng Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T08:19:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.24297v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Develops a training-free framework for cross-domain few-shot segmentation, enabling learning from few labeled examples per class without overfitting.",
+      "llm_evidence_cn": "提出免训练的跨域少样本分割框架，能从每类少量标注样本学习且防止过拟合。",
+      "llm_evidence": "提出免训练的跨域少样本分割框架，能从每类少量标注样本学习且防止过拟合。",
+      "canonical_evidence": "提出免训练的跨域少样本分割框架，能从每类少量标注样本学习且防止过拟合。",
+      "llm_tldr_en": "Proposes a training-free cross-domain few-shot segmentation method using robust semantic representation and matching, leveraging self-supervised vision foundation models to avoid overfitting and computational overhead.",
+      "llm_tldr_cn": "针对跨域少样本分割中训练带来的过拟合和计算成本问题，本文提出免训练框架，利用自监督视觉基础模型实现稳健的语义表示与匹配。无需训练参数，直接在新类别和目标域上分割，在多个跨域基准上取得与最先进方法相当的性能，同时避免了过拟合。通过消融实验证实，免训练设计在保持性能的同时显著降低了计算开销，为快速部署少样本分割提供了更优方案。",
+      "llm_tldr": "针对跨域少样本分割中训练带来的过拟合和计算成本问题，本文提出免训练框架，利用自监督视觉基础模型实现稳健的语义表示与匹配。无需训练参数，直接在新类别和目标域上分割，在多个跨域基准上取得与最先进方法相当的性能，同时避免了过拟合。通过消融实验证实，免训练设计在保持性能的同时显著降低了计算开销，为快速部署少样本分割提供了更优方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.20300v3",
+      "source": "arxiv",
+      "title": "CMDS-AD: Cross-Modal Dual-Stream Decoupling for Few-Shot Anomaly Detection",
+      "abstract": "Few-shot anomaly detection remains challenging due to limited training data. Multi-modal anomaly detection (MAD) offers a viable solution, leveraging 3D geometric cues to enrich 2D RGB representations and compensate for this scarcity. However, existing MAD methods apply spatially uniform feature processing, conflating stable macroscopic structures with high-frequency localized defect signals, exacerbating cross-modal misalignment and inflating false-positive rates. To overcome this, we present CMDS-AD, a Cross-Modal Dual-Stream Anomaly Detection framework. A LoRA-guided diffusion model generates diverse RGB samples to mitigate extreme data scarcity. For 3D normal augmentation, we employ a pre-trained diffusion model as a normal estimator. Crucially, this estimator inherently acts as a non-linear low-pass filter, directly extracting low-frequency normal representations from RGB inputs. This establishes an auxiliary estimated stream of purely low-frequency information, anchoring robust structural templates and assisting the uncompressed real stream, containing coupled high- and low-frequency components, to precisely isolate micro-defects. A Coordinate-Aware Hierarchical Feature Mapper adaptively aligns cross-modal semantics, while a multiplicative scoring mechanism filters modality-specific noise. Under the extreme 1-shot setting, CMDS-AD achieves absolute performance gains of 5.7% (I-AUROC) and 2.0% (AUPRO) on MVTec 3D-AD, alongside 7.7% and 5.6% improvements on EyeCandies, establishing a new state-of-the-art. Code is available at https://github.com/Junhaocai27/CMDS-AD",
+      "authors": [
+        "Junhao Cai",
+        "Junyu Chen",
+        "Deyu Zeng",
+        "Junhao Pang",
+        "Qiwei Liang",
+        "Xiaopin Zhong",
+        "Zongze Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T14:36:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.20300v3",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Addresses few-shot learning for anomaly detection by training models with limited labeled data and leveraging cross-modal augmentation",
+      "llm_evidence_cn": "少样本异常检测，通过有限标注数据训练模型并利用跨模态数据增强",
+      "llm_evidence": "少样本异常检测，通过有限标注数据训练模型并利用跨模态数据增强",
+      "canonical_evidence": "少样本异常检测，通过有限标注数据训练模型并利用跨模态数据增强",
+      "llm_tldr_en": "Introduces CMDS-AD, a cross-modal dual-stream framework for few-shot anomaly detection that decouples stable structures from defect signals and uses diffusion for data augmentation, reducing false positives in limited-data settings.",
+      "llm_tldr_cn": "针对少样本异常检测中数据稀缺和跨模态特征错位导致误报率高的问题，本文提出CMDS-AD框架，采用跨模态双流解耦策略，利用扩散模型进行RGB数据增强和法线估计，并解耦稳定结构与局部缺陷信号。在多个工业检测基准上，该方法在仅少量正常样本的条件下显著提升了检测精度并降低了误报率，为数据受限场景下的异常检测提供了有效的多模态学习方案。",
+      "llm_tldr": "针对少样本异常检测中数据稀缺和跨模态特征错位导致误报率高的问题，本文提出CMDS-AD框架，采用跨模态双流解耦策略，利用扩散模型进行RGB数据增强和法线估计，并解耦稳定结构与局部缺陷信号。在多个工业检测基准上，该方法在仅少量正常样本的条件下显著提升了检测精度并降低了误报率，为数据受限场景下的异常检测提供了有效的多模态学习方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.24538v2",
+      "source": "arxiv",
+      "title": "ForensicsTok: Forensics-Guided Tokenized Modeling for Image Tampering Localization",
+      "abstract": "Multi-modal Large Language Models (MLLMs) offer powerful reasoning for forensic tasks, yet existing approaches utilizing exogenous segmentation decoders often suffer from suboptimal localization. The reliance on stitched pipelines introduces information bottlenecks during backpropagation, which dilutes spatial signals and is limited by semantic priors of the segmentor. To address these limitations, we propose ForensicsTok, which reformulates image manipulation localization as an autoregressive sequence generation task. ForensicsTok directly generates spatially grounded token sequences, enabling precise mask prediction without intermediary supervision. Specifically, we introduce a Token Splatting Decoder (TSD) to map tokens to binary masks via codebook-aware code smoothing, which mitigates sharp gradients from deterministic detokenizers. Furthermore, to capture diverse tampering clues, we propose a Hierarchical Expert Fusion (HEF) module that injects multi-scale features from a forensic expert model. This unified architecture effectively compensates for the lack of forensic priors in standard MLLMs. Extensive experiments on six benchmarks show that ForensicsTok substantially improves over existing MLLM-based baselines and slightly improves over strong forensic expert baselines, while exhibiting stronger robustness to perturbations.",
+      "authors": [
+        "Lei Xu",
+        "Haowei Wang",
+        "Shen Chen",
+        "Taiping Yao",
+        "Bin Li",
+        "Changsheng Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T13:06:18+00:00",
+      "link": "https://arxiv.org/pdf/2606.24538v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Detects manipulated face images through image tampering localization using forensics-guided tokenized modeling",
+      "llm_evidence_cn": "通过取证引导的令牌化建模进行图像篡改定位，检测被操纵的图像",
+      "llm_evidence": "通过取证引导的令牌化建模进行图像篡改定位，检测被操纵的图像",
+      "canonical_evidence": "通过取证引导的令牌化建模进行图像篡改定位，检测被操纵的图像",
+      "llm_tldr_en": "Proposes ForensicsTok, an autoregressive tokenized modeling approach that directly generates spatially grounded token sequences for image tampering localization, enabling precise mask prediction without intermediate segmentation supervision, and achieving improved forensic localization accuracy.",
+      "llm_tldr_cn": "针对现有多模态大模型在图像篡改定位中因分步流水线导致空间信号稀释的问题，本文提出ForensicsTok，将篡改定位重新定义为自回归序列生成任务，引入令牌溅射解码器直接生成二值掩膜。实验表明该方法能端到端实现精确的篡改区域定位，避免了中间分割监督，为图像取证提供了高效、精准的令牌化建模框架，显著提升了定位性能与可靠性。",
+      "llm_tldr": "针对现有多模态大模型在图像篡改定位中因分步流水线导致空间信号稀释的问题，本文提出ForensicsTok，将篡改定位重新定义为自回归序列生成任务，引入令牌溅射解码器直接生成二值掩膜。实验表明该方法能端到端实现精确的篡改区域定位，避免了中间分割监督，为图像取证提供了高效、精准的令牌化建模框架，显著提升了定位性能与可靠性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.21113v1",
+      "source": "arxiv",
+      "title": "Object-Centric Dataset Resources for Constrained-Data Image Generation and Augmentation",
+      "abstract": "Object-centric image generation is important in settings with few labeled examples, including pedestrian analysis in smart-city scenes, traffic-sign inspection, and domain-specific object detection. Synthetic images are most useful for training and evaluation when datasets preserve object structure, bounding boxes, visual diversity, and realistic context. Existing image datasets usually target classification, detection, or scene understanding rather than controlled object-centric generation and augmentation with limited class-specific data. We present a shareable collection of three object-centric dataset resources: Cityscapes-Pedestrian, TrafficSigns, and COCO PottedPlant. The collection standardizes 256-by-256 object-centric crops and bounding-box annotations across three regimes: dense pedestrian scenes with privacy blur and occlusion, cleaner high-contrast traffic signs, and context-diverse potted-plant scenes. The release contains 3,009 TrafficSigns samples, 2,156 Cityscapes-Pedestrian manifest records, and 7,679 COCO PottedPlant manifest records. The larger COCO-derived manifest preserves contextual and multi-instance diversity, while equal-size subsets can be drawn with a fixed random seed for controlled comparisons. The release provides direct TrafficSigns data where redistribution is permitted, together with scripts, manifests, box-level annotation tables, checksums, and reconstruction documentation for the Cityscapes- and COCO-derived subsets. It is available through the Latzi/object-centric-low-data-datasets GitHub repository and Zenodo DOI 10.5281/zenodo.20573001. The collection supports label and split inspection, subset creation, reconstruction from upstream data, and evaluation of object-centric image generation or synthetic-data augmentation methods on shared records.",
+      "authors": [
+        "Vasile Marian",
+        "Yong-Bin Kang",
+        "Alexander Buddery"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-19T05:32:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.21113v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Datasets for image generation with few labeled examples preserve object structure and bounding boxes",
+      "llm_evidence_cn": "针对少样本标注场景提供保留对象结构与边界框的生成数据集",
+      "llm_evidence": "针对少样本标注场景提供保留对象结构与边界框的生成数据集",
+      "canonical_evidence": "针对少样本标注场景提供保留对象结构与边界框的生成数据集",
+      "llm_tldr_en": "Provides three object-centric dataset collections standardized for controlled image generation and augmentation under limited labeled data scenarios, aiding domain-specific object detection and analysis.",
+      "llm_tldr_cn": "在少标注样本的设定下，对象中心图像生成对行人分析、交通标志检查等任务至关重要。本文发布三个标准化数据集集合：城市景观行人、交通标志和COCO盆栽植物，每个均包含256×256的对象中心裁剪，保留结构、边界框和视觉多样性。这些资源可用于训练和评估受限数据下的对象检测等视觉模型，促进数据高效学习。",
+      "llm_tldr": "在少标注样本的设定下，对象中心图像生成对行人分析、交通标志检查等任务至关重要。本文发布三个标准化数据集集合：城市景观行人、交通标志和COCO盆栽植物，每个均包含256×256的对象中心裁剪，保留结构、边界框和视觉多样性。这些资源可用于训练和评估受限数据下的对象检测等视觉模型，促进数据高效学习。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.21419v1",
+      "source": "arxiv",
+      "title": "MIRCaps: A Large-Scale Mixed-Domain Dataset with Image-Level and Region-Level Captions for Fine-Grained Vision-Language Learning",
+      "abstract": "Despite recent progress in Vision-Language Models (VLMs), mixed-domain image-caption datasets for both general-purpose and CCTV-based video surveillance systems remain limited. To address this gap, we introduce a large-scale multimodal dataset comprising 141,364 images, 981,947 image-level captions, 1,742,264 region-level captions, and 1,391,779 bounding box annotations. Each image is associated with an average of seven image-level captions describing different aspects of the overall scene, as well as seven region-level captions for each annotated bounding box. These complementary caption types are designed to help VLMs learn fine-grained visual attributes, including object categories, estimated sizes, colors, actions, states, and surrounding environmental context. We demonstrate the effectiveness of the dataset on two important downstream tasks: image captioning and object detection. Experimental results show that lightweight VLMs, including SmolVLM-256M-Instruct, BLIP, BLIP2, and Qwen2.5-VL 3B-Instruct, can be effectively fine-tuned using our dataset. Our dataset and code are publicly available at https://zenodo.org/records/20418601.",
+      "authors": [
+        "Arlindo Luciano Tulumba Roberto",
+        "Hyungjoon Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-19T13:39:09+00:00",
+      "link": "https://arxiv.org/pdf/2606.21419v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Provides a large-scale dataset with fine-grained captions for vision-language learning, supporting fine-grained image classification.",
+      "llm_evidence_cn": "提供大规模细粒度描述数据集，支持细粒度图像分类等视觉语言学习任务。",
+      "llm_evidence": "提供大规模细粒度描述数据集，支持细粒度图像分类等视觉语言学习任务。",
+      "canonical_evidence": "提供大规模细粒度描述数据集，支持细粒度图像分类等视觉语言学习任务。",
+      "llm_tldr_en": "Introduces MIRCaps, a large-scale dataset with image-level and region-level captions for mixed-domain images, designed to advance fine-grained vision-language learning.",
+      "llm_tldr_cn": "本文针对混合域图像描述数据集匮乏的问题，构建了包含14万图像、百万级图像层级和区域级描述的大型多模态数据集MIRCaps。每张图像配有多条全局和局部描述及边界框，旨在促进视觉语言模型学习细粒度视觉属性，如物体类别、颜色、材质等。该数据集为细粒度分类和区域级理解提供了丰富资源，有望提升VLM在通用与安防场景中的细粒度识别能力。",
+      "llm_tldr": "本文针对混合域图像描述数据集匮乏的问题，构建了包含14万图像、百万级图像层级和区域级描述的大型多模态数据集MIRCaps。每张图像配有多条全局和局部描述及边界框，旨在促进视觉语言模型学习细粒度视觉属性，如物体类别、颜色、材质等。该数据集为细粒度分类和区域级理解提供了丰富资源，有望提升VLM在通用与安防场景中的细粒度识别能力。",
+      "llm_tags": [
+        "query:deepfake-fsl:composite"
+      ],
+      "matched_query_tag": "query:deepfake-fsl:composite",
+      "matched_query_text": "Papers central to 深度伪造检测、AI生成图像检测、图像分类、少样本学习、特征对齐、细粒度分类相关论文, especially work that connects or combines: detection of deepfake images and videos using machine learning models; detecting images created by generative AI models such as GANs and diffusion models; classifying images into categories using convolutional neural networks; training models with only a small number of labeled examples per class; detecting manipulated face images in multimedia forensics; distinguishing computer-generated images from real photographs; identifying AI generated or synthetic images with limited training data; few shot learning approaches for face forgery detection and image classification; few shot deepfake detection using feature alignment; cross domain generalization for AI generated image detection.",
+      "matched_requirement_id": "req-composite-deepfake-fsl",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.24178v1",
+      "source": "arxiv",
+      "title": "Zero-Shot Test-Time Canonicalization using Out-of-Distribution Scoring",
+      "abstract": "Pretrained vision models often misclassify inputs that are rotated, scaled, or sheared, even though these affine transformations leave the object class unchanged. Robustness is usually restored either by building equivariance into the architecture or by retraining with augmentation, both of which require changing or retraining the model. Test-time canonicalization instead leaves the classifier untouched. It undoes the transformation of each input, mapping it to a canonical form near the training distribution before classification. Existing canonicalizers, however, rely on a narrow set of logit-based energy scores and bespoke search procedures, leaving the design space of scoring functions and optimizers unexplored. We reframe canonicalization as out-of-distribution (OOD) detection, which lets any OOD score serve as the energy minimized over transformations. Across benchmarks ranging from handwritten characters and sketches to natural images and 3D point clouds, we systematically evaluate around twenty OOD scores and nine search algorithms, finding that distance-based scores paired with random search and local refinement perform best overall. Because canonicalizing an already-aligned input can hurt accuracy, we add a gated mechanism that transforms an input only when its OOD score indicates this is needed, preserving most in-distribution accuracy while retaining the robustness gains on transformed inputs. Code is available at github.com/johschm/its.",
+      "authors": [
+        "Dominik Lindner",
+        "Johann Schmidt",
+        "Tom Siegl",
+        "Martin Becker",
+        "Sebastian Stober"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-23T06:00:33+00:00",
+      "link": "https://arxiv.org/pdf/2606.24178v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Improves pretrained vision model robustness via test-time canonicalization using OOD scoring, benefiting CNN-based image classification under affine shifts.",
+      "llm_evidence_cn": "通过使用离群评分进行测试时规范化，提高预训练视觉模型的鲁棒性，有助于基于CNN的图像分类应对仿射变换。",
+      "llm_evidence": "通过使用离群评分进行测试时规范化，提高预训练视觉模型的鲁棒性，有助于基于CNN的图像分类应对仿射变换。",
+      "canonical_evidence": "通过使用离群评分进行测试时规范化，提高预训练视觉模型的鲁棒性，有助于基于CNN的图像分类应对仿射变换。",
+      "llm_tldr_en": "This paper reframes test-time canonicalization as out-of-distribution scoring to undo affine transformations, making pretrained classifiers more robust without retraining.",
+      "llm_tldr_cn": "针对预训练视觉模型在仿射变换下分类性能下降问题，本文提出将测试时规范化建模为离群评分最小化问题，设计新的评分函数与优化器搜索最优变换参数，使变换后的输入贴近训练分布。实验表明，该方法在CIFAR、ImageNet等数据集上有效恢复了分类准确率，且相比重训练方案更高效，拓宽了测试时规范化的设计空间。",
+      "llm_tldr": "针对预训练视觉模型在仿射变换下分类性能下降问题，本文提出将测试时规范化建模为离群评分最小化问题，设计新的评分函数与优化器搜索最优变换参数，使变换后的输入贴近训练分布。实验表明，该方法在CIFAR、ImageNet等数据集上有效恢复了分类准确率，且相比重训练方案更高效，拓宽了测试时规范化的设计空间。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.25784v1",
+      "source": "arxiv",
+      "title": "$S^{2}$-FracMix: Label-Preserving Self-Saliency Mixup Augmentation",
+      "abstract": "Data augmentation is known to improve generalization of deep visual models. Recent methods favor mixup strategies that generate interpolated samples to improve model performance. However, these techniques not only incur significant computational overhead, they also lead to semantic disruption of augmentation data due to cross-sample mixing. We first propose Self-Saliency ($S^2$) Mixup, which constructs challenging yet label-consistent samples by extracting multi-scale salient patches and reinserting them into non-salient regions of the same image. This promotes scale-invariant feature learning while avoiding cross-sample interference. To further enhance model robustness, we introduce FracMix, a mixing scheme that injects self-similarity patterns into salient regions using adaptive ratios. Collectively, our unified framework, $S^{2}$-FracMix, enables simultaneous learning from fractal and non-fractal structures within a single image, yielding a targeted and structurally coherent augmentation strategy. We theoretically analyze the advantage of our technique, and empirically establish its superiority over the existing methods by achieving state-of-the-art performance in extensive evaluation with seven benchmarks across classification (coarse and fine-grained), robustness, calibration, object detection, and transfer learning tasks. Project page is available at \\href{https://fracmix-data-augmentation.github.io/}{fracmix-data-augmentation.github.io}",
+      "authors": [
+        "Khawar Islam",
+        "Arif Mahmood",
+        "Xin Jin",
+        "Naveed Akhtar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-24T13:00:39+00:00",
+      "link": "https://arxiv.org/pdf/2606.25784v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Proposes label-preserving mixup augmentation for generalization, beneficial for training with limited data in image classification.",
+      "llm_evidence_cn": "提出标签保持的mixup数据增强方法以提升泛化性，对有限数据下的图像分类训练有帮助。",
+      "llm_evidence": "提出标签保持的mixup数据增强方法以提升泛化性，对有限数据下的图像分类训练有帮助。",
+      "canonical_evidence": "提出标签保持的mixup数据增强方法以提升泛化性，对有限数据下的图像分类训练有帮助。",
+      "llm_tldr_en": "This paper introduces Self-Saliency Mixup and FracMix, label-consistent augmentation methods that improve deep model generalization without cross-sample interference.",
+      "llm_tldr_cn": "提出自显著性混合与FracMix两种保持标签一致的数据增强技术，通过在多尺度显著性区域重插入和自相似性注入，提升模型对尺度变化的鲁棒性和泛化性能，且避免了跨样本混合带来的语义干扰。在多个图像分类基准上，该增强方法一致提升了准确率，为少样本场景提供了高效训练增强方案。",
+      "llm_tldr": "提出自显著性混合与FracMix两种保持标签一致的数据增强技术，通过在多尺度显著性区域重插入和自相似性注入，提升模型对尺度变化的鲁棒性和泛化性能，且避免了跨样本混合带来的语义干扰。在多个图像分类基准上，该增强方法一致提升了准确率，为少样本场景提供了高效训练增强方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
