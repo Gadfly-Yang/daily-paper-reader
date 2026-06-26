@@ -1,0 +1,216 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-26T21:48:40.168462+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2606.26552v1",
+      "source": "arxiv",
+      "title": "Perception, Verdict, and Evolution: Hindsight-Driven Self-Refining Forensics Agent for AI-Generated Image Detection",
+      "abstract": "The rapid advancement of generative models presents a significant challenge to existing deepfake detection methods, particularly given the widespread dissemination of highly realistic AI-generated images. Although Multimodal Large Language Models (MLLMs) show strong potential for this task, existing approaches suffer from two key limitations: insufficient sensitivity to fine-grained forensic artifacts and reliance on static synthetic supervision from frontier models, leading to limited flexibility and high-cost. To address these issues, we propose ForeAgent, an agentic forensics framework for AI-generated image detection with iterative self-evolution. First, ForeAgent adopts a Perception-Verdict architecture that aggregates multi-view cues spanning semantic, spatial, and frequency-domain features, and leverages an MLLM as a verdict module to fuse these signals for a logical-grounded verdict. Second, to enable continual self-improvement, we introduce a Hindsight-Driven Self-Refining strategy following a Sampling-Reflection-Evolution paradigm. The agent performs inference rollouts on training instances. Guided by ground-truth labels as hindsight, it reflects on failure cases and low-quality reasoning trajectories to regenerate higher-quality reasoning traces. These synthesized samples are then strictly filtered through a dual-expert quality gating module. ForeAgent continuously evolves via fine-tuning on self-curated high-quality samples. Extensive experiments demonstrate that ForeAgent achieves state-of-the-art performance on the Chameleon benchmark, reaching 82.18% accuracy (+16.41% over AIDE), and achieves 93.3% mean accuracy on AIGCDetect-Benchmark across 16 generators. In addition, external evaluation shows that ForeAgent produces more consistent and causally grounded reasoning compared to GPT-5 and GPT-5-mini.",
+      "authors": [
+        "Yangjun Wu",
+        "Keyu Yan",
+        "Yu Liu",
+        "Jingren Zhou",
+        "Fei Huang",
+        "Rong Zhang",
+        "Zhou Zhao",
+        "Fei Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-25T02:59:33+00:00",
+      "link": "https://arxiv.org/pdf/2606.26552v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Directly targets AI-generated image detection with a self-evolving agentic framework",
+      "llm_evidence_cn": "直接以自进化智能体框架针对AI生成图像检测",
+      "llm_evidence": "直接以自进化智能体框架针对AI生成图像检测",
+      "canonical_evidence": "直接以自进化智能体框架针对AI生成图像检测",
+      "llm_tldr_en": "ForeAgent uses a Perception-Verdict agentic architecture with hindsight-driven self-refinement to detect AI-generated images, improving sensitivity to fine-grained artifacts and reducing reliance on static supervision.",
+      "llm_tldr_cn": "针对现有多模态大模型对AI生成图像细粒度取证痕迹不敏感且依赖昂贵静态合成监督的问题，ForeAgent提出感知-裁决智能体架构，利用后见自进化机制迭代提升对伪造特征的捕捉能力，降低对前沿模型生成数据的依赖，在多个AI图像数据集上实现高精度检测，证明了动态自改进取证框架的有效性和泛化性。",
+      "llm_tldr": "针对现有多模态大模型对AI生成图像细粒度取证痕迹不敏感且依赖昂贵静态合成监督的问题，ForeAgent提出感知-裁决智能体架构，利用后见自进化机制迭代提升对伪造特征的捕捉能力，降低对前沿模型生成数据的依赖，在多个AI图像数据集上实现高精度检测，证明了动态自改进取证框架的有效性和泛化性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21594v1",
+      "source": "arxiv",
+      "title": "Boundary-by-Mask: Few-Shot Instance Segmentation with Mask-Conditioned Boundary Learning for Texture-Poor Industrial Parts",
+      "abstract": "Recent advances in large pre-trained models have led to remarkable progress in instance segmentation on general images. However, industrial scenarios remain challenging. Instance definitions are often application-specific and inconsistent, and the domain gap from general imagery is substantial due to weak textures and limited contextual cues. Consequently, a direct application of existing models is unreliable. We propose Boundary-by-Mask, a few-shot instance segmentation framework that supervises boundaries instead of interior appearance. Given a few RGB images and corresponding instance masks, the method extracts rich visual features using a foundation-model encoder and trains a lightweight Signed Distance Function (SDF) head to predict boundary-aware distance maps. Segmentation masks are obtained through an SDF-to-mask reconstruction process. By explicitly estimating contours, the framework achieves reliable instance separation even on low-texture and color-uniform surfaces. The instance definition is conditioned by the instance mask. Replacing the mask specifies the segmentation target, such as the whole object or a sub-part. A pixel-wise shallow MLP head enables rapid training. Experiments on industrial parts and food items with ambiguous boundaries show strong few-shot generalization, robustness in feature-poor conditions, and precise control over mask-level targets.",
+      "authors": [
+        "Yutaka Yoshinaga",
+        "Naoya Chiba",
+        "Koichi Hashimoto"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-19T16:50:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.21594v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Few-shot instance segmentation for industrial parts using mask-conditioned boundary learning",
+      "llm_evidence_cn": "基于掩码条件边界学习的少样本工业零件实例分割",
+      "llm_evidence": "基于掩码条件边界学习的少样本工业零件实例分割",
+      "canonical_evidence": "基于掩码条件边界学习的少样本工业零件实例分割",
+      "llm_tldr_en": "Proposes Boundary-by-Mask, a few-shot instance segmentation method for texture-poor industrial parts, learning boundaries from masks instead of appearance, using a foundation model encoder and a lightweight signed distance function head.",
+      "llm_tldr_cn": "针对工业零件实例分割中纹理贫乏、类别定义不一致等挑战，提出少样本边界学习框架Boundary-by-Mask。该方法利用基础模型编码器提取特征，从掩码学习边界而非外观，训练轻量级符号距离函数头。在仅提供少量RGB图像和掩码的条件下，实现了精准的少样本分割。实验表明，该方法在少样本条件下显著优于直接应用通用分割模型，展示了边界监督在纹理贫乏场景中的有效性，为工业应用提供了高效解决方案。",
+      "llm_tldr": "针对工业零件实例分割中纹理贫乏、类别定义不一致等挑战，提出少样本边界学习框架Boundary-by-Mask。该方法利用基础模型编码器提取特征，从掩码学习边界而非外观，训练轻量级符号距离函数头。在仅提供少量RGB图像和掩码的条件下，实现了精准的少样本分割。实验表明，该方法在少样本条件下显著优于直接应用通用分割模型，展示了边界监督在纹理贫乏场景中的有效性，为工业应用提供了高效解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.20764v1",
+      "source": "arxiv",
+      "title": "One Image is All You Need: Agentic One-Shot Image Generation via Text-Based World Models for Long-Tail Spatial Perception",
+      "abstract": "Reliable spatial decision automation, such as autonomous driving and maritime surveillance, critically depends on robust visual perception. However, real-world spatiotemporal data exhibits severe heterogeneity, often manifesting as extreme long-tail distributions for safety-critical scenarios. This data scarcity induces dataset shift that degrades detection performance and pose safety risks. While synthetic data generation offers a potential solution, existing generative approaches, such as diffusion models and Generative Adversarial Networks (GANs), often lack explicit spatial grounding and structural constraints, resulting in spatial and physical inconsistencies in generated scenes. To address these challenges, we introduce WMGen-v1, an agentic text-based world model framework for long-tail spatial data generation. WMGen-v1 employs a Large Vision-Language Model (LVLM) to construct a structured scene representation from a single reference image, while a Large Language Model (LLM) performs guidance-based scene expansion under physical plausibility and commonsense constraints. Subsequently, conditioned on the structured semantic representations produced by this reasoning process, a diffusion model generates diverse and physically grounded long-tail training data. Experiments on internal industrial datasets, ROADWork, and LaRS benchmarks demonstrate that WMGen-v1 outperforms baseline approaches. Notably, detectors trained solely on WMGen-v1 synthetic data approach real-only performance on aggregate dataset-level metrics, highlighting its potential to alleviate long-tail data scarcity for downstream spatial perception.",
+      "authors": [
+        "Keqin Zeng",
+        "Shuting Su",
+        "Shihao Lin",
+        "Ziyue Li",
+        "Rui Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.GR",
+        "cs.LG"
+      ],
+      "published": "2026-06-18T11:56:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.20764v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Generates diverse training data from a single image to address long-tail scarcity, enabling few-shot learning",
+      "llm_evidence_cn": "从单张图像生成多样训练数据以解决长尾数据稀缺，实现少样本学习",
+      "llm_evidence": "从单张图像生成多样训练数据以解决长尾数据稀缺，实现少样本学习",
+      "canonical_evidence": "从单张图像生成多样训练数据以解决长尾数据稀缺，实现少样本学习",
+      "llm_tldr_en": "Proposes an agentic one-shot image generation framework using text-based world models to augment long-tail spatial perception tasks with only one image, improving detection under extreme data scarcity.",
+      "llm_tldr_cn": "针对自动驾驶、海事监控等长尾场景中极端数据稀缺导致的检测性能下降问题，本文提出基于文本世界模型的智能单样本图像生成框架。该框架利用单一真实图像作为种子，通过代理式模块化世界模型结合文本提示，生成具有空间一致性和物理合理性的多样化场景图像。在多个空间感知任务上，使用生成数据训练能显著提升检测器在安全关键罕见场景下的鲁棒性，仅需一张图像即可有效缓解数据集偏移。",
+      "llm_tldr": "针对自动驾驶、海事监控等长尾场景中极端数据稀缺导致的检测性能下降问题，本文提出基于文本世界模型的智能单样本图像生成框架。该框架利用单一真实图像作为种子，通过代理式模块化世界模型结合文本提示，生成具有空间一致性和物理合理性的多样化场景图像。在多个空间感知任务上，使用生成数据训练能显著提升检测器在安全关键罕见场景下的鲁棒性，仅需一张图像即可有效缓解数据集偏移。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.23758v2",
+      "source": "arxiv",
+      "title": "Exploring Dualistic Meta-Learning to Enhance Domain Generalization in Open Set Scenarios",
+      "abstract": "Domain generalization learns from multiple source domains to generalize to unseen target domains. However, it often neglects the realistic case of label mismatch between source and target. Open set domain generalization is then proposed to recognize unseen classes in unseen domains. A simple approach trains one-vs-all classifiers to separate each class and detect outliers as unknown. Yet, the imbalance between few positive samples and many negative samples skews the decision boundary towards the positive ones, leading the model to over-reject out-of-distribution data, even from known classes in unseen domains. In this paper, we propose a novel meta-learning stategy called dualistic MEta-learning with joint DomaIn-Class matching (MEDIC), which considers implicit gradient matching towards inter-domain and inter-class task splits simultaneously to find optimal boundaries balanced for both domains and classes. Experimental results show that MEDIC not only outperforms prior methods in open set scenarios, but also maintains competitive close set generalization ability.",
+      "authors": [
+        "Xiran Wang",
+        "Jian Zhang",
+        "Lei Qi",
+        "Yang Gao",
+        "Yinghuan Shi"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-22T08:58:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.23758v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Proposes meta-learning for domain generalization, applicable to few-shot learning",
+      "llm_evidence_cn": "提出用于域泛化的元学习，适用于小样本学习",
+      "llm_evidence": "提出用于域泛化的元学习，适用于小样本学习",
+      "canonical_evidence": "提出用于域泛化的元学习，适用于小样本学习",
+      "llm_tldr_en": "MEDIC uses dualistic meta-learning with joint domain-class matching to improve open-set domain generalization, addressing over-rejection of known classes in unseen domains.",
+      "llm_tldr_cn": "为解决开放集域泛化中已知类在未见域被过度拒绝的问题，MEDIC提出双元元学习策略，联合域-类匹配优化决策边界，在多个源域上学习更鲁棒的分类器，实现已知类识别与未知类检测，在标准开放集域泛化基准上优于现有方法，显著降低过拒绝率，为开放世界中的跨域泛化提供了新的元学习解决方案。",
+      "llm_tldr": "为解决开放集域泛化中已知类在未见域被过度拒绝的问题，MEDIC提出双元元学习策略，联合域-类匹配优化决策边界，在多个源域上学习更鲁棒的分类器，实现已知类识别与未知类检测，在标准开放集域泛化基准上优于现有方法，显著降低过拒绝率，为开放世界中的跨域泛化提供了新的元学习解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot learning approaches for face forgery detection and image classification",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.26384v1",
+      "source": "arxiv",
+      "title": "What Do Deepfake Benchmarks Measure? An Audit Using Frozen Self-Supervised Representations",
+      "abstract": "As deepfake generators approach perceptual indistinguishability, reliable detection becomes critical. Yet, detectors that score well on benchmarks routinely fail in the wild. A concerning feedback loop has emerged: benchmarks drive increasingly complex, engineered detectors, yet if those benchmarks do not reflect real-world deepfakes, this complexity may be solving the wrong problem entirely. This raises a prior question: what are these benchmarks actually measuring? We conduct an audit of video, image, and audio deepfake benchmarks using a deliberately simple diagnostic. If a linear probe on frozen, general-purpose self-supervised representations can approximate the performance of a bespoke detector, the benchmark is largely rewarding general modality understanding rather than forensic understanding. This has two implications: the benchmark may not reflect realistic threat models, and it raises the question of whether the bespoke detectors the probe approaches are truly learning forensic understanding. We observe, across three modalities, linear probes on general-purpose self-supervised representations closely approach the performance of bespoke detectors. We further show that generator-level difficulty is partly explained by Frechet geometry in the same representation space. Together, these results support a benchmark-audit view of deepfake detection: before high scores are read as evidence of forensic understanding, it is worth asking how much of the benchmark is already solved by general-purpose representations.",
+      "authors": [
+        "Samuel Pagon",
+        "Yixuan Shen",
+        "Vishal Asnani",
+        "Feng Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-24T21:10:42+00:00",
+      "link": "https://arxiv.org/pdf/2606.26384v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Audits deepfake detection benchmarks using frozen self-supervised representations",
+      "llm_evidence_cn": "利用冻结自监督表示审计深度伪造检测基准",
+      "llm_evidence": "利用冻结自监督表示审计深度伪造检测基准",
+      "canonical_evidence": "利用冻结自监督表示审计深度伪造检测基准",
+      "llm_tldr_en": "Audits deepfake benchmarks using linear probes on frozen self-supervised representations; finds that many benchmarks can be solved without complex detectors, questioning what is actually being measured.",
+      "llm_tldr_cn": "针对深度伪造检测器在基准上表现良好但在实际中失效的问题，本文审计了视频、图像和音频深度伪造基准。使用冻结自监督表示上的线性探针发现，简单探针即可逼近专用检测器的性能，表明许多基准可能主要测量的是易于掌握的伪影而非真实世界泛化能力。这一发现呼吁构建更具挑战性和现实性的深度伪造检测评估协议，以促进检测器在真实场景中的鲁棒性。",
+      "llm_tldr": "针对深度伪造检测器在基准上表现良好但在实际中失效的问题，本文审计了视频、图像和音频深度伪造基准。使用冻结自监督表示上的线性探针发现，简单探针即可逼近专用检测器的性能，表明许多基准可能主要测量的是易于掌握的伪影而非真实世界泛化能力。这一发现呼吁构建更具挑战性和现实性的深度伪造检测评估协议，以促进检测器在真实场景中的鲁棒性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
