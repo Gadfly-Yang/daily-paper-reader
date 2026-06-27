@@ -6,35 +6,31 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-26
-- 运行时间：2026-06-26 21:52:12 UTC
+- 最新运行日期：2026-06-27
+- 运行时间：2026-06-27 20:52:33 UTC
 - 运行状态：成功
-- 本次总论文数：5
-- 精读区：3
+- 本次总论文数：3
+- 精读区：1
 - 速读区：2
 
 ### 今日简报（AI）
-今日精读两篇顶会论文，聚焦AI生成图像检测与小样本工业部件分割。最值得关注的是满分论文提出“后见之明”自反思鉴伪智能体，用判决-演化闭环大幅提升深伪检测鲁棒性。建议关注该方向开源代码与相关基准审计，警惕现有深伪评估的隐性偏差。
-- 详情：[/202606/26/README](/202606/26/README)
+今日精读对抗域提示生成助力单域泛化高分突破，并速览零样本蒸馏驱动高效视频学习与多模态统一路由新框架。  
+最值得关注：对抗性提示微调与伪标签空间蒸馏，分别在单域泛化和少标注视频学习中展现出强实用潜力。  
+建议跟踪“提示+对抗”的组合思路，在资源受限场景下快速提升模型跨域性能。
+- 详情：[/202606/27/README](/202606/27/README)
 
 ### 精读区论文标签
-1. [Perception, Verdict, and Evolution: Hindsight-Driven Self-Refining Forensics Agent for AI-Generated Image Detection](/202606/26/2606.26552v1-perception-verdict-and-evolution-hindsight-driven-self-refining-forensics-agent-for-ai-generated-image-detection)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：直接以自进化智能体框架针对AI生成图像检测
-2. [Boundary-by-Mask: Few-Shot Instance Segmentation with Mask-Conditioned Boundary Learning for Texture-Poor Industrial Parts](/202606/26/2606.21594v1-boundary-by-mask-few-shot-instance-segmentation-with-mask-conditioned-boundary-learning-for-texture-poor-industrial-parts)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：基于掩码条件边界学习的少样本工业零件实例分割
-3. [One Image is All You Need: Agentic One-Shot Image Generation via Text-Based World Models for Long-Tail Spatial Perception](/202606/26/2606.20764v1-one-image-is-all-you-need-agentic-one-shot-image-generation-via-text-based-world-models-for-long-tail-spatial-perception)  
+1. [Adversarial Domain Prompt Tuning and Generation for Single Domain Generalization](/202606/27/2606.21736v1-adversarial-domain-prompt-tuning-and-generation-for-single-domain-generalization)  
    标签：评分：8.0/10、query:deepfake-fsl
-   evidence：从单张图像生成多样训练数据以解决长尾数据稀缺，实现少样本学习
+   evidence：利用AI生成图像进行领域泛化，可应用于合成图像检测的跨域泛化
 
 ### 速读区论文标签
-1. [Exploring Dualistic Meta-Learning to Enhance Domain Generalization in Open Set Scenarios](/202606/26/2606.23758v2-exploring-dualistic-meta-learning-to-enhance-domain-generalization-in-open-set-scenarios)  
+1. [LEViL: Label-Efficient Video Learning via Zero-Shot Distillation over VLM-Generated Pseudo-Label Spaces](/202606/27/2606.21358v1-levil-label-efficient-video-learning-via-zero-shot-distillation-over-vlm-generated-pseudo-label-spaces)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：提出用于域泛化的元学习，适用于小样本学习
-2. [What Do Deepfake Benchmarks Measure? An Audit Using Frozen Self-Supervised Representations](/202606/26/2606.26384v1-what-do-deepfake-benchmarks-measure-an-audit-using-frozen-self-supervised-representations)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：利用冻结自监督表示审计深度伪造检测基准
+   evidence：利用VLM生成伪标签实现标签高效的视频学习框架。
+2. [SPAR: Semantic-Pixel Self-Alignment and Adaptive Routing for Unified Multimodal Models](/202606/27/2606.23041v1-spar-semantic-pixel-self-alignment-and-adaptive-routing-for-unified-multimodal-models)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：提出语义与像素特征对齐方法，可应用于少样本检测
 
 
 <div class="dpr-home-promo-card">

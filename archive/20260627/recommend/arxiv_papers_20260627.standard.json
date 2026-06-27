@@ -1,0 +1,134 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-27T20:50:11.778655+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2606.21736v1",
+      "source": "arxiv",
+      "title": "Adversarial Domain Prompt Tuning and Generation for Single Domain Generalization",
+      "abstract": "Single domain generalization (SDG) aims to learn a robust model, which could perform well on many unseen domains while there is only one single domain available for training. One of the promising directions for achieving single-domain generalization is to generate out-of-domain (OOD) training data through data augmentation or image generation. Given the rapid advancements in AI-generated content (AIGC), this paper is the first to propose leveraging powerful pre-trained text-to-image (T2I) foundation models to create the training data. However, manually designing textual prompts to generate images for all possible domains is often impractical, and some domain characteristics may be too abstract to describe with words. To address these challenges, we propose a novel Progressive Adversarial Prompt Tuning (PAPT) framework for pre-trained diffusion models. Instead of relying on static textual domains, our approach learns two sets of abstract prompts as conditions for the diffusion model: one that captures domain-invariant category information and another that models domain-specific styles. This adversarial learning mechanism enables the T2I model to generate images in various domain styles while preserving key categorical features. Extensive experiments demonstrate the effectiveness of the proposed method, achieving superior performances to state-of-the-art single-domain generalization approaches.",
+      "authors": [
+        "Zhipeng Xu",
+        "De Cheng",
+        "Xinyang Jiang",
+        "Nannan Wang",
+        "Dongsheng Li",
+        "Xinbo Gao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T20:46:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.21736v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Leverages AI-generated images for domain generalization, relevant to cross-domain detection of synthetic images",
+      "llm_evidence_cn": "利用AI生成图像进行领域泛化，可应用于合成图像检测的跨域泛化",
+      "llm_evidence": "利用AI生成图像进行领域泛化，可应用于合成图像检测的跨域泛化",
+      "canonical_evidence": "利用AI生成图像进行领域泛化，可应用于合成图像检测的跨域泛化",
+      "llm_tldr_en": "Proposes using text-to-image models with adversarial prompt tuning to generate diverse out-of-domain data for single domain generalization, applicable to cross-domain AI-generated image detection.",
+      "llm_tldr_cn": "针对单领域泛化任务，首次利用文本到图像基础模型生成多样化域外数据，通过对抗性提示调优自动生成无标注描述符，并结合提示条件生成器合成各类域图像，有效提升模型在未知域的泛化性能，为跨域AI生成图像检测提供通用数据增强策略。",
+      "llm_tldr": "针对单领域泛化任务，首次利用文本到图像基础模型生成多样化域外数据，通过对抗性提示调优自动生成无标注描述符，并结合提示条件生成器合成各类域图像，有效提升模型在未知域的泛化性能，为跨域AI生成图像检测提供通用数据增强策略。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.21358v1",
+      "source": "arxiv",
+      "title": "LEViL: Label-Efficient Video Learning via Zero-Shot Distillation over VLM-Generated Pseudo-Label Spaces",
+      "abstract": "Supervised video pretraining is a common transfer learning practice for improving downstream action recognition performance. However, it requires large-scale labeled source datasets, and the effectiveness of the learned initialization is influenced by the similarity between the source and target domains. Constructing such labeled pretraining datasets for different target domains is costly and difficult to scale. To address these limitations, this study proposes a label-efficient video learning framework that combines annotation-free video pretraining with target-label-set-aware fine-tuning. During pretraining, a vision-language model (VLM) generates textual descriptions of unlabeled videos, which are processed to construct an interpretable semantic pseudo-label space. A frozen video-language model then produces zero-shot soft target distributions over this space, allowing a student video encoder to learn semantically rich representations without manual source annotations. During downstream adaptation, target-label-set-aware fine-tuning combines supervised learning from labeled target videos with zero-shot distillation over the actual target label set, helping preserve VLM-derived semantic guidance while adapting the pretrained encoder to the target task. Experiments on UCF101 and HMDB51 show that the proposed framework outperforms the compared semi-supervised video action recognition methods across all evaluated limited-label regimes. Moreover, the annotation-free pretraining stage learns transferable representations that provide an effective initialization for full-data fine-tuning, despite relying on a comparatively modest unlabeled pretraining pool.",
+      "authors": [
+        "Aslı Çelik"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T12:01:10+00:00",
+      "link": "https://arxiv.org/pdf/2606.21358v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Label-efficient video learning framework using pseudo-labels from VLM for reduced annotation.",
+      "llm_evidence_cn": "利用VLM生成伪标签实现标签高效的视频学习框架。",
+      "llm_evidence": "利用VLM生成伪标签实现标签高效的视频学习框架。",
+      "canonical_evidence": "利用VLM生成伪标签实现标签高效的视频学习框架。",
+      "llm_tldr_en": "LEViL uses zero-shot distillation from VLM-generated pseudo-labels to enable annotation-free video pretraining, reducing labeled data needs for action recognition.",
+      "llm_tldr_cn": "为解决视频预训练对大规模标注数据的依赖，提出LEViL框架，利用VLM生成视频伪标签进行无标注预训练，再通过目标标签集感知微调。在动作识别任务上实现了显著的数据效率提升，为少标注场景下的视频学习提供了有效方案。",
+      "llm_tldr": "为解决视频预训练对大规模标注数据的依赖，提出LEViL框架，利用VLM生成视频伪标签进行无标注预训练，再通过目标标签集感知微调。在动作识别任务上实现了显著的数据效率提升，为少标注场景下的视频学习提供了有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.23041v1",
+      "source": "arxiv",
+      "title": "SPAR: Semantic-Pixel Self-Alignment and Adaptive Routing for Unified Multimodal Models",
+      "abstract": "Multimodal Large Language Models (MLLMs) have achieved remarkable success in visual understanding but remain constrained in visual generation due to the fundamental feature discrepancy between semantic perception and pixel-level reconstruction. Bridging this gap requires overcoming two core challenges: endowing semantic encoders with high-fidelity reconstruction capabilities, and effectively aligning generative models with semantic spaces without relying on external teachers. To this end, we propose a novel unified multimodal framework featuring \\textbf{S}emantic-\\textbf{P}ixel self-alignment and \\textbf{A}daptive \\textbf{R}outing (\\textbf{SPAR}). First, to reconcile semantic perception with pixel-level reconstruction, we introduce an asymmetric dual-stream unified tokenizer. A lightweight semantic stream anchors discriminative features, while a Transformer-augmented pixel stream recovers fine-grained visual details into a unified compact latent space. Second, to eliminate external dependencies, we propose a self-aligned generation paradigm that natively leverages this optimized tokenizer as an internal alignment teacher for the diffusion model. Furthermore, to facilitate flexible multimodal interaction within this unified space, we introduce Dynamic Token Routing, which enables each token to adaptively aggregate multi-layer MLLM features based on its distinct semantic demands. Extensive experiments demonstrate that SPAR establishes the state-of-the-art for unified architectures, achieving exceptional generation and reconstruction quality while preserving foundational visual understanding capabilities.",
+      "authors": [
+        "Hongxiang Li",
+        "Hongxu Chen",
+        "Chenyang Zhu",
+        "Xiaoshuang Huang",
+        "Jiayin Cai",
+        "Xiaolong Jiang",
+        "Yao Hu",
+        "Long Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T08:48:19+00:00",
+      "link": "https://arxiv.org/pdf/2606.23041v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Proposes feature alignment between semantic and pixel spaces, useful for few-shot detection methods",
+      "llm_evidence_cn": "提出语义与像素特征对齐方法，可应用于少样本检测",
+      "llm_evidence": "提出语义与像素特征对齐方法，可应用于少样本检测",
+      "canonical_evidence": "提出语义与像素特征对齐方法，可应用于少样本检测",
+      "llm_tldr_en": "Introduces a unified multimodal framework with semantic-pixel self-alignment and adaptive routing, bridging perception and generation; the alignment mechanism can benefit few-shot deepfake detection.",
+      "llm_tldr_cn": "针对多模态大模型在视觉生成中语义感知与像素重建之间的特征差异，提出语义-像素自对齐与自适应路由框架，通过内部特征对齐弥合两者鸿沟，实现理解与生成统一，其对齐方法可迁移至少样本文本生成图像检测等任务。",
+      "llm_tldr": "针对多模态大模型在视觉生成中语义感知与像素重建之间的特征差异，提出语义-像素自对齐与自适应路由框架，通过内部特征对齐弥合两者鸿沟，实现理解与生成统一，其对齐方法可迁移至少样本文本生成图像检测等任务。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot deepfake detection using feature alignment",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
