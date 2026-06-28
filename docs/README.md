@@ -6,31 +6,28 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-27
-- 运行时间：2026-06-27 20:52:33 UTC
+- 最新运行日期：2026-06-28
+- 运行时间：2026-06-28 21:23:38 UTC
 - 运行状态：成功
-- 本次总论文数：3
+- 本次总论文数：2
 - 精读区：1
-- 速读区：2
+- 速读区：1
 
 ### 今日简报（AI）
-今日精读对抗域提示生成助力单域泛化高分突破，并速览零样本蒸馏驱动高效视频学习与多模态统一路由新框架。  
-最值得关注：对抗性提示微调与伪标签空间蒸馏，分别在单域泛化和少标注视频学习中展现出强实用潜力。  
-建议跟踪“提示+对抗”的组合思路，在资源受限场景下快速提升模型跨域性能。
-- 详情：[/202606/27/README](/202606/27/README)
+今日精读满分论文探索AutoML驱动可持续深度学习，速读一篇图覆盖数据选择用于医学影像分类。  
+最值得关注：多目标超参数优化提升Deep Shift网络能效，以及一次性数据筛选在图覆盖框架下的创新思路。  
+建议读者尝试将AutoML能效优化思路落地到自身训练流程，也可留意稀疏数据选择在医学AI中的实用价值。
+- 详情：[/202606/28/README](/202606/28/README)
 
 ### 精读区论文标签
-1. [Adversarial Domain Prompt Tuning and Generation for Single Domain Generalization](/202606/27/2606.21736v1-adversarial-domain-prompt-tuning-and-generation-for-single-domain-generalization)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：利用AI生成图像进行领域泛化，可应用于合成图像检测的跨域泛化
+1. [Leveraging AutoML for Sustainable Deep Learning: A Multi-Objective HPO Approach on Deep Shift Neural Networks](/202606/28/2606.23208v1-leveraging-automl-for-sustainable-deep-learning-a-multi-objective-hpo-approach-on-deep-shift-neural-networks)  
+   标签：评分：10.0/10、query:deepfake-fsl
+   evidence：针对图像分类的深度移位神经网络自动优化完全符合要求。
 
 ### 速读区论文标签
-1. [LEViL: Label-Efficient Video Learning via Zero-Shot Distillation over VLM-Generated Pseudo-Label Spaces](/202606/27/2606.21358v1-levil-label-efficient-video-learning-via-zero-shot-distillation-over-vlm-generated-pseudo-label-spaces)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：利用VLM生成伪标签实现标签高效的视频学习框架。
-2. [SPAR: Semantic-Pixel Self-Alignment and Adaptive Routing for Unified Multimodal Models](/202606/27/2606.23041v1-spar-semantic-pixel-self-alignment-and-adaptive-routing-for-unified-multimodal-models)  
+1. [One-Shot Data Selection for Medical Image Classification via Graph Coverage](/202606/28/2606.22002v1-one-shot-data-selection-for-medical-image-classification-via-graph-coverage)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：提出语义与像素特征对齐方法，可应用于少样本检测
+   evidence：使用图覆盖的一次性数据选择训练有限标签的图像分类器
 
 
 <div class="dpr-home-promo-card">

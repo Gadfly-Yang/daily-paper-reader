@@ -1,0 +1,92 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-28T21:20:52.598791+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2606.23208v1",
+      "source": "arxiv",
+      "title": "Leveraging AutoML for Sustainable Deep Learning: A Multi-Objective HPO Approach on Deep Shift Neural Networks",
+      "abstract": "Deep Learning (DL) has advanced various fields by extracting complex patterns from large datasets. However, the computational demands of DL models pose environmental and resource challenges. Deep Shift Neural Networks (DSNNs) present a solution by leveraging shift operations to reduce computational complexity at inference. Compared to common DNNs, DSNNs are still less well understood and less well optimized. By leveraging AutoML techniques, we provide valuable insights into the potential of DSNNs and how to design them in a better way. We focus on image classification, a core task in computer vision, especially in low-resource environments. Since we consider complementary objectives such as accuracy and energy consumption, we combine state-of-the-art multi-fidelity (MF) hyperparameter optimization (HPO) with multi-objective optimization to find a set of Pareto optimal trade-offs on how to design DSNNs. Our approach led to significantly better configurations of DSNNs regarding loss and emissions compared to default DSNNs. This includes simultaneously increasing performance by about 20% and reducing emissions, in some cases by more than 60%. Investigating the behavior of quantized networks in terms of both emissions and accuracy, our experiments reveal surprising model-specific trade-offs, yielding the greatest energy savings. For example, in contrast to common expectations, quantizing smaller portions of the network with low precision can be optimal with respect to energy consumption while retaining or improving performance. We corroborated these findings across multiple backbone architectures, highlighting important nuances in quantization strategies and offering an automated approach to balancing energy efficiency and model performance.",
+      "authors": [
+        "Leona Hennig",
+        "Marius Lindauer"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-22T11:53:42+00:00",
+      "link": "https://arxiv.org/pdf/2606.23208v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "AutoML optimization of deep shift neural networks for image classification tasks directly matches the requirement.",
+      "llm_evidence_cn": "针对图像分类的深度移位神经网络自动优化完全符合要求。",
+      "llm_evidence": "针对图像分类的深度移位神经网络自动优化完全符合要求。",
+      "canonical_evidence": "针对图像分类的深度移位神经网络自动优化完全符合要求。",
+      "llm_tldr_en": "This paper explores AutoML hyperparameter optimization for deep shift neural networks (DSNNs) on image classification, balancing accuracy and energy to promote sustainable deep learning.",
+      "llm_tldr_cn": "本文研究使用自动机器学习(AutoML)对深度移位神经网络(DSNN)进行多目标超参数优化，在图像分类任务中兼顾精度与能耗，揭示了DSNN在低资源环境下的潜力，为可持续深度学习提供了设计指导。",
+      "llm_tldr": "本文研究使用自动机器学习(AutoML)对深度移位神经网络(DSNN)进行多目标超参数优化，在图像分类任务中兼顾精度与能耗，揭示了DSNN在低资源环境下的潜力，为可持续深度学习提供了设计指导。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.22002v1",
+      "source": "arxiv",
+      "title": "One-Shot Data Selection for Medical Image Classification via Graph Coverage",
+      "abstract": "Training medical image classifiers on entire datasets is wasteful when annotation budgets are limited: not all samples contribute equally, yet acquiring expert labels is expensive. Active learning reduces annotation cost through iterative querying, but assumes repeated access to an oracle and requires multiple rounds of model training. One-shot geometry-based methods such as facility location avoid retraining but operate on pairwise distances that ignore the local structure of the data manifold. We propose a graph-based one-shot selection method that operates entirely on frozen foundation model embeddings. Given embeddings from a pretrained encoder, we construct a k-nearest neighbor graph over all training samples and derive a two-term coverage kernel from the heat diffusion kernel, capturing both direct and two-hop neighborhood relationships. Greedy facility location on this kernel selects class-balanced subsets that maximize coverage of the data manifold. The two-term kernel matches the full spectral heat kernel in selection behavior while reducing computation to sparse matrix operations with a single hyperparameter. We evaluate on five MedMNIST datasets spanning histopathology, radiology, and microscopy, comparing against both training-dynamics and geometry-based baselines. Our method achieves the highest balanced accuracy on nine of ten dataset-ratio conditions, with the largest gains on class-imbalanced datasets where global graph construction captures cross-class structure that per-class methods miss, all without any model training during selection. Code is available at https://github.com/zahiriddin-rustamov/graph-coverage-selection.",
+      "authors": [
+        "Zahiriddin Rustamov",
+        "Nadia Badawi",
+        "Rafat Damseh",
+        "Nazar Zaki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-20T11:54:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.22002v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "One-shot data selection using graph coverage for training image classifiers with limited labels",
+      "llm_evidence_cn": "使用图覆盖的一次性数据选择训练有限标签的图像分类器",
+      "llm_evidence": "使用图覆盖的一次性数据选择训练有限标签的图像分类器",
+      "canonical_evidence": "使用图覆盖的一次性数据选择训练有限标签的图像分类器",
+      "llm_tldr_en": "We propose a one-shot data selection method using graph coverage on frozen embeddings, outperforming active learning and geometry-based methods on medical image classification tasks without iterative retraining.",
+      "llm_tldr_cn": "针对医学图像分类中标注预算有限的问题，本文提出一种基于图覆盖的一次性数据选择方法。利用冻结的基础模型嵌入构建k近邻图，导出两项覆盖核函数选择最具代表性的训练样本，无需迭代训练。在多个数据集上的实验表明，该方法比主动学习和基于距离的方法更能提升分类性能，为医学图像分析中的数据高效学习提供了新途径。",
+      "llm_tldr": "针对医学图像分类中标注预算有限的问题，本文提出一种基于图覆盖的一次性数据选择方法。利用冻结的基础模型嵌入构建k近邻图，导出两项覆盖核函数选择最具代表性的训练样本，无需迭代训练。在多个数据集上的实验表明，该方法比主动学习和基于距离的方法更能提升分类性能，为医学图像分析中的数据高效学习提供了新途径。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
