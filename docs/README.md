@@ -6,28 +6,32 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-28
-- 运行时间：2026-06-28 21:23:38 UTC
+- 最新运行日期：2026-06-29
+- 运行时间：2026-06-29 21:10:10 UTC
 - 运行状态：成功
-- 本次总论文数：2
-- 精读区：1
-- 速读区：1
+- 本次总论文数：3
+- 精读区：3
+- 速读区：0
 
 ### 今日简报（AI）
-今日精读满分论文探索AutoML驱动可持续深度学习，速读一篇图覆盖数据选择用于医学影像分类。  
-最值得关注：多目标超参数优化提升Deep Shift网络能效，以及一次性数据筛选在图覆盖框架下的创新思路。  
-建议读者尝试将AutoML能效优化思路落地到自身训练流程，也可留意稀疏数据选择在医学AI中的实用价值。
-- 详情：[/202606/28/README](/202606/28/README)
+今日精研AI生成图像检测：从“人像细节”到“模型融合”，揪出伪造痕迹。
+最值得关注：TruEye 聚焦人体局部伪影，实现细粒度检测；融合架构将 CNN 与 ViT 互补，大幅提升识别鲁棒性。
+想练火眼金睛？先关注人像毛发、手指等高频漏洞，再试试模型融合策略，对抗 Deepfake 新变种。
+- 详情：[/202606/29/README](/202606/29/README)
 
 ### 精读区论文标签
-1. [Leveraging AutoML for Sustainable Deep Learning: A Multi-Objective HPO Approach on Deep Shift Neural Networks](/202606/28/2606.23208v1-leveraging-automl-for-sustainable-deep-learning-a-multi-objective-hpo-approach-on-deep-shift-neural-networks)  
+1. [TruEye: Fine-Grained Detection of AI-Generated Human Subjects in Images](/202606/29/2606.27505v1-trueye-fine-grained-detection-of-ai-generated-human-subjects-in-images)  
    标签：评分：10.0/10、query:deepfake-fsl
-   evidence：针对图像分类的深度移位神经网络自动优化完全符合要求。
+   evidence：细粒度检测与定位图像中AI生成的人物
+2. [AI-Generated Image Recognition via Fusion of CNNs and Vision Transformers](/202606/29/2606.27637v1-ai-generated-image-recognition-via-fusion-of-cnns-and-vision-transformers)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：融合CNN和ViT进行AI生成图像识别，在CIFAKE上达到97.32%准确率
+3. [Beyond Sparse Supervision: Diffusion-Guided Learning for Few-Shot Graph Fraud Detection](/202606/29/2606.28134v1-beyond-sparse-supervision-diffusion-guided-learning-for-few-shot-graph-fraud-detection)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：扩散引导的增强与对比学习实现少样本图欺诈检测。
 
 ### 速读区论文标签
-1. [One-Shot Data Selection for Medical Image Classification via Graph Coverage](/202606/28/2606.22002v1-one-shot-data-selection-for-medical-image-classification-via-graph-coverage)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：使用图覆盖的一次性数据选择训练有限标签的图像分类器
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">

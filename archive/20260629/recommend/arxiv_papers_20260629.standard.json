@@ -1,0 +1,131 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-29T21:06:49.724246+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2606.27505v1",
+      "source": "arxiv",
+      "title": "TruEye: Fine-Grained Detection of AI-Generated Human Subjects in Images",
+      "abstract": "AI generated images are proliferating across the Internet. While some are used for entertainment, others are weaponized for fraud and social engineering attacks on social media users. Existing detectors overfit to generators seen during training, treat detection as opaque binary classification, or rely on costly Large Language Models (LLMs) to explain their outputs. In this paper, we present TruEye, a novel model for fine grained detection and localization of AI manipulated or AI generated humans and scenes. Unlike conventional detectors that assign a single authenticity label, TruEye is the first to distinguish among five compositional categories of synthetic content, including the most challenging case in which a real human is composited into a real scene where they were never physically present. At its core is a mask conditioned dual stream transformer that separates human and scene tokens while preserving patch level spatial correspondence. Specialized reasoning within each stream and region gated cross attention enforce semantic coherence between subject and background, while token level supervision and global compositional classification yield robust, interpretable predictions without invoking an LLM. By restricting intra stream attention to semantically coherent tokens, TruEye also runs over $100\\times$ faster than LLM based competitors. Experiments on 6 datasets and our newly curated FineSyn dataset, show that TruEye surpasses state of the art detectors with higher accuracy, faster inference, and stronger generalization to unseen AI generated or manipulated images.",
+      "authors": [
+        "Jay Barot",
+        "Dan Lin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-25T19:38:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.27505v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Fine-grained detection and localization of AI-generated human subjects in images",
+      "llm_evidence_cn": "细粒度检测与定位图像中AI生成的人物",
+      "llm_evidence": "细粒度检测与定位图像中AI生成的人物",
+      "canonical_evidence": "细粒度检测与定位图像中AI生成的人物",
+      "llm_tldr_en": "TruEye introduces fine-grained detection of AI-generated or manipulated humans, distinguishing five compositional categories and providing localization. It overcomes overfitting to generators and binary classification limits, offering more detailed and interpretable detection for combating fraud.",
+      "llm_tldr_cn": "针对现有AI生成图像检测器过拟合特定生成器、仅提供二分类或依赖大语言模型的局限，本文提出TruEye，首个能对AI生成或操纵人物进行五类细粒度检测与定位的模型，覆盖真人合成等最复杂场景。实验表明TruEye提升了检测精细度，并提供可解释的检测结果，有助于对抗虚假人脸图像带来的欺诈风险。",
+      "llm_tldr": "针对现有AI生成图像检测器过拟合特定生成器、仅提供二分类或依赖大语言模型的局限，本文提出TruEye，首个能对AI生成或操纵人物进行五类细粒度检测与定位的模型，覆盖真人合成等最复杂场景。实验表明TruEye提升了检测精细度，并提供可解释的检测结果，有助于对抗虚假人脸图像带来的欺诈风险。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.27637v1",
+      "source": "arxiv",
+      "title": "AI-Generated Image Recognition via Fusion of CNNs and Vision Transformers",
+      "abstract": "Recent advancements in synthetic data technology have opened a new era where images of remarkable quality are generated, blurring the lines between real-life images and those produced by Artificial Intelligence (AI). This evolution poses a significant challenge to ensuring the reliability and authenticity of data, underscoring the need for robust detection methods. In this paper, we present a robust approach aimed at addressing these pressing concerns. Our methodology revolves around leveraging fusion strategies, combining the strengths of multiple detection methods for identifying AI-generated images. Through extensive experimentation on the CIFAKE dataset, our model showcases remarkable performance, achieving an impressive accuracy rate of 97.32%. This accomplishment underscores the efficacy of our approach in accurately distinguishing between AI-generated images and real-life images, thus contributing to the advancement of data authentication techniques amidst the proliferation of synthetic data.",
+      "authors": [
+        "Xuan-Bach Mai",
+        "Hoang-Minh Nguyen-Huu",
+        "Quoc-Nghia Nguyen",
+        "Hoang-Tung Vu",
+        "Minh-Triet Tran",
+        "Trung-Nghia Le"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-26T01:27:45+00:00",
+      "link": "https://arxiv.org/pdf/2606.27637v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Fusion of CNNs and ViTs for AI-generated image recognition, achieving 97.32% accuracy on CIFAKE",
+      "llm_evidence_cn": "融合CNN和ViT进行AI生成图像识别，在CIFAKE上达到97.32%准确率",
+      "llm_evidence": "融合CNN和ViT进行AI生成图像识别，在CIFAKE上达到97.32%准确率",
+      "canonical_evidence": "融合CNN和ViT进行AI生成图像识别，在CIFAKE上达到97.32%准确率",
+      "llm_tldr_en": "This paper proposes a fusion of CNN and Vision Transformer models for recognizing AI-generated images, achieving 97.32% accuracy on the CIFAKE dataset, demonstrating effective detection of synthetic media.",
+      "llm_tldr_cn": "针对AI生成图像日益逼真带来的真实性挑战，本文提出融合卷积神经网络和视觉变换器优势的检测方法，在CIFAKE数据集上实验取得97.32%的高准确率，为可靠识别合成图像提供了鲁棒方案，对多媒体内容鉴伪具有重要意义。",
+      "llm_tldr": "针对AI生成图像日益逼真带来的真实性挑战，本文提出融合卷积神经网络和视觉变换器优势的检测方法，在CIFAKE数据集上实验取得97.32%的高准确率，为可靠识别合成图像提供了鲁棒方案，对多媒体内容鉴伪具有重要意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.28134v1",
+      "source": "arxiv",
+      "title": "Beyond Sparse Supervision: Diffusion-Guided Learning for Few-Shot Graph Fraud Detection",
+      "abstract": "Graph-based fraud detection is essential for safeguarding large-scale transaction systems, where undetected anomalies may lead to substantial financial losses and security risks. Real-world fraud graphs pose two coupled challenges: sparse and imbalanced supervision, where verified fraudulent labels are scarce and heavily skewed toward benign accounts, and representation dilution, where spatial message passing may oversmooth camouflaged anomalies while spectral filters may suppress fraud-relevant mid- and high-frequency irregularities. To address these challenges, we propose ADC-GNN, short for Attention-guided Diffusion-Contrastive Graph Neural Network, a unified framework that combines diffusion-guided feature augmentation, contrastive representation learning, and multi-hop spectral attention for few-shot graph fraud detection. The diffusion component is formulated as a feature-space denoising augmentation mechanism rather than a full topology-generative graph diffusion model: it constructs noise-perturbed node-feature views under a cosine schedule and uses contrastive learning to stabilize node representations across perturbations. The spectral attention module further adaptively emphasizes fraud-relevant hop-level and relation-level cues. We evaluate ADC-GNN primarily on three public benchmarks and additionally report a proprietary real-world telecom transaction dataset with approximately 60,000 records as a private case study. Under the 1% training setting, ADC-GNN achieves consistent improvements over original graph fraud baselines and four protocol-consistent recent graph anomaly/fraud baselines on the public benchmarks. Additional analyses on split stability, training ratios, oversampling alternatives, module-level ablations, diffusion schedules, and runtime and memory-consumption comparisons further characterize the effective operating regime of ADC-GNN.",
+      "authors": [
+        "Liming Liu",
+        "Chao Hu",
+        "Mingfei Lu",
+        "Yiwei Ge",
+        "Xingle Li",
+        "Heyuan Shi"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-26T14:34:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.28134v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Few-shot graph fraud detection with diffusion-guided augmentation and contrastive learning.",
+      "llm_evidence_cn": "扩散引导的增强与对比学习实现少样本图欺诈检测。",
+      "llm_evidence": "扩散引导的增强与对比学习实现少样本图欺诈检测。",
+      "canonical_evidence": "扩散引导的增强与对比学习实现少样本图欺诈检测。",
+      "llm_tldr_en": "This paper proposes ADC-GNN, a framework for few-shot fraud detection on graphs that combines diffusion-guided feature augmentation, contrastive learning, and attention to handle sparse and imbalanced labels. It addresses representation dilution issues in graph neural networks, outperforming existing methods on real-world fraud datasets.",
+      "llm_tldr_cn": "针对图欺诈检测中的稀疏、不平衡标签和表示稀释问题，提出ADC-GNN框架。通过扩散模型引导的特征增强丰富少数类样本，结合对比学习强化欺诈模式，并利用注意力机制聚焦关键信息。在真实交易数据集上，该少样本方法显著优于现有GNN，即使在仅有少量标注欺诈节点的情况下，仍能保持高检测精度，为金融安全提供了一种数据高效的解决方案。",
+      "llm_tldr": "针对图欺诈检测中的稀疏、不平衡标签和表示稀释问题，提出ADC-GNN框架。通过扩散模型引导的特征增强丰富少数类样本，结合对比学习强化欺诈模式，并利用注意力机制聚焦关键信息。在真实交易数据集上，该少样本方法显著优于现有GNN，即使在仅有少量标注欺诈节点的情况下，仍能保持高检测精度，为金融安全提供了一种数据高效的解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}
