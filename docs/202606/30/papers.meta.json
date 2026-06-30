@@ -1,0 +1,69 @@
+{
+  "label": "2026-06-30",
+  "date": "2026-06-30",
+  "generated_at": "2026-06-30T22:18:17",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202606/30/2606.24538v3-forensicstok-forensics-guided-tokenized-modeling-for-image-tampering-localization",
+      "section": "deep",
+      "title_en": "ForensicsTok: Forensics-Guided Tokenized Modeling for Image Tampering Localization",
+      "authors": "Lei Xu, Haowei Wang, Shen Chen, Taiping Yao, Bin Li, Changsheng Chen",
+      "date": "2026-06-23",
+      "pdf": "https://arxiv.org/pdf/2606.24538v3",
+      "score": "9.0",
+      "evidence": "直接解决图像篡改的取证定位任务",
+      "tldr": "针对现有多模态大模型方法依赖外部分割解码器导致空间信号稀释和信息瓶颈，ForensicsTok将图像篡改定位转化为自回归序列生成任务，通过Token Splatting Decoder实现令牌到掩码的平滑映射，并利用Hierarchical Expert Fusion注入多尺度取证特征。在六个基准上，该方法不仅显著优于基于MLLM的基线，还小幅超越强取证专家模型，同时展现出更强的抗扰动能力。该统一架构有效补偿了标准MLLM缺少的取证先验，为图像篡改定位开辟了新方向。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Multi-modal Large Language Models (MLLMs) offer powerful reasoning for forensic tasks, yet existing approaches utilizing exogenous segmentation decoders often suffer from suboptimal localization. The reliance on stitched pipelines introduces information bottlenecks during backpropagation, which dilutes spatial signals and is limited by semantic priors of the segmentor. To address these limitations, we propose ForensicsTok, which reformulates image manipulation localization as an autoregressive sequence generation task. ForensicsTok directly generates spatially grounded token sequences, enabling precise mask prediction without intermediary supervision. Specifically, we introduce a Token Splatting Decoder (TSD) to map tokens to binary masks via codebook-aware code smoothing, which mitigates sharp gradients from deterministic detokenizers. Furthermore, to capture diverse tampering clues, we propose a Hierarchical Expert Fusion (HEF) module that injects multi-scale features from a forensic expert model. This unified architecture effectively compensates for the lack of forensic priors in standard MLLMs. Extensive experiments on six benchmarks show that ForensicsTok substantially improves over existing MLLM-based baselines and slightly improves over strong forensic expert baselines, while exhibiting stronger robustness to perturbations.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/30/2606.28386v1-data-provenance-for-image-auto-regressive-generation",
+      "section": "deep",
+      "title_en": "Data Provenance for Image Auto-Regressive Generation",
+      "authors": "Bihe Zhao, Louis Kerner, Michel Meintz, Tameem Bakr, Franziska Boenisch, Adam Dziedzic",
+      "date": "2026-06-22",
+      "pdf": "https://arxiv.org/pdf/2606.28386v1",
+      "score": "9.0",
+      "evidence": "利用生成过程的特征模式追踪AI生成图像至源模型",
+      "tldr": "随着图像自回归模型（如LlamaGen）基于next-token预测实现快速照片级生成，其潜在的滥用威胁（如虚假新闻、深度伪造）亟需可靠的数据溯源手段。然而，主流水印技术必须在生成阶段嵌入信号，不适用于已发布的无标记内容或不支持水印的模型。本工作发现IAR生成过程中会遗留独特的特征模式，可作为事后溯源标志。提出一个无需修改模型或生成输出的溯源框架，通过鲁棒检测这些模式实现源模型标识。在多种IAR模型上的实验证实了该方法的高精度和通用性，为自回归图像生成提供了事后追溯、版权保护与鉴伪的关键能力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Image autoregressive models (IARs) have recently demonstrated remarkable capabilities in visual content generation, achieving photorealistic quality and rapid synthesis through the next-token prediction paradigm adapted from large language models. As these models become widely accessible, robust data provenance is required to reliably trace IAR-generated images to the source model that synthesized them. This is critical to prevent the spread of misinformation, detect fraud, and attribute harmful content. We find that although IAR-generated images often appear visually identical to real images, their generation process introduces characteristic patterns in their outputs, which serves as a reliable provenance signal for the generated images. Leveraging this, we present a post-hoc framework that enables the robust detection of such patterns for provenance tracing. Notably, our framework does not require modifications of the generative process or outputs. Thereby, it is applicable in contexts where prior watermarking methods cannot be used, such as for generated content that is already published without additional marks and for models that do not integrate watermarking. We demonstrate the effectiveness of our approach across a wide range of IARs, highlighting its high potential for robust data provenance tracing in autoregressive image generation.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/30/2606.30528v1-flow-leveraging-average-images-for-improving-generalisation-of-deepfake-faces-detectors",
+      "section": "deep",
+      "title_en": "$μ$Flow: Leveraging Average Images for Improving Generalisation of Deepfake Faces Detectors",
+      "authors": "Orazio Pontorno, Mattia Litrico, Luca Guarnera, Mario Valerio Giuffrida, Sebastiano Battiato",
+      "date": "2026-06-29",
+      "pdf": "https://arxiv.org/pdf/2606.30528v1",
+      "score": "9.0",
+      "evidence": "单类深度伪造检测器仅用真实图像训练，利用平均图像放大生成痕迹，提升对GAN和扩散模型的跨域泛化",
+      "tldr": "生成模型日益逼真，但现有深度伪造检测器依赖监督训练，跨生成器泛化受限。μFlow提出仅用真实图像训练，通过平均多张图像放大生成痕迹，利用归一化流将单图特征对齐至平均特征分布，获得高判别力的似然准则。在完全分布外设置下，μFlow显著超越SOTA检测器，展示了无需伪影即可实现强泛化的能力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Current generative models, including GANs and diffusion models, have reached an outstanding level of photorealism, posing significant risks to privacy and security. To ensure real-world applicability, deepfake detectors must generalise effectively to unseen generators. However, most existing approaches rely on supervised training with both real and fake images, which limits their generalisation especially across generators categories (e.g. GANs vs DMs). In this work, we introduce $μ$Flow, a one-class deepfake detector trained only on real images without relying on pseudo-deepfakes or synthetic artifacts. Our approach builds on the observation that averaging multiple images amplifies consistent generative traces, producing highly discriminative feature representations. We leverage this property by modelling the distribution of features extracted from averaged images and training a normalizing flow to align the feature space of individual images with this distribution. This alignment yields a likelihood-based criterion that separates real and fake samples while promoting strong generalisation. We evaluate $μ$Flow on a fully out-of-distribution setting, where both real and fake datasets are unseen during training. Experimental results show that our method significantly outperforms SOTA detectors. Project page: https://opontorno.github.io/MuFlow.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/30/2606.23069v2-rethinking-prototype-based-similarity-learning-for-few-shot-object-detection",
+      "section": "quick",
+      "title_en": "Rethinking Prototype-based Similarity Learning for Few-Shot Object Detection",
+      "authors": "KunHo Heo, Seungjae kim, Wongyu Lee, SuYeon Kim, MyeongAh Cho",
+      "date": "2026-06-22",
+      "pdf": "https://arxiv.org/pdf/2606.23069v2",
+      "score": "7.0",
+      "evidence": "提出文本锚定语义掩码和改进的相似度学习用于小样本目标检测，可应用于小样本人脸伪造检测",
+      "tldr": "少样本目标检测中基于原型的相似性学习受限于类间语义混淆与定位精度不足。本文提出文本锚定语义掩码（TSMa），利用文本特征引导通道级交互，扩大类间相似性边界以缓解混淆；并设计阶段对齐层次自回归回归（SHARe），利用ViT分层特征逐步细化边界框。在COCO基准上，方法取得新SOTA，超越先前最优10.1 nAP，验证了语义对齐与层次回归在少样本检测中的有效性。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Few-shot object detection aims to detect novel object categories from only a few labeled examples, avoiding costly large-scale annotation. Recent prototype-based similarity learning approaches enable training-free adaptation by matching query features with class prototypes. However, they suffer from two fundamental limitations: (i) class confusion arising from inter-class similarity margin collapse, and (ii) insufficient visual cues for precise localization, as similarity scores capture only class-level semantic affinity while providing limited spatial information. To address these issues, we introduce two complementary components. Text-Anchored Semantic Mask (TSMa) leverages class-level text features as semantic anchors to identify semantically aligned channels through channel-wise interaction between visual and text features. By suppressing style-induced spurious responses and emphasizing class-intrinsic signals, TSMa enlarges inter-class similarity margins and mitigates class confusion. We further propose Stage-Aligned Hierarchical Autoregressive Regression (SHARe), which reformulates localization as a hierarchical autoregressive process that progressively refines bounding boxes across multiple stages. SHARe leverages the layer-wise characteristics of ViT representations by aligning feature abstraction levels with regression stages: deeper layers guide early coarse localization, while shallower layers rich in edge and texture cues refine spatial details in later stages. Experiments on COCO demonstrate a new state of the art, outperforming the previous best by +10.1 nAP, with extensive analysis validating each component. The code is available at https://github.com/VisualScienceLab-KHU/ReSet.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

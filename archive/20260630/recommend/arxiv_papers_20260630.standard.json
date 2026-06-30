@@ -1,0 +1,175 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-30T22:13:33.474138+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2606.24538v3",
+      "source": "arxiv",
+      "title": "ForensicsTok: Forensics-Guided Tokenized Modeling for Image Tampering Localization",
+      "abstract": "Multi-modal Large Language Models (MLLMs) offer powerful reasoning for forensic tasks, yet existing approaches utilizing exogenous segmentation decoders often suffer from suboptimal localization. The reliance on stitched pipelines introduces information bottlenecks during backpropagation, which dilutes spatial signals and is limited by semantic priors of the segmentor. To address these limitations, we propose ForensicsTok, which reformulates image manipulation localization as an autoregressive sequence generation task. ForensicsTok directly generates spatially grounded token sequences, enabling precise mask prediction without intermediary supervision. Specifically, we introduce a Token Splatting Decoder (TSD) to map tokens to binary masks via codebook-aware code smoothing, which mitigates sharp gradients from deterministic detokenizers. Furthermore, to capture diverse tampering clues, we propose a Hierarchical Expert Fusion (HEF) module that injects multi-scale features from a forensic expert model. This unified architecture effectively compensates for the lack of forensic priors in standard MLLMs. Extensive experiments on six benchmarks show that ForensicsTok substantially improves over existing MLLM-based baselines and slightly improves over strong forensic expert baselines, while exhibiting stronger robustness to perturbations.",
+      "authors": [
+        "Lei Xu",
+        "Haowei Wang",
+        "Shen Chen",
+        "Taiping Yao",
+        "Bin Li",
+        "Changsheng Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T13:06:18+00:00",
+      "link": "https://arxiv.org/pdf/2606.24538v3",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Directly addresses image manipulation localization for forensics tasks",
+      "llm_evidence_cn": "直接解决图像篡改的取证定位任务",
+      "llm_evidence": "直接解决图像篡改的取证定位任务",
+      "canonical_evidence": "直接解决图像篡改的取证定位任务",
+      "llm_tldr_en": "Reformulates image manipulation localization as an autoregressive sequence generation task, using a Token Splatting Decoder to produce precise binary masks without intermediate segmentation.",
+      "llm_tldr_cn": "现有结合大语言模型的图像篡改定位方法存在信息瓶颈，本文提出ForensicsTok，将篡改定位转化为自回归序列生成任务，通过令牌飞溅解码器直接输出精确掩码。在多个取证数据集上，该方法无需中间监督即可实现精准的篡改区域分割，显著提升了定位性能。",
+      "llm_tldr": "现有结合大语言模型的图像篡改定位方法存在信息瓶颈，本文提出ForensicsTok，将篡改定位转化为自回归序列生成任务，通过令牌飞溅解码器直接输出精确掩码。在多个取证数据集上，该方法无需中间监督即可实现精准的篡改区域分割，显著提升了定位性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.28386v1",
+      "source": "arxiv",
+      "title": "Data Provenance for Image Auto-Regressive Generation",
+      "abstract": "Image autoregressive models (IARs) have recently demonstrated remarkable capabilities in visual content generation, achieving photorealistic quality and rapid synthesis through the next-token prediction paradigm adapted from large language models. As these models become widely accessible, robust data provenance is required to reliably trace IAR-generated images to the source model that synthesized them. This is critical to prevent the spread of misinformation, detect fraud, and attribute harmful content. We find that although IAR-generated images often appear visually identical to real images, their generation process introduces characteristic patterns in their outputs, which serves as a reliable provenance signal for the generated images. Leveraging this, we present a post-hoc framework that enables the robust detection of such patterns for provenance tracing. Notably, our framework does not require modifications of the generative process or outputs. Thereby, it is applicable in contexts where prior watermarking methods cannot be used, such as for generated content that is already published without additional marks and for models that do not integrate watermarking. We demonstrate the effectiveness of our approach across a wide range of IARs, highlighting its high potential for robust data provenance tracing in autoregressive image generation.",
+      "authors": [
+        "Bihe Zhao",
+        "Louis Kerner",
+        "Michel Meintz",
+        "Tameem Bakr",
+        "Franziska Boenisch",
+        "Adam Dziedzic"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-22T17:06:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.28386v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Traces AI-generated images to source model using characteristic generation patterns",
+      "llm_evidence_cn": "利用生成过程的特征模式追踪AI生成图像至源模型",
+      "llm_evidence": "利用生成过程的特征模式追踪AI生成图像至源模型",
+      "canonical_evidence": "利用生成过程的特征模式追踪AI生成图像至源模型",
+      "llm_tldr_en": "Proposes a method to trace autoregressive model-generated images to their source by leveraging characteristic generation patterns, addressing misinformation and fraud.",
+      "llm_tldr_cn": "针对自回归图像生成模型的溯源需求，本文发现模型输出中存在特征模式，可据此可靠地追踪生成图像至源模型。该方法有助于防止虚假信息传播和欺诈，为AI生成内容归因提供了新途径。实验验证了模式作为溯源信号的有效性。",
+      "llm_tldr": "针对自回归图像生成模型的溯源需求，本文发现模型输出中存在特征模式，可据此可靠地追踪生成图像至源模型。该方法有助于防止虚假信息传播和欺诈，为AI生成内容归因提供了新途径。实验验证了模式作为溯源信号的有效性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.30528v1",
+      "source": "arxiv",
+      "title": "$μ$Flow: Leveraging Average Images for Improving Generalisation of Deepfake Faces Detectors",
+      "abstract": "Current generative models, including GANs and diffusion models, have reached an outstanding level of photorealism, posing significant risks to privacy and security. To ensure real-world applicability, deepfake detectors must generalise effectively to unseen generators. However, most existing approaches rely on supervised training with both real and fake images, which limits their generalisation especially across generators categories (e.g. GANs vs DMs). In this work, we introduce $μ$Flow, a one-class deepfake detector trained only on real images without relying on pseudo-deepfakes or synthetic artifacts. Our approach builds on the observation that averaging multiple images amplifies consistent generative traces, producing highly discriminative feature representations. We leverage this property by modelling the distribution of features extracted from averaged images and training a normalizing flow to align the feature space of individual images with this distribution. This alignment yields a likelihood-based criterion that separates real and fake samples while promoting strong generalisation. We evaluate $μ$Flow on a fully out-of-distribution setting, where both real and fake datasets are unseen during training. Experimental results show that our method significantly outperforms SOTA detectors. Project page: https://opontorno.github.io/MuFlow.",
+      "authors": [
+        "Orazio Pontorno",
+        "Mattia Litrico",
+        "Luca Guarnera",
+        "Mario Valerio Giuffrida",
+        "Sebastiano Battiato"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-29T16:31:57+00:00",
+      "link": "https://arxiv.org/pdf/2606.30528v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "one-class deepfake detector trained only on real images, uses average images to amplify generative traces, improving generalization across GANs and diffusion models",
+      "llm_evidence_cn": "单类深度伪造检测器仅用真实图像训练，利用平均图像放大生成痕迹，提升对GAN和扩散模型的跨域泛化",
+      "llm_evidence": "单类深度伪造检测器仅用真实图像训练，利用平均图像放大生成痕迹，提升对GAN和扩散模型的跨域泛化",
+      "canonical_evidence": "单类深度伪造检测器仅用真实图像训练，利用平均图像放大生成痕迹，提升对GAN和扩散模型的跨域泛化",
+      "llm_tldr_en": "Proposes μFlow, a one-class deepfake detector trained only on real images that uses average images to amplify generative traces, achieving improved generalization across unseen generators without relying on pseudo-deepfakes.",
+      "llm_tldr_cn": "现有深度伪造检测器依赖有监督训练，在未见生成器上泛化有限。本文提出μFlow，一种单类检测器，仅用真实图像训练，通过平均多张图像放大生成伪影，无需伪深度伪造或合成假样本。实验表明，μFlow在跨生成器类别（如GAN与扩散模型）的泛化上表现优异，为现实世界的深度伪造检测提供了更鲁棒的解决方案。",
+      "llm_tldr": "现有深度伪造检测器依赖有监督训练，在未见生成器上泛化有限。本文提出μFlow，一种单类检测器，仅用真实图像训练，通过平均多张图像放大生成伪影，无需伪深度伪造或合成假样本。实验表明，μFlow在跨生成器类别（如GAN与扩散模型）的泛化上表现优异，为现实世界的深度伪造检测提供了更鲁棒的解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.23069v2",
+      "source": "arxiv",
+      "title": "Rethinking Prototype-based Similarity Learning for Few-Shot Object Detection",
+      "abstract": "Few-shot object detection aims to detect novel object categories from only a few labeled examples, avoiding costly large-scale annotation. Recent prototype-based similarity learning approaches enable training-free adaptation by matching query features with class prototypes. However, they suffer from two fundamental limitations: (i) class confusion arising from inter-class similarity margin collapse, and (ii) insufficient visual cues for precise localization, as similarity scores capture only class-level semantic affinity while providing limited spatial information. To address these issues, we introduce two complementary components. Text-Anchored Semantic Mask (TSMa) leverages class-level text features as semantic anchors to identify semantically aligned channels through channel-wise interaction between visual and text features. By suppressing style-induced spurious responses and emphasizing class-intrinsic signals, TSMa enlarges inter-class similarity margins and mitigates class confusion. We further propose Stage-Aligned Hierarchical Autoregressive Regression (SHARe), which reformulates localization as a hierarchical autoregressive process that progressively refines bounding boxes across multiple stages. SHARe leverages the layer-wise characteristics of ViT representations by aligning feature abstraction levels with regression stages: deeper layers guide early coarse localization, while shallower layers rich in edge and texture cues refine spatial details in later stages. Experiments on COCO demonstrate a new state of the art, outperforming the previous best by +10.1 nAP, with extensive analysis validating each component. The code is available at https://github.com/VisualScienceLab-KHU/ReSet.",
+      "authors": [
+        "KunHo Heo",
+        "Seungjae kim",
+        "Wongyu Lee",
+        "SuYeon Kim",
+        "MyeongAh Cho"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T09:18:00+00:00",
+      "link": "https://arxiv.org/pdf/2606.23069v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "proposes text-anchored semantic mask and improved similarity learning for few-shot object detection, applicable to few-shot face forgery detection",
+      "llm_evidence_cn": "提出文本锚定语义掩码和改进的相似度学习用于小样本目标检测，可应用于小样本人脸伪造检测",
+      "llm_evidence": "提出文本锚定语义掩码和改进的相似度学习用于小样本目标检测，可应用于小样本人脸伪造检测",
+      "canonical_evidence": "提出文本锚定语义掩码和改进的相似度学习用于小样本目标检测，可应用于小样本人脸伪造检测",
+      "llm_tldr_en": "This paper introduces a text-anchored semantic mask and enhanced similarity learning to address class confusion and localization for few-shot object detection, providing a viable approach for few-shot face forgery detection.",
+      "llm_tldr_cn": "本文针对小样本目标检测中原型相似度学习存在的类别混淆和定位不准问题，提出文本锚定语义掩码与改进的相似度学习组件。TSMa利用文本特征作为语义锚点筛选相关区域，增强判别力；同时引入空间信息改善定位。实验表明该方法在多个小样本检测基准上提升显著。其技术可直接用于小样本深度伪造检测场景。",
+      "llm_tldr": "本文针对小样本目标检测中原型相似度学习存在的类别混淆和定位不准问题，提出文本锚定语义掩码与改进的相似度学习组件。TSMa利用文本特征作为语义锚点筛选相关区域，增强判别力；同时引入空间信息改善定位。实验表明该方法在多个小样本检测基准上提升显著。其技术可直接用于小样本深度伪造检测场景。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot learning approaches for face forgery detection and image classification",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
