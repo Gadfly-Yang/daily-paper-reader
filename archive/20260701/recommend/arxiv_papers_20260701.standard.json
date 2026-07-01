@@ -1,0 +1,208 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-01T21:56:42.991496+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2606.29484v1",
+      "source": "arxiv",
+      "title": "The Calibrated Deepfake Trust Score (CDTS): Competence-Coupled Trust Degradation Across Deepfake Detectors",
+      "abstract": "Modern deepfake detectors are rarely consumed as bare classifiers. In moderation, provenance, and verification pipelines their output probability is read as a degree of trust, so its calibration matters as much as raw accuracy. We reframe deepfake detection as a calibrated, self-auditing trust instrument, the Calibrated Deepfake Trust Score (CDTS), and identify what governs its trustworthiness. Our central finding is a competence-calibration coupling: the calibration of the trust score degrades as the detector's discriminative competence falls. We establish it across 32 configurations (pooled Pearson r = -0.81), demonstrate it within a single dataset, reinforce it by inducing low competence directly, and replicate it on a fourth held-out dataset the detectors never trained on. It holds across three architecturally distinct detectors, two convolutional networks and a CLIP vision transformer (r = -0.88, -0.83, -0.86). The result is also deployable: a single calibrator frozen on in-domain data fails on exactly the low-competence generators the coupling flags (its error tracks competence at r = -0.98), and competence is estimable without labels, so a label-free monitor flags calibration risk on unseen generators and routing source-batches on a reference-free competence estimate lowers overall AURC and improves the low-to-mid coverage operating region relative to confidence-based routing. The same competence factor also drives calibration inequity across demographic subgroups (distinct from accuracy inequity) and explanation faithfulness. We therefore argue that detector trustworthiness is organized by competence as a shared driver, that competence is the right quantity to estimate and condition on, and that trust scoring must be competence-aware. We offer the CDTS wrapper as the mechanism, and report openly where the unification is tight and where it is architecture-specific.",
+      "authors": [
+        "Md Anas Biswas"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-28T16:29:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.29484v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes Calibrated Deepfake Trust Score to study trust degradation in deepfake detectors",
+      "llm_evidence_cn": "提出校准深度伪造信任评分研究检测器信任退化",
+      "llm_evidence": "提出校准深度伪造信任评分研究检测器信任退化",
+      "canonical_evidence": "提出校准深度伪造信任评分研究检测器信任退化",
+      "llm_tldr_en": "The paper reframes deepfake detection as a calibrated trust instrument, finding that calibration degrades as detector competence falls, which is crucial for trustworthy deployment.",
+      "llm_tldr_cn": "将深度伪造检测重构为校准信任评分工具，发现检测器的校准能力会随其判别能力下降而退化，该耦合关系在32种配置中被验证，强调了在部署深度伪造检测系统时必须保证校准的可靠性。",
+      "llm_tldr": "将深度伪造检测重构为校准信任评分工具，发现检测器的校准能力会随其判别能力下降而退化，该耦合关系在32种配置中被验证，强调了在部署深度伪造检测系统时必须保证校准的可靠性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.31004v1",
+      "source": "arxiv",
+      "title": "Auditing Generalization in AI-Generated Video Detection: A Six-Control Protocol and the VidAudit Toolkit",
+      "abstract": "AI-generated video detection benchmarks such as GenVidBench and AIGVDBench are the de facto leaderboards, yet most evaluation protocols leave uncontrolled confounds that can inflate reported generalization. As an existence proof, a three-feature clip-length classifier reaches a leave-one-generator-out (LOGO) AUC of 0.998 on GenVidBench under unaudited evaluation, while measuring nothing about motion. A 20-paper survey finds none applying all six standard controls that would catch this, so we combine them into an audited protocol and apply it to six representative feature sources (three published detectors and three repurposed signal sources), re-running it cross-dataset on AIGVDBench. The audit both debunks and certifies: the trivial classifier collapses to near chance (0.529), a CLIP baseline is caught carrying dataset identity, and the 2025 forensic detector WaveRep clears the floor at out-of-distribution LOGO AUC 0.996 with chance-level real-vs-real coherence. At a deployable FPR of 0.1%, multiple high-AUC methods fall to single-digit recall and the leaderboard order changes, so we recommend an audited tuple (AUC, above-floor margin, operating-point recall, and calibration) over a single number. As a white-box positive control, we add TemporalSpec (codec motion vectors); via cross-substrate feature fusion (XSFF), a second substrate adds genuine complementarity that survives the audit. We release VidAudit, to our knowledge the largest unified and audited detector collection for this task, providing 14 detectors behind one plugin API, a leaderboard, and Croissant metadata, available at https://github.com/KurbanIntelligenceLab/vidaudit. Together, the protocol and toolkit move evaluation from leaderboard rank toward whether a result measures what it claims.",
+      "authors": [
+        "Mert Onur Cakiroglu",
+        "Zhihe Lu",
+        "Mehmet Dalkilic",
+        "Hasan Kurban"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-30T00:29:53+00:00",
+      "link": "https://arxiv.org/pdf/2606.31004v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "audits generalization of AI-generated video detection with a six-control protocol and VidAudit toolkit",
+      "llm_evidence_cn": "通过六项控制协议和VidAudit工具包审计AI生成视频检测的泛化性",
+      "llm_evidence": "通过六项控制协议和VidAudit工具包审计AI生成视频检测的泛化性",
+      "canonical_evidence": "通过六项控制协议和VidAudit工具包审计AI生成视频检测的泛化性",
+      "llm_tldr_en": "The paper reveals confounds in AI-generated video detection benchmarks and proposes an audited protocol that debunks inflated generalization, providing a more reliable evaluation standard.",
+      "llm_tldr_cn": "针对现有AI生成视频检测基准中泛化性评估不严谨的问题，提出包含六项控制的审计协议和VidAudit工具包，发现现有评测因未控制混淆因素而虚高，通过审计去除虚假泛化，为AI生成视频检测提供了更可靠的评估标准。",
+      "llm_tldr": "针对现有AI生成视频检测基准中泛化性评估不严谨的问题，提出包含六项控制的审计协议和VidAudit工具包，发现现有评测因未控制混淆因素而虚高，通过审计去除虚假泛化，为AI生成视频检测提供了更可靠的评估标准。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.31082v1",
+      "source": "arxiv",
+      "title": "Fleet: Few Shots Lead Effective AI-generated Image Detection",
+      "abstract": "AI-generated image (AIGI) detection is undergoing a critical transition from laboratory benchmarks to open-world adversarial defense. The prevalent paradigm focuses on finding static feature spaces, assuming that some invariant artifacts learned from historical data can achieve universal zero-shot generalization. While achieving saturation on several AIGI benchmarks, this static hypothesis suffers a severe performance drop against rapidly evolving generators (e.g., SD3, Nano Banana Pro). To address these limitations, we propose that the field should expand beyond \"static generalization\" to a new paradigm of \"dynamic adaptation\". We introduce Fleet, a framework that pioneers a dynamic paradigm of continuous few-shot evolution, enabling rapid alignment with emerging generative threats. Fleet improves few-shot adaptation by replacing unconstrained feature updates with constrained routing correction, where avoidance routing redirects novel AI samples away from Non-AI-dominated routes within decoupled subspaces. To validate this, we present Treasure, a benchmark spanning 64 models and 360k images, featuring diverse architectures and 20 closed-source commercial engines. Experiments reveal that while static SOTA methods fail catastrophically on modern generators, Fleet restores performance from 20.4% to 73.1% with only 10-shot adaptation on \"Doubao Seedream 4.0\". Code and data are available at https://github.com/ICTMCG/Fleet .",
+      "authors": [
+        "Jiaan Wang",
+        "Sirui Liu",
+        "Yu Li",
+        "Kaiyuan Yang",
+        "Juan Cao",
+        "Sheng Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-30T03:15:52+00:00",
+      "link": "https://arxiv.org/pdf/2606.31082v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "few-shot dynamic adaptation for AI-generated image detection",
+      "llm_evidence_cn": "少样本动态适应检测AI生成图像",
+      "llm_evidence": "少样本动态适应检测AI生成图像",
+      "canonical_evidence": "少样本动态适应检测AI生成图像",
+      "llm_tldr_en": "Introduces Fleet, a few-shot evolution framework for AI-generated image detection that dynamically adapts to new generators, overcoming the failure of static feature-based detectors against rapidly evolving models like SD3.",
+      "llm_tldr_cn": "提出Fleet框架，通过持续少样本进化实现AI生成图像检测的动态适应，解决了静态特征检测器面对快速演进的生成器（如SD3）时失效的问题。在多个基准上，Fleet展示了优于静态方法的泛化能力，为开放世界防御提供了新范式。",
+      "llm_tldr": "提出Fleet框架，通过持续少样本进化实现AI生成图像检测的动态适应，解决了静态特征检测器面对快速演进的生成器（如SD3）时失效的问题。在多个基准上，Fleet展示了优于静态方法的泛化能力，为开放世界防御提供了新范式。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot learning approaches for face forgery detection and image classification",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.30795v1",
+      "source": "arxiv",
+      "title": "Simple Supervision Is Hard to Beat: A Bitter Lesson from Sparse Target Labels in Domain-Adaptive Object Detection",
+      "abstract": "Source-free domain adaptive object detection adapts a source-trained detector to an unlabeled target domain, typically through teacher-student self-training with pseudo-labels. We revisit this setting when a small, uniformly sampled subset of target images is labeled. We introduce Random-Target Supervised Mixing (RTSM), a simple anchor that incorporates these annotations through a supervised detection loss while leaving the original unlabeled adaptation branch unchanged. Across evaluations spanning four SFDA-OD methods, two object detectors, multiple adaptation tasks, and target-label budgets from 1% to 10%, RTSM consistently improves pure SFDA by 1.7 to 18.3 AP50. We then examine whether the same annotations can provide further gains by steering unlabeled self-training. To this end, we evaluate ten sparse-label feedback plugins covering pseudo-label selection, object completion, and optimization control, which yield limited and method-dependent gains over RTSM. These results reveal a bitter lesson for sparse-label SFDA-OD: simple supervision is hard to beat. RTSM therefore provides a simple yet effective anchor for sparse-label SFDA-OD.",
+      "authors": [
+        "Lijun Zhang",
+        "Ruinian Xu",
+        "Mudit Agrawal"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-29T18:21:09+00:00",
+      "link": "https://arxiv.org/pdf/2606.30795v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "improving domain adaptation with a small set of labeled target images, directly addresses few-shot learning",
+      "llm_evidence_cn": "使用少量标注目标图像改进域自适应，直接回应少样本学习",
+      "llm_evidence": "使用少量标注目标图像改进域自适应，直接回应少样本学习",
+      "canonical_evidence": "使用少量标注目标图像改进域自适应，直接回应少样本学习",
+      "llm_tldr_en": "Shows that adding a small subset (1-10%) of labeled target images with a simple supervised loss significantly boosts source-free domain adaptive object detection.",
+      "llm_tldr_cn": "该论文重新审视源域自由域自适应目标检测中少量有标签目标数据的作用，提出简单的随机目标监督混合方法（RTSM），在保留无标注分支的同时加入监督检测损失，实验表明仅1%-10%的标注即可将纯无监督方法提升1.7到18.3 AP50，揭示了少量标注在域自适应中的极高性价比。",
+      "llm_tldr": "该论文重新审视源域自由域自适应目标检测中少量有标签目标数据的作用，提出简单的随机目标监督混合方法（RTSM），在保留无标注分支的同时加入监督检测损失，实验表明仅1%-10%的标注即可将纯无监督方法提升1.7到18.3 AP50，揭示了少量标注在域自适应中的极高性价比。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.29714v1",
+      "source": "arxiv",
+      "title": "UniVAD v2: Unified Visual Anomaly Detection via Support-Conditioned Boundary Construction",
+      "abstract": "Unified visual anomaly detection seeks to train a single detector that can be deployed across categories, domains, and application scenarios. In the few-shot transfer regime, the key challenge is to estimate an episode-specific boundary for an unseen target category from a small support set. Existing approaches mainly infer this boundary from normal-side evidence and provide limited abnormal-side evidence for deployment-specific tolerance. Within the normal side, they often struggle to jointly capture local correspondences and global support-query relations, making their boundaries less reliable for unseen anomalies. To address these issues, we propose UniVAD v2, a two-sided support-conditioned boundary construction framework for unified visual anomaly detection. Built on the component-patch divide-and-conquer framework of UniVAD, UniVAD v2 strengthens the normal side with an Optimal Transport-based Relational Modeling module (OTRM), which complements retrieval with support-query matching through transport-style allocation, and an Adaptive Coordination mechanism for Retrieval and Relational Modeling (ACRRM), which estimates episode-conditioned reliabilities to fuse the two sources of evidence. On the abnormal side, a Few-Shot Abnormal Reference module (FAR) converts optional abnormal references into rejection-side evidence for boundary adjustment. Experiments on six datasets spanning industrial, logical, and medical anomaly detection demonstrate strong cross-domain generalization. Under the 1N-shot protocol, UniVAD v2 improves the mean image-level AUC over UniVAD from 83.0\\% to 84.5\\%, and further reaches 85.7\\% in the 1N+1A-shot setting. On the MVTec-AD Severity Split (MVTec-AD-SS), UniVAD v2 achieves 96.2\\% image-level AUC and 96.9\\% pixel-level AUC, showing that abnormal references enable controllable boundary customization without retraining.",
+      "authors": [
+        "Zhaopeng Gu",
+        "Bingke Zhu",
+        "Zhaowen Li",
+        "Guibo Zhu",
+        "Yingying Chen",
+        "Ming Tang",
+        "Peng Su",
+        "Jinqiao Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-29T02:38:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.29714v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "few-shot anomaly detection using support set for boundary construction",
+      "llm_evidence_cn": "利用支持集构建边界的少样本异常检测",
+      "llm_evidence": "利用支持集构建边界的少样本异常检测",
+      "canonical_evidence": "利用支持集构建边界的少样本异常检测",
+      "llm_tldr_en": "UniVAD v2 proposes a two-sided support-conditioned boundary framework for unified visual anomaly detection in few-shot transfer, improving reliability for unseen anomalies.",
+      "llm_tldr_cn": "统一视觉异常检测在少样本迁移场景下难以从未见类别的小支持集中估计可靠决策边界。本文提出UniVAD v2，一种双边支持条件边界构建框架，同时利用正常和异常侧证据建立更鲁棒的边界。该方法能联合捕获局部对应与全局关系，提升了少样本异常检测的可靠性，适用于跨类别、跨域的异常检测任务。",
+      "llm_tldr": "统一视觉异常检测在少样本迁移场景下难以从未见类别的小支持集中估计可靠决策边界。本文提出UniVAD v2，一种双边支持条件边界构建框架，同时利用正常和异常侧证据建立更鲁棒的边界。该方法能联合捕获局部对应与全局关系，提升了少样本异常检测的可靠性，适用于跨类别、跨域的异常检测任务。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

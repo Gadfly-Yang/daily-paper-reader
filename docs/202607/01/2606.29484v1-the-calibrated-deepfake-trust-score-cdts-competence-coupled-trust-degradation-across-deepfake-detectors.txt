@@ -1,0 +1,1783 @@
+Title: 2606.29484v1.pdf
+
+URL Source: https://arxiv.org/pdf/2606.29484v1
+
+Published Time: Tue, 30 Jun 2026 01:19:43 GMT
+
+Number of Pages: 27
+
+Markdown Content:
+The Calibrated Deepfake Trust Score (CDTS): Competence-
+
+# Coupled Trust Degradation Across Deepfake Detectors 
+
+Md Anas Biswas 
+
+School of Computing, University of Portsmouth, Portsmouth, United Kingdom 
+
+> up2082724@myport.ac.uk · ORCID: 0009-0009-0113-5816
+
+Abstract 
+
+Modern deepfake detectors are rarely consumed as bare classifiers. In moderation, provenance, and 
+
+verification pipelines their output probability is read as a degree of trust, so its calibration matters as much as 
+
+raw accuracy. We reframe deepfake detection as a calibrated, self-auditing trust instrument, the Calibrated 
+
+Deepfake Trust Score (CDTS), and identify what governs its trustworthiness. Our central finding is a 
+
+competence–calibration coupling : the calibration of the trust score degrades as the detector’s 
+
+discriminative competence falls. We establish it across 32 configurations (pooled Pearson r = −0.81), 
+
+demonstrate it within a single dataset, reinforce it by inducing low competence directly, and replicate it on a 
+
+fourth held-out dataset the detectors never trained on. It holds across three architecturally distinct detectors, 
+
+two convolutional networks and a CLIP vision transformer (r = −0.88, −0.83, −0.86). The result is also 
+
+deployable: a single calibrator frozen on in-domain data fails on exactly the low-competence generators the 
+
+coupling flags (its error tracks competence at r = −0.98), and competence is estimable without labels, so a 
+
+label-free monitor flags calibration risk on unseen generators and routing source-batches on a reference-free 
+
+competence estimate lowers overall AURC and improves the low-to-mid coverage operating region relative 
+
+to confidence-based routing. The same competence factor also drives calibration inequity across 
+
+demographic subgroups (distinct from accuracy inequity) and explanation faithfulness. We therefore argue 
+
+that detector trustworthiness is organized by competence as a shared driver, that competence is the right 
+
+quantity to estimate and condition on, and that trust scoring must be competence-aware. We offer the CDTS 
+
+wrapper as the mechanism, and report openly where the unification is tight and where it is architecture-
+
+specific. 
+
+Keywords:  deepfake detection; calibration; trustworthy machine learning; explanation faithfulness; 
+
+algorithmic fairness; calibration equity; selective prediction; distribution shift; model monitoring  
+
+> Figure 1. The CDTS wrapper. Any backbone's logit is mapped through a post-hoc calibrator to a trust score, augmented with a
+> label-free competence monitor that drives a zero-trust routing policy. The equity audit and explanation-faithfulness analysis are
+> evaluated on the trust score. Detection competence is the shared driver of these trust properties; the coupling and label-free
+> monitoring hold across CNN and transformer backbones (Sections 4.4, 7.2).
+
+11 Introduction 
+
+1.1 Detectors are consumed as trust signals 
+
+Deepfake detection is no longer an academic exercise in binary classification. As synthetic media has 
+
+moved into political communication, fraud, and non-consensual imagery, detectors have been embedded 
+
+into operational pipelines, content moderation at platform scale, media-provenance frameworks, identity 
+
+verification, and journalistic verification, where their output is not a verdict but an input to a downstream 
+
+decision. In these settings a detector's probability is interpreted as a degree of trust: a moderation system 
+
+escalates content in proportion to how confident the detector is that it is manipulated, and a verification 
+
+workflow passes or holds an asset based on where its score falls. What is consumed is therefore the 
+
+calibrated meaning of the probability, not merely the sign of a thresholded decision. 
+
+This shift makes calibration a first-order property. A detector whose 0.9 outputs are wrong nine times in ten 
+
+is dangerous in a way that a detector with the same accuracy but honest uncertainty is not, because confident 
+
+errors propagate silently: a confidently mislabelled asset is never escalated for review. The reliability of the 
+
+probability, formalized as calibration (Guo et al., 2017), is thus as consequential as discriminative accuracy 
+
+for any system that reads the score as trust. Yet the deepfake-detection literature overwhelmingly optimizes 
+
+and reports accuracy (AUC, detection rate), and the small body of work that treats the probability itself (Jin 
+
+et al., 2025) does so as a single-axis calibration-improvement problem rather than asking how calibration 
+
+behaves as the detector encounters the novel generators that motivate the field. 
+
+1.2 Graceful Trust Degradation and the CDTS instrument 
+
+We adopt a simple organizing principle for what a trust instrument owes its consumer: it must never fail 
+
+silently. As a detector's reliability degrades, under a new generator, heavy compression, or for particular 
+
+demographic subgroups, the trust signal should  know  it (remain calibrated, or report that it cannot),  show  it
+
+(offer explanations whose faithfulness is itself diagnostic),  warn  about it (detect the degradation, ideally 
+
+without labels),  not discriminate  in it (degrade evenly across subgroups), and  route  around it (feed a 
+
+verification policy that abstains when trust is low). We call this Graceful Trust Degradation (GTD). 
+
+The Calibrated Deepfake Trust Score (CDTS) is the artifact that operationalizes GTD (Figure 1). CDTS is a 
+
+wrapper, not a new backbone: it maps any detector's logit through a post-hoc calibrator to a calibrated trust 
+
+score T, a calibrated fake-probability with target P(fake | T = t) = t (an authenticity score is simply 1 − T), 
+
+and augments it with a label-free competence estimate and a routing policy. Treating the instrument, rather 
+
+than the detector, as the unit of contribution lets us ask a question the accuracy literature cannot: when these 
+
+five trust properties degrade, do they degrade independently, each requiring its own guarantee, or together, 
+
+governed by something common? 
+
+1.3 From a temporal conjecture to competence coupling 
+
+Our initial hypothesis, and the one around which this project was originally designed, was temporal: that as 
+
+generators evolve over time, calibration drift, explanation instability, and fairness degradation would fire 
+
+together, and that a drift alarm could forecast their joint collapse before accuracy visibly dropped. The 
+
+experiments reported here revise that hypothesis in an important way. We find  no independent temporal 
+
+effect : once detection competence is controlled for, the apparent timeline degradation vanishes (the partial 
+
+correlation of generator release era with calibration error, holding competence fixed, is approximately zero 
+
+and non-significant; Section 7). The variable that actually unifies the trust signals is not the calendar but 
+
+competence , how well the detector discriminates on the generator at hand. Time matters only as a proxy for 
+
+how far a generator sits from the detector's competence frontier. This is a stronger and more actionable 
+
+claim than the temporal conjecture, and we rebuild the paper around it, reporting the revision openly 
+
+because it is itself a finding. 
+
+> 2
+
+1.4 Contributions 
+
+C1. The competence–calibration coupling (Section 4).  We establish that the calibration of a deepfake 
+
+trust score degrades as discriminative competence falls, robustly across three architectures spanning two 
+
+convolutional networks and a vision transformer (r = −0.88, −0.83, −0.86), across the two datasets and four 
+
+forgery methods of the pooled coupling set, within a single dataset, under direct manipulation of 
+
+competence, and on a fourth held-out dataset the detectors never trained on. 
+
+C2. Calibration equity, distinct from accuracy equity (Section 5).  We measure whether the trust score 
+
+stays calibrated within demographic subgroups, a multicalibration view (Hébert-Johnson et al., 2018), and 
+
+show subgroups that are equally well-classified can be unequally calibrated, a disparity the prevailing 
+
+accuracy-gap fairness framing misses. 
+
+C3. Explanation faithfulness is competence-coupled (Section 6).  Using a saturation-free per-region 
+
+faithfulness metric that avoids a confound we document in standard deletion curves, we show Grad-CAM 
+
+faithfulness rises with competence (r = +0.94). 
+
+C4. Label-free competence monitoring (Section 7).  Predictive entropy, a reference-free uncertainty 
+
+signal, tracks competence without labels and, through the coupling, detects calibration risk on unseen 
+
+generators; it keeps a consistent negative sign across all three backbones (reaching r = −0.95 on the 
+
+transformer). Score dispersion is a useful companion signal where the score distribution has range but 
+
+compresses on some backbones, and reference-divergence signals reverse sign across architectures and so 
+
+cannot serve as a portable monitor; entropy is therefore the signal we recommend, converting the coupling 
+
+into a deployable early-warning mechanism. 
+
+C5. The unifying result: competence as a shared factor, with architecture scope (Section 8).  On 
+
+convolutional detectors the intrinsic trust signals (calibration, explanation faithfulness) collapse onto a 
+
+single competence-aligned factor (first component 86.8-90.7% of variance, r up to 0.95); the coupling and 
+
+reference-free entropy monitoring generalize to a transformer, while the full multi-signal factor is 
+
+architecture-specific. Trustworthiness is organized by competence as a shared driver, with scope 
+
+characterized across architectures. 
+
+C6. Competence-aware routing (Section 9).  Routing source-batches on a label-free reference-free 
+
+competence estimate (batch score dispersion) lowers overall AURC and improves the low-to-mid coverage 
+
+operating region relative to confidence-based routing, the practical payoff of C1–C5. 
+
+Throughout, we report uncertainty on the claims that bear on deployment: the central coupling and every 
+
+interval claim (the subgroup-equity gaps, the calibration improvement, the mediation partials) carry 
+
+bootstrap confidence intervals, and correlations are reported with significance tests; we report a binning-
+
+robust and a saturation-free metric where the standard estimator is biased; and we document each confound 
+
+we broke and each deviation from our original design. 
+
+## 2 Related Work 
+
+Five literatures bear on this paper, each studying in isolation a property that we connect to a single factor. 
+
+We position our contribution against the closest prior work in each, and against the one existing attempt to 
+
+calibrate deepfake detectors specifically. 
+
+2.1 Deepfake detection and benchmarks 
+
+Detector architectures range from naive CNN backbones to frequency-aware and foundation-model 
+
+detectors; we build on two canonical reproducible baselines, Xception (Chollet, 2017) and EfficientNet-B4 
+
+(Tan & Le, 2019), as implemented in the DeepfakeBench framework (Yan et al., 2023). Our empirical 
+
+timeline and cross-generator analysis use FaceForensics++ (Rössler et al., 2019), Celeb-DF v2 (Li et al., 
+
+2020), and the DF40 generator suite (Yan et al., 2024), which spans GAN-era to diffusion-era methods and 
+
+> 3
+
+supplies a controlled progression of forgery techniques. Our contribution, however, is orthogonal to the 
+
+choice of backbone: CDTS wraps a detector's score, so the trust properties we study are properties of the 
+
+wrapper and the score, not of any one architecture. The broader evidence that detectors age, that in-the-wild 
+
+performance collapses against contemporary generators (Chandra et al., 2025), is precisely the deployment 
+
+reality that makes calibration-under-novelty, rather than calibration on a fixed benchmark, the question 
+
+worth asking. 
+
+2.2 Calibration 
+
+Post-hoc calibration is mature for general classifiers: Platt scaling fits a sigmoid to the scores (Platt, 1999), 
+
+isotonic regression fits a non-parametric monotone map (Zadrozny & Elkan, 2002), and temperature scaling 
+
+provides a single-parameter softmax rescaling (Guo et al., 2017). Calibration is quantified by the Expected 
+
+Calibration Error (ECE) and its relatives; because ECE is sensitive to its binning scheme, debiased and 
+
+equal-mass estimators are preferred (Kumar et al., 2019; Roelofs et al., 2022), a caution we adopt by 
+
+reporting equal-mass ECE throughout. The single most relevant prior work is Jin et al. (2025), which 
+
+introduces deepfake-detection calibration via packed ensembles and reports reliability diagrams and ECE 
+
+on standard benchmarks. That work treats calibration as a quantity to improve on a fixed test distribution. It 
+
+does not study how calibration behaves as competence varies across generators, does not address subgroup 
+
+calibration, explanation faithfulness, or monitoring, and does not connect any of these. Our competence– 
+
+calibration coupling reframes the problem: the question is not only how to calibrate, but where calibration 
+
+can be trusted, and the answer is governed by competence. We adopt that work's bootstrap-CI rigor as our 
+
+competitive floor. 
+
+2.3 Fairness in deepfake detection 
+
+Fairness work in this domain is framed almost entirely as accuracy disparity. Gender-balanced benchmarks 
+
+(Nadimpalli & Rattani, 2022), massively-annotated demographic databases (Xu et al., 2024), and million-
+
+scale demographically-annotated face datasets with multi-detector fairness benchmarks (Lin et al., 2025) all 
+
+measure error-rate or AUC gaps across demographic groups. Closest to our setting in spirit is recent label-
+
+free fairness work: Face-Fairness (Brown & Russell, 2026) is a detector-agnostic, demographic-label-free 
+
+framework that remaps a detector’s logits, conditioned on frozen face embeddings, to shrink the across-
+
+group false-positive and true-positive gaps without access to identity attributes. Our aim is different along 
+
+two axes. First, the target quantity: Face-Fairness equalizes an accuracy-style criterion (group error and 
+
+FPR/TPR gaps), whereas we measure and audit calibration equity, whether the trust score’s probability 
+
+remains reliable within each subgroup, a property we show in Section 5 is distinct from accuracy parity. 
+
+Second, the role of the remapping: their logit remapping is an intervention that improves fairness, whereas 
+
+our calibrator is a diagnostic instrument whose residual error, even under a best-case oracle fit, exposes 
+
+where competence is too low for the score to be trustworthy at all. The two are complementary: a label-free 
+
+remapper like Face-Fairness could sit upstream of the calibration-equity audit we propose. Our calibration-
+
+equity measurement is grounded in multicalibration (Hébert-Johnson et al., 2018), which requires 
+
+simultaneous calibration across identifiable subgroups rather than only on average. We show in Section 5 
+
+that this is not a relabelling of accuracy fairness: a subgroup can be classified equally well yet have a 
+
+materially worse-calibrated trust score, so calibration equity exposes disparities accuracy fairness cannot 
+
+see. We use the demographic annotations of Xu et al. (2024) for this analysis. 
+
+2.4 Explanation faithfulness and selective prediction 
+
+Explanation faithfulness, whether a saliency map identifies the regions a model actually uses, is measured 
+
+by deletion/insertion curves and area-over-perturbation metrics (DeYoung et al., 2020), typically over 
+
+gradient-based saliency such as Grad-CAM (Selvaraju et al., 2017). The one deepfake-specific evaluation 
+
+of explanation faithfulness (Gowrisankar & Thing, 2024), argues that generic removal-based evaluation is 
+
+ill-suited to deepfake detectors and proposes an adversarial alternative. We show in Section 6 that the 
+
+standard deletion metric is confounded for our purpose by score saturation, and introduce a saturation-free 
+
+> 4
+
+per-region rank metric; we then use it not to compare explainers but to expose that faithfulness itself rises 
+
+and falls with competence. For routing, we draw on selective prediction and the reject option (El-Yaniv & 
+
+Wiener, 2010; Geifman & El-Yaniv, 2017), reporting risk-coverage curves; the algorithmic-recourse 
+
+direction (Mothilal et al., 2020) we leave to future work. The label-free monitoring view in Section 7 
+
+borrows the activity-monitoring framing of detecting interesting change without labels (Fawcett & Provost, 
+
+1999), but applies it to competence rather than to a class signal. 
+
+2.5 What is new here 
+
+Each property above has been studied alone. The contribution of this paper is to show they are not separate: 
+
+calibration, calibration equity, explanation faithfulness, and label-free monitorability are governed by a 
+
+common factor, competence, which is the right object to estimate and condition on. We establish this across 
+
+three architectures spanning convolutional networks and a vision transformer, and we characterize its scope: 
+
+the competence-calibration coupling and entropy-based label-free monitoring generalize across all three, 
+
+the intrinsic-signal factor across both convolutional backbones, while the full multi-signal single-factor 
+
+structure is architecture-specific. To our knowledge this unification, its demonstration via mediation and a 
+
+factor decomposition, the cross-architecture scoping, and the resulting competence-aware routing are new 
+
+to deepfake detection, as is the calibration-equity lens itself. 
+
+## 3 The CDTS Instrument and Experimental Setup 
+
+3.1 The CDTS wrapper and notation 
+
+Let a detector produce a logit for an input frame, mapped by a softmax to a raw fake-probability p (the 
+
+model’s estimated probability that the frame is manipulated). CDTS applies a post-hoc calibrator g, fit on a 
+
+held-out identity-disjoint calibration split, to obtain the calibrated trust score T = g(p). We adopt the 
+
+convention that T is a calibrated fake-probability: the calibration target is P(fake | T = t) = t, so that T = 0.9 
+
+should correspond to a 90% empirical frequency of manipulation, and all calibration error (ECE) is 
+
+computed on T against the is-fake label. A consumer who prefers an authenticity score uses 1 − T; we report 
+
+and calibrate the fake-probability direction throughout because it is the detector’s native output and the 
+
+exact quantity whose calibration we measure (equal-mass ECE is not perfectly invariant under the 1 − T 
+
+inversion, so we fix the direction here to make the reported quantity unambiguous). The explanation-
+
+faithfulness analysis (Section 6) perturbs this same fake-probability. We measure discriminative 
+
+competence  by the area under the ROC curve (AUC) on a given generator,  calibration  by the Expected 
+
+Calibration Error of the calibrated score (ECE_cal), and downstream trust properties on T itself. The 
+
+wrapper additionally maintains a label-free competence estimate from the score distribution (Section 7), 
+
+which drives the routing policy (Section 9). Nothing in the construction is backbone-specific. 
+
+3.2 Detectors and the competence-manipulation control 
+
+We use three detectors from the DeepfakeBench framework (Yan et al., 2023), all with published weights 
+
+and all trained on face-swap (FS) forgeries, which keeps the cross-architecture comparison fair. The 
+
+primary detector is Xception (Chollet, 2017). To test architecture-generality within the convolutional family 
+
+we add EfficientNet-B4 (Tan & Le, 2019). To test whether our findings extend beyond convolutional 
+
+networks entirely, we add a third detector built on a CLIP vision transformer (Radford et al., 2021), a non-
+
+convolutional foundation-model backbone (the DeepfakeBench CLIP detector, fine-tuned with low-rank 
+
+adapters on the same FS training data and loaded from its published checkpoint); it is scored at its native 
+
+224x224 resolution against the 256x256 of the two CNNs. The CLIP detector exposes a pooled embedding 
+
+rather than a spatial convolutional feature map, so it admits no Grad-CAM saliency; it therefore enters the 
+
+competence-calibration coupling (Section 4.4) and the label-free monitoring analysis (Section 7.2) but not 
+
+the explanation-faithfulness or intrinsic-factor analyses, which require a per-region saliency map (Sections 
+
+6, 8.2). To break the confound between competence and dataset identity (Section 4.3), we additionally use a 
+
+reenactment-trained (FR) Xception checkpoint, which is broadly incompetent on face-swap content (all 
+
+> 5
+
+AUC < 0.67); applying it to face-swap generators induces low competence on otherwise-detectable 
+
+forgeries, manipulating competence while holding the images fixed. Grad-CAM (Selvaraju et al., 2017) is 
+
+computed at the final convolutional feature map of each convolutional backbone. 
+
+3.3 Data 
+
+Four sources are used overall: three for the main analyses and DFD as an external-validity source. 
+
+FaceForensics++ c23 (Rössler et al., 2019) supplies a 22,388-frame test split across four forgery methods 
+
+(faceswap, deepfakes, face2face, neuraltextures) and carries the per-frame demographic annotations of Xu 
+
+et al. (2024) (gender, age band, ethnicity, and a skin-tone attribute), joined to our scored frames by identity. 
+
+Celeb-DF v2 (Li et al., 2020) supplies a 16,420-frame test split and the real frames paired with the DF40 
+
+generators. DF40 (Yan et al., 2024) supplies the generator suite for the timeline, monitoring, faithfulness, 
+
+and unifying analyses; we use its Celeb-DF-sourced face-swap, reenactment, and entire-face-synthesis 
+
+methods. Following the dataset's identity structure, demographic labels transfer by identity for the face-
+
+swap and reenactment subsets built on FaceForensics++/Celeb-DF identities; entire-face-synthesis methods 
+
+synthesize new identities and are therefore excluded from the subgroup-calibration cells. DF40 is used 
+
+under its CC BY-NC 4.0 (non-commercial) license. For the external-validity test of Section 4.5 we 
+
+additionally use the FaceForensics DeepFakeDetection set (DFD), a fourth source the detectors never 
+
+trained on, from which we score 2,493 face crops across 40 manipulated and 40 real videos. 
+
+3.4 Calibration, metrics, and statistics 
+
+We calibrate per target generator, not once in-domain. For each generator we split its scored frames into two 
+
+identity-disjoint halves (50/50, seed-fixed), fit the calibrator on one half using that generator’s labels, and 
+
+report calibration error on the held-out half. This is a deliberate and consequential choice: the reported ECE 
+
+is therefore the best-case, oracle calibration achievable for that generator if its labels were available, not the 
+
+error of a single calibrator trained in-domain and transferred to an unseen generator. We use the oracle 
+
+protocol because it isolates the question we study, whether the detector’s score is calibratable at all on a 
+
+given generator, from the separate question of whether a transferred calibrator generalizes; as Section 4 
+
+shows, calibration degrades with competence even under this best case, which is a stronger statement than a 
+
+transferred calibrator failing, and it means the ECE we report is a lower bound on what a genuinely zero-
+
+label deployed calibrator would incur. The calibrator itself is hybrid, selected by calibration-set size: Platt 
+
+scaling (Platt, 1999) when the calibration set is small (n < 1000, where a low-variance parametric fit is 
+
+preferable) and isotonic regression (Zadrozny & Elkan, 2002) otherwise. The identity-disjoint split prevents 
+
+leakage between the calibration and evaluation halves. We report AUC for competence, ECE for calibration 
+
+(15 bins, equal-mass; equal-mass binning is less biased than equal-width (Roelofs et al., 2022)), and the 
+
+Brier score; where the standard estimator is at risk we report the debiased view (Kumar et al., 2019). We 
+
+report bootstrap 95% confidence intervals (B = 2000 resamples; percentile interval) on the central 
+
+competence-calibration coupling and on every interval-based claim, namely the subgroup-equity gaps, the 
+
+pooled calibration improvement, and the partial correlations of the mediation analysis; correlations 
+
+elsewhere are reported with significance tests rather than intervals. For the subgroup analysis, bootstraps 
+
+resample whole identities (clustered) and use the pivotal interval, because frames nest within identities and 
+
+a naive frame-level bootstrap is anti-conservative. Correlations are reported as Pearson with Spearman 
+
+alongside; partial correlations control for AUC by linear residualization. 
+
+## 4 The Competence–Calibration Coupling 
+
+We begin with the finding the rest of the paper rests on: the calibration of a deepfake trust score is not a fixed 
+
+property of the calibrator but a function of how competently the detector discriminates on the data at hand. 
+
+Where competence is high, calibration is excellent and improvable; where competence is low, calibration is 
+
+poor and largely unrecoverable. We restate the protocol because it governs how this section should be read: 
+
+every ECE below is oracle calibration, fit per generator on a held-out, identity-disjoint half of that 
+
+> 6
+
+generator’s own labelled frames (Section 3.4). The degradation we report is therefore not a failure of 
+
+calibrator transfer; it is a failure that persists even when the calibrator is handed the target generator’s labels. 
+
+4.1 Calibration cannot repair what competence has not earned 
+
+Table 1 contrasts two checkpoints on the same FaceForensics++ test frames: the competent FS-trained 
+
+Xception and the incompetent FR-trained checkpoint. Post-hoc calibration sharply improves the competent 
+
+detector, its pooled ECE falls from 0.455 to 0.047, a reduction of roughly 90%. On the incompetent 
+
+checkpoint the same calibration procedure, fit the same way, reduces ECE far less, from 0.694 to only 0.207, 
+
+which remains badly miscalibrated. The calibrator is not at fault; it is being asked to manufacture a score-to-
+
+correctness mapping that the detector's collapsed discriminative signal cannot support.                    
+
+> Table 1. Pooled calibration before and after hybrid calibration for a competent (FS) and an incompetent (FR) checkpoint on the
+> same FaceForensics++ test split, with 95% bootstrap confidence intervals. Calibration recovers a competent detector but cannot
+> rescue an incompetent one.
+> Checkpoint Set ECE 95% CI Brier
+> Xception-FS (competent) raw 0.455 [0.448, 0.463] 0.440
+> calibrated 0.047 [0.040, 0.061] 0.140
+> Xception-FR (incompetent) raw 0.694 [0.687, 0.700] 0.687
+> calibrated 0.207 [0.203, 0.225] 0.160
+
+4.2 The coupling holds within and across datasets 
+
+The contrast in Table 1 generalizes to a continuous relationship: as AUC falls across configurations, 
+
+calibrated ECE rises. Table 2 reports the correlation across data slices. On FaceForensics++, across two 
+
+checkpoints and four forgery methods, the coupling is strong (r = -0.82). On DF40 alone it is present but not 
+
+significant (r = -0.58), and the reason is instructive: the DF40 face-swap methods on which the FS detector 
+
+is competent occupy a narrow, high-competence band (AUC 0.65–0.95), and a correlation is statistically 
+
+hard to estimate over so short a range, not absent. This is a power limitation of the narrow band, not evidence 
+
+against the coupling: the two tests that widen the competence range both recover it strongly and 
+
+significantly. Inducing low competence directly (next subsection) drives the within-DF40 correlation to 
+
+−0.94 (Table 2, confound-breaker row; p = 6 × 10 ⁶), and the per-actor analysis on the held-out DFD ⁻
+
+dataset, where per-actor competence spans AUC 0.14 to 1.00, gives −0.89 on this same detector (Section 
+
+4.5). The narrow-band non-significance is therefore the expected consequence of restricted range, and the 
+
+decisive tests that widen the range deliberately.                                
+
+> Table 2. Competence–calibration coupling across data slices: Pearson and Spearman correlation of AUC against calibrated ECE.
+> The relationship is clearest where the competence range is wide, and strongest under direct competence manipulation.
+> Slice nPearson r pSpearman AUC range
+> FF++ Xception (2ckpt x 4) 8-0.817 0.013 -0.810 0.39–0.97
+> DF40 Xception-FS only 8-0.585 0.128 -0.333 0.65–0.95
+> DF40 within (FS+FR-mismatch) 12 -0.939 6.0e-6 -0.783 0.26–0.95
+> EfficientNet-B4 (FF++ and DF40) 12 -0.769 0.003 -0.734 0.47–0.94
+> GRAND combined 32 -0.807 2.5e-8 -0.818 0.26–0.97
+
+Because configurations share architectures, datasets, checkpoints, and forgery families, we treat the pooled 
+
+p-value as descriptive rather than as evidence from 32 fully independent observations; the negative 
+
+relationship is also visible within grouped slices and under the robustness checks of Table 4. 
+
+74.3 Breaking the confound by inducing low competence 
+
+A correlation between AUC and ECE across generators could in principle be confounded: different 
+
+generators differ in many ways besides how well the detector handles them. We break this by manipulating 
+
+competence directly while holding the images fixed. Applying the reenactment-trained checkpoint to DF40 
+
+face-swap methods forces competence low (AUC 0.26–0.46) on exactly the frames the competent 
+
+checkpoint handles well. Every such forced-low-competence configuration is badly calibrated, and the 
+
+within-DF40 coupling strengthens to r = -0.94 (Table 2, confound-breaker row; Figure 2). Because the only 
+
+thing changed is the detector's competence on fixed inputs, the relationship tracks competence rather than 
+
+dataset or generator identity. We are careful not to overclaim: the FR checkpoint differs from the FS 
+
+checkpoint in more than competence, so the causal reading rests on the monotone within-DF40 relationship 
+
+across the induced competence range, not on the checkpoint swap alone.  
+
+> Figure 2. Inducing low competence. Applying a mismatched (reenactment-trained) checkpoint to DF40 face-swaps craters AUC
+> and inflates calibrated ECE on otherwise-detectable forgeries, isolating the role of competence from generator identity.
+
+4.4 Architecture-generality 
+
+The coupling is not specific to one architecture or even to one architecture family. EfficientNet-B4 (Tan & 
+
+Le, 2019) exhibits the same relationship on both datasets (Table 2), and pooling all convolutional 
+
+configurations, two CNN architectures, two datasets, four forgery methods, and three checkpoints, 32 in 
+
+total, the coupling is r = −0.81 (p = 2.5 × 10 ⁸; Figure 3). To test whether the coupling survives a ⁻
+
+fundamentally different architecture, we add a third detector built on a CLIP vision transformer, a non-
+
+convolutional foundation-model backbone. Across the 20 DF40 generators the coupling holds on the 
+
+transformer at r = −0.859 (95% bootstrap CI [−0.93, −0.75]), comparable to the two CNNs (Xception r = 
+
+−0.88, 95% bootstrap CI [−0.95, −0.79]; EfficientNet r = −0.83, 95% bootstrap CI [−0.92, −0.70]). All three 
+
+intervals are 5,000 resamples over each detector’s 20 per-generator points, and all exclude zero. The 
+
+competence-calibration coupling is therefore a property of the calibration-under-competence problem itself, 
+
+holding across both convolutional and transformer detectors, not an artifact of any particular network or 
+
+> 8
+
+architecture family. We return to what else does and does not generalize across these three architectures in 
+
+Section 8.  
+
+> Figure 3. The competence–calibration coupling across 32 configurations (two convolutional architectures, two datasets, four
+> forgery methods, three checkpoints). Calibrated ECE rises as competence falls; pooled r = −0.81 (95% bootstrap CI [−0.90,
+> −0.70], 5,000 resamples over the 32 configurations), p = 2.5 × 10 ⁸. ⁻
+
+4.5 External validity on a fourth dataset (DFD) 
+
+The coupling so far is established on FaceForensics++, Celeb-DF, and the DF40 generator suite. To test it 
+
+on data the detectors never trained on and that we did not use to fit anything, we add the FaceForensics 
+
+DeepFakeDetection set (DFD), a face-swap corpus of acted videos with a generation method distinct from 
+
+the training forgeries. We score 2,493 face crops (40 manipulated and 40 real videos, 27 actors) with all 
+
+three FS-trained detectors and ask two questions. First, does DFD sit on the coupling line established from 
+
+the other datasets? At a held-out, oracle-calibrated whole-dataset level the three detectors land at 
+
+competence 0.59 (Xception), 0.70 (EfficientNet), and 0.83 (the CLIP transformer), and their calibrated ECE 
+
+values (0.127, 0.138, 0.062) fall close to what the 32-configuration line predicts for those competences 
+
+(0.189, 0.137, 0.080; residuals −0.062, +0.001, −0.017). The shape the coupling predicts is reproduced on 
+
+this fourth source: the two lower-competence CNNs are the more miscalibrated, and the higher-competence 
+
+transformer is the better calibrated, with no detector off the line by more than 0.06 (Figure 4). Second, does 
+
+the coupling hold within DFD? Splitting DFD by actor identity (the 16 actors with both manipulated and 
+
+real frames) and correlating per-actor competence against per-actor calibration error gives a strong negative 
+
+coupling on every detector (Table 3), r = −0.89 (Xception), −0.77 (EfficientNet), and −0.63 (the 
+
+transformer), all significant at p < 0.01, over a wide per-actor competence range (AUC 0.14 to 1.00). The 
+
+Xception within-DFD coefficient (−0.89) essentially matches its cross-generator coupling of Section 4.4 
+
+(−0.88), an internal-consistency check on a fully independent dataset. We are measured about scope: this is 
+
+a single manipulation family, the per-actor correlations rest on sixteen actors with per-slice raw (not re-
+
+oracle-calibrated) ECE, and DFD adds a fresh data source at a new competence regime rather than new 
+
+generator diversity. With those caveats, the coupling reproduces on a fourth dataset both as a whole-dataset 
+
+point on the established line and as a within-dataset per-actor relationship, on all three architectures.                             
+
+> 9Figure 4. External validity on a fourth dataset. The competence–calibration line (dashed) is fit from the 32 configurations of the
+> CDTS coupling set (grey). The three DFD points (stars), scored on a held-out dataset that contributed nothing to the line, fall on
+> it: EfficientNet at competence 0.70 sits essentially on the prediction, the CLIP transformer at 0.83 is on the line, and Xception at
+> 0.59 is just below it (dotted connectors show the residuals, all at most 0.06). The lower-competence CNNs are the more
+> miscalibrated and the higher-competence transformer the better calibrated, the coupling’s prediction reproduced out of
+> distribution.
+> Table 3. Within-DFD per-actor competence–calibration coupling on afourth, held-out dataset (FaceForensics
+> DeepFakeDetection). Per-actor Pearson and Spearman correlation of competence (AUC) against calibration error, over the 16
+> actors with both manipulated and real frames, for each FS-trained detector. Per-actor ECE is the raw (not re-calibrated) error of
+> that small slice. The coupling holds on all three architectures over a wide per-actor competence range (AUC 0.14–1.00).
+> Detector Per-actor AUC range Pearson r Spearman p
+> Xception 0.17–1.00 -0.89 -0.86 <0.001
+> EfficientNet-B4 0.14–1.00 -0.77 -0.76 <0.001
+> CLIP-ViT 0.24–1.00 -0.63 -0.81 0.009
+
+4.6 Why this happens 
+
+A calibrator learns the mapping from score to empirical correctness in the regime where the detector 
+
+separates classes. Deployed where the detector does not separate classes, that mapping has nothing to latch 
+
+onto: calibration can correct a systematic over- or under-confidence, but it cannot synthesize the 
+
+discriminative signal that calibrated probabilities presuppose. The consequence for deployment is the 
+
+uncomfortable one: trust scores are least reliable exactly where competence is lowest, which is exactly on 
+
+the novel generators a detector has not seen, the case that matters most (Chandra et al., 2025). 
+
+It is worth separating what is definitional here from what is empirical, because the two are easily conflated. 
+
+At the extreme of no discriminative signal, calibration is trivially unattainable: a detector at AUC 0.5 has no 
+
+score-to-correctness structure for any calibrator to recover, so the coupling there restates what AUC and 
+
+ECE measure rather than discovering anything. That extreme is not where our claim lives. The deployment-
+
+relevant regime is the intermediate band, roughly AUC 0.6 to 0.85, where a detector separates classes well 
+
+enough that good calibration is attainable in principle and is not fixed in advance by the competence value. 
+
+In that band the coupling is an empirical fact, not a definitional one: a detector at AUC 0.75 could in 
+
+principle be well calibrated, yet across our generators and architectures it reliably is not, and the calibrated 
+
+10 error rises smoothly and predictably as competence falls through this range. The induced-competence test 
+
+(Section 4.3) and the per-generator and per-actor scatter (Sections 4.4 and 4.5) each span a wide competence 
+
+range that runs through this band rather than sitting only at the trivial extreme, which is why we treat the 
+
+strength of the relationship across the range, rather than its sign where competence vanishes, as the result. 
+
+4.7 A deployable calibrator fails exactly where the coupling predicts 
+
+The coupling so far is established under the oracle protocol (Section 3.4), which fits a fresh calibrator on 
+
+each target generator’s own labels and therefore reports a best-case lower bound, not a deployable number. 
+
+We now close that gap with the genuinely zero-label setting a deployment actually faces. We fit a single 
+
+calibrator once, on a pooled, identity-disjoint calibration split of the high-competence in-domain generators 
+
+(the face-swap methods the FS-trained detector handles well: simswap, blendface, facedancer, fsgan, 
+
+faceswap, inswap), and then freeze it and apply it unchanged to every generator’s held-out evaluation 
+
+frames, including generators it never saw. This is the transferred calibrator: no target labels, no refitting, one 
+
+calibrator for everything. Comparing it on the identical evaluation frames to the oracle and to the raw scores 
+
+isolates the cost of deploying without target labels.  The result confirms the coupling on the deployable 
+
+quantity, and more sharply than the oracle did.  The transferred ECE rises as competence falls at r = 
+
+−0.98 across all 21 generators (r = −0.97 on the 15 strictly out-of-domain generators alone; Figure 5). The 
+
+relationship is in fact tighter than the oracle coupling because the oracle partially repairs even low-
+
+competence generators using their own labels, whereas the transferred calibrator, having no such access, 
+
+degrades monotonically with competence. On the high-competence generators the transferred calibrator is 
+
+nearly as good as the oracle (mean ECE 0.031 for AUC > 0.85, with per-generator gaps to the oracle of 
+
+0.011 for blendface and 0.008 for simswap), but on the low-competence generators it collapses (mean ECE 
+
+0.441 for AUC < 0.60, a fourteen-fold increase). Crucially, the gap between the transferred and oracle ECE, 
+
+the penalty for having no target labels, itself widens as competence falls (r = −0.81 against AUC): from a 
+
+few thousandths on the in-domain generators to 0.29 on StyleGAN2 and 0.37 on DiT. The oracle ECE is at 
+
+or below the transferred ECE on twenty of twenty-one generators, confirming it is a genuine lower bound. 
+
+The practical reading is direct: a single deployed calibrator is safe to trust only where the detector is already 
+
+competent, and the trust score it produces becomes unreliable on exactly the novel, low-competence 
+
+generators that motivate deployment, which is precisely what a competence monitor (Section 7) is needed to 
+
+flag.  
+
+> Figure 5. Deployable (transferred) calibration. A single calibrator is fit once on the high-competence in-domain generators and
+> applied frozen to all generators. Left: raw, oracle (per-generator best case), and transferred (frozen, deployable) ECE against
+> competence; the transferred calibrator tracks competence at r = −0.98 and approaches the oracle only where competence is
+> 11 high. Right: the deployment penalty (transferred minus oracle ECE) grows as competence falls (r = −0.81), so the cost of having
+> no target labels is concentrated on exactly the low-competence generators that matter most.
+
+4.8 The coupling is robust to analysis choices 
+
+A skeptic might ask whether the coupling is an artifact of our metric choices: the binning scheme, the 
+
+number of bins, the correlation coefficient, the calibrator, or the identity-split seed. Table 4 reports the 
+
+pooled DF40 coupling (29 generators across the two convolutional detectors) recomputed under each of 
+
+these choices. The relationship is stable: the coefficient stays between −0.39 and −0.70 across bin counts, 
+
+calibrators, correlation types, and four resampling seeds (seed range −0.63 to −0.79). Kendall’s tau is 
+
+smaller in magnitude than Pearson, as it always is, but remains negative and significant. The pooled DF40 
+
+baseline here (r = −0.69) is computed on DF40 alone and is the cleanest single-dataset pool for varying 
+
+analysis knobs; it is consistent with the headline r = −0.81 of Section 4.4, which additionally pools the 
+
+FaceForensics++ and induced-low-competence configurations and therefore spans a wider competence 
+
+range. One specification is an outlier: equal-width binning yields r = +0.24, reversing the sign. This is not a 
+
+failure of the coupling but a known failure of equal-width ECE under score saturation. A competent detector 
+
+concentrates its scores near 0 and 1, so 58 to 63 percent of a high-competence generator’s mass falls in the 
+
+two extreme bins, where equal-width bins are too wide to register the residual miscalibration; the metric 
+
+therefore understates error precisely for the competent generators and breaks the monotone relationship. 
+
+This is the same score-saturation effect we document for the faithfulness metric in Section 6.1, and it is 
+
+exactly why we adopt equal-mass binning throughout (Roelofs et al., 2022). We report the equal-width row 
+
+rather than omit it because it makes the methodological point: the coupling is robust to every reasonable 
+
+estimator, and the one estimator it is not robust to is the one independently known to be biased for the score 
+
+distributions at hand.                      
+
+> Table 4. Specification robustness of the competence-calibration coupling (pooled DF40, two convolutional detectors). Pearson
+> correlation of competence (AUC) against calibrated ECE under varied analysis choices. The coupling is stable across bin count,
+> calibrator, correlation type, and resampling seed. Equal-width binning is the lone outlier and reverses sign, a documented artifact
+> of equal-width ECE under the score saturation of competent detectors (Section 6.1), which motivates the equal-mass binning used
+> throughout.
+> Specification rn
+> Baseline (equal-mass, 15 bins, Pearson, hybrid calibrator) -0.69 29
+> 10 bins -0.66 29
+> 20 bins -0.68 29
+> Spearman rank correlation -0.54 29
+> Kendall tau correlation -0.39 29
+> All-isotonic calibrator -0.69 29
+> Resampling: 4 split seeds -0.70 29
+> Xception-FS only (drop EfficientNet) -0.65 21
+> Equal-width binning +0.24 29
+
+## 5 Calibration Equity 
+
+If competence governs calibration, and competence varies, then calibration should vary across any partition 
+
+of the data on which the detector's competence varies, including demographic subgroups. We therefore ask 
+
+whether the trust score remains calibrated within subgroups, not merely on average. 
+
+5.1 The subgroup calibration gap 
+
+Using the per-frame demographic annotations of Xu et al. (2024) joined by identity, we adopt a 
+
+multicalibration view (Hébert-Johnson et al., 2018): a trust score should be calibrated simultaneously across 
+
+12 identifiable subgroups. We summarize per-axis disparity by the worst-vs-pooled subgroup-ECE gap, the 
+
+worst subgroup’s ECE minus the pooled ECE computed over all frames, with identity-clustered pivotal 
+
+bootstrap intervals (B = 2000); clustering is necessary because frames nest within identities and the 
+
+evaluation split contains only 70 identities, so a frame-level bootstrap would badly understate uncertainty. 
+
+This worst-vs-pooled gap is the multicalibration quantity; it is distinct from the pairwise subgroup contrast 
+
+reported in Table 6 (Section 5.3), and the two can differ when the worst subgroup is neither of the two 
+
+groups being contrasted. 
+
+5.2 The trust score is unequally calibrated 
+
+Table 5 reports the gaps. The gender, age, and skin-tone gaps have confidence intervals excluding zero, 
+
+indicating the trust score is reliably less calibrated for the worse-served subgroup along those axes; the age 
+
+gap is the largest of the three (0.068) though estimated with the widest interval; the ethnicity gap is 
+
+inconclusive, its interval spanning zero given the limited identity diversity. We flag honestly that the 
+
+significant gaps, while real, are not large, and that 70 identities is a small base for a fairness claim, an issue 
+
+we return to in Section 10.                      
+
+> Table 5. Worst-vs-pooled subgroup-ECE gap (the worst subgroup’s ECE minus the pooled ECE over all frames) with identity-
+> clustered 95% bootstrap confidence intervals. A positive gap whose interval excludes zero indicates the trust score is reliably less
+> calibrated for the worst-served subgroup along that axis.
+> Axis Worst-vs-pooled gap SE 95% CI CI excludes 0
+> gender 0.026 0.007 [0.022, 0.048] yes
+> age 0.068 0.025 [0.007, 0.103] yes
+> ethnicity 0.014 0.033 [-0.124, 0.023] no
+> skintone 0.030 0.009 [0.020, 0.054] yes
+
+5.3 Calibration equity is not accuracy equity 
+
+The novelty of this lens is that it sees disparities accuracy fairness cannot. To compare accuracy and 
+
+calibration axis by axis, Table 6 reports a pairwise subgroup contrast: for each axis, the accuracy gap (AUC) 
+
+between two named subgroups alongside the calibration gap (ECE) between those same two subgroups. 
+
+This pairwise contrast is a different quantity from the worst-vs-pooled gap of Table 5, it compares two 
+
+specific groups rather than the worst subgroup against the pool, so when the worst-calibrated subgroup is 
+
+neither of the two being contrasted the pairwise gap is the smaller (this is why the age gap is 0.015 here but 
+
+0.068 in Table 5: the worst age subgroup, middle-aged, is outside the young-versus-senior contrast). On 
+
+skin-tone the detector is essentially equally accurate across the two groups (AUC gap 0.0006) yet unequally 
+
+calibrated (pairwise ECE gap 0.0151): a fairness audit reading only accuracy would certify this detector as 
+
+equitable while its trust score is materially less reliable for one group. On age the accuracy gap exceeds the 
+
+pairwise calibration gap, the reverse ordering, confirming the two are distinct, complementary lenses rather 
+
+than one dominating the other (Figure 6). Prior deepfake-fairness work (Nadimpalli & Rattani, 2022; Lin et 
+
+al., 2025) measures only the accuracy gap and would therefore miss the skin-tone calibration disparity 
+
+entirely.           
+
+> Table 6. Pairwise subgroup contrast: accuracy-equity (AUC gap) versus calibration-equity (ECE gap) between the two named
+> subgroups on each axis. This pairwise gap differs from the worst-vs-pooled gap of Table 5 (it contrasts two specific groups, not the
+> worst against the pool). Where the pairwise ECE gap exceeds the AUC gap, calibration equity reveals a disparity an accuracy-only
+> audit would miss.
+> Axis Pairwise AUC gap Pairwise ECE gap Calibration reveals
+> more?
+> gender (M vs F) 0.0052 0.0092 yes
+> skintone (shiny vs not) 0.0006 0.0151 yes
+
+13 Axis Pairwise AUC gap Pairwise ECE gap Calibration reveals     
+
+> more?
+> age (young vs senior) 0.0489 0.0146 no
+> Figure 6. Left: per-subgroup calibration error (worst-vs-pooled view), with low-power cells marked. Right: the pairwise
+> subgroup contrast, accuracy-equity versus calibration-equity between two named groups per axis. Skin-tone groups are equally
+> accurate but unequally calibrated, the disparity an accuracy-only audit misses.
+
+## 6 Explanation Faithfulness 
+
+A trust instrument that ships explanations should ship faithful ones, and the faithfulness of those 
+
+explanations is itself a trust signal. We show that explanation faithfulness, properly measured, is governed 
+
+by the same competence factor as calibration. 
+
+6.1 A saturation-free faithfulness metric 
+
+Standard deletion/insertion faithfulness (DeYoung et al., 2020) is confounded for our purpose by score 
+
+saturation. A competent detector pins the fake-probability near 1.0 (the start-score correlates with 
+
+competence at r = 0.998), which compresses the dynamic range of any absolute-score perturbation curve 
+
+and can even reverse its apparent sign; we observed this directly when an initial deletion-curve analysis 
+
+produced a competence ranking opposite to every other metric. We therefore use a scale-free measure. We 
+
+partition each image into an 8×8 grid; for each patch we record its Grad-CAM (Selvaraju et al., 2017) 
+
+importance and the actual change in fake-probability when only that patch is removed; faithfulness is the 
+
+Spearman rank correlation between importance and effect across the 64 patches. This asks whether the 
+
+regions the explanation emphasizes are the regions that actually move the decision, a question whose 
+
+answer is independent of the absolute score level, and therefore immune to the saturation confound. 
+
+6.2 Faithfulness rises with competence 
+
+Across 20 generators, explanation faithfulness increases with competence: Pearson r = +0.94, p < 10 ⁷ ⁻
+
+(Figure 7). A competent detector's saliency identifies regions that genuinely drive its decision; an 
+
+incompetent detector's saliency is uncorrelated with the evidence the model actually uses, an explanation in 
+
+form only. Figure 8 makes the mechanism concrete at the per-region level: for competent detectors 
+
+(simswap, blendface) Grad-CAM importance predicts the real per-region effect, producing a rising trend, 
+
+whereas for incompetent detectors (pixart, wav2lip) importance and effect are unrelated, producing a flat 
+
+scatter. In these experiments, the same explanation machinery is faithful or not largely according to detector 
+
+competence. 
+
+14 Figure 7.  Saturation-free explanation faithfulness against competence across 20 generators (r = +0.94). When a detector cannot  
+
+> discriminate, its explanation carries no faithful signal.
+> Figure 8. Per-region faithfulness. For competent detectors (left two panels), Grad-CAM importance predicts the actual fake-
+> probability drop when a region is removed (rising trend, faithful); for incompetent detectors (right two), importance is
+> uncorrelated with effect (flat, unfaithful). The metric is saturation-robust by construction.
+
+## 7 Label-Free Competence Monitoring 
+
+The coupling is only deployable if competence can be estimated when it matters, on a fresh generator for 
+
+which no labels exist. This section shows it can, and in doing so corrects our original temporal hypothesis. 
+
+7.1 There is no independent temporal drift 
+
+We scored 21 DF40 generators spanning release eras 2016–2024 (Table 7). The coupling holds across the 
+
+timeline (r = −0.86 between era-ordered AUC and ECE_cal), which might suggest a temporal drift story. It 
+
+is not one. The partial correlation of release era with calibrated ECE, controlling for competence, is 0.08 and 
+
+non-significant; within the face-swap family, where the detector is competent, the era effect is r = −0.03 and 
+
+non-significant. Once competence is accounted for, time explains nothing. Building a temporal drift alarm 
+
+would therefore be building an indirect, weaker proxy for a competence monitor. We reframe early warning 
+
+accordingly: monitor competence, not time. 
+
+15 7.2 Two families of label-free signal, and which one generalizes 
+
+In deployment AUC is unavailable because labels are. But an unlabeled signal that tracks competence 
+
+inherits, through the coupling, the ability to forecast calibration risk. Label-free signals computed from the 
+
+predicted-probability stream fall into two families, and the distinction matters because they do not 
+
+generalize equally across architectures. The first family is reference-divergence: the distance of a 
+
+generator’s score distribution from an in-domain reference distribution (Kolmogorov–Smirnov, 
+
+Wasserstein). On Xception these track competence strongly (KS vs AUC r = 0.961; Table 8). The second 
+
+family is reference-free uncertainty: statistics of the detector’s own output that need no reference, namely 
+
+predictive entropy and score dispersion (the standard deviation of scores). On Xception these also track 
+
+competence (entropy vs AUC r = -0.837 on the 20-generator unifying set; Table 8 reports the same signals 
+
+on the 21-generator timeline set). On a single architecture the two families look interchangeable, but they 
+
+are not. Testing the same signals on EfficientNet-B4 and on the CLIP transformer separates them sharply 
+
+(Table 9). The reference-divergence signal decouples from competence on EfficientNet (KS vs AUC r = -
+
+0.339, from +0.961 on Xception): distance-from-reference depends on the backbone’s score geometry, not 
+
+competence alone, and is therefore not a portable monitor. The decisive difference between the families is 
+
+directional consistency, not raw magnitude. Predictive entropy, the reference-free signal we rely on, never 
+
+reverses sign: it correlates negatively with competence on all three (Xception r = −0.837, EfficientNet r = 
+
+−0.384, CLIP r = −0.951), and score dispersion is strongly negative on the two architectures where the score 
+
+distribution has range (Xception r = −0.733, CLIP r = −0.962); on EfficientNet the dispersion compresses to 
+
+a narrow band (standard deviation 0.29 to 0.37 across the 20 generators) and its residual correlation with 
+
+competence is weakly positive (r = +0.53, 95% CI [+0.17, +0.81]), the opposite sign to the other two 
+
+backbones, so dispersion is not a dependable cross-architecture monitor. Predictive entropy, by contrast, 
+
+stays negative on all three backbones (Xception −0.84, EfficientNet −0.43, CLIP −0.95) and is the 
+
+reference-free signal we rely on for portability. Reference-divergence does not: KS correlates with 
+
+competence at +0.961 on Xception but reverses to -0.339 on EfficientNet, and Wasserstein likewise flips 
+
+from +0.90 to -0.09. This sign reversal is the failure that matters operationally. A monitor is a threshold on a 
+
+signal; if the signal-to-competence relationship is strongly positive on one backbone and negative on 
+
+another, a threshold tuned on the first backbone flags exactly the wrong generators on the second. A 
+
+reference-free signal that is weak but correctly signed everywhere is a usable monitor; a reference-
+
+divergence signal that is strong but sign-unstable across architectures is not. We are explicit that 
+
+EfficientNet is the hard case for all distribution-shape signals, reference-free included: its score geometry 
+
+compresses these statistics, so entropy is only -0.384 there, weaker than on the other two backbones though 
+
+still correctly signed. The practical conclusion is therefore narrower and more defensible than a blanket 
+
+magnitude claim: label-free competence monitoring should be built on predictive entropy, whose direction 
+
+is stable across CNN and transformer backbones (and on score dispersion where the score distribution has 
+
+range), rather than on reference-divergence, whose sign is not, and a deployment should expect the signal to 
+
+be stronger on some backbones than others. Through the coupling, a label-free monitor flags high-
+
+calibration-risk generators without any labels: predictive entropy, the portable signal, reaches ROC-AUC 
+
+0.76, while KS divergence scores 0.86 on Xception but is not portable for the sign-reversal reason above 
+
+(Figure 9); we caution that the quantity being flagged, the oracle ECE_cal of Section 3.4, is itself measured 
+
+with target-generator labels, so the monitor flags generators on which calibration will be poor even in the 
+
+best case, using no labels to raise the flag. We note one signal, the mean predicted score, correlates even 
+
+more strongly (r = 0.99) but is confounded by class balance, the fraction of fake frames, and we therefore do 
+
+not headline it; it is marked accordingly in Table 8 and excluded as a deployable signal.              
+
+> Table 7. DF40 generator timeline (FS-Xception): competence and calibration across release eras. The coupling holds across the
+> timeline, but era adds nothing once competence is controlled.
+> Generator Era Family AUC ECE (cal)
+> faceswap 2016 FS 0.892 0.045
+> fomm 2019 FR 0.801 0.054
+> 16
+
+Generator Era Family AUC ECE (cal) 
+
+fsgan  2019  FS  0.900  0.036 
+
+wav2lip  2019  FR  0.470  0.224 
+
+StyleGAN2  2020  EFS  0.649  0.063 
+
+ddim  2020  EFS  0.766  0.041 
+
+simswap  2020  FS  0.948  0.024 
+
+StyleGAN3  2021  EFS  0.679  0.060 
+
+facevid2vid  2021  FR  0.822  0.064 
+
+pirender  2021  FR  0.688  0.089 
+
+DiT  2022  EFS  0.521  0.161 
+
+StyleGANXL  2022  EFS  0.637  0.093 
+
+lia  2022  FR  0.607  0.146 
+
+sd2.1  2022  EFS  0.688  0.044 
+
+blendface  2023  FS  0.943  0.022 
+
+facedancer  2023  FS  0.933  0.025 
+
+inswap  2023  FS  0.815  0.073 
+
+pixart  2023  EFS  0.433  0.265 
+
+sadtalker  2023  FR  0.427  0.264 
+
+SiT  2024  EFS  0.553  0.097 
+
+rddm  2024  EFS  0.733  0.148 
+
+Table 8.  Label-free signals against competence on the 21-generator timeline set (Xception). Each signal is computed without 
+
+labels; AUC uses labels, making this a non-circular test. Reference-divergence and distribution-shape signals carry genuine 
+
+competence information here; their cross-architecture portability, where the reference-free signals prove more robust than 
+
+reference-divergence, is quantified in the text. The mean score (marked) is the strongest correlate but is class-balance-confounded 
+
+and not used as a deployable signal. 
+
+Signal  r vs AUC  p Spearman 
+
+mean_score (excluded)  0.993  2.7e-19  0.991 
+
+ks_vs_ref  0.952  3.3e-11  0.948 
+
+wasserstein_vs_ref  0.884  1.1e-7  0.884 
+
+bimodality  0.824  4.5e-6  0.804 
+
+std_score  -0.739  1.3e-4  -0.764 
+
+entropy  -0.681  6.8e-4  -0.736 
+
+confident_frac  0.567  0.007  0.756 
+
+kl_vs_ref  0.265  0.245  0.764 
+
+17 Figure 9.  Label-free detection of calibration risk. Predictive entropy, the portable reference-free monitor, flags high-ECE 
+
+generators at ROC-AUC 0.76 using no labels. KS divergence scores higher here (0.86) but its orientation is Xception-specific: 
+
+because KS reverses sign across architectures (Section 7.2, Table 9), the threshold that achieves 0.86 on Xception points the 
+
+wrong way on EfficientNet, so entropy is the signal we rely on for portability. 
+
+Table 9.  Cross-architecture behavior of label-free monitoring signals: Pearson correlation of each signal with competence (AUC) 
+
+on each detector. The key pattern is directional: predictive entropy keeps a consistent negative sign on all three backbones, whereas 
+
+the reference-divergence signals (KS, Wasserstein) actively reverse between Xception (strongly positive) and EfficientNet 
+
+(negative), making a threshold tuned on one backbone point the wrong way on another. Score dispersion is reliable only where the 
+
+score distribution has range: it is strongly negative on Xception and the transformer but compresses to a narrow band on 
+
+EfficientNet (standard deviation 0.29 to 0.37 across generators) where its residual correlation is weakly positive (+0.53), so 
+
+dispersion is not a dependable cross-architecture monitor and entropy is the signal we rely on. EfficientNet is the hard case for all 
+
+distribution-shape signals: entropy weakens to −0.38 there but holds its sign, while dispersion loses its range and the reference-
+
+divergence signals invert outright. All correlations are over the 20 DF40 generators except the Xception dispersion row (21-
+
+generator timeline set). Reference-divergence was not computed on the transformer (em-dash). 
+
+Signal  Family  Xception (CNN)  EfficientNet (CNN)  CLIP (ViT) 
+
+predictive entropy  reference-free  -0.84  -0.38  -0.95 
+
+score dispersion  reference-free  -0.73  +0.53  -0.96 
+
+KS vs reference  reference-divergence  +0.96  -0.34  —
+
+Wasserstein vs reference  reference-divergence  +0.90  -0.09  —
+
+## 8 The Unifying Result: Competence as a Shared Factor, and How Far It Generalizes 
+
+Sections 4 through 7 each relate a trust signal to competence. We now ask whether these are separate 
+
+findings or facets of one, and how far the answer generalizes across architectures. We first establish the 
+
+unification on our primary detector (Xception), then test it on EfficientNet-B4 and the CLIP transformer. 
+
+Across 20 generators we assemble the per-generator trust-signal vector, calibrated ECE, explanation 
+
+faithfulness, and the monitoring signals, and examine its structure, distinguishing the intrinsic trust signals 
+
+(calibration and explanation faithfulness) from the monitoring signals (score-distribution statistics). 
+
+8.1 On the primary detector, the signals share one factor 
+
+A single factor on Xception.  On Xception, every trust signal correlates with every other (|r| from 0.54 to 
+
+0.95; Figure 10, right and Figure 11). A principal-component analysis of the five standardized signals yields 
+
+a dominant first component explaining 84.7% of the variance (Figure 10, left): on this detector the signals 
+
+18 vary together along one axis. Restricting to the intrinsic signals alone (calibration and faithfulness) the first 
+
+component explains 90.7% of their variance, so the structure is not merely the monitoring signals being 
+
+mutually redundant. 
+
+That factor is competence.  The first principal component aligns with detection competence at r = 0.98 (p = 
+
+5.0 × 10 ¹⁴; Figure 10, right). The latent axis underlying all of the trust signals is competence itself. ⁻
+
+Competence accounts for their joint structure.  Controlling for competence, every pairwise correlation 
+
+among the trust signals drops to near zero (Table 10): calibration and faithfulness fall from −0.81 to +0.06, 
+
+calibration and KS divergence from −0.84 to +0.07, faithfulness and KS divergence from +0.89 to −0.14. 
+
+Because n = 20 limits power, a loss of significance alone would be weak evidence, so we bootstrap each 
+
+partial correlation (5,000 resamples over generators). The result is stronger than non-significance: each 
+
+partial correlation’s 95% interval excludes the raw correlation it came from (calibration and faithfulness, 
+
+raw −0.81, partial 0.06 with 95% interval [−0.30, 0.42], the raw value well outside the interval), which is 
+
+what mediation by a common factor predicts and what a mere power loss would not produce. We are candid 
+
+that the intervals are wide, so we do not claim the partials are precisely zero, only that the strong raw 
+
+associations are accounted for by competence rather than surviving it. We are also explicit that this 
+
+mediation evidence is associational: the competence manipulation in Section 4 grounds the calibration link 
+
+causally, but the explanation and monitoring links rest on correlation, so the language of a common factor 
+
+should be read with that caveat.                   
+
+> Table 10. Pairwise trust-signal correlations before and after controlling for competence (partial correlation), with bootstrap 95%
+> intervals on the partial (5,000 generator resamples). Each partial interval excludes the raw correlation, evidence the raw
+> associations are mediated by competence rather than lost to the limited n = 20 power; the intervals are wide, so the partials are not
+> claimed to be precisely zero.
+> Signal pair Raw r Partial r (| AUC) Partial r 95% CI p
+> ECE ↔ faithfulness -0.81 0.06 [-0.30, 0.42] 0.792
+> ECE ↔ KS-divergence -0.84 0.07 [-0.57, 0.50] 0.781
+> faithfulness ↔ KS-divergence 0.89 -0.14 [-0.68, 0.38] 0.543
+> Figure 10. The unifying result on Xception. Left: principal-component analysis of the five trust signals; the first component
+> explains 84.7% of the variance. Right: that component aligns with competence (r = 0.98). On this detector the trust signals share
+> one competence factor; Section 8.2 tests how far this generalizes.
+
+19 Figure 11.  Trust-signal correlation matrix. Every signal co-varies with every other; competence (AUC) is the shared axis. 
+
+8.2 How far the unification generalizes across architectures 
+
+The intrinsic-signal factor holds on both CNNs.  The intrinsic trust signals, calibration and explanation 
+
+faithfulness, collapse onto a single competence-aligned factor on both convolutional detectors: on Xception 
+
+the intrinsic first component explains 90.7% of the variance and aligns with competence at r = 0.95, and on 
+
+EfficientNet-B4 it explains 86.8% and aligns at r = 0.85 (Figure 12). The competence factor underlying the 
+
+intrinsic trust properties is thus not specific to one network. The CLIP transformer cannot enter this 
+
+particular test because it has no convolutional feature map and therefore no Grad-CAM explanation-
+
+faithfulness signal; conv Grad-CAM and transformer attribution are different instruments and would not be 
+
+a like-for-like comparison.  
+
+> Figure 12. The intrinsic-signal competence factor across convolutional architectures. First principal component of the intrinsic
+> trust signals (calibration and explanation faithfulness) against competence for Xception (PC1 = 90.7%, r = 0.95) and
+> EfficientNet-B4 (PC1 = 86.8%, r = 0.85). The intrinsic trust properties share a competence-aligned factor on both backbones.
+
+20 The full multi-signal factor is architecture-specific.  Whether the monitoring signals join that intrinsic 
+
+factor depends on the backbone. On Xception the full five-signal first component explains 84.7% of the 
+
+variance (r = 0.98 with competence), a clean single factor. On EfficientNet the full five-signal first 
+
+component explains only 44.0% (with a second component of nearly equal size), because the reference-
+
+divergence monitoring signals decouple from competence on that backbone (Section 7.2) and form a 
+
+separate axis. The strong single-factor structure across all signals is therefore specific to Xception, while the 
+
+intrinsic-signal factor is general across the CNNs and the coupling itself (Section 4.4) is general across all 
+
+three architectures including the transformer. 
+
+8.3 Synthesis: what generalizes 
+
+What generalizes, and what we claim.  Three results survive across architectures and are the robust core of 
+
+this paper: the competence-calibration coupling (all three detectors, CNN and transformer; Section 4.4), 
+
+label-free competence monitoring via predictive entropy, whose direction is consistent across all three 
+
+architectures (Section 7.2), and the intrinsic-signal competence factor (both CNNs; untestable on the 
+
+transformer for faithfulness). What is architecture-dependent is whether the reference-divergence 
+
+monitoring signals and the full multi-signal factor hold, both strong on Xception but not general. The honest 
+
+synthesis is therefore not that competence is a universal single factor, but that detector trustworthiness is 
+
+organized by competence as a shared driver: competence governs calibration and explanation faithfulness 
+
+across backbones, and governs label-free monitorability through signals whose portability we have 
+
+characterized. The strength of the organization, and which signals participate, depends on the backbone 
+
+score geometry. This is still a strong and actionable claim: competence is the one quantity to estimate, it is 
+
+lowest exactly for the novel generators that matter most, it is estimable without labels via reference-free 
+
+uncertainty, and when it drops the intrinsic trust properties fail together. The original temporal conjecture is 
+
+replaced: the signals co-fire because they share a competence factor, and time is merely a proxy for distance 
+
+from the detector's competence frontier. 
+
+## 9 Competence-Aware Routing 
+
+If competence governs every trust failure and is estimable without labels, then a verification policy should 
+
+abstain on low competence rather than low confidence. This matters because the two come apart exactly 
+
+where it counts: a low-competence detector is confidently wrong, so confidence is the wrong signal to route 
+
+on. 
+
+9.1 Setup 
+
+We cast routing as selective prediction (El-Yaniv & Wiener, 2010; Geifman & El-Yaniv, 2017). At 
+
+coverage c we answer the c fraction of inputs a routing signal deems most trustworthy and abstain on the 
+
+rest, measuring selective error on the answered set, pooled across 21 generators (593,502 frames). We 
+
+compare three routing signals: per-frame confidence, per-frame predictive entropy, and per-batch 
+
+competence estimated by the reference-free score dispersion of a source-batch, which is label-free, needs no 
+
+reference distribution, and uses no generator identity. We route on dispersion rather than reference-
+
+divergence because Section 7.2 showed reference-divergence is not architecture-portable; dispersion is a 
+
+strong competence signal on this detector (Xception r = −0.73), though entropy is the more portable 
+
+reference-free signal across architectures. 
+
+9.2 Batch-level reference-free routing improves AURC 
+
+Routing on batch-level reference-free competence (score dispersion) achieves a lower overall risk-coverage 
+
+curve than confidence (area under the risk-coverage curve 0.2076 versus 0.2208; Table 11, Figure 13). The 
+
+advantage is concentrated in the low-to-mid coverage regime that matters for a verification gate, where a 
+
+system answers the most trustworthy fraction and abstains on the rest: dispersion reduces selective error 
+
+substantially up to about 70% coverage (for example 0.151 versus 0.206 at 40% coverage, and 0.281 versus 
+
+> 21
+
+0.287 at 70%), and is marginally worse only at high coverage (0.310 versus 0.303 at 80%), where almost 
+
+nothing is abstained and the routing signal barely matters. We report two honest points alongside. Per-frame 
+
+entropy is a monotone function of |p − 0.5| and is therefore mathematically equivalent to confidence, 
+
+yielding an indistinguishable curve and no gain. A reference-divergence batch signal (KS) achieves a 
+
+slightly lower AURC on this single detector, but Section 7.2 showed it is architecture-sensitive and 
+
+decouples from competence on other backbones; we therefore route on a reference-free signal, accepting a 
+
+marginally smaller in-sample advantage for the reference-free property that generalizes. The advantage of 
+
+competence-aware routing is realized at the granularity at which competence is estimable, the batch or 
+
+source level, which is also the granularity at which deployed content arrives, in source-batches from a given 
+
+uploader, campaign, or generator.                   
+
+> Table 11. Risk-coverage comparison. Area under the risk-coverage curve (AURC; lower is better) and selective error at fixed
+> coverage, pooled over 21 generators. Routing on batch-level reference-free competence (score dispersion) achieves a lower overall
+> AURC than per-frame confidence, with its advantage concentrated at low-to-mid coverage; batch entropy does not improve on
+> confidence.
+> Routing signal AURC Err@70% Err@80% Err@90%
+> confidence (per-frame) 0.221 0.287 0.302 0.317
+> batch dispersion (ref-free) 0.208 0.281 0.310 0.326
+> batch entropy (ref-free) 0.227 0.309 0.313 0.336
+> Figure 13. Risk-coverage. Routing on batch-level reference-free competence (score dispersion, green) achieves a lower overall
+> risk-coverage curve than per-frame confidence (red), with the advantage concentrated at low-to-mid coverage and a small
+> crossover at high coverage.
+
+## 10 Discussion 
+
+10.1 One factor, not five guarantees 
+
+The practical upshot of Section 8 is a change in how trustworthiness should be engineered. The natural 
+
+reading of the GTD desiderata, that a trust instrument needs five separate guarantees each independently 
+
+certified, is not what the data support: calibration, calibration equity, and explanation faithfulness are 
+
+downstream of a single quantity, competence, on both convolutional architectures we tested, and the 
+
+22 competence-calibration coupling itself holds on a transformer as well. This is good news for deployment: 
+
+rather than maintaining several independent audits, a system can estimate competence, which it can do 
+
+without labels, and condition trust on it. The qualification we have earned through the cross-architecture 
+
+tests is that the unification is tight for the intrinsic trust properties and for the coupling, while the 
+
+participation of label-free monitoring signals in that single factor depends on the backbone, which is why we 
+
+recommend the specific reference-free signal whose direction is portable across backbones, predictive 
+
+entropy (Section 7.2) rather than any distribution-shape signal. 
+
+10.2 Deployment implications 
+
+Three common practices fail for the same reason. Static calibration on a fixed benchmark, a fairness audit on 
+
+a fixed dataset, and confidence-threshold routing all ignore competence, which is lowest precisely for the 
+
+novel generators that drive real risk (Chandra et al., 2025). CDTS conditions on competence end to end: 
+
+calibrate the score where labels permit (Section 4), audit calibration equity rather than only accuracy equity 
+
+(Section 5), estimate competence label-free from the score distribution on generators where labels do not 
+
+(Section 7), and route source-batches on that label-free estimate (Section 9). The operating recipe is 
+
+competence-centered: monitor competence and condition trust. 
+
+10.3 Limitations 
+
+Several limitations bound these claims. First, the explanation-faithfulness and the full multi-signal unifying 
+
+analyses are conducted on the two convolutional detectors (the CLIP transformer has no convolutional 
+
+feature map and so admits no Grad-CAM faithfulness signal); the coupling is tested on all three 
+
+architectures and the reference-free monitor we recommend (predictive entropy) is portable across them, 
+
+though a broader sweep of transformer detectors and faithfulness methods suited to attention-based models 
+
+remains future work. Second, the unifying analysis aggregates 20 DF40 generators; one generator (rddm) 
+
+was scored after the explanation pipeline was finalized and appears in the Section 7 timeline but not the 
+
+Section 6 and 8 analyses, and the result is stable both to this choice and to de-duplicating the correlated 
+
+monitoring signals. Third, the mediation evidence in Section 8 is associational: the manipulation in Section 
+
+4 grounds the calibration link causally, but the explanation and monitoring links rest on correlation. Fourth, 
+
+ECE is binning-sensitive, mitigated here by equal-mass binning (Roelofs et al., 2022) and a saturation-free 
+
+explanation metric; the equity evaluation rests on 70 identities, so the gender and skin-tone gaps, though 
+
+significant, are modest and the ethnicity result is inconclusive; we study image-level rather than video-
+
+temporal detectors and, for the main pooled analyses, two source datasets (with a third, FaceForensics 
+
+DeepFakeDetection, used for the external-validity test of Section 4.5); the routing advantage is realized at 
+
+the batch level; and algorithmic recourse (Mothilal et al., 2020) is left to future work. Finally, a note on the 
+
+deployment reading of the calibration results. Most of our per-generator ECE values (Sections 4.1 to 4.4) are 
+
+computed under an oracle protocol (Section 3.4) that fits a calibrator on a held-out half of the target 
+
+generator's own labels, so those numbers are a best-case lower bound rather than a deployable figure; we use 
+
+that protocol deliberately, to isolate whether a generator's score is calibratable at all from the separate 
+
+question of whether a calibrator transfers. We do additionally evaluate the genuinely zero-label case in 
+
+Section 4.7, fitting one calibrator on in-domain data and freezing it: there the deployable error tracks 
+
+competence even more tightly (r = −0.98) and exceeds the oracle on every generator, confirming the oracle 
+
+is a lower bound and that a single deployed calibrator fails on exactly the low-competence generators the 
+
+coupling flags. The remaining genuinely label-free components are the competence monitor (Section 7) and 
+
+the routing policy (Section 9), neither of which uses any target labels. The honest scope is therefore that the 
+
+oracle calibration numbers are a diagnostic of calibratability, while the deployable calibration claim rests on 
+
+the transferred-calibrator result of Section 4.7 and the label-free monitor and router. 
+
+> 23
+
+## 11 Conclusion 
+
+Deepfake-detector trustworthiness is organized, to a substantial degree, by one measurable factor: detection 
+
+competence. We showed that competence drives calibration, demonstrated causally by inducing low 
+
+competence, holding across three architectures spanning convolutional networks and a vision transformer (r 
+
+= −0.88, −0.83, and −0.86), replicating on a fourth held-out dataset the detectors never trained on, and 
+
+persisting for a single frozen calibrator deployed without target labels (whose error tracks competence at r = 
+
+−0.98); that it produces calibration inequity distinct from accuracy inequity; that it governs explanation 
+
+faithfulness under a saturation-free metric; and that it makes label-free monitoring feasible. On both 
+
+convolutional detectors the intrinsic trust signals collapse onto a single competence-aligned factor (first 
+
+component 86.8-90.7% of variance, r up to 0.95). The result is deployable: competence is estimable without 
+
+labels from predictive entropy, whose direction is stable across CNN and transformer backbones, and 
+
+routing source-batches on that estimate lowers overall AURC and improves the low-to-mid coverage 
+
+operating region relative to confidence-based routing. We are explicit about scope: the strength of the multi-
+
+signal unification, and which signals participate, depends on the backbone score geometry, so we claim 
+
+competence as a shared driver of trust degradation demonstrated across architectures, not a universal single 
+
+factor. Because competence is lowest exactly where deployment risk is highest, trust scoring must be 
+
+competence-aware. The CDTS wrapper is the mechanism, know, show, warn, not-discriminate, and route, 
+
+all conditioned on the factor that governs them. 
+
+> 24
+
+## Appendix A Architecture Robustness of the Unifying Result: Pre-Specified Test and 
+
+## Outcome 
+
+We pre-specified the following test of the unifying result before computing it: repeat the full multi-signal 
+
+principal-component analysis on EfficientNet-B4 (Tan & Le, 2019), and require the first component to 
+
+explain at least 75% of the variance and to align with competence at |r| of at least 0.90 for the single-factor 
+
+structure to count as architecture-general; a materially weaker or non-aligned component would bound the 
+
+full-signal claim to Xception. We report the outcome honestly.  The full-signal bar was not met on 
+
+EfficientNet.  The EfficientNet full five-signal first component explains only 44.0% of the variance (against 
+
+an Xception value of 84.7%), with a second component of nearly equal size, and aligns with competence at r 
+
+= 0.82. Both fall short of the pre-specified thresholds. Diagnosing why (Section 7.2) shows the cause: the 
+
+reference-divergence monitoring signals decouple from competence on EfficientNet and form a second 
+
+axis, splitting the variance.  What did replicate.  Restricting to the intrinsic trust signals (calibration and 
+
+explanation faithfulness) the single-factor structure holds on both convolutional architectures: the intrinsic 
+
+first component explains 90.7% of the variance on Xception (r = 0.95 with competence) and 86.8% on 
+
+EfficientNet (r = 0.85). We additionally tested a third, non-convolutional architecture, a CLIP vision 
+
+transformer: the competence-calibration coupling holds there at r = -0.859 (Section 4.4), and reference-free 
+
+uncertainty signals track competence on the transformer at up to r = -0.962 (Section 7.2). The transformer 
+
+has no convolutional feature map and so cannot contribute a Grad-CAM explanation-faithfulness signal, 
+
+which is why it does not enter the intrinsic-factor decomposition.  Conclusion of the test.  The pre-specified 
+
+full-signal single factor is architecture-specific to Xception. What generalizes across architectures, and what 
+
+we therefore claim, is the competence-calibration coupling (three architectures, CNN and transformer), the 
+
+intrinsic-signal competence factor (both CNNs), and reference-free label-free monitoring (three 
+
+architectures). This is a narrower but honestly-bounded claim than a universal single factor, established by a 
+
+test whose acceptance criteria were fixed before the result was known. 
+
+> 25
+
+## References 
+
+Brown, R., & Russell, C. (2026). Face-Feature Tuning: Post-hoc calibration for fair and accurate deepfake detection. 
+
+International Conference on Learning Representations (ICLR) . Face-Fairness (FF). 
+
+Chandra, N. A., Murtfeldt, R., Qiu, L., Karmakar, A., Lee, H., Tanumihardja, E., Farhat, K., Caffee, B., Paik, S., Lee, 
+
+C., Choi, J., Kim, A., & Etzioni, O. (2025). Deepfake-Eval-2024: A multi-modal in-the-wild benchmark of 
+
+deepfakes circulated in 2024.  arXiv preprint . arXiv:2503.02857. 
+
+Chollet, F. (2017). Xception: Deep learning with depthwise separable convolutions.  Proceedings of the IEEE 
+
+Conference on Computer Vision and Pattern Recognition (CVPR) , 1251–1258. 
+
+DeYoung, J., Jain, S., Rajani, N. F., Lehman, E., Xiong, C., Socher, R., & Wallace, B. C. (2020). ERASER: A 
+
+benchmark to evaluate rationalized NLP models.  Proceedings of the 58th Annual Meeting of the Association for 
+
+Computational Linguistics (ACL) , 4443–4458. AOPC faithfulness. 
+
+El-Yaniv, R., & Wiener, Y. (2010). On the foundations of noise-free selective classification.  Journal of Machine 
+
+Learning Research , 11:1605–1641. 
+
+Fawcett, T., & Provost, F. (1999). Activity monitoring: Noticing interesting changes in behavior.  Proceedings of the 
+
+5th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD) , 53–62. AMOC. 
+
+Geifman, Y., & El-Yaniv, R. (2017). Selective classification for deep neural networks.  Advances in Neural 
+
+Information Processing Systems (NeurIPS) , 4878–4887. 
+
+Gowrisankar, B., & Thing, V. L. L. (2024). An adversarial attack approach for explainable AI evaluation on deepfake 
+
+detection models.  Computers & Security , 139:103684. 
+
+Guo, C., Pleiss, G., Sun, Y., & Weinberger, K. Q. (2017). On calibration of modern neural networks.  Proceedings of 
+
+the 34th International Conference on Machine Learning (ICML) , 1321–1330. 
+
+Hébert-Johnson, Ú., Kim, M. P., Reingold, O., & Rothblum, G. N. (2018). Multicalibration: Calibration for the 
+
+(computationally-identifiable) masses.  Proceedings of the 35th International Conference on Machine Learning 
+
+(ICML) , 1939–1948. arXiv:1711.08513. 
+
+Jin, X., Guan, W., Wang, W., & Dong, J. (2025). Towards reliable deepfake detection from an uncertainty calibration 
+
+perspective.  Visual Intelligence , 3:28. DOI:10.1007/s44267-025-00100-2. 
+
+Kumar, A., Liang, P. S., & Ma, T. (2019). Verified uncertainty calibration.  Advances in Neural Information 
+
+Processing Systems (NeurIPS) , 3792–3803. 
+
+Li, Y., Yang, X., Sun, P., Qi, H., & Lyu, S. (2020). Celeb-DF: A large-scale challenging dataset for DeepFake 
+
+forensics.  Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,
+
+3207–3216. 
+
+Lin, L., Santosh, Wu, X., Wang, S., & Hu, S. (2025). AI-Face: A million-scale demographically annotated AI-
+
+generated face dataset and fairness benchmark.  Proceedings of the IEEE/CVF Conference on Computer Vision 
+
+and Pattern Recognition (CVPR) . arXiv:2406.00783. 
+
+Mothilal, R. K., Sharma, A., & Tan, C. (2020). Explaining machine learning classifiers through diverse counterfactual 
+
+explanations.  Proceedings of the 2020 Conference on Fairness, Accountability, and Transparency (FAT*) , 607– 
+
+617. DiCE. 
+
+Nadimpalli, A. V., & Rattani, A. (2022). GBDF: Gender balanced DeepFake dataset towards fair DeepFake detection. 
+
+arXiv preprint . arXiv:2207.10246. 
+
+Platt, J. (1999). Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods. 
+
+Advances in Large Margin Classifiers , 61–74. 
+
+Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., 
+
+Krueger, G., & Sutskever, I. (2021). Learning transferable visual models from natural language supervision. 
+
+Proceedings of the 38th International Conference on Machine Learning (ICML) , 8748–8763. CLIP. 
+
+26 Roelofs, R., Cain, N., Shlens, J., & Mozer, M. C. (2022). Mitigating bias in calibration error estimation.  Proceedings 
+
+of the 25th International Conference on Artificial Intelligence and Statistics (AISTATS) , 4036–4054. 
+
+Rössler, A., Cozzolino, D., Verdoliva, L., Riess, C., Thies, J., & Nießner, M. (2019). FaceForensics++: Learning to 
+
+detect manipulated facial images.  Proceedings of the IEEE/CVF International Conference on Computer Vision 
+
+(ICCV) , 1–11. 
+
+Selvaraju, R. R., Cogswell, M., Das, A., Vedantam, R., Parikh, D., & Batra, D. (2017). Grad-CAM: Visual 
+
+explanations from deep networks via gradient-based localization.  Proceedings of the IEEE/CVF International 
+
+Conference on Computer Vision (ICCV) , 618–626. 
+
+Tan, M., & Le, Q. (2019). EfficientNet: Rethinking model scaling for convolutional neural networks.  Proceedings of 
+
+the 36th International Conference on Machine Learning (ICML) , 6105–6114. 
+
+Xu, Y., Terhörst, P., Pedersen, M., & Raja, K. (2024). Analyzing fairness in deepfake detection with massively 
+
+annotated databases.  IEEE Transactions on Technology and Society . DOI:10.1109/TTS.2024.3365421. 
+
+Yan, Z., Yao, T., Chen, S., Zhao, Y., Fu, X., Zhu, J., Luo, D., Wang, C., Ding, S., Wu, Y., & Yuan, L. (2024). DF40: 
+
+Toward next-generation deepfake detection.  Advances in Neural Information Processing Systems (NeurIPS), 
+
+Datasets and Benchmarks Track . arXiv:2406.13495. 
+
+Yan, Z., Zhang, Y., Yuan, X., Lyu, S., & Wu, B. (2023). DeepfakeBench: A comprehensive benchmark of deepfake 
+
+detection.  Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track .
+
+arXiv:2307.01426. 
+
+Zadrozny, B., & Elkan, C. (2002). Transforming classifier scores into accurate multiclass probability estimates. 
+
+Proceedings of the 8th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining 
+
+(KDD) , 694–699. 
+
+27
