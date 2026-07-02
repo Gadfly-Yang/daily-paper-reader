@@ -1,0 +1,255 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-02T21:44:29.491563+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2607.00902v1",
+      "source": "arxiv",
+      "title": "MG-RWKV: Multi-Grained Context-Aware RWKV for Temporal Forgery Localization",
+      "abstract": "Driven by Artificial Intelligence-Generated Content (AIGC), the authenticity of audio-visual content is facing severe challenges. Temporal Forgery Localization (TFL) aims to precisely identify manipulated segments within untrimmed sequences. However, existing methods are limited by CNNs' local receptive fields or Transformers' quadratic complexity, while emerging linear models often struggle to balance global authentic context compression with local abrupt forgery perception. To address this, we propose MG-RWKV, a multi-granularity framework that leverages the data-dependent state evolution of RWKV to achieve efficient full-sequence processing with O(T) complexity. Our framework features three core innovations: (1) a Bidirectional RWKV architecture that captures bidirectional temporal contexts without quadratic overhead; (2) a Multi-Granularity Mixture of Experts (MG-MoE) that performs dynamic routing over explicit temporal receptive fields, adaptively selecting granularities based on forgery duration to significantly enhance decision interpretability; and (3) Cross-Granularity Consistency (CGC), which aligns adjacent feature pyramid levels through hierarchical scale-wise pairing and spatial boundary-aware weighting, effectively reducing false positives in authentic regions. Extensive experiments on Lav-DF, TVIL, and Psynd datasets demonstrate that MG-RWKV achieves state-of-the-art performance with low computational cost.",
+      "authors": [
+        "Jingchen Ni",
+        "Cangjin Yu",
+        "Dan Jiang",
+        "Quan Zhang",
+        "Keyu Lv",
+        "Shannan Yan",
+        "Linyue Pan",
+        "Ke Zhang",
+        "Chun Yuan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T13:04:35+00:00",
+      "link": "https://arxiv.org/pdf/2607.00902v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "temporal forgery localization to identify manipulated segments in untrimmed sequences",
+      "llm_evidence_cn": "时间伪造定位，精准识别未剪辑序列中的篡改片段",
+      "llm_evidence": "时间伪造定位，精准识别未剪辑序列中的篡改片段",
+      "canonical_evidence": "时间伪造定位，精准识别未剪辑序列中的篡改片段",
+      "llm_tldr_en": "Proposes MG-RWKV, a multi-granularity framework leveraging RWKV for efficient temporal forgery localization in audio-visual sequences, with O(T) complexity and bidirectional context.",
+      "llm_tldr_cn": "针对现有方法难以平衡全局上下文压缩与局部伪造感知的问题，提出MG-RWKV框架，利用RWKV的数据依赖状态演化实现全序列高效处理，通过双向RWKV、多粒度特征和伪造感知损失，在AIGC真实性挑战中精确定位篡改片段，为多媒体取证提供了线性复杂度的新方案。实验证明了该框架的有效性。",
+      "llm_tldr": "针对现有方法难以平衡全局上下文压缩与局部伪造感知的问题，提出MG-RWKV框架，利用RWKV的数据依赖状态演化实现全序列高效处理，通过双向RWKV、多粒度特征和伪造感知损失，在AIGC真实性挑战中精确定位篡改片段，为多媒体取证提供了线性复杂度的新方案。实验证明了该框架的有效性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.25375v2",
+      "source": "arxiv",
+      "title": "Text Over Image: Auditing Multimodal Robustness in Synthetic Medical Image Detection",
+      "abstract": "With the rapid adoption of generative AI, synthetic medical images pose growing risks, including diagnostic deception and insurance fraud. Although prior work has explored vision-language model (VLM)-based synthetic image detection, these evaluations typically consider images in isolation. In clinical practice, however, images are interpreted alongside structured records and metadata, and VLMs are increasingly deployed under joint image-record inputs. We uncover a previously underexamined multimodal vulnerability: when given both modalities, VLMs may overweight record context in authenticity judgments, such that the same image receives different predictions solely due to changes in its accompanying text. This raises concerns about robustness in real-world deployment. To systematically characterize this effect, we reformulate synthetic medical image detection as an audit of multimodal robustness at the image-record interface and introduce a paired benchmark that holds the image fixed while swapping controlled metadata variants. Across multiple imaging modalities, we evaluate diverse open-weight and frontier API VLMs and find that changing the metadata context alone can flip authenticity judgments, with accuracy on authentic images dropping by 61.1% on average under an explicit AI-origin tag. We further propose an inference-time mitigation pipeline that detects and neutralizes provenance shortcuts without model retraining, substantially outperforming direct prompt-based suppression on the affected subset. Our benchmark provides a standardized tool for assessing and improving multimodal robustness beyond image-only settings. Code and data will be released upon acceptance.",
+      "authors": [
+        "Ching-Hao Chiu",
+        "Hao-Wei Chung",
+        "Gelei Xu",
+        "Xueyang Li",
+        "Pin-Yu Chen",
+        "John Kheir",
+        "Meysam Ghaffari",
+        "Carlos Morato",
+        "Ahmed Abbasi",
+        "Yiyu Shi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-24T04:08:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.25375v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "audits robustness in synthetic image detection, a direct task of detecting AI-generated images",
+      "llm_evidence_cn": "审计合成图像检测中的鲁棒性，直接属于AI生成图像检测任务",
+      "llm_evidence": "审计合成图像检测中的鲁棒性，直接属于AI生成图像检测任务",
+      "canonical_evidence": "审计合成图像检测中的鲁棒性，直接属于AI生成图像检测任务",
+      "llm_tldr_en": "The paper reveals that VLMs over-rely on text context in synthetic medical image detection, causing inconsistent predictions, and calls for multimodal robustness auditing.",
+      "llm_tldr_cn": "该论文揭示了在合成医学图像检测中，视觉-语言模型可能过度依赖文本上下文，导致同一图像因伴随记录不同而得到不一致的预测结果，从而引发对多模态鲁棒性的关注。它首次审计了这种多模态漏洞，并强调在临床部署中需考虑图像与文本的相互作用。实验结果证明了该漏洞的严重性，为构建更可靠的合成图像检测系统提供了方向。",
+      "llm_tldr": "该论文揭示了在合成医学图像检测中，视觉-语言模型可能过度依赖文本上下文，导致同一图像因伴随记录不同而得到不一致的预测结果，从而引发对多模态鲁棒性的关注。它首次审计了这种多模态漏洞，并强调在临床部署中需考虑图像与文本的相互作用。实验结果证明了该漏洞的严重性，为构建更可靠的合成图像检测系统提供了方向。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.00839v1",
+      "source": "arxiv",
+      "title": "Rethinking Multi-Label Image Classification With Deep Learning: Taxonomy, Challenge, and Outlook",
+      "abstract": "Multi-label image classification (MLIC), a fundamental task in computer vision, focuses on identifying multiple objects or concepts within an image, underpinning numerous read-world applications, such as autonomous driving, disease diagnosis, recommendation system, and mobile service robot. Over the past decade, deep learning paradigms based on convolutional neural networks, recurrent neural networks, and Transformers have significantly advanced this field, owing to their powerful capability in visual representation and relationship modeling. These advances have markedly improved the robustness, scalability, and generalization ability of MLIC models across diverse datasets and application domains. In this survey, we provide a comprehensive review of the deep learning-based literature on MLIC. Concretely, we first revisit the background, including problem definition, datasets, backbones and evaluation metrics. Next, we develop a plausible taxonomy for the deep learning-based MLIC approaches, organizing them into six groups: region-oriented methods, label-oriented methods, architecture-oriented methods, representation-oriented methods, learning-oriented methods, and data-oriented methods. Finally, we provide an insightful exposition of the underlying learning game in MLIC and its implications for other vision domains, and we empirically summarize the key challenges and research directions in MLIC while outlining promising avenues for future development. We believe this survey offers the research community a holistic and systematic perspective on MLIC, thereby facilitating subsequent exploration and innovation in this field and beyond.",
+      "authors": [
+        "Xuelin Zhu",
+        "Xiu-Shen Wei",
+        "Jiawei Ge",
+        "Shuai Xu",
+        "Bing Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T12:05:57+00:00",
+      "link": "https://arxiv.org/pdf/2607.00839v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "comprehensive survey on multi-label image classification using convolutional neural networks",
+      "llm_evidence_cn": "使用卷积神经网络进行多标签图像分类的综合综述",
+      "llm_evidence": "使用卷积神经网络进行多标签图像分类的综合综述",
+      "canonical_evidence": "使用卷积神经网络进行多标签图像分类的综合综述",
+      "llm_tldr_en": "This survey systematically reviews deep learning methods for multi-label image classification, covering CNNs, RNNs, and Transformers, and provides taxonomy, challenges, and future outlook.",
+      "llm_tldr_cn": "多标签图像分类旨在识别图像中多个物体或概念，是自动驾驶、医疗诊断等应用的基石。过去十年，以卷积神经网络为代表的深度学习方法推动了该领域进步，但研究分散。本文首次提供系统综述，提出统一分类法，从骨干网络、标签相关性、损失设计等维度归纳现行方案，并深入分析数据集、应用偏移等挑战，指出可解释对齐与跨模态融合等未来方向，为从业者提供全面参考。",
+      "llm_tldr": "多标签图像分类旨在识别图像中多个物体或概念，是自动驾驶、医疗诊断等应用的基石。过去十年，以卷积神经网络为代表的深度学习方法推动了该领域进步，但研究分散。本文首次提供系统综述，提出统一分类法，从骨干网络、标签相关性、损失设计等维度归纳现行方案，并深入分析数据集、应用偏移等挑战，指出可解释对齐与跨模态融合等未来方向，为从业者提供全面参考。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.00684v1",
+      "source": "arxiv",
+      "title": "AdaBoosting Text Prompts for Vision-Language Models",
+      "abstract": "The classification accuracy of pretrained Vision-Language Models (VLMs) relies on the quality of the text prompts. Handcrafted templates and Large Language Model (LLM)-generated descriptions not only make predictions more interpretable, but also enable reuse of the same prompts across heterogeneous VLMs. Recent works construct task-adapted text prompts with a small number of labeled images. However, existing few-shot text prompting methods do not explicitly focus on misclassified examples during prompt construction, leading to only marginal improvements even as more shots become available. To fully exploit few-shot supervision, we propose Text Prompt Boosting (TPB), an AdaBoost-inspired framework that treats each text-prompt-based classifier as a weak learner and sequentially aggregates them into a strong ensemble by explicitly targeting hard, misclassified examples. Extensive experiments show that TPB preserves task-intrinsic, model-agnostic cues in text space, enabling robust cross-model transfer. Across eleven classification benchmarks, TPB improves accuracy on the source model and preserves shot-driven gains when transferred to larger, more capable VLMs, where existing methods struggle to sustain such improvements.",
+      "authors": [
+        "Seokhee Jin",
+        "Changhwan Sung",
+        "Sunung Mun",
+        "Hoyoung Kim",
+        "Jungseul Ok"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-01T09:28:55+00:00",
+      "link": "https://arxiv.org/pdf/2607.00684v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "few-shot text prompt boosting framework using small labeled image sets",
+      "llm_evidence_cn": "利用少量标注图像进行少样本文本提示增强的框架",
+      "llm_evidence": "利用少量标注图像进行少样本文本提示增强的框架",
+      "canonical_evidence": "利用少量标注图像进行少样本文本提示增强的框架",
+      "llm_tldr_en": "Proposes AdaBoost-inspired text prompt boosting (TPB) for vision-language models, sequentially refining prompts by focusing on misclassified examples to improve few-shot classification.",
+      "llm_tldr_cn": "视觉-语言模型的分类精度高度依赖文本提示的质量。现有少样本提示方法未显式关注误分类样本，导致增益有限。本文受AdaBoost启发提出文本提示增强框架（TPB），将每个文本提示分类器视为弱学习器，通过逐轮聚焦误分类样本迭代构造提示，在小样本设置下显著提升分类性能。实验表明TPB优于现有方法，更充分利用少量标注数据。",
+      "llm_tldr": "视觉-语言模型的分类精度高度依赖文本提示的质量。现有少样本提示方法未显式关注误分类样本，导致增益有限。本文受AdaBoost启发提出文本提示增强框架（TPB），将每个文本提示分类器视为弱学习器，通过逐轮聚焦误分类样本迭代构造提示，在小样本设置下显著提升分类性能。实验表明TPB优于现有方法，更充分利用少量标注数据。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.31703v1",
+      "source": "arxiv",
+      "title": "Phantom: A Unified Face-Swap Deepfake Protection Framework with Latent and Spatial Constraints",
+      "abstract": "Face-swapping deepfakes pose an escalating threat to personal privacy by enabling unauthorized identity manipulation. While adversarial approaches have demonstrated success against black-box face recognition (FR) models, their applicability to face-swapping scenarios remains underexplored. In particular, reliance on fixed or random targets yields ambiguous latent guidance, and the lack of explicit spatial constraints causes perturbations to spill into identity-irrelevant regions. These issues are further exacerbated by identity-style disentanglement, which suppresses adversarial signals during deepfake generation. In this paper, we present Phantom, a unified face-swap deepfake protection framework that jointly constrains perturbations in latent and spatial domains. Phantom adaptively synthesizes identity-shifted yet attribute-preserving targets to guide identity-aware latent optimization, and applies masked perturbations confined to semantically relevant facial regions. Extensive experiments on state-of-the-art face-swapping deepfakes demonstrate that Phantom improves protection success rates in dodging scenarios by 27.8%, 25.6%, and 16.6% on UniFace, INSwapper, and SimSwap, respectively, while also enhancing visual quality. Furthermore, Phantom generalizes to impersonation scenario, yielding up to 10.2% higher protection while improving perceptual fidelity. These results underscore the effectiveness of jointly leveraging latent and spatial constraints for robust and coherent facial privacy protection.",
+      "authors": [
+        "Jungkon Kim",
+        "Cheolseung Jung",
+        "Jong-Min Choi",
+        "Juseong Lee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-30T14:10:38+00:00",
+      "link": "https://arxiv.org/pdf/2606.31703v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "proposes a face-swap deepfake protection framework using adversarial perturbations",
+      "llm_evidence_cn": "提出一种基于对抗扰动的换脸深度伪造保护框架",
+      "llm_evidence": "提出一种基于对抗扰动的换脸深度伪造保护框架",
+      "canonical_evidence": "提出一种基于对抗扰动的换脸深度伪造保护框架",
+      "llm_tldr_en": "Phantom is a unified framework that applies adversarial perturbations to face images to protect against face-swapping deepfake generation, addressing latent and spatial constraint issues.",
+      "llm_tldr_cn": "该论文针对换脸深度伪造对个人隐私的威胁，提出了一种统一的保护框架Phantom，通过结合潜在和空间约束生成对抗扰动，防止图像被用于换脸生成。它解决了现有方法中目标模糊和扰动扩散至身份无关区域的问题，并在多个换脸模型上验证了保护效果。这项工作为深度伪造防御提供了新的思路，对抗样本技术可有效阻断非法人脸操纵。",
+      "llm_tldr": "该论文针对换脸深度伪造对个人隐私的威胁，提出了一种统一的保护框架Phantom，通过结合潜在和空间约束生成对抗扰动，防止图像被用于换脸生成。它解决了现有方法中目标模糊和扰动扩散至身份无关区域的问题，并在多个换脸模型上验证了保护效果。这项工作为深度伪造防御提供了新的思路，对抗样本技术可有效阻断非法人脸操纵。",
+      "llm_tags": [
+        "query:deepfake-fsl:composite"
+      ],
+      "matched_query_tag": "query:deepfake-fsl:composite",
+      "matched_query_text": "Papers central to 深度伪造检测、AI生成图像检测、图像分类、少样本学习、特征对齐、细粒度分类相关论文, especially work that connects or combines: detection of deepfake images and videos using machine learning models; detecting images created by generative AI models such as GANs and diffusion models; classifying images into categories using convolutional neural networks; training models with only a small number of labeled examples per class; detecting manipulated face images in multimedia forensics; distinguishing computer-generated images from real photographs; identifying AI generated or synthetic images with limited training data; few shot learning approaches for face forgery detection and image classification; few shot deepfake detection using feature alignment; cross domain generalization for AI generated image detection.",
+      "matched_requirement_id": "req-composite-deepfake-fsl",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.00948v1",
+      "source": "arxiv",
+      "title": "Dataset Biases and Shortcut Learning in Motion-Based AI-Generated Video Detection",
+      "abstract": "The visual quality of AI-generated videos has improved drastically in recent years, making it increasingly difficult for humans to distinguish between real and synthetic media. In this work, we evaluate the robustness and applicability of four state-of-the-art motion-based AI-generated video detectors. We identify significant preprocessing and sampling biases in these methods and demonstrate that they account for a substantial portion of their reported performance. Furthermore, we find that these detectors are highly sensitive to motion patterns specific to their evaluation datasets, where AI-generated videos generally exhibit less inter-frame movement than real videos. We show that for all detectors, performance collapses to near-random levels when evaluated on a dataset that does not contain this motion bias. Additionally, through dataset rebalancing and the application of simple spatial augmentations, we observe severe performance degradation across all evaluated models. In contrast, we find that an existing frequency-based detector maintains strong performance across all evaluated datasets, suggesting that frequency-based approaches may offer a more generalizable path forward for AI-generated video detection. We hope that our work raises awareness towards these vulnerabilities and encourages the development of more representative, unbiased datasets and more robust evaluation protocols.",
+      "authors": [
+        "Joren Michels",
+        "Lode Jorissen",
+        "Nick Michiels"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T13:47:42+00:00",
+      "link": "https://arxiv.org/pdf/2607.00948v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Evaluates motion-based AI-generated video detectors, directly relevant to deepfake video detection",
+      "llm_evidence_cn": "评估基于运动的AI生成视频检测器，与深度伪造视频检测直接相关",
+      "llm_evidence": "评估基于运动的AI生成视频检测器，与深度伪造视频检测直接相关",
+      "canonical_evidence": "评估基于运动的AI生成视频检测器，与深度伪造视频检测直接相关",
+      "llm_tldr_en": "Identifies dataset biases and shortcut learning in motion-based AI-generated video detectors, showing performance collapse under unbiased evaluation.",
+      "llm_tldr_cn": "针对AI生成视频检测，评估了四种基于运动的检测器的鲁棒性，发现预处理和采样偏差是性能虚高的主要来源，且检测器对运动模式高度敏感。在去除偏差后，所有检测器性能降至接近随机水平，揭示了当前方法的脆弱性，为构建更可靠的检测器提供了指导。",
+      "llm_tldr": "针对AI生成视频检测，评估了四种基于运动的检测器的鲁棒性，发现预处理和采样偏差是性能虚高的主要来源，且检测器对运动模式高度敏感。在去除偏差后，所有检测器性能降至接近随机水平，揭示了当前方法的脆弱性，为构建更可靠的检测器提供了指导。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
