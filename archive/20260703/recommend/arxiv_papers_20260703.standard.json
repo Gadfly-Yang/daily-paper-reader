@@ -1,0 +1,94 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-03T21:35:21.308562+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2607.01303v1",
+      "source": "arxiv",
+      "title": "CPG-PAD: Concept-Informed Prompts Guided Presentation Attack Detection",
+      "abstract": "Presentation Attack Detection (PAD) serves as a crucial safeguard for face recognition systems against presentation attacks such as printed photos, replayed videos, and 3D masks. Despite significant progress, existing PAD models still struggle to generalize across unseen domains due to variations in sensors, lighting, and attack materials. Recent Vision-Language Models (VLMs) have shown strong generalization ability, yet their applications in PAD remain limited because learned prompts, typically optimized under class-label supervision, fail to explicitly align with fine-grained attack-relevant visual semantics. As a result, the learned representations often overfit domain-specific artifacts instead of capturing transferable attack cues. To address this, we propose Concept-Informed Prompts Guided Presentation Attack Detection (CPG-PAD), a framework that introduces model-level concept guidance into the prompt learning process. Specifically, we design a Visual Concept-driven Enhancement (VCE) module that employs eXplainable AI (XAI) techniques to automatically discover PAD-relevant visual concepts and generate concept-associated heatmaps providing localized fine-grained guidance. Guided by these heatmaps, a Prompt-based Concept Injection (PCI) mechanism integrates these concepts into the prompt space through a Visual-Prompt Decoder (VPD) and a concept-mapping loss, enabling prompts to align with the model's internal concept space. This design enables CPG-PAD to capture generalizable and domain-invariant attack cues while effectively suppressing dataset-specific biases. Extensive experiments across nine benchmark datasets demonstrate that CPG-PAD consistently achieves state-of-the-art cross-domain performance under multi-source, limited-source, and single-source settings.",
+      "authors": [
+        "Haoyuan Zhang",
+        "Xiangyu Zhu",
+        "Li Gao",
+        "Ajian Liu",
+        "Siran Peng",
+        "Zhen Lei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-01T15:33:45+00:00",
+      "link": "https://arxiv.org/pdf/2607.01303v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Detects face presentation attacks (print, replay, mask) using concept-informed VLM prompts",
+      "llm_evidence_cn": "利用概念引导提示检测面部呈现攻击（打印、重放、面具）",
+      "llm_evidence": "利用概念引导提示检测面部呈现攻击（打印、重放、面具）",
+      "canonical_evidence": "利用概念引导提示检测面部呈现攻击（打印、重放、面具）",
+      "llm_tldr_en": "Proposes CPG-PAD that uses concept-informed prompts to align VLM representations with fine-grained attack cues, improving generalization across unseen domains in face presentation attack detection.",
+      "llm_tldr_cn": "针对面部呈现攻击检测模型跨域泛化难题，提出概念引导提示的CPG-PAD方法。利用视觉语言模型，将人工定义的概念知识融入可学习提示，使模型显式关注攻击相关的细粒度视觉语义。实验表明，该方法在多个公开数据库上有效提升了跨域攻击检测精度，为多媒体取证中的面部伪造检测提供了新范式。",
+      "llm_tldr": "针对面部呈现攻击检测模型跨域泛化难题，提出概念引导提示的CPG-PAD方法。利用视觉语言模型，将人工定义的概念知识融入可学习提示，使模型显式关注攻击相关的细粒度视觉语义。实验表明，该方法在多个公开数据库上有效提升了跨域攻击检测精度，为多媒体取证中的面部伪造检测提供了新范式。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.01657v1",
+      "source": "arxiv",
+      "title": "Domain Generalization via Text-Anchored Information Bottleneck",
+      "abstract": "Visual recognition models often fail when deployed in new environments. Domain Generalization (DG) addresses this by learning representations that remain invariant to environment-specific variations. Recent approaches increasingly rely on large vision-language models, assuming that preserving their expressive visual representations improves robustness. However, we show that such visual expressiveness can instead propagate spurious cues that tie representations to the training environments, hindering invariant learning. We therefore discard visual guidance and instead treat the language embedding space as the primary source of domain invariance, naturally acting as an information bottleneck that preserves core semantics while suppressing domain-specific variations. Extensive experiments across diverse backbones exhibit state-of-the-art performance and further analyze what makes guidance effective for robust generalization. These findings shift the focus of DG from improving representations to designing supervision that enforces invariance.",
+      "authors": [
+        "Eunyi Lyou",
+        "Yunjeong Choi",
+        "Junho Lee",
+        "Joonseok Lee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-02T03:31:34+00:00",
+      "link": "https://arxiv.org/pdf/2607.01657v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Uses language bottleneck for domain generalization, key for cross-domain AI image detection",
+      "llm_evidence_cn": "利用语言信息瓶颈实现域不变特征学习，适用于AI生成图像跨域检测",
+      "llm_evidence": "利用语言信息瓶颈实现域不变特征学习，适用于AI生成图像跨域检测",
+      "canonical_evidence": "利用语言信息瓶颈实现域不变特征学习，适用于AI生成图像跨域检测",
+      "llm_tldr_en": "Proposes to discard visual guidance and instead use language embedding space as a bottleneck to learn domain-invariant representations, significantly improving generalization.",
+      "llm_tldr_cn": "针对视觉识别模型在新环境中泛化失败的问题，提出文本锚定信息瓶颈方法。放弃视觉引导，将语言嵌入空间作为信息瓶颈，约束模型只保留语义关键信息，抑制域特定变化。实验表明，该方法在多种域泛化基准上取得显著提升，为AI生成图像检测等跨域任务提供了有效的特征学习策略。",
+      "llm_tldr": "针对视觉识别模型在新环境中泛化失败的问题，提出文本锚定信息瓶颈方法。放弃视觉引导，将语言嵌入空间作为信息瓶颈，约束模型只保留语义关键信息，抑制域特定变化。实验表明，该方法在多种域泛化基准上取得显著提升，为AI生成图像检测等跨域任务提供了有效的特征学习策略。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}

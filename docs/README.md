@@ -6,40 +6,29 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-02
-- 运行时间：2026-07-02 21:52:08 UTC
+- 最新运行日期：2026-07-03
+- 运行时间：2026-07-03 21:37:59 UTC
 - 运行状态：成功
-- 本次总论文数：6
-- 精读区：4
-- 速读区：2
+- 本次总论文数：2
+- 精读区：2
+- 速读区：0
 
 ### 今日简报（AI）
-今日聚焦深度伪造检测前沿，精读一篇满分论文《MG-RWKV》与高分医用合成图鲁棒性审计研究，并速览两项防护工作。  
-最值得关注：多粒度时序伪造定位与多模态合成医学影像的脆弱性审计，揭示了从视频补丁到跨模态攻击的新攻防形态。  
-建议日常警惕“眼见为实”陷阱，尤其面对AI生成的视频与医疗影像时，需依赖技术交叉验证而非单一感官判断。
-- 详情：[/202607/02/README](/202607/02/README)
+今日精读两篇聚焦文本概念植入视觉任务的前沿研究，分别攻克活体检测与域泛化。
+核心启示：引入概念提示与文本锚定信息瓶颈，能显著提升模型抵抗攻击与跨域泛化的鲁棒性。
+建议关注视觉任务泛化与安全的读者，重点阅读《CPG-PAD》的提示设计思路，其评分高达9.0。
+- 详情：[/202607/03/README](/202607/03/README)
 
 ### 精读区论文标签
-1. [MG-RWKV: Multi-Grained Context-Aware RWKV for Temporal Forgery Localization](/202607/02/2607.00902v1-mg-rwkv-multi-grained-context-aware-rwkv-for-temporal-forgery-localization)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：时间伪造定位，精准识别未剪辑序列中的篡改片段
-2. [Text Over Image: Auditing Multimodal Robustness in Synthetic Medical Image Detection](/202607/02/2606.25375v2-text-over-image-auditing-multimodal-robustness-in-synthetic-medical-image-detection)  
+1. [CPG-PAD: Concept-Informed Prompts Guided Presentation Attack Detection](/202607/03/2607.01303v1-cpg-pad-concept-informed-prompts-guided-presentation-attack-detection)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：审计合成图像检测中的鲁棒性，直接属于AI生成图像检测任务
-3. [Rethinking Multi-Label Image Classification With Deep Learning: Taxonomy, Challenge, and Outlook](/202607/02/2607.00839v1-rethinking-multi-label-image-classification-with-deep-learning-taxonomy-challenge-and-outlook)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：使用卷积神经网络进行多标签图像分类的综合综述
-4. [AdaBoosting Text Prompts for Vision-Language Models](/202607/02/2607.00684v1-adaboosting-text-prompts-for-vision-language-models)  
+   evidence：利用概念引导提示检测面部呈现攻击（打印、重放、面具）
+2. [Domain Generalization via Text-Anchored Information Bottleneck](/202607/03/2607.01657v1-domain-generalization-via-text-anchored-information-bottleneck)  
    标签：评分：8.0/10、query:deepfake-fsl
-   evidence：利用少量标注图像进行少样本文本提示增强的框架
+   evidence：利用语言信息瓶颈实现域不变特征学习，适用于AI生成图像跨域检测
 
 ### 速读区论文标签
-1. [Phantom: A Unified Face-Swap Deepfake Protection Framework with Latent and Spatial Constraints](/202607/02/2606.31703v1-phantom-a-unified-face-swap-deepfake-protection-framework-with-latent-and-spatial-constraints)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：提出一种基于对抗扰动的换脸深度伪造保护框架
-2. [Dataset Biases and Shortcut Learning in Motion-Based AI-Generated Video Detection](/202607/02/2607.00948v1-dataset-biases-and-shortcut-learning-in-motion-based-ai-generated-video-detection)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：评估基于运动的AI生成视频检测器，与深度伪造视频检测直接相关
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">

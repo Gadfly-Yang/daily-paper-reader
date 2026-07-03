@@ -1,0 +1,39 @@
+{
+  "label": "2026-07-03",
+  "date": "2026-07-03",
+  "generated_at": "2026-07-03T21:38:12",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202607/03/2607.01303v1-cpg-pad-concept-informed-prompts-guided-presentation-attack-detection",
+      "section": "deep",
+      "title_en": "CPG-PAD: Concept-Informed Prompts Guided Presentation Attack Detection",
+      "authors": "Haoyuan Zhang, Xiangyu Zhu, Li Gao, Ajian Liu, Siran Peng, Zhen Lei",
+      "date": "2026-07-01",
+      "pdf": "https://arxiv.org/pdf/2607.01303v1",
+      "score": "9.0",
+      "evidence": "利用概念引导提示检测面部呈现攻击（打印、重放、面具）",
+      "tldr": "人脸识别系统易受打印照片、视频重放等呈现攻击，现有PAD模型跨域泛化差；VLM提示学习未能对齐细粒度攻击语义导致过拟合。提出CPG-PAD，通过XAI技术自动发现PAD相关视觉概念生成热图，并利用概念注入机制将攻击语义融入提示空间，抑制数据集偏差。在九个数据集的多源、有限源及单源跨域实验中均达最优，显著提升PAD泛化性能。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Presentation Attack Detection (PAD) serves as a crucial safeguard for face recognition systems against presentation attacks such as printed photos, replayed videos, and 3D masks. Despite significant progress, existing PAD models still struggle to generalize across unseen domains due to variations in sensors, lighting, and attack materials. Recent Vision-Language Models (VLMs) have shown strong generalization ability, yet their applications in PAD remain limited because learned prompts, typically optimized under class-label supervision, fail to explicitly align with fine-grained attack-relevant visual semantics. As a result, the learned representations often overfit domain-specific artifacts instead of capturing transferable attack cues. To address this, we propose Concept-Informed Prompts Guided Presentation Attack Detection (CPG-PAD), a framework that introduces model-level concept guidance into the prompt learning process. Specifically, we design a Visual Concept-driven Enhancement (VCE) module that employs eXplainable AI (XAI) techniques to automatically discover PAD-relevant visual concepts and generate concept-associated heatmaps providing localized fine-grained guidance. Guided by these heatmaps, a Prompt-based Concept Injection (PCI) mechanism integrates these concepts into the prompt space through a Visual-Prompt Decoder (VPD) and a concept-mapping loss, enabling prompts to align with the model's internal concept space. This design enables CPG-PAD to capture generalizable and domain-invariant attack cues while effectively suppressing dataset-specific biases. Extensive experiments across nine benchmark datasets demonstrate that CPG-PAD consistently achieves state-of-the-art cross-domain performance under multi-source, limited-source, and single-source settings.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/03/2607.01657v1-domain-generalization-via-text-anchored-information-bottleneck",
+      "section": "deep",
+      "title_en": "Domain Generalization via Text-Anchored Information Bottleneck",
+      "authors": "Eunyi Lyou, Yunjeong Choi, Junho Lee, Joonseok Lee",
+      "date": "2026-07-02",
+      "pdf": "https://arxiv.org/pdf/2607.01657v1",
+      "score": "8.0",
+      "evidence": "利用语言信息瓶颈实现域不变特征学习，适用于AI生成图像跨域检测",
+      "tldr": "视觉识别模型跨域泛化常因环境变化而失败。现有方法依赖大型视觉语言模型保留视觉表达性，但可能传播虚假线索，阻碍不变学习。本文提出文本锚定信息瓶颈，将语言嵌入空间作为领域不变性来源，自然保留核心语义并抑制领域特定变化。在多种骨干网络上取得最优性能，将领域泛化焦点从改进表示转向设计不变性监督。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Visual recognition models often fail when deployed in new environments. Domain Generalization (DG) addresses this by learning representations that remain invariant to environment-specific variations. Recent approaches increasingly rely on large vision-language models, assuming that preserving their expressive visual representations improves robustness. However, we show that such visual expressiveness can instead propagate spurious cues that tie representations to the training environments, hindering invariant learning. We therefore discard visual guidance and instead treat the language embedding space as the primary source of domain invariance, naturally acting as an information bottleneck that preserves core semantics while suppressing domain-specific variations. Extensive experiments across diverse backbones exhibit state-of-the-art performance and further analyze what makes guidance effective for robust generalization. These findings shift the focus of DG from improving representations to designing supervision that enforces invariance.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
