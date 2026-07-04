@@ -1,0 +1,60 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-04T20:41:23.281069+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2606.31249v1",
+      "source": "arxiv",
+      "title": "Rethinking the Role of Feature Engineering and Learning Strategies in Few-Shot Hidden Emotion Recognition",
+      "abstract": "In this paper, we present the solution developed by our team, XInsight Lab, which achieved first place in Track 3 of the 4th EI-MIGA-IJCAI Challenge with a test accuracy of 0.76923. To address the challenge of weak and sparse implicit emotion evidence in long videos, this paper extends the winning solution from the previous competition and proposes a compact multi-modal temporal modeling framework. The framework integrates and evaluates the effects of multi-source features, including 2D/3D skeletons, facial expression Blendshapes, DINOv2/v3 vision foundation models, X-CLIP video features, and Gemini semantic priors. Architecturally, we propose a cross-attention mechanism that utilizes static pose features, denoted as Base, as the Query and dynamic micro-motion differential features, denoted as Offset, as the Key and Value. By capturing local relative velocities, this mechanism eliminates static biases related to individual body shape and identity. Concurrently, an adaptive pooling method based on Multiple Instance Learning is employed to extract instantaneous emotions while suppressing background noise in long sequences. Finally, the paper reveals the representation collapse phenomenon of general vision foundation models in micro-dynamic tasks, and analyzes the underlying mechanisms where networks fall into public-leaderboard-driven pseudo-generalization due to shortcut learning and rote memorization.",
+      "authors": [
+        "Xiaochuan Guo",
+        "Jihao Gu",
+        "Haixu Liu",
+        "Yuxin Liu",
+        "Qi Wang",
+        "Yufei Wang",
+        "Fei Wang",
+        "Kun Li",
+        "Dan Guo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-30T07:25:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.31249v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "few-shot hidden emotion recognition using feature engineering and learning strategies",
+      "llm_evidence_cn": "使用特征工程和学习策略的少样本隐藏情绪识别",
+      "llm_evidence": "使用特征工程和学习策略的少样本隐藏情绪识别",
+      "canonical_evidence": "使用特征工程和学习策略的少样本隐藏情绪识别",
+      "llm_tldr_en": "Proposes a multi-modal framework for few-shot emotion recognition, integrating 2D/3D skeletons, facial blendshapes, DINOv2/v3, X-CLIP, and Gemini priors with cross-attention, achieving first place in IJCAI challenge.",
+      "llm_tldr_cn": "针对长视频中隐藏情绪证据弱且稀疏的少样本识别挑战，提出集成多源特征的紧凑多模态时序建模框架。该框架融合2D/3D骨架、面部表情Blendshapes、DINOv2/v3视觉基础模型、X-CLIP视频特征及Gemini语义先验，并设计交叉注意力机制融合静态姿态与动态特征。在IJCAI挑战赛中取得第一，测试准确率0.76923，为少样本视频理解提供了有效方案，尤其适用于细粒度情感分析。",
+      "llm_tldr": "针对长视频中隐藏情绪证据弱且稀疏的少样本识别挑战，提出集成多源特征的紧凑多模态时序建模框架。该框架融合2D/3D骨架、面部表情Blendshapes、DINOv2/v3视觉基础模型、X-CLIP视频特征及Gemini语义先验，并设计交叉注意力机制融合静态姿态与动态特征。在IJCAI挑战赛中取得第一，测试准确率0.76923，为少样本视频理解提供了有效方案，尤其适用于细粒度情感分析。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot learning approaches for face forgery detection and image classification",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

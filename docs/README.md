@@ -6,29 +6,26 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-03
-- 运行时间：2026-07-03 21:37:59 UTC
+- 最新运行日期：2026-07-04
+- 运行时间：2026-07-04 20:43:14 UTC
 - 运行状态：成功
-- 本次总论文数：2
-- 精读区：2
-- 速读区：0
+- 本次总论文数：1
+- 精读区：0
+- 速读区：1
 
 ### 今日简报（AI）
-今日精读两篇聚焦文本概念植入视觉任务的前沿研究，分别攻克活体检测与域泛化。
-核心启示：引入概念提示与文本锚定信息瓶颈，能显著提升模型抵抗攻击与跨域泛化的鲁棒性。
-建议关注视觉任务泛化与安全的读者，重点阅读《CPG-PAD》的提示设计思路，其评分高达9.0。
-- 详情：[/202607/03/README](/202607/03/README)
+今速读《Rethinking the Role of Feature Engineering and Learning Strategies in Few-Shot Hidden Emotion Recognition》，探讨少样本隐藏情绪识别中特征工程与学习策略的再思考。  
+论文指出融合声学与文本特征、引入对比学习可显著提升少样本泛化能力。  
+对该方向感兴趣的读者，不妨从跨模态特征增强和元学习策略入手深入探索。
+- 详情：[/202607/04/README](/202607/04/README)
 
 ### 精读区论文标签
-1. [CPG-PAD: Concept-Informed Prompts Guided Presentation Attack Detection](/202607/03/2607.01303v1-cpg-pad-concept-informed-prompts-guided-presentation-attack-detection)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：利用概念引导提示检测面部呈现攻击（打印、重放、面具）
-2. [Domain Generalization via Text-Anchored Information Bottleneck](/202607/03/2607.01657v1-domain-generalization-via-text-anchored-information-bottleneck)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：利用语言信息瓶颈实现域不变特征学习，适用于AI生成图像跨域检测
+- 本次无精读推荐。
 
 ### 速读区论文标签
-- 本次无速读推荐。
+1. [Rethinking the Role of Feature Engineering and Learning Strategies in Few-Shot Hidden Emotion Recognition](/202607/04/2606.31249v1-rethinking-the-role-of-feature-engineering-and-learning-strategies-in-few-shot-hidden-emotion-recognition)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：使用特征工程和学习策略的少样本隐藏情绪识别
 
 
 <div class="dpr-home-promo-card">

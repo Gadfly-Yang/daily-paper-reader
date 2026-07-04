@@ -1,0 +1,24 @@
+{
+  "label": "2026-07-04",
+  "date": "2026-07-04",
+  "generated_at": "2026-07-04T20:43:23",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202607/04/2606.31249v1-rethinking-the-role-of-feature-engineering-and-learning-strategies-in-few-shot-hidden-emotion-recognition",
+      "section": "quick",
+      "title_en": "Rethinking the Role of Feature Engineering and Learning Strategies in Few-Shot Hidden Emotion Recognition",
+      "authors": "Xiaochuan Guo, Jihao Gu, Haixu Liu, Yuxin Liu, Qi Wang, Yufei Wang, Fei Wang, Kun Li, Dan Guo",
+      "date": "2026-06-30",
+      "pdf": "https://arxiv.org/pdf/2606.31249v1",
+      "score": "7.0",
+      "evidence": "使用特征工程和学习策略的少样本隐藏情绪识别",
+      "tldr": "针对长视频中隐含情感证据弱且稀疏的挑战，本文提出紧凑多模态时序建模框架，集成多源特征（骨架、表情、视觉基础模型等），设计交叉注意力机制以静态姿态为Query、动态微运动差分为Key/Value消除个体偏差，结合多实例学习自适应池化提取瞬时情绪。在挑战赛Track 3中以0.76923准确率获第一。进一步揭示视觉基础模型在微动态任务中的表示坍缩及公榜驱动伪泛化机制，为小样本情感识别提供新见解。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "In this paper, we present the solution developed by our team, XInsight Lab, which achieved first place in Track 3 of the 4th EI-MIGA-IJCAI Challenge with a test accuracy of 0.76923. To address the challenge of weak and sparse implicit emotion evidence in long videos, this paper extends the winning solution from the previous competition and proposes a compact multi-modal temporal modeling framework. The framework integrates and evaluates the effects of multi-source features, including 2D/3D skeletons, facial expression Blendshapes, DINOv2/v3 vision foundation models, X-CLIP video features, and Gemini semantic priors. Architecturally, we propose a cross-attention mechanism that utilizes static pose features, denoted as Base, as the Query and dynamic micro-motion differential features, denoted as Offset, as the Key and Value. By capturing local relative velocities, this mechanism eliminates static biases related to individual body shape and identity. Concurrently, an adaptive pooling method based on Multiple Instance Learning is employed to extract instantaneous emotions while suppressing background noise in long sequences. Finally, the paper reveals the representation collapse phenomenon of general vision foundation models in micro-dynamic tasks, and analyzes the underlying mechanisms where networks fall into public-leaderboard-driven pseudo-generalization due to shortcut learning and rote memorization.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

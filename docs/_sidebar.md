@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-07-04 <!--dpr-date:20260704-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/04/2606.31249v1-rethinking-the-role-of-feature-engineering-and-learning-strategies-in-few-shot-hidden-emotion-recognition" data-sidebar-item="{&quot;title&quot;: &quot;Rethinking the Role of Feature Engineering and Learning Strategies in Few-Shot Hidden Emotion Recognition&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.31249v1-rethinking-the-role-of-feature-engineering-and-learning-strategies-in-few-shot-hidden-emotion-recognition&quot;, &quot;score&quot;: &quot;7.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;使用特征工程和学习策略的少样本隐藏情绪识别&quot;}">Rethinking the Role of Feature Engineering and Learning Strategies in Few-Shot Hidden Emotion Recognition</a>
   * 2026-07-03 <!--dpr-date:20260703-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/03/2607.01303v1-cpg-pad-concept-informed-prompts-guided-presentation-attack-detection" data-sidebar-item="{&quot;title&quot;: &quot;CPG-PAD: Concept-Informed Prompts Guided Presentation Attack Detection&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.01303v1-cpg-pad-concept-informed-prompts-guided-presentation-attack-detection&quot;, &quot;score&quot;: &quot;9.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;利用概念引导提示检测面部呈现攻击（打印、重放、面具）&quot;}">CPG-PAD: Concept-Informed Prompts Guided Presentation Attack Detection</a>
