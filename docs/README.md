@@ -6,26 +6,29 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-04
-- 运行时间：2026-07-04 20:43:14 UTC
+- 最新运行日期：2026-07-05
+- 运行时间：2026-07-05 20:14:06 UTC
 - 运行状态：成功
-- 本次总论文数：1
+- 本次总论文数：2
 - 精读区：0
-- 速读区：1
+- 速读区：2
 
 ### 今日简报（AI）
-今速读《Rethinking the Role of Feature Engineering and Learning Strategies in Few-Shot Hidden Emotion Recognition》，探讨少样本隐藏情绪识别中特征工程与学习策略的再思考。  
-论文指出融合声学与文本特征、引入对比学习可显著提升少样本泛化能力。  
-对该方向感兴趣的读者，不妨从跨模态特征增强和元学习策略入手深入探索。
-- 详情：[/202607/04/README](/202607/04/README)
+今日速览了两篇论文，分别探索扩散模型在异常检测中的多类正态建模，以及以检索图像为视觉思维的无训练多模态上下文学习。  
+扩散模型让开放集认证更鲁棒，而检索式视觉思路正试图打破大模型“开放回答”与“封闭选择”之间的屏障。  
+可重点跟进这类方法在系统安全与新一代交互推理中的落地进展。
+- 详情：[/202607/05/README](/202607/05/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Rethinking the Role of Feature Engineering and Learning Strategies in Few-Shot Hidden Emotion Recognition](/202607/04/2606.31249v1-rethinking-the-role-of-feature-engineering-and-learning-strategies-in-few-shot-hidden-emotion-recognition)  
+1. [Diffusion-Based Multi-Class Normality for OOD Detection: An Application to CDP Authentication](/202607/05/2607.00609v1-diffusion-based-multi-class-normality-for-ood-detection-an-application-to-cdp-authentication)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：使用特征工程和学习策略的少样本隐藏情绪识别
+   evidence：利用扩散重建误差检测伪造CDP文档的异常检测
+2. [Retrieved Images as Visual Thought: Training-Free Multimodal In-Context Learning for the Open-vs-Closed Gap](/202607/05/2607.00606v1-retrieved-images-as-visual-thought-training-free-multimodal-in-context-learning-for-the-open-vs-closed-gap)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：使用检索示例图像进行无训练多模态上下文学习，实现有限标注数据下的分类
 
 
 <div class="dpr-home-promo-card">

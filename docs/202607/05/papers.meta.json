@@ -1,0 +1,39 @@
+{
+  "label": "2026-07-05",
+  "date": "2026-07-05",
+  "generated_at": "2026-07-05T20:14:21",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202607/05/2607.00609v1-diffusion-based-multi-class-normality-for-ood-detection-an-application-to-cdp-authentication",
+      "section": "quick",
+      "title_en": "Diffusion-Based Multi-Class Normality for OOD Detection: An Application to CDP Authentication",
+      "authors": "Bolutife Atoki, Iuliia Tkachenko, Bertrand Kerautret, Carlos Crispim-Junior",
+      "date": "2026-07-01",
+      "pdf": "https://arxiv.org/pdf/2607.00609v1",
+      "score": "7.0",
+      "evidence": "利用扩散重建误差检测伪造CDP文档的异常检测",
+      "tldr": "复制检测图案认证中，真伪样本视觉高度相似，仅印刷与数字化签名存在细微差异，传统重建式异常检测难以统一建模多类正态分布。为此，提出基于扩散的多类正态性框架，采用类条件ControlNet仅学习真实多类样本，利用真实类条件下的重建误差进行OOD检测，并设计双模板掩码机制隐藏互补区域，仅对保留像素评分以降低对可见结构的依赖。在Indigo 1x1 Base数据集上，方法在多类真伪鉴别中全面优于各类生成基线，且训练与阈值设定无需任何伪造样本。该工作为无监督多类OOD检测提供了有效方案，在防伪认证等场景具有重要应用价值。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Reconstruction-based generative models offer a natural framework for unsupervised out-of-distribution (OOD) detection, but multi-class normality modelling requires a single detector to capture multiple in-distribution manifolds and produce comparable anomaly scores across classes. We study this problem in copy detection pattern (CDP) authentication, where authentic and counterfeit samples are visually similar but differ in subtle printing-and-digitisation (P\\&D) signatures. We propose a diffusion based multi-class normality framework in which a single class-conditional ControlNet is trained exclusively on authentic CDPs from multiple P\\&D classes and detects counterfeits through reconstruction error under authentic-class conditioning. We further introduce dual template masking, which hides complementary regions of the input template and scores only withheld pixels, reducing reliance on visible binary structure. On the Indigo 1 x 1 Base dataset, the proposed method outperforms traditional and adapted generative baselines under multi-class authentic-versus-counterfeit evaluation, without using counterfeit samples for training or threshold calibration.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/05/2607.00606v1-retrieved-images-as-visual-thought-training-free-multimodal-in-context-learning-for-the-open-vs-closed-gap",
+      "section": "quick",
+      "title_en": "Retrieved Images as Visual Thought: Training-Free Multimodal In-Context Learning for the Open-vs-Closed Gap",
+      "authors": "Bingchen Huang, Zhiling Wang, Yifu Chen, Yuanchao Du",
+      "date": "2026-07-01",
+      "pdf": "https://arxiv.org/pdf/2607.00606v1",
+      "score": "6.0",
+      "evidence": "使用检索示例图像进行无训练多模态上下文学习，实现有限标注数据下的分类",
+      "tldr": "现有视觉推理动态化方法多依赖生成或工具，成本高且易出错；本工作提出无需训练的ReVisIT框架，通过检索图像-标签对作为视觉思维单元，结合结构化定义与交替注入实现多模态上下文学习。在多个基准上，小模型配合ReVisIT即接近大模型SOTA，如4-shot达98.5%，且显著超越基线。该框架揭示检索质量的关键作用，并发布新基准MAAC-Bench，为高效视觉推理提供新范式。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Recent work on Thinking with Images makes vision a dynamic part of reasoning, but does so through generation: the model invokes external tools, synthesizes code, or imagines new imagery, each at the cost of a tool protocol, brittle code, or an expensive training pipeline. A fourth route makes vision dynamic without generating anything, by retrieving labeled exemplar images and reasoning over them, yet it remains underexplored despite being train-free. We present ReVisIT, a train-free framework that realizes this retrieval-based route by treating each retrieved image-label pair as a unit of visual thought. ReVisIT combines structured class definitions, per-query multimodal retrieval of exemplars, and alternating user/assistant injection of those exemplars before joint multi-attribute decoding, and degrades gracefully to whichever components a task admits. On VL-ICL Bench Fast Open MiniImageNet, Qwen3-VL-30B-A3B with ReVisIT reaches 98.5% at 4-shot, statistically indistinguishable from the 72B LLaVA-OneVision SOTA (98.7%) on this near-saturated task at about 1/2.4 the parameters, while the same backbone without the scaffold sits at chance. The turns layer alone adds 26.1 points to GPT-4.1 on free-form concept induction (Bongard-OpenWorld), and the full stack yields a 4-6 point macro gain across three backbones on MAAC-Bench, a new license-clean 27-class, 5-attribute benchmark, significant by paired bootstrap on the curator-derived attributes. Component analysis shows that retrieval-plus-turns is the universal lever while structured definitions are need-adaptive, and that 83% of the retrieval gain comes from retrieval quality rather than from the presence of exemplars. MAAC-Bench is released with a rubric-grounded LLM verification protocol that replaces author spot-check on subjective attributes.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

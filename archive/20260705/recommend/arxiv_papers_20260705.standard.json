@@ -1,0 +1,93 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-05T20:12:47.541626+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2607.00609v1",
+      "source": "arxiv",
+      "title": "Diffusion-Based Multi-Class Normality for OOD Detection: An Application to CDP Authentication",
+      "abstract": "Reconstruction-based generative models offer a natural framework for unsupervised out-of-distribution (OOD) detection, but multi-class normality modelling requires a single detector to capture multiple in-distribution manifolds and produce comparable anomaly scores across classes. We study this problem in copy detection pattern (CDP) authentication, where authentic and counterfeit samples are visually similar but differ in subtle printing-and-digitisation (P\\&D) signatures. We propose a diffusion based multi-class normality framework in which a single class-conditional ControlNet is trained exclusively on authentic CDPs from multiple P\\&D classes and detects counterfeits through reconstruction error under authentic-class conditioning. We further introduce dual template masking, which hides complementary regions of the input template and scores only withheld pixels, reducing reliance on visible binary structure. On the Indigo 1 x 1 Base dataset, the proposed method outperforms traditional and adapted generative baselines under multi-class authentic-versus-counterfeit evaluation, without using counterfeit samples for training or threshold calibration.",
+      "authors": [
+        "Bolutife Atoki",
+        "Iuliia Tkachenko",
+        "Bertrand Kerautret",
+        "Carlos Crispim-Junior"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T08:33:03+00:00",
+      "link": "https://arxiv.org/pdf/2607.00609v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Anomaly detection for counterfeit CDP documents using diffusion reconstruction error",
+      "llm_evidence_cn": "利用扩散重建误差检测伪造CDP文档的异常检测",
+      "llm_evidence": "利用扩散重建误差检测伪造CDP文档的异常检测",
+      "canonical_evidence": "利用扩散重建误差检测伪造CDP文档的异常检测",
+      "llm_tldr_en": "Proposes a diffusion-based multi-class normality framework for OOD detection, applied to copy detection pattern authentication, detecting counterfeits through reconstruction error.",
+      "llm_tldr_cn": "针对多类异常检测问题，提出基于扩散的多类正常性框架，训练单个分类条件ControlNet在多个正常类上，通过不同类别条件下的重建误差差异识别伪造样本，在CDP认证中有效区分真假，为多媒体取证提供新范式。",
+      "llm_tldr": "针对多类异常检测问题，提出基于扩散的多类正常性框架，训练单个分类条件ControlNet在多个正常类上，通过不同类别条件下的重建误差差异识别伪造样本，在CDP认证中有效区分真假，为多媒体取证提供新范式。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.00606v1",
+      "source": "arxiv",
+      "title": "Retrieved Images as Visual Thought: Training-Free Multimodal In-Context Learning for the Open-vs-Closed Gap",
+      "abstract": "Recent work on Thinking with Images makes vision a dynamic part of reasoning, but does so through generation: the model invokes external tools, synthesizes code, or imagines new imagery, each at the cost of a tool protocol, brittle code, or an expensive training pipeline. A fourth route makes vision dynamic without generating anything, by retrieving labeled exemplar images and reasoning over them, yet it remains underexplored despite being train-free. We present ReVisIT, a train-free framework that realizes this retrieval-based route by treating each retrieved image-label pair as a unit of visual thought. ReVisIT combines structured class definitions, per-query multimodal retrieval of exemplars, and alternating user/assistant injection of those exemplars before joint multi-attribute decoding, and degrades gracefully to whichever components a task admits. On VL-ICL Bench Fast Open MiniImageNet, Qwen3-VL-30B-A3B with ReVisIT reaches 98.5% at 4-shot, statistically indistinguishable from the 72B LLaVA-OneVision SOTA (98.7%) on this near-saturated task at about 1/2.4 the parameters, while the same backbone without the scaffold sits at chance. The turns layer alone adds 26.1 points to GPT-4.1 on free-form concept induction (Bongard-OpenWorld), and the full stack yields a 4-6 point macro gain across three backbones on MAAC-Bench, a new license-clean 27-class, 5-attribute benchmark, significant by paired bootstrap on the curator-derived attributes. Component analysis shows that retrieval-plus-turns is the universal lever while structured definitions are need-adaptive, and that 83% of the retrieval gain comes from retrieval quality rather than from the presence of exemplars. MAAC-Bench is released with a rubric-grounded LLM verification protocol that replaces author spot-check on subjective attributes.",
+      "authors": [
+        "Bingchen Huang",
+        "Zhiling Wang",
+        "Yifu Chen",
+        "Yuanchao Du"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T08:31:09+00:00",
+      "link": "https://arxiv.org/pdf/2607.00606v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Training-free multimodal in-context learning using retrieved exemplar images for classification with limited labeled data",
+      "llm_evidence_cn": "使用检索示例图像进行无训练多模态上下文学习，实现有限标注数据下的分类",
+      "llm_evidence": "使用检索示例图像进行无训练多模态上下文学习，实现有限标注数据下的分类",
+      "canonical_evidence": "使用检索示例图像进行无训练多模态上下文学习，实现有限标注数据下的分类",
+      "llm_tldr_en": "ReVisIT is a training-free framework that uses retrieved image-label pairs as visual thought units for multimodal in-context learning, enabling classification with few labeled examples without any model training, bridging the open-vs-closed gap.",
+      "llm_tldr_cn": "现有视觉推理方法多依赖工具调用或昂贵训练，检索式方法利用示例图像进行推理却未被充分探索。本文提出ReVisIT，一种无训练框架，将检索到的图文对视为视觉思维单元，结合结构化类定义、多模态检索和少量示例，在分类任务中无需参数更新即可实现高效推理。实验表明，该方法能弥合开集与闭集差距，为少样本图像分类提供了一种简单、可扩展的替代方案，无需依赖生成模型或复杂训练流程。",
+      "llm_tldr": "现有视觉推理方法多依赖工具调用或昂贵训练，检索式方法利用示例图像进行推理却未被充分探索。本文提出ReVisIT，一种无训练框架，将检索到的图文对视为视觉思维单元，结合结构化类定义、多模态检索和少量示例，在分类任务中无需参数更新即可实现高效推理。实验表明，该方法能弥合开集与闭集差距，为少样本图像分类提供了一种简单、可扩展的替代方案，无需依赖生成模型或复杂训练流程。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
