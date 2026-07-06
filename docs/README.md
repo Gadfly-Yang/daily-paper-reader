@@ -6,29 +6,28 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-05
-- 运行时间：2026-07-05 20:14:06 UTC
+- 最新运行日期：2026-07-06
+- 运行时间：2026-07-06 20:57:06 UTC
 - 运行状态：成功
 - 本次总论文数：2
-- 精读区：0
-- 速读区：2
+- 精读区：1
+- 速读区：1
 
 ### 今日简报（AI）
-今日速览了两篇论文，分别探索扩散模型在异常检测中的多类正态建模，以及以检索图像为视觉思维的无训练多模态上下文学习。  
-扩散模型让开放集认证更鲁棒，而检索式视觉思路正试图打破大模型“开放回答”与“封闭选择”之间的屏障。  
-可重点跟进这类方法在系统安全与新一代交互推理中的落地进展。
-- 详情：[/202607/05/README](/202607/05/README)
+通过示例教AI理解“视觉概念”的今天，我们精读了一篇给图集就能学会概念的高分论文，并瞥见对象中心表征的新玩法。  
+核心结论是：无需密集标注，让模型从少数图像集合中推断“什么是一类概念”，效果惊艳且直指开放世界理解。  
+建议读者从“对比式概念学习”入手，看看它如何让机器像人一样瞥见共性。
+- 详情：[/202607/06/README](/202607/06/README)
 
 ### 精读区论文标签
-- 本次无精读推荐。
+1. [Show Me Examples: Inferring Visual Concepts from Image Sets](/202607/06/2607.02402v1-show-me-examples-inferring-visual-concepts-from-image-sets)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：从少量示例图像中推断视觉概念，实现少样本分类
 
 ### 速读区论文标签
-1. [Diffusion-Based Multi-Class Normality for OOD Detection: An Application to CDP Authentication](/202607/05/2607.00609v1-diffusion-based-multi-class-normality-for-ood-detection-an-application-to-cdp-authentication)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：利用扩散重建误差检测伪造CDP文档的异常检测
-2. [Retrieved Images as Visual Thought: Training-Free Multimodal In-Context Learning for the Open-vs-Closed Gap](/202607/05/2607.00606v1-retrieved-images-as-visual-thought-training-free-multimodal-in-context-learning-for-the-open-vs-closed-gap)  
+1. [Object-centric LeJEPA](/202607/06/2607.02404v1-object-centric-lejepa)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：使用检索示例图像进行无训练多模态上下文学习，实现有限标注数据下的分类
+   evidence：以对象为中心的自监督学习提升数据效率，有助于少样本图像分类
 
 
 <div class="dpr-home-promo-card">

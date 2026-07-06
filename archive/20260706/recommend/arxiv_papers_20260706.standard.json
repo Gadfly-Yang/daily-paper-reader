@@ -1,0 +1,94 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-06T20:53:49.834412+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2607.02402v1",
+      "source": "arxiv",
+      "title": "Show Me Examples: Inferring Visual Concepts from Image Sets",
+      "abstract": "Vision-language models (VLMs) can follow complex textual instructions, yet they struggle to reason from purely visual context. In particular, current models fail to infer shared concepts from sets of example images and apply them to new inputs. We introduce Visual Concept Inference from Sets (VICIS), a task that evaluates this capability. Given a small context set of images sharing a concept and a query image, the model must generate new images that preserve the context-defined concept while remaining consistent with the query. We show that state-of-the-art VLMs perform poorly on this task, often ignoring the visual context or defaulting to biased generations. To address this gap, we propose a training framework and architecture that learn to infer visual concepts from image sets and extract concept-specific embeddings from queries. Experiments on synthetic data and large-scale ImageNet/WordNet data show that our model generates more accurate and diverse outputs and generalizes to unseen concepts and modalities such as sketches.",
+      "authors": [
+        "Nick Stracke",
+        "Kolja Bauer",
+        "Stefan Andreas Baumann",
+        "Miguel Angel Bautista",
+        "Josh Susskind",
+        "Björn Ommer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-02T16:35:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.02402v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Learns to infer visual concepts from small example sets, enabling few-shot classification",
+      "llm_evidence_cn": "从少量示例图像中推断视觉概念，实现少样本分类",
+      "llm_evidence": "从少量示例图像中推断视觉概念，实现少样本分类",
+      "canonical_evidence": "从少量示例图像中推断视觉概念，实现少样本分类",
+      "llm_tldr_en": "Introduces a task and framework for few-shot visual concept inference from image sets, improving generalization with limited data.",
+      "llm_tldr_cn": "现有视觉语言模型难以从纯视觉上下文中推理共享概念。本文提出视觉概念集推理任务VICIS，要求模型从少量示例图像集中推断概念并应用于新输入。针对现有模型表现不佳的问题，提出训练框架和架构学习概念推理，在少样本场景下实现更好的泛化，为基于示例的视觉理解提供了有效途径。",
+      "llm_tldr": "现有视觉语言模型难以从纯视觉上下文中推理共享概念。本文提出视觉概念集推理任务VICIS，要求模型从少量示例图像集中推断概念并应用于新输入。针对现有模型表现不佳的问题，提出训练框架和架构学习概念推理，在少样本场景下实现更好的泛化，为基于示例的视觉理解提供了有效途径。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.02404v1",
+      "source": "arxiv",
+      "title": "Object-centric LeJEPA",
+      "abstract": "Image encoders trained with LeJEPA can deliver strong features for downstream tasks, but, like other image-level self-supervised methods, typically require large training datasets. Aligning representations at the level of objects rather than whole scenes promises greater data efficiency, but doing this in a completely self-supervised way, effectively jointly partitioning a scene and representing its objects, is unstable: the two are locked in a cyclic dependency, partitioning requires meaningful representations, while meaningful representations require consistent partitioning. We sidestep this instability by taking object masks as given during training, using cheap, off-the-shelf SAM proposals. We extend LeJEPA - whose distributional anti-collapse objective ports naturally from whole images to variable-sized sets of objects - to align object-centric representations rather than whole images. An additional instance-separating loss, which treats other objects in the same scene as negatives, further boosts downstream performance. Across two model scales and 10-100% of COCO, object-level LeJEPA outperforms image-level LeJEPA on tracking (DAVIS), classification (ImageNet-1k), segmentation (ADE20k), and re-identification (NAVI).",
+      "authors": [
+        "Jakob Geusen",
+        "Ender Konukoglu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-07-02T16:38:21+00:00",
+      "link": "https://arxiv.org/pdf/2607.02404v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Object-centric self-supervised learning for data efficiency, aiding few-shot image classification",
+      "llm_evidence_cn": "以对象为中心的自监督学习提升数据效率，有助于少样本图像分类",
+      "llm_evidence": "以对象为中心的自监督学习提升数据效率，有助于少样本图像分类",
+      "canonical_evidence": "以对象为中心的自监督学习提升数据效率，有助于少样本图像分类",
+      "llm_tldr_en": "Extends LeJEPA with object-centric representation learning using SAM masks to improve data efficiency, enabling stronger features for downstream tasks with limited data, beneficial for few-shot learning.",
+      "llm_tldr_cn": "针对自监督表征学习通常需要大量训练数据的问题，该论文提出以对象为中心的LeJEPA方法，通过利用SAM提供的对象掩码，将场景级表征提升到对象级，从而在有限数据下学习更高效的视觉特征。实验显示，该方法在下游任务中仅需较少标注数据即可取得有竞争力的性能，为少样本图像分类等任务提供了数据高效的表征预训练途径。",
+      "llm_tldr": "针对自监督表征学习通常需要大量训练数据的问题，该论文提出以对象为中心的LeJEPA方法，通过利用SAM提供的对象掩码，将场景级表征提升到对象级，从而在有限数据下学习更高效的视觉特征。实验显示，该方法在下游任务中仅需较少标注数据即可取得有竞争力的性能，为少样本图像分类等任务提供了数据高效的表征预训练途径。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

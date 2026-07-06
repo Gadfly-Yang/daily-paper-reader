@@ -1,0 +1,39 @@
+{
+  "label": "2026-07-06",
+  "date": "2026-07-06",
+  "generated_at": "2026-07-06T20:57:20",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202607/06/2607.02402v1-show-me-examples-inferring-visual-concepts-from-image-sets",
+      "section": "deep",
+      "title_en": "Show Me Examples: Inferring Visual Concepts from Image Sets",
+      "authors": "Nick Stracke, Kolja Bauer, Stefan Andreas Baumann, Miguel Angel Bautista, Josh Susskind, Björn Ommer",
+      "date": "2026-07-02",
+      "pdf": "https://arxiv.org/pdf/2607.02402v1",
+      "score": "8.0",
+      "evidence": "从少量示例图像中推断视觉概念，实现少样本分类",
+      "tldr": "当前视觉语言模型难以从纯视觉上下文中推断概念，尤其无法从示例图像集提取共享概念。本文提出VICIS任务，给定少量示例图像和查询，要求生成保留概念且与查询一致的新图像。我们设计了训练框架让模型从图像集合推断视觉概念并提取概念特定嵌入。实验显示模型输出更准确多样，并能泛化到未见概念和草图模态，显著增强了模型从示例中学习视觉概念的能力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Vision-language models (VLMs) can follow complex textual instructions, yet they struggle to reason from purely visual context. In particular, current models fail to infer shared concepts from sets of example images and apply them to new inputs. We introduce Visual Concept Inference from Sets (VICIS), a task that evaluates this capability. Given a small context set of images sharing a concept and a query image, the model must generate new images that preserve the context-defined concept while remaining consistent with the query. We show that state-of-the-art VLMs perform poorly on this task, often ignoring the visual context or defaulting to biased generations. To address this gap, we propose a training framework and architecture that learn to infer visual concepts from image sets and extract concept-specific embeddings from queries. Experiments on synthetic data and large-scale ImageNet/WordNet data show that our model generates more accurate and diverse outputs and generalizes to unseen concepts and modalities such as sketches.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/06/2607.02404v1-object-centric-lejepa",
+      "section": "quick",
+      "title_en": "Object-centric LeJEPA",
+      "authors": "Jakob Geusen, Ender Konukoglu",
+      "date": "2026-07-02",
+      "pdf": "https://arxiv.org/pdf/2607.02404v1",
+      "score": "6.0",
+      "evidence": "以对象为中心的自监督学习提升数据效率，有助于少样本图像分类",
+      "tldr": "图像级自监督方法如LeJEPA需要大量训练数据，而对象级表示对齐虽具数据效率但自监督分割不稳定。本文通过使用SAM提供对象掩码，将LeJEPA扩展为对象中心版本，并引入实例分离损失。在COCO的10-100%数据上，对象级LeJEPA在跟踪（DAVIS）、分类（ImageNet-1k）、分割（ADE20k）和重识别（NAVI）任务中均优于图像级LeJEPA，展示了数据高效且性能优越的表示学习途径。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Image encoders trained with LeJEPA can deliver strong features for downstream tasks, but, like other image-level self-supervised methods, typically require large training datasets. Aligning representations at the level of objects rather than whole scenes promises greater data efficiency, but doing this in a completely self-supervised way, effectively jointly partitioning a scene and representing its objects, is unstable: the two are locked in a cyclic dependency, partitioning requires meaningful representations, while meaningful representations require consistent partitioning. We sidestep this instability by taking object masks as given during training, using cheap, off-the-shelf SAM proposals. We extend LeJEPA - whose distributional anti-collapse objective ports naturally from whole images to variable-sized sets of objects - to align object-centric representations rather than whole images. An additional instance-separating loss, which treats other objects in the same scene as negatives, further boosts downstream performance. Across two model scales and 10-100% of COCO, object-level LeJEPA outperforms image-level LeJEPA on tracking (DAVIS), classification (ImageNet-1k), segmentation (ADE20k), and re-identification (NAVI).",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

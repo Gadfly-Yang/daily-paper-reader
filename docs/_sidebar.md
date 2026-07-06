@@ -1,6 +1,11 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-07-06 <!--dpr-date:20260706-->
+    * 精读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/06/2607.02402v1-show-me-examples-inferring-visual-concepts-from-image-sets" data-sidebar-item="{&quot;title&quot;: &quot;Show Me Examples: Inferring Visual Concepts from Image Sets&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.02402v1-show-me-examples-inferring-visual-concepts-from-image-sets&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;从少量示例图像中推断视觉概念，实现少样本分类&quot;}">Show Me Examples: Inferring Visual Concepts from Image Sets</a>
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/06/2607.02404v1-object-centric-lejepa" data-sidebar-item="{&quot;title&quot;: &quot;Object-centric LeJEPA&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.02404v1-object-centric-lejepa&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;以对象为中心的自监督学习提升数据效率，有助于少样本图像分类&quot;}">Object-centric LeJEPA</a>
   * 2026-07-05 <!--dpr-date:20260705-->
     * 速读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/05/2607.00609v1-diffusion-based-multi-class-normality-for-ood-detection-an-application-to-cdp-authentication" data-sidebar-item="{&quot;title&quot;: &quot;Diffusion-Based Multi-Class Normality for OOD Detection: An Application to CDP Authentication&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.00609v1-diffusion-based-multi-class-normality-for-ood-detection-an-application-to-cdp-authentication&quot;, &quot;score&quot;: &quot;7.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;利用扩散重建误差检测伪造CDP文档的异常检测&quot;}">Diffusion-Based Multi-Class Normality for OOD Detection: An Application to CDP Authentication</a>
