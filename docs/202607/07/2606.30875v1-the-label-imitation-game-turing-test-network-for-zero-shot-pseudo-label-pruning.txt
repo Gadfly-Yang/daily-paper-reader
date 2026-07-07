@@ -1,0 +1,929 @@
+Title: The Label Imitation Game: Turing Test Network for Zero-Shot Pseudo-Label Pruning
+
+URL Source: https://arxiv.org/pdf/2606.30875v1
+
+Published Time: Wed, 01 Jul 2026 00:17:13 GMT
+
+Number of Pages: 28
+
+Markdown Content:
+# The Label Imitation Game: Turing Test Network for Zero-Shot Pseudo-Label Pruning 
+
+Brent A. Griffin 1 and Jason J. Corso 1,2 
+
+> 1
+
+Voxel51, {brent,jason}@voxel51.com  
+
+> 2
+
+University of Michigan 
+
+Abstract. Foundation model pseudo-labeling—labeling data strictly via zero-shot inference—enables massive scale, but performance is under-mined by hallucinations that evade standard thresholds. To eliminate these errors, we introduce the Turing-inspired Label Imitation Game (LIG) , a framework that formalizes pseudo-label pruning as an adversar-ial interrogation. Rather than filtering labels via isolated thresholds, we use the LIG to train a Turing Test Network (TTN) , a task-agnostic “judge” that evaluates candidate pseudo-labels within a dataset-wide con-text. Experiments across four diverse datasets demonstrate the TTN’s robustness, consistently enhancing label accuracy for three state-of-the-art vision-language models without costly supervision or retraining. Cru-cially, we demonstrate that learned semantic-contextual logic is a robust alternative to spatial-geometric verification, enabling a unique zero-shot task transfer capability—a TTN trained strictly on image classification datasets can effectively prune complex object detection pseudo-labels. This pruning yields F1-score gains of 28% for the worst-performing base-line categories and 44% with task-specific fine-tuning. Significantly, we also observe Category Revival , where the TTN pruning “detoxifies” the training signal for downstream models and enables them to recover from zero recall on transfer-vulnerable classes. The pre-trained TTN models and code are available at https://github.com/voxel51/ttn .
+
+Keywords: Pseudo-labeling · Label Pruning · Zero-Shot Task Transfer ·
+
+Noise-Robust Learning · Foundation Models · Semi-Supervised Detection 
+
+## 1 Introduction 
+
+Can machines annotate data? Foundation vision-language models (VLMs), while powerful for tasks like object detection [11,16,35], often suffer systemic hallucina-tions when applied to open-world problems [18, 32, 59]. For pseudo-labeling [29], these hallucinations add training noise that degrades downstream model perfor-mance relative to expensive (but accurate) human labeling [37,41]. Accordingly, traditional strategies use fixed thresholds to mitigate noise [15, 20, 24]. However, our experiments find this often discards authentic, low-confidence labels while retaining structured errors that are “confidently wrong.” To address this, there is a critical need for a lightweight, post-hoc “interrogator” that differentiates accu-rate labels from hallucinations, ideally without any costly human supervision or changes to the underlying VLM architecture and downstream training pipeline. 
+
+> arXiv:2606.30875v1 [cs.CV] 29 Jun 2026
+
+2 B. Griffin and J. Corso     
+
+> VOC (GDINO) COCO (YOLOE) LVIS and BDD (YOLOW) Reject Accept
+> Pseudo-Label Tokens Judge Accept/Reject
+
+Fig. 1: Zero-Shot Pseudo-Label Pruning . A single Turing Test Network (TTN) trained strictly on image-classification (bottom) finds and rejects systemic VLM hallu-cinations across diverse detection datasets and pseudo-label architectures (top) while accepting accurate labels (middle). TTN rejects labels for spatial inaccuracy ( A), se-mantic inconsistency ( B), or both ( C). Visualizations generated using FiftyOne [36]. 
+
+Inspired by Alan Turing’s “Imitation Game” [48], we propose the Label Im-itation Game (LIG), which formalizes pseudo-label pruning as an adversarial interrogation where a judge must distinguish between accurate labels and hal-lucinations. To operationalize this judge, we introduce the Turing Test Network (TTN)—a transformer-based module that rejects erroneous labels by evaluating their contextual plausibility against a dataset-wide reference set (see Fig. 1). Our primary contributions are: (i) The Label Imitation Game (LIG): 
+
+a novel framework that formalizes label pruning as an adversarial interrogation between a judge and candidate labels (Sec. 4); (ii) The Turing Test Network (TTN): a lightweight, transformer-based architecture that automates the role of the LIG judge by utilizing non-masked self-attention to evaluate semantic and spatial consistency without class labels (Sec. 5); and (iii) Zero-Shot Task Transfer: a cross-task evaluation demonstrating that a TTN trained strictly on image classification can prune object detection pseudo-labels without any 
+
+human input, yielding F1-score gains of 28% and Category Revival—enabling downstream detectors to recover from zero recall on up to 27 classes (Sec. 6). 
+
+## 2 Related Work 
+
+Foundation Model Pseudo Labeling is a scalable alternative to costly man-ual annotation [15, 37, 41]. After earlier work established the benefits of unified Vision-Language Models (VLMs) [58], grounded language-image pre-training [31] reformulated object detection as a phrase grounding task—aligning text phrases to image regions. This VLM innovation enables massive zero-shot trans-fer by treating arbitrary detection categories as contextualized text prompts, Turing Test Network 3
+
+which is enhanced in open-vocabulary detectors like Grounding DINO [34] and YOLO-World [6]. These VLMs are powerful tools for “data engines” [1, 52], with innovative processes like using high-confidence predictions in weakly-augmented views to generate pseudo-labels for strongly-augmented ones [47]. Nonetheless, VLMs are fallible and generally limited by a precision-recall trade-off [15]. 
+
+Hallucinations and Label Noise —predicting entities that are visually absent or contextually inconsistent [18, 32, 59]—are the Achilles heel of VLMs, even oc-curring at high confidence thresholds [5] (Fig. 2). Thankfully, VLM hallucina-tions can be treated as a specialized label noise problem [10]. While noise-robust methods commonly use fixed loss thresholds [20, 24], self-adaptive and class-balanced approaches can explicitly identify noisy data [46]. For pseudo-label pruning, specifically, other techniques maximize re-labeling accuracy by select-ing subsets that maintain neighborhood prediction confidence [39] or iteratively refining boxes to improve localization [21]. Other spatial-geometric verification methods use embeddings to prune redundant detections [44], but rely on local feature similarity. To expand beyond local heuristics, we leverage a dataset-wide semantic context to selectively prune inaccurate pseudo-labels, addressing global inconsistencies that traditional methods overlook. 
+
+Adversarial Interrogation provides a novel framework for pruning. The con-cept of a Visual Turing Test was first proposed to evaluate scene interpretation through binary interrogation [13], while later adversarial variants for dialogue use a “Judge” to discriminate between human and machine responses [12]. This draws a direct analogy to generative adversarial networks [14], which popular-ized the minimax game between a generator and discriminator. This emerging “LLM-as-a-Judge” paradigm provides a scalable alternative to human evalua-tion by using foundation model reasoning to assess output quality across diverse tasks [30,57]. As an alternative to high-cost LLMs, adversarial filters use an iter-ative greedy algorithm to remove classification data biases [4], but this approach precludes reasoning for complex spatial-semantic interrogation. We address this with the Label Imitation Game (LIG), a general framework that formalizes la-bel pruning as an adversarial interrogation independent of source models. By decoupling evaluation from specific task heads, the LIG enables our lightweight Turing Test Network to act as a task-agnostic judge that interrogates the se-mantic plausibility of candidate pseudo-labels within a global reference context. 
+
+## 3 Problem Formulation: The Label Noise Challenge 
+
+Assume a model generates pseudo-labels ˆY on an unlabeled dataset DU = {xi}Mi=1 .Here, data examples xi are drawn i.i.d. from an underlying distribution P , and 
+
+ˆY = { ˆyi}Mi=1 comprises variable-length label sets ( | ˆyi| ≥ 0) for each xi.In practice, pseudo-label accuracy is highly variable and, even with high-confidence thresholds, models often produce hallucinations (see Fig. 2). Our goal is to (i) selectively prune these inaccurate labels to increase precision, while (ii) preserving accurate labels to maintain recall. Accordingly, we evaluate and prune ˆY to select label subset ˜Y = { ˜yi}Mi=1 and formulate the pseudo-label 4 B. Griffin and J. Corso   
+
+> VOC (YOLOW) COCO (GDINO) LVIS and BDD (YOLOE)
+> Fig. 2: TTN Zero-Shot Rejections on High-Confidence Pseudo-Labels
+
+pruning problem as 
+
+arg max 
+
+> ˜Y⊆ˆY
+
+Ex,y∼P [F1(y; ˜ y)] , (1) where y is the ground truth and the F1 score is the harmonic mean of precision and recall. Specifically, F1 = 2 precision ·recall precision + recall ∈ [0 , 1] , precision = TP TP+FP ∈ [0 , 1] ,recall = TP TP+FN ∈ [0 , 1] , true positives ( TP ) is the number of accurate pseudo-labels, and false negatives ( FN ) is the number of y labels without a corresponding 
+
+> TP
+
+. In plain words, precision is the frequency of pseudo-labels being correct, 
+
+recall is the frequency of ground-truth instances being correctly pseudo-labeled, and the goal of Eq. (1) is maximizing the F1 score , which emphasizes label performance across both metrics ( F1 = 1 for perfect precision and recall). Pseudo-labeled datasets are commonly used for downstream model train-ing . However, if left unpruned, pseudo-labels corresponding to hallucinations will induce inductive interference that misleads downstream model convergence. Thus, we combine pruned pseudo-labels ˜Y with DU to generate the “detoxified” dataset ˜D = {(xi, ˜yi)}Mi=1 . We evaluate ˜D by reformulating pruning from Eq. (1) explicitly for downstream model training as 
+
+arg min 
+
+> ˜Y⊆ˆY
+
+Ex,y∼P [ℓ(x, y; f(˜D))] , (2) where ℓ is the task-specific loss function and f(˜D) is a model trained on ˜D. In plain words, the goal of Eq. (2) is to prune pseudo-labels ( ˜Y ⊆ ˆY) to train a downstream model ( f ) that most accurately predicts ground-truth labels ( y) for unseen images ( x) drawn from the underlying data distribution ( P ). 
+
+## 4 Adversarial Interrogation via the Label Imitation Game 
+
+The Turing test evaluates a machine’s ability to exhibit intelligent behavior in-distinguishable from that of a human [48]. Likewise, our goal is to evaluate which pseudo-labels are indistinguishable from those of a human annotator, implicitly denoting high accuracy. We formalize this as the Label Imitation Game (LIG). We formulate label tests in the context of a game involving a set of Ideal 
+
+and Candidate labels and a Judge . The Judge is given all labels and must de-termine which belong to each set. We use LIG to train the Turing Test Network, which later serves as the Judge at inference to reject and prune pseudo-labels, solving ˜Y ⊆ ˆY in Eqs. (1) & (2). We use a tokenized representation (Sec. 4.1) for the LIG (Sec. 4.2), but these games are general to the original labels and data. Turing Test Network 5
+
+4.1 Tokenizing Labels & Data 
+
+The transformer architecture (the de facto standard for NLP [49]) operates on a tokenized representation of data to iteratively compare context across all inputs before determining final outputs. To utilize this iterative comparison capability for the LIG, we fuse labels y and data x into tokens, specifically 
+
+g(x, y) = {g1, g2, . . . , gn}, (3) where g is a function operating on x and y, n = |y| = |g(x, y)|, and each output token gi is a lower-dimension representation than x (we specify g in Sec. 5). Extending Eq. (3), we can generate arbitrary tokens across m data examples as 
+
+G = {g1, g2, . . . , gN } = {g(xi, yi)}mi=1 . (4) Using Eq. (4), we reformulate label pruning as token pruning , i.e., selecting 
+
+˜G ⊆ ˆG, where ˆG = {ˆgi} ˆNi=1 = {g(xi, ˆyi)}Mi=1 and ˆN = | ˆY|. Furthermore, because there is a one-to-one correspondence between tokens and labels, tokens can map directly back to labels as g−1 : ˜G → ˜Y in Eq. (1) for bijective equivalence. 
+
+4.2 Label Imitation Games 
+
+For Game 1 , we use Eq. (4) to generate a set of tokens G∗ = {g∗ 
+
+> i
+
+}N ∗ 
+
+> i=1
+
+from accurately labeled data {xi, y∗ 
+
+> i
+
+}m∗ 
+
+> i=1
+
+and ˆG = {ˆgi} ˆNi=1 from pseudo-labeled data 
+
+{xi, ˆyi}mi=1 . The Judge’s objective is to predict which tokens in the combined set correspond to pseudo-labels. We formulate this Pseudo-Label Game as 
+
+Game 1 (PLG) Given G∗ ∪ ˆG, identify which tokens belong to ˆG.
+
+The intuition of PLG is if a Candidate token ˆgi ∈ ˆG is distinguishable from the Ideal set G∗, its corresponding pseudo-label is likely inaccurate and should be rejected. Conversely, as ˆgi approaches G∗ accuracy, it becomes effectively indistinguishable. In fact, experiments show that carefully chosen ˆgi can even serve as Ideal tokens G∗ (we call this “Self-Referential Pruning” in Sec. 5.2). For Game 2 , assume each token is associated with a latent category ci ∈ C 
+
+from its underlying label and data. Extending Eq. (4), we denote ci ∀ gi as 
+
+G = {g(c1)1 , g(c2)2 , . . . , g(cN ) 
+
+> N
+
+} = {g(xi, yi)}mi=1 . (5) In this game, by construction, the Ideal tokens G(c∗) are homogeneous w.r.t. a target category c∗, s.t. ci = c∗, ∀ g(ci) 
+
+> i
+
+∈ G(c∗). Conversely, Candidate tokens 
+
+G(¬c∗) are strictly disjoint from c∗, s.t. ci̸ = c∗, ∀ g(ci) 
+
+> i
+
+∈ G(¬c∗). The Judge’s 
+
+objective is to predict which tokens in the combined set belong to disjoint cate-gories ci̸ = c∗. We formulate this Out-of-Category Game as 
+
+Game 2 (OCG) Given G(c∗) ∪ G(¬c∗), identify which tokens belong to G(¬c∗).6 B. Griffin and J. Corso   
+
+> VOC (YOLOE) COCO and LVIS (YOLOW) BDD (GDINO)
+> Fig. 3: TTN Zero-Shot Rejections on Poorly-Localized Pseudo-Labels
+
+Notably, the OCG Judge is not informed of the target category c∗. To ensure the objective is not underdetermined, we implement OCG s.t. |G(c∗)| > |G(¬c∗)|.This constraint provides sufficient referential density for the Judge to infer target identity, resolve categorical ambiguity, and distinguish the Ideal tokens from Candidates. The intuition of OCG is if a token gi ∈ G(¬c∗) is distinguishable from the ideal set G(c∗), its corresponding pseudo-label is semantically inconsistent or noisy and should be rejected. A substantial benefit of OCG is generating numerous training examples for the Turing Test Network (details in Sec. 5). Finally, denoting PLG 1 and or OCG 2 as h, we find ˜Y ⊆ ˆY in Eq. (1) as 
+
+˜Y = g−1( ˜G) = g−1 h(G∗ ∪ ˆG) ∩ ˆG, (6) where ˜G are Candidate pseudo-label tokens ˆgi ∈ ˆG accepted by h when provided 
+
+G∗ ∪ ˆG and g−1 maps the tokens back to their original labels (Eq. (4)). 
+
+## 5 Learning to Judge: The Turing Test Network 
+
+We introduce the Turing Test Network (TTN) to automate the role of LIG Judge. Specifically, we employ a transformer-based discriminator trained on a LIG-based binary cross-entropy loss to identify label errors (Sec. 5.1). We train the baseline TTN strictly on classification data but in a class-agnostic manner, withholding categorical labels across 1,303 classes from eight datasets to ensure the TTN learns latent semantic relationships rather than basic class mapping. After training, the TTN exhibits an emergent capacity to build and evaluate se-mantic (Fig. 2) and spatial context (Fig. 3) solely from input sequences, enabling zero-shot transfer to object detection without supervision (Sec. 5.2). Finally, we introduce a task-specific variant (TTN D) fine-tuned on detection data, pseudo-labels, and ≤ 100 human labels per class for enhanced performance (Sec. 5.3). 
+
+Network Architecture : TTN’s architecture consists of (i) a frozen CLIP [43] feature extractor that encodes label-defined image patches as fi ∈ R768 and (ii) a custom-learned tokenizer gi(fi) ∈ R512 that enables the (iii) transformer-based reasoning block to evaluate each token and output Accept/Reject logits zi
+
+(Fig. 4). For full details, please refer to Sec. S1 in the Supplementary Material. 
+
+5.1 Training via the Label Imitation Game 
+
+We train the TTN by minimizing a weighted binary cross-entropy (BCE) loss over LIG outcomes. For a sequence of n = |G| tokens, the objective function is 
+
+LBCE (w) := −
+
+> n
+
+X
+
+> i=1
+
+h
+
+pwyi · log  σ(zi) + (1 − yi) · log  1 − σ(zi)i
+
+, (7) Turing Test Network 7
+
+> Fig. 4: Turing Test Network (TTN) Architecture . The TTN processes image patches via a TTN Tokenizer and an eight-layer Transformer. Using non-masked self-attention, TTN evaluates relational and sequential context to produce Accept/Reject logits ( zi) for each input without any class labels, enabling zero-shot task transfer.
+
+where w are trainable parameters of the tokenizer and transformer, yi ∈ { 0, 1}
+
+is the ground-truth indicator assigning yi = 0 to the Accept set and yi = 1 
+
+to the Reject set, pw is a positive weight applied to Reject training examples (conceptually, pruning aggression), zi is the output logit per token gi ∈ G, and 
+
+σ(zi) = 11+ e−zi is the model’s estimated probability that gi should be rejected. To ensure the TTN generalizes across diverse failure modes, we construct training batches by sampling tokens gi from a categorical training distribution 
+
+P (S) over the following four mutually exclusive states S ∈ { 1, 2, 3, 4}:
+
+S =a1 (Ideal): High-fidelity human-label token with target category c∗.
+
+S = 2 (OCG-Human): Human-label token with disjoint category ci̸ = c∗.
+
+S = 3 (OCG-Pseudo): Pseudo-label token with disjoint category ci̸ = c∗.
+
+S = 4 (PLG): Pseudo-label token of any fidelity and target category c∗.By construction, yi = 1 if S = 1 and yi = 0 otherwise in Eq. (7). We denote the sampling probability for each state as πk = P (S = k), where P πk = 1 . This formulation enables control of LIG difficulty by adjusting the training failure distribution. For OCG ( S = {2, 3}), all disjoint categories ci̸ = c∗ have an equal chance of being selected, but we only use one disjoint category per game. 
+
+Training Protocol : Each training sequence includes references for context prior to candidates. Specifically, we assign the first 10 positions sampled exclusively from the Ideal state ( S = 1 ) to the Reference Set . To ensure a robust reference context, we limit Reference Sets to only include categories with N > 10 instances. The final position is reserved for the Candidate Slot , which is sampled from the full distribution P (S). This forces the TTN to utilize the Reference Set’s context to interrogate the Candidate’s fidelity. While experiments indicate the TTN can handle an arbitrary number of Reference and Candidate Slots, we utilize this 10:1 ratio for all training results. Notably, a disjoint category may still serve as a Reject Candidate ( S̸ = 1 ) even if it fails to meet the Reference Set threshold (i.e., N ≤ 10 instances), provided it contains at least one representative label. 
+
+Optimization : We optimize the baseline TTN using pw = 1 in Eq. (7), a batch size of 256, and an SGD optimizer ( 5 × 10 −4 weight decay, 5 × 10 −3 learning rate, implemented via PyTorch [40]). Each distinct dataset contributes 1,000 training sequences per epoch, with a 20% held-out validation set for model se-lection. To ensure the TTN is a balanced and domain-agnostic judge, we se-8 B. Griffin and J. Corso 
+
+Table 1: TTN Classification LIG Evaluation . TTN trains on 80% of images from all categories and is evaluated on the remaining 20% for validation. The Accept/Reject validation accuracies are for Ideal ( S = 1 ) and OCG ( S = 2 ) Candidates, respectively. 
+
+Number of Image TTN 80/20 Split Acc. Dataset Classes Images Size Accept Reject Overall                                                 
+
+> ImageNet [8] 1,000 1,281,167 Varied 97.7% 94.8% 96.2% Food-101 [3] 101 101,000 ≤512 97.7% 95.3% 96.5% CIFAR100 [28] 100 50,000 32 ×32 77.6% 85.4% 81.5% MIT Indoor Scenes [42] 67 15,620 ≥200 98.9% 96.5% 97.7% Fashion-MNIST [53] 10 60,000 28 ×28 97.2% 92.5% 94.8% CIFAR10 [28] 10 50,000 32 ×32 98.3% 97.8% 98.0% EuroSAT [22] 10 27,000 64 ×64 98.6% 97.6% 98.1% VTID2 [2] 54,356 Varied 100.0% 99.8% 99.9%
+
+lect the final parameters w from the checkpoint achieving the highest valida-tion accuracy. Specifically, we evenly weight the Accept ( S = 1 ) and Reject (S̸ = 1 ) accuracies per dataset, then average across all datasets in Tab. 1. This dual-averaging strategy prevents the TTN from over-fitting to specific image domains or majority-class distributions. Notably, rotating disjoint categories 
+
+ci̸ = c∗ evenly within each dataset also reduces memorizing specific features for the 1,303 overall classes. The TTN trains for 100K epochs (hold-out selec-tion at the 90K checkpoint) in 61.05 hours on a single NVIDIA L40S GPU. This modest computational requirement—relative to the foundation models it evaluates—highlights TTN efficiency as a general lightweight pruning module. 
+
+5.2 Zero-Shot Cross-Task Transfer 
+
+TTN’s zero-shot cross-task transfer performance—pruning object detection la-bels with a model trained purely on image classification (Figs. 1 to 4)—stems di-rectly from our training protocol, which forces the TTN to identify robust seman-tic boundaries purely from diverse, high-fidelity input sequences (Tab. 1). Specif-ically, the TTN training sampling distribution P (S) uses only human-verified sources, π1 = π2 = 12 , with zero pseudo-label probabilities, π3 = π4 = 0 . By ex-cluding noisy pseudo-labels and detection-specific formats during this phase, we ensure the TTN internalizes a robust intrinsic semantic logic. This foundation generalizes to novel tasks and categories in a zero-shot manner, requiring no task-specific supervision. Furthermore, including low-resolution datasets (e.g., CIFAR, Fashion-MNIST) acts as an inherent curriculum for scale variation. 
+
+TTN LIG Evaluation : As detailed in Tab. 1, the TTN achieves high validation accuracy ( > 94% Overall on 7/8 datasets) across diverse classification domains. Notably, the model maintains robust performance even on low-resolution data (e.g., 98.0% on CIFAR10), which is representative of the visual degradations typ-ical of tiny object pseudo-labels. By learning to judge pixelated and high-fidelity labels for numerous classes, the TTN develops a domain-agnostic semantic logic that facilitates effective zero-shot transfer from classification to detection. 
+
+Self-Referential Pruning : After foundation model pseudo-labeling, the TTN prunes detection labels without human supervision by constructing a dataset-spanning “Ideal” set from the 1,000 highest-confidence pseudo-labels per target Turing Test Network 9
+
+Table 2: TTN D Detection LIG Evaluation . We train TTN D with VLM pseudo-labels and ≤ 100 human labels per class. Accept/Reject validation accuracies are for 
+
+S = 1 /S = {2, 3, 4} Candidates, respectively. TTN D uses a lower pw (Eq. (7)) to priori-tize Accept accuracy; Reject accuracy varies with instance density and class complexity. 
+
+Number of Training Objects TTN D 80/20 Split Acc. Dataset Classes Images Objects per Image Accept Reject Overall                             
+
+> VOC [9] 20 16,551 40,058 2.42 95.1% 84.2% 89.7% COCO [33] 80 118,287 849,945 7.19 96.8% 59.2% 78.0% LVIS [19] 1,203 100,170 1,270,141 12.68 95.8% 50.6% 73.2% BDD [56] 10 70,000 1,286,871 18.38 93.0% 63.0% 78.0%
+
+category c∗, |G(c∗)| ≤ 1, 000 . We then perform a Self-Referential LIG for each category, where the TTN evaluates every pseudo-label candidate ˆg(c∗) 
+
+> i
+
+∈ ˆG(c∗)
+
+(including “Ideal” selections) against 10 reference samples drawn from G(c∗). We aggregate the Accept/Reject logits for each candidate ( zi) across multiple games to cover all available references and increase robustness; if a candidate’s aggre-gate score is > 0, it is pruned (Eq. (6)). This iterative process allows the TTN to identify and reject systemic hallucinations, even if they had high initial con-fidence (Fig. 2). Categories lacking sufficient reference labels ( |G(c∗)| < 10 ) are preserved with their original pseudo-labels to prevent uncontextualized pruning. 
+
+5.3 Task-Specific Fine-Tuning 
+
+To maximize detection pruning performance, we test task-specific fine-tuning (TTN D) with the full LIG training sampling distribution P (S). From TTN weights, we fine-tune a single TTN D model on all detection datasets in Tab. 2 simultaneously, spanning web images to autonomous driving. This multi-domain approach ensures TTN D is a robust generalist across diverse visual contexts while mastering the specific spatial and semantic nuances of the object detection task. For the Ideal set ( S = 1 ), TTN D uses up to 100 human-verified detection labels for each target category (subject to availability), which are split 80/20 for the train/validation protocol. For label efficiency, the 80 training labels are reused as the Ideal set for pseudo-label pruning at inference ( |G(c∗)| ≤ 80 ). To generate the remaining training distributions ( S = {2, 3, 4}), TTN D uses three Vision-Language Models (VLMs): YOLO-World (YOLOW) [6], YOLOE [50], and Grounding DINO-Tiny (GDINO) [34], each sampled at a confidence threshold of τ = 0 .1. To maximize the hallucination signal relative to the Ideal set, we limit training examples from each VLM to the lowest-confidence quartile of pseudo-labels per class. Each VLM-dataset combination contributes 1,000 training sequences per epoch, exposing TTN D to the diverse error characteristics and spatial inaccuracies of multiple VLM architectures. TTN D adopts the baseline TTN training configuration with three modifica-tions: (i) a non-uniform sampling distribution of π1 = 12 , π2 = 14 , π3 = π4 = 18 ;(ii) a reduced pruning aggression ( pw = 0 .2 in Eq. (7)) to instill a conservative bias that minimizes false rejections, ensuring the TTN D only prunes when there is strong evidence of a hallucination; and (iii) a 0.02 learning rate for 4K epochs (with selection at the 2K checkpoint), requiring only 4.28 hours of fine-tuning. 10 B. Griffin and J. Corso 
+
+> 0.6
+> 0.7
+> 0.8
+> Recall
+
+GDINO 
+
+> 0.8
+> 0.9
+
+YOLOE 
+
+> 0.8
+> 0.9
+
+YOLOW 
+
+> 0.7
+> 0.8
+
+VOC Overall           
+
+> 0.1 0.3 0.5
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> Precision
+> AL [15] TTN TTN D
+> 0.1 0.3 0.5
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> Confidence Threshold
+> 0.1 0.3 0.5
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> 0.1 0.3 0.5
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+
+Fig. 5: Recall and Precision across VLM Models and Confidence Thresholds on VOC . YOLOW, YOLOE have higher recall and precision at low thresholds values, likely due to better internal non-maximum suppression of predicted labels. TTN prunes away predicted label failures, which incidentally decreases recall but more substantially increases precision. Additional metric plots across all datasets provided in Fig. S3. 
+
+After fine-tuning, TTN D achieves high validation accuracies (73–90%, Tab. 2). Accept accuracy (Candidate S = 1 ) consistently exceeds 93% across all domains. Reject accuracy ( S = {2, 3, 4}) naturally reflects the varying instance density and class complexity of the target datasets, which we explore further in Sec. 6. 
+
+## 6 Experimental Evaluation of the LIG and TTN 
+
+6.1 Experimental Setup 
+
+Our experimental setup is motivated by the comprehensive Auto-Labeling 
+
+(AL) benchmark [15]. This foundation model pseudo-labeling benchmark uses GDINO, YOLOE, and YOLOW VLMs across various confidence thresholds τ
+
+and four diverse detection datasets: VOC, COCO, LVIS, and BDD. We use τ ∈
+
+[0 .05 , 0.5] to improve peak AL F1-score performance via TTN pruning ( ˜Y ⊆ ˆY in Eq. (1)). The AL benchmark includes training downstream detectors strictly on pseudo-labels, which provides another evaluation for TTN performance gains ( ˜D
+
+in Eq. (2)). In addition to TTN, we include LIG ∗ as an Oracle judge that prunes all candidate pseudo-labels with IoU < 0.5. This represents an IoU-specific upper bound for LIG-based pruning, though it preserves spatial label redundancies. See 
+
+Supplementary Material for method comparisons, ablations, runtime, extended benchmark results, and full experiment details (Secs. S2 to S6). 
+
+6.2 Interrogating the Signal: Pseudo-Label Evaluation 
+
+We first evaluate the effectiveness of the TTN as a standalone pseudo-label filter. As shown on VOC in Fig. 5, TTN consistently improves precision across Turing Test Network 11 
+
+Table 3: Combined Label and Downstream Model Evaluation . Results are averaged over VLM model, confidence threshold, and class, except for Labels, which is the total number for all classes. Overall is additionally averaged over all datasets. 
+
+Mean of VLM, Confidence Threshold, & Class Dataset Method Labels Recall Prec. F1 F2 mAP 50 mAP 50:95               
+
+> LIG ∗39,008 0.816 0.914 0.845 0.825 0.707 0.500 TTN D61,337 0.788 0.677 0.695 0.734 0.685 0.486
+
+VOC TTN 78,403 0.794 0.628 0.662 0.716 0.675 0.478 AL [15] 134,899 0.815 0.562 0.615 0.690 0.656 0.466 LIG ∗ 627,792 0.594 0.908 0.689 0.626 0.454 0.315 TTN D 1,565,002 0.582 0.537 0.511 0.534 0.436 0.302 
+
+COCO TTN 1,192,383 0.538 0.571 0.513 0.515 0.434 0.303                      
+
+> AL 1,834,962 0.593 0.514 0.499 0.531 0.432 0.299 LIG ∗290,613 0.137 0.600 0.191 0.154 0.059 0.041 TTN D1,659,673 0.136 0.116 0.079 0.087 0.060 0.042
+
+LVIS TTN 1,508,817 0.131 0.116 0.079 0.086 0.059 0.042                      
+
+> AL 1,777,051 0.137 0.112 0.078 0.087 0.059 0.042
+> LIG ∗426,726 0.267 0.837 0.376 0.301 0.306 0.178 TTN D773,755 0.243 0.459 0.262 0.235 0.269 0.156
+
+BDD TTN 854,393 0.242 0.428 0.249 0.227 0.252 0.148 AL 1,084,056 0.267 0.411 0.256 0.241 0.253 0.147 LIG ∗ 346,035 0.454 0.815 0.525 0.476 0.382 0.259 TTN D 1,014,942 0.437 0.447 0.387 0.398 0.362 0.247 
+
+Overall TTN 908,499 0.426 0.436 0.376 0.386 0.355 0.243 AL 1,207,742 0.453 0.400 0.362 0.387 0.350 0.238 
+
+all VLM models and confidence thresholds. While pruning naturally results in an incidental decrease in recall, the more substantial precision increases lead to overall F1-score improvements across all datasets (Tab. 3). Specifically, TTN and TTN D improve Overall F1 by 4% and 7%, respectively, advancing toward the 45% gain set by the LIG ∗ Oracle. Notably, LIG ∗ exhibits an epsilon improvement in recall due to matching disambiguation. Essentially, by rejecting high-entropy labels, we reduce Hungarian matching interference and enable higher-fidelity pairings between the accepted pseudo-labels and ground truth during evaluation. We also evaluate the F2 score, which favors recall   5TP 5TP+4FN+FP ∈ [0 , 1] , to measure the trade-off between pruning and signal preservation. TTN D improves Overall F2 by 3%, demonstrating that its task-specific logic “detoxifies” the label set while preserving high-recall candidates for downstream training. 
+
+6.3 Detector Training and Evaluation on Detoxified Labels 
+
+We further evaluate the utility of our pruning framework by training downstream object detectors on the detoxified pseudo-labeled datasets. Specifically, for each dataset, we train a YOLO11n detector [26] on unlabeled training images paired with TTN-pruned pseudo-labels ( ˜D in Eq. (2)). After training, these detectors are then evaluated on their respective human-labeled validation sets. Critically, these validation sets (both images and labels) are entirely disjoint and unseen by both the TTN and the downstream detectors, ensuring a robust measure of how TTN pruning improves generalization from VLM supervision. As shown in Tab. 3, training on TTN-pruned datasets results in consistent mAP 50 and mAP 50:95 improvements across all VLM architectures and datasets. 12 B. Griffin and J. Corso 
+
+> 0.55
+> 0.60
+> 0.65
+> 0.70
+> mAP 50
+
+VOC     
+
+> 0.1 0.3 0.5
+> 0.35
+> 0.40
+> 0.45
+> 0.50
+> Confidence Threshold
+> mAP 50  (v)
+> AL [15] TTN TTN D
+> 0.40
+> 0.43
+> 0.46
+
+COCO   
+
+> 0.1 0.3 0.5
+> 0.16
+> 0.18
+> 0.20
+> |
+> 0.054
+> 0.057
+> 0.060
+> A
+
+LVIS   
+
+> 0.1 0.3 0.5
+> 0.000
+> 0.001
+> 0.002
+> I
+> 0.22
+> 0.25
+> 0.28
+
+BDD   
+
+> 0.1 0.3 0.5
+> 0.005
+> 0.010
+> 0.015
+> |
+
+Fig. 6: Downstream Model Evaluation across all Confidence Thresholds and Datasets . Results are average over all VLM models (see Fig. 5 right). Row two results evaluate the vulnerable classes ( v, Sec. 6.4). mAP 50:95 plots are provided in Sec. S5. 
+
+Remarkably, although TTN D does not reject nearly as many pseudo-labels as the LIG ∗ Oracle (see Labels in Tab. 3), TTN D closes 38% of the mAP 50 and 43% of the mAP 50:95 gap between AL and LIG ∗ performance. This indicates that TTN D successfully rejects many of the VLM hallucinations that are particularly disruptive for downstream training. As illustrated in Fig. 6, mAP 50 gains are particularly pronounced at lower confidence thresholds ( τ ). By detoxifying the low-τ , high-recall regime, the TTN effectively expands the usable training distri-bution, allowing the downstream detector to learn from a larger, yet cleaner, set of examples. With TTN’s generalization across categories established, we focus on the most challenging, transfer-vulnerable classes in Sec. 6.4. 
+
+6.4 Category Revival: Rescuing Vulnerable Classes 
+
+To understand TTN performance on challenge categories, we perform a targeted evaluation for AL’s [15] maximum and non-zero minimum F1-score classes in Tab. 4. While TTN F1 gains are consistent across VLM models and datasets for the Max. F1 classes, gains for the challenge classes are particularly signifi-cant (e.g., > 300% for GDINO Chair). For the Min. F1 class mean, specifically, 
+
+zero-shot TTN increases F1 by 28% and TTN D increases F1 by 44% ,effectively “raising the floor” for VLM-driven labeling. Remarkably, LIG ∗ Ora-cle pruning increases Min. F1 by 432%, indicating systemic VLM hallucinations that would have induced severe inductive interference in downstream models. Motivated by this finding, we perform a broader analysis of these chal-lenge categories in downstream model training. Specifically, we evaluate transfer-
+
+vulnerable classes (v), defined per-VLM as the bottom quartile of classes ranked by AL’s [15] downstream mAP 50 at τ = 0 .1. As shown in Fig. 6, TTN pruning consistently improves mAP 50 across confidence thresholds and datasets Turing Test Network 13 
+
+Table 4: F1 Score on Max. & Min. (Non-Zero) AL Classes at τ = 0 .1. Relative to AL [15], TTN and TTN D increase F1 by 4% and 7% respectively for the best performing classes (top) and 28% and 44% for the worst performing classes (bottom). 
+
+VOC F1 COCO F1 BDD F1
+
+Method GDINO YOLOE YOLOW GDINO YOLOE YOLOW GDINO YOLOE YOLOW Mean Max. F1 Cat Cat Cat Cat Bear Giraffe Car Car Person 
+
+LIG ∗ 0.747 0.940 0.948 0.675 0.892 0.935 0.693 0.577 0.656 0.785 TTN D 0.687 0.907 0.915 0.602 0.819 0.873 0.478 0.519 0.545 0.705 
+
+TTN 0.649 0.893 0.903 0.579 0.848 0.878 0.443 0.479 0.518 0.688 AL [15] 0.585 0.822 0.851 0.528 0.784 0.861 0.438 0.535 0.543 0.661 
+
+Min. F1 Chair Chair Sofa Handbag Toaster Toaster Train Motor Train 
+
+LIG ∗ 0.641 0.892 0.940 0.516 0.840 0.686 0.323 0.018 0.319 0.575 TTN D 0.204 0.520 0.436 0.047 0.194 0.186 0.005 0.016 0.116 0.192 
+
+TTN 0.172 0.489 0.391 0.051 0.180 0.175 0.002 0.014 0.058 0.170 AL 0.054 0.364 0.319 0.045 0.174 0.166 0.002 0.016 0.058 0.133 
+
+Table 5: Vulnerable-Class ( v) Performance Evaluation . We evaluate pseudo-label quality and downstream detector performance on the transfer-vulnerable classes (bottom quartile of AL [15] mAP 50 ). TTN and TTN D consistently outperform AL, mitigating the inductive interference caused by vision-language model hallucinations. 
+
+Mean of VLM, Confidence Threshold, & Class Dataset Method Labels Recall Prec. F1 F2 mAP 50 mAP 50:95 
+
+LIG ∗ 7,340 0.716 0.898 0.760 0.729 0.522 0.328 TTN D 19,265 0.682 0.513 0.512 0.576 0.485 0.308 
+
+VOC v TTN 22,084 0.686 0.483 0.490 0.562 0.470 0.300 AL [15] 47,139 0.715 0.425 0.442 0.528 0.438 0.281 LIG ∗ 89,503 0.422 0.898 0.545 0.461 0.204 0.124 TTN D 446,132 0.413 0.392 0.338 0.355 0.184 0.112 
+
+COCO v TTN 319,843 0.380 0.410 0.340 0.345 0.185 0.113 
+
+AL 544,203 0.421 0.381 0.333 0.353 0.175 0.106 LIG ∗ 266 0.027 0.269 0.045 0.032 0.0004 0.0003 TTN D 27,025 0.027 0.034 0.013 0.014 0.0007 0.0006 
+
+LVIS v TTN 29,297 0.026 0.032 0.013 0.013 0.0009 0.0007 
+
+AL 31,402 0.027 0.032 0.012 0.014 0.0007 0.0006 LIG ∗ 453 0.077 0.576 0.123 0.091 0.036 0.016 TTN D 18,535 0.075 0.074 0.035 0.042 0.013 0.006 
+
+BDD v TTN 32,899 0.076 0.035 0.022 0.031 0.006 0.003 AL 34,888 0.077 0.036 0.022 0.032 0.007 0.003 LIG ∗ 24,390 0.311 0.660 0.368 0.328 0.191 0.117 TTN D 127,739 0.299 0.253 0.225 0.247 0.171 0.107 
+
+Overall v TTN 101,031 0.292 0.240 0.216 0.238 0.166 0.104 AL 164,408 0.310 0.218 0.202 0.231 0.155 0.098 
+
+on these failing categories. Remarkably, TTN D approximately doubles pre-cision, F1, mAP 50 , and mAP 50:95 on BDD v with only a 3% reduction in recall after pruning 53% of the labels, as shown in Tab. 5. Across all datasets, zero-shot TTN and TTN D improve Overall mAP 50:95 by 6% and 9%, respectively. By selectively pruning disruptive candidates, both TTNs facilitate a par-ticularly striking Category Revival , where the downstream model achieves non-trivial mAP on classes that previously exhibited zero recall. For example, at a τ = 0 .1 threshold on LVIS, the AL baseline exhibits 0 recall for the 259 vul-nerable classes regardless of VLM. The zero-shot TTN recovers recall for 37 of these categories (27, 10 for YOLOE, YOLOW), while TTN D recovers 28 (17, 11 for YOLOE, YOLOW). This disproportionate improvement suggests that many 14 B. Griffin and J. Corso       
+
+> 0.1 0.3 0.5
+> 100
+> 1K
+> 10K
+> 100K
+> Confidence Threshold
+> BDD v
+> Number of Labels
+> AL [15] TTN DLIG ∗
+> 0.1 0.3 0.5
+> 0.02
+> 0.05
+> 0.10
+> 0.20
+> 0.50
+
+Precision   
+
+> 0.1 0.3 0.5
+> 0.01
+> 0.02
+> 0.05
+> 0.10
+
+F1 Score   
+
+> 0.1 0.3 0.5
+> 0.002
+> 0.005
+> 0.010
+> 0.020
+
+mAP 50:95 
+
+Fig. 7: The Post-Engine Interrogation Frontier (log scale). The pruning gap on BDD v (left) shows the sheer magnitude of VLM hallucinations that the LIG ∗ Oracle successfully discards, whereas even high-confidence filtering retains these errors. Preci-sion, F1 score, and mAP 50:95 performance across confidence thresholds τ (right) shows that TTN D significantly narrows the performance gap in the high-noise, low-τ regime. 
+
+transfer-vulnerable classes do not suffer from a lack of data, but rather from an exceptionally high noise-to-signal ratio. This recovery of the most challeng-ing classes shows that the TTN’s semantic pruning is a critical component for achieving robust generalization in fully autonomous pseudo-labeling pipelines. 
+
+## 7 Conclusion and the Post-Engine Interrogation Frontier 
+
+In this paper, we introduced the Label Imitation Game (LIG), a Turing-inspired framework that formalizes pseudo-label pruning as a dataset-wide adversarial interrogation. By developing the Turing Test Network (TTN), we demonstrate that a model trained strictly on image classification can effectively judge and “detoxify” complex object detection pseudo-labels. Our experiments across four diverse datasets show that the TTN successfully suppresses systemic foundation model hallucinations, yielding zero-shot F1-score gains of 28% for the most chal-lenging categories—rising to 44% with task-specific fine-tuning (TTN D). Cru-cially, both models facilitate Category Revival, enabling downstream detectors to recover from zero recall on dozens of transfer-vulnerable classes. Our results establish that global semantic-contextual logic is a robust alternative to local spatial-geometric verification. By releasing our LIG framework and pre-trained TTN weights, we provide the vision community with a lightweight, task-agnostic module that enhances pseudo-labeling rigor at scale. Looking forward, a significant Post-Engine Interrogation Frontier re-mains for future work. As shown in Fig. 7, the optimal pruning regime includes low-confidence labels, where the most authentic signal is often discarded by tra-ditional filtering. TTN D substantially narrows this performance gap, but addi-tional gains must be won from increasingly subtle and difficult-to-identify hallu-cinations. We postulate that integrating multi-model consensus and LIG-aware spatial redundancy reduction will close this gap. To broaden applicability, ex-panding the TTN’s interrogative capacity to video [7] and 3D modalities [38] provides new frontiers for fully autonomous, noise-robust machine learning. Turing Test Network 15 
+
+## References 
+
+1. Bogdoll, D., Ananta, R.P., Giridharan, A., Moore, I., Stevens, G., Liu, H.X.: Mcity data engine: Iterative model improvement through open-vocabulary data selection. arXiv preprint 2504.21614 (2025) 3 2. Boonsirisumpun, N., Okafor, E., Surinta, O.: Vehicle image datasets for image classification. Data in Brief (2024) 8 3. Bossard, L., Guillaumin, M., Van Gool, L.: Food-101 – mining discriminative components with random forests. In: European Conference on Computer Vision (ECCV) (2014) 8 4. Bras, R.L., Swayamdipta, S., Bhagavatula, C., Zellers, R., Peters, M., Sabharwal, A., Choi, Y.: Adversarial filters of dataset biases. In: Proceedings of the 37th International Conference on Machine Learning (ICML) (2020) 3 5. Chen, C., Debattista, K., Han, J.: Pseudo-labelling should be aware of disguising channel activations. In: European Conference on Computer Vision (ECCV) (2024) 36. Cheng, T., Song, L., Ge, Y., Liu, W., Wang, X., Shan, Y.: Yolo-world: Real-time open-vocabulary object detection. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2024) 3, 9, 25 7. Dave, I.R., Rizve, M.N., Shah, M.: Finepseudo: Improving pseudo-labelling through temporal-alignablity for semi-supervised fine-grained action recognition. In: Euro-pean Conference on Computer Vision (ECCV) (2024) 14 8. Deng, J., Dong, W., Socher, R., Li, L.J., Li, K., Fei-Fei, L.: Imagenet: A large-scale hierarchical image database. In: IEEE Conference on Computer Vision and Pattern Recognition (CVPR) (2009) 8 9. Everingham, M., Van Gool, L., Williams, C.K.I., Winn, J., Zisserman, A.: The pascal visual object classes (voc) challenge. International Journal of Computer Vision (IJCV) (2010) 9, 26, 27 10. Freire, A., de S. Silva, L.H., de Andrade, J.V., Azevedo, G.O., Fernandes, B.J.: Beyond clean data: Exploring the effects of label noise on object detection perfor-mance. Knowledge-Based Systems (2024) 3 11. Fu, S., Yang, Q., Mo, Q., Yan, J., Wei, X., Meng, J., Xie, X., Zheng, W.S.: Llmdet: Learning strong open-vocabulary object detectors under the supervision of large language models. In: Proceedings of the Computer Vision and Pattern Recognition Conference (CVPR) (2025) 1 12. Gao, X., Zhang, Y., Galley, M., Dolan, B.: An adversarially-learned turing test for dialog generation models. arXiv preprint arXiv:2104.08231 (2021) 3 13. Geman, D., Geman, S., Hallonquist, N., Younes, L.: Visual turing test for computer vision systems. Proceedings of the National Academy of Sciences (PNAS) (2015) 314. Goodfellow, I.J., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A.C., Bengio, Y.: Generative adversarial nets. In: Advances in Neural Information Processing Systems (NeurIPS) (2014) 3 15. Griffin, B.A., Gangwar, M., Sela, J., Corso, J.J.: Auto-labeling data for object detection. arXiv preprint arXiv:2506.02359 (2025) 1, 2, 3, 10, 11, 12, 13, 14, 21, 22, 24, 25, 26, 27 16. Gu, X., Lin, T.Y., Kuo, W., Cui, Y.: Open-vocabulary object detection via vi-sion and language knowledge distillation. In: International Conference on Learning Representations (ICLR) (2022) 1 16 B. Griffin and J. Corso 17. Gui, Z., Sun, S., Li, R., Yuan, J., An, Z., Roth, K., Prabhu, A., Torr, P.: kNN-CLIP: Retrieval enables training-free segmentation on continually expanding large vocabularies. Transactions on Machine Learning Research (TMLR) (2024) 21 18. Gunjal, A., Yin, J., Bas, E.: Detecting and preventing hallucinations in large vision language models. Proceedings of the AAAI Conference on Artificial Intelligence (AAAI) (2024) 1, 3 19. Gupta, A., Dollar, P., Girshick, R.: Lvis: A dataset for large vocabulary instance segmentation. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2019) 9, 26, 27 20. Han, B., Yao, Q., Yu, X., Niu, G., Xu, M., Hu, W., Tsang, I., Sugiyama, M.: Co-teaching: Robust training of deep neural networks with extremely noisy labels. In: Advances in Neural Information Processing Systems (NeurIPS) (2018) 1, 3, 21 21. He, Y., Chen, W., Liang, K., Tan, Y., Liang, Z., Guo, Y.: Pseudo-label correction and learning for semi-supervised object detection. arXiv preprint arXiv:2303.02998 (2023) 3 22. Helber, P., Bischke, B., Dengel, A., Borth, D.: Eurosat: A novel dataset and deep learning benchmark for land use and land cover classification. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing (2019) 8 23. Hudson, D.A., Manning, C.D.: Gqa: A new dataset for real-world visual reasoning and compositional question answering. In: Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR) (2019) 25 24. Jiang, L., Zhou, Z., Leung, T., Li, L.J., Fei-Fei, L.: MentorNet: Learning data-driven curriculum for very deep neural networks on corrupted labels. In: Proceed-ings of the 35th International Conference on Machine Learning (ICML) (2018) 1, 3, 21 25. Jocher, G., Chaurasia, A., Qiu, J.: Yolo by ultralytics. https://github.com/ ultralytics/ultralytics (2023) 25 26. Jocher, G., Qiu, J.: Ultralytics yolo11. https : / / github . com / ultralytics / ultralytics (2024) 11, 27 27. Kamath, A., Singh, M., LeCun, Y., Synnaeve, G., Misra, I., Carion, N.: Mdetr -modulated detection for end-to-end multi-modal understanding. In: Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) (2021) 25 28. Krizhevsky, A.: Learning multiple layers of features from tiny images (Technical Report, 2009) 8 29. Lee, D.H.: Pseudo-label : The simple and efficient semi-supervised learning method for deep neural networks. ICML 2013 Workshop : Challenges in Representation Learning (WREPL) (2013) 1 30. Li, H., Dong, Q., Chen, J., Su, H., Zhou, Y., Ai, Q., Ye, Z., Liu, Y.: Llms-as-judges: A comprehensive survey on llm-based evaluation methods. arXiv preprint arXiv:2412.05579 (2024) 3 31. Li, L.H., Zhang, P., Zhang, H., Yang, J., Li, C., Zhong, Y., Wang, L., Yuan, L., Zhang, L., Hwang, J.N., Chang, K.W., Gao, J.: Grounded language-image pre-training. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2022) 2, 25 32. Li, Y., Du, Y., Zhou, K., Wang, J., Zhao, X., Wen, J.R.: Evaluating object hallu-cination in large vision-language models. In: Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing (2023) 1, 3 33. Lin, T.Y., Maire, M., Belongie, S., Hays, J., Perona, P., Ramanan, D., Dollár, P., Zitnick, C.L.: Microsoft coco: Common objects in context. In: The European Conference on Computer Vision (ECCV) (2014) 9, 26, 27, 28 Turing Test Network 17 34. Liu, S., Zeng, Z., Ren, T., Li, F., Zhang, H., Yang, J., Jiang, Q., Li, C., Yang, J., Su, H., Zhu, J., Zhang, L.: Grounding dino: Marrying dino with grounded pre-training for open-set object detection. In: The European Conference on Computer Vision (ECCV) (2024) 3, 9, 25 35. Minderer, M., Gritsenko, A., Houlsby, N.: Scaling open-vocabulary object detec-tion. In: Advances in Neural Information Processing Systems (NeurIPS) (2023) 136. Moore, B.E., Corso, J.J.: Fiftyone. https://github.com/voxel51/fiftyone (2020) 2 37. Nagase, Y., Babazaki, Y., Shibata, T.: Annotation-free object detection by knowledge-extraction training from visual-language models. In: International Con-ference on Pattern Recognition (ICPR) (2025) 1, 2 38. Ošep, A., Meinhardt, T., Ferroni, F., Peri, N., Ramanan, D., Leal-Taixé, L.: Better call sal: Towards learning to segment anything in lidar. In: European Conference on Computer Vision (ECCV) (2024) 14 39. Park, D., Choi, S., Kim, D., Song, H., Lee, J.G.: Robust data pruning under label noise via maximizing re-labeling accuracy. In: Advances in Neural Information Processing Systems (NeurIPS) (2023) 3 40. Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., Killeen, T., Lin, Z., Gimelshein, N., Antiga, L., Desmaison, A., Kopf, A., Yang, E., DeVito, Z., Raison, M., Tejani, A., Chilamkurthy, S., Steiner, B., Fang, L., Bai, J., Chintala, S.: Pytorch: An imperative style, high-performance deep learning library. In: Advances in Neural Information Processing Systems (NeurIPS) (2019) 7 41. Popp, N., Zhang, D., Metzen, J.H., Hein, M., Schott, L.: Single-pass object-focused data selection. arXiv preprint arXiv:2412.10032 (2025) 1, 2 42. Quattoni, A., Torralba, A.: Recognizing indoor scenes. In: Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) (2009) 8 43. Radford, A., Kim, J.W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., Sutskever, I.: Learning transfer-able visual models from natural language supervision. In: Proceedings of the 38th International Conference on Machine Learning (ICML) (2021) 6, 19 44. Salscheider, N.O.: Featurenms: Non-maximum suppression by learning feature em-beddings. In: 2020 25th International Conference on Pattern Recognition (ICPR) (2021) 3 45. Shao, S., Li, Z., Zhang, T., Peng, C., Yu, G., Zhang, X., Li, J., Sun, J.: Objects365: A large-scale, high-quality dataset for object detection. In: Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) (2019) 25 46. Sheng, M., Sun, Z., Chen, T., Pang, S., Wang, Y., Yao, Y.: Foster adaptivity and balance in learning with noisy labels. In: European Conference on Computer Vision (ECCV) (2024) 3 47. Sohn, K., Berthelot, D., Carlini, N., Zhang, Z., Zhang, H., Raffel, C.A., Cubuk, E.D., Kurakin, A., Li, C.L.: Fixmatch: Simplifying semi-supervised learning with consistency and confidence. In: Advances in Neural Information Processing Systems (NeurIPS) (2020) 3, 21 48. Turing, A.M.: Computing machinery and intelligence. Mind 59 (236), 433–460 (1950) 2, 4 49. Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A.N., Kaiser, L.u., Polosukhin, I.: In: Advances in Neural Information Processing Sys-tems (NeurIPS) (2017) 5 50. Wang, A., Liu, L., Chen, H., Lin, Z., Han, J., Ding, G.: Yoloe: Real-time seeing anything. In: Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) (2025) 9, 25 18 B. Griffin and J. Corso 51. Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., Cistac, P., Rault, T., Louf, R., Funtowicz, M., Davison, J., Shleifer, S., von Platen, P., Ma, C., Jernite, Y., Plu, J., Xu, C., Scao, T.L., Gugger, S., Drame, M., Lhoest, Q., Rush, A.M.: Transformers: State-of-the-art natural language processing. In: Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations. Association for Computational Linguistics (2020) 25 52. Xiao, B., Wu, H., Xu, W., Dai, X., Hu, H., Lu, Y., Zeng, M., Liu, C., Yuan, L.: Florence-2: Advancing a unified representation for a variety of vision tasks. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2024) 3 53. Xiao, H., Rasul, K., Vollgraf, R.: Fashion-mnist: A novel image dataset for bench-marking machine learning algorithms. arXiv preprint arXiv:1708.07747 (2017) 8 54. Xu, M., Zhang, Z., Hu, H., Wang, J., Wang, L., Wei, F., Bai, X., Liu, Z.: End-to-end semi-supervised object detection with soft teacher. In: Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) (2021) 21 55. Young, P., Lai, A., Hodosh, M., Hockenmaier, J.: From image descriptions to visual denotations: New similarity metrics for semantic inference over event descriptions. Transactions of the Association for Computational Linguistics (2014) 25 56. Yu, F., Chen, H., Wang, X., Xian, W., Chen, Y., Liu, F., Madhavan, V., Dar-rell, T.: Bdd100k: A diverse driving dataset for heterogeneous multitask learning. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2020) 9, 26, 27 57. Zheng, L., Chiang, W.L., Sheng, Y., Zhuang, S., Wu, Z., Zhuang, Y., Lin, Z., Li, Z., Li, D., Xing, E., Zhang, H., Gonzalez, J.E., Stoica, I.: Judging llm-as-a-judge with mt-bench and chatbot arena. In: Advances in Neural Information Processing Systems (NeurIPS) (2023) 3 58. Zhou, L., Palangi, H., Zhang, L., Hu, H., Corso, J., Gao, J.: Unified vision-language pre-training for image captioning and vqa. In: Proceedings of the AAAI Conference on Artificial Intelligence (AAAI) (2020) 2 59. Zhou, Y., Cui, C., Yoon, J., Zhang, L., Deng, Z., Finn, C., Bansal, M., Yao, H.: Analyzing and mitigating object hallucination in large vision-language models. In: The Twelfth International Conference on Learning Representations (ICLR) (2024) 1, 3 Turing Test Network 19 
+
+# Supplementary Material The Label Imitation Game: Turing Test Network for Zero-Shot Pseudo-Label Pruning 
+
+Brent A. Griffin and Jason J. Corso 
+
+## Contents of the Supplementary Material 
+
+Section S1: Network Architecture Specifications Section S2: Extended Method Comparisons Section S3: Methodological Validation and Sensitivity Analysis Section S4: Computational Efficiency & Scalability Section S5: Extended Performance Benchmarks Section S6: Experimental Protocol 
+
+## S1 Network Architecture Specifications 
+
+To elaborate on Sec. 5, we provide the full architectural details of the Turing Test Network (TTN), which consists of three stages: a frozen feature extractor, a custom-learned tokenizer, and a transformer-based reasoning block. These ar-chitectural designs enable the TTN to build and evaluate semantic and spatial context without class labels, thus facilitating zero-shot transfer (Fig. S1). 
+
+S1.1 Stage 1: Frozen Feature Extractor 
+
+TTN uses a pre-trained vision-language model to establish a high-level semantic representation of labels. Specifically, we use the CLIP ViT-L/14 model [43] to encode the underlying image patches defined by each label. We keep the encoder frozen for a robust, general-purpose initial feature space fi ∈ R768 .
+
+S1.2 Stage 2: Custom-Learned TTN Tokenizer 
+
+To bridge the gap between static CLIP embeddings and the transformer rea-soning space, a lightweight multi-layer perceptron (MLP) transforms the initial features into “TTN Tokens.” The MLP sequentially processes fi through a fully-connected 1,024-D layer, a ReLU activation, a fully-connected 512-D layer, and, finally, a Dropout layer ( p = 0 .2). The output tokens gi(fi) ∈ R512 (Eq. (3)) are the condensed visual and semantic information TTN evaluates during the Label Imitation Game (LIG). 20 B. Griffin and J. Corso 
+
+> Fig. S1: Turing Test Network (TTN) Architecture Specifications . The TTN processes image patches via a custom tokenizer (Sec. S1.2) and an eight-layer trans-former (Sec. S1.3). Using non-masked self-attention, the TTN evaluates relational and sequential context to produce Accept/Reject logits ( zi) for each input without any class labels, enabling zero-shot task transfer from image classification training to object de-tection pseudo-label pruning. The TTN learns 26.5 M parameter weights (orange).
+
+S1.3 Stage 3: Non-Masked Transformer-based Reasoning Block 
+
+The core of TTN is an eight-layer transformer that evaluates each token gi ∈ G.Unlike standard classifiers that process examples in isolation, this block utilizes non-masked Multi-Head Self-Attention (MHSA) to evaluate many tokenized la-bels across an arbitrary number of data examples simultaneously (Eq. (4)). To preserve relational and sequential context across tokens, we add learned posi-tional encodings via an embedding table to the transformer input. The MHSA block splits the input tokens into eight heads, while the subsequent feed-forward block reuses the tokenizer’s MLP design with new weights. To ensure stable gradient flow, each transformer layer has residual connections where the input is normalized only for sub-layer operations and added to each sub-layer output. The final output state of each token is passed through a final layer normalization and linear projection layer to produce the Accept/Reject logits ( zi in Eq. (7)). 
+
+## S2 Extended Method Comparisons 
+
+We provide additional method comparisons to supplement the related work (Sec. 2) and experimental evaluation (Sec. 6) of the main paper. To provide Turing Test Network 21                                                                             
+
+> Table S1: Methodological Setup & Procedural Requirements Comparison Developed Operates Without :for Object Architecture or Detection Method Detection Pipeline Changes GT Labels AL [15], TTN Yes Yes Yes
+> CLIP kNN Prune, TTN DYes Yes No SoftTeacher [54] Yes No No Co-teaching [20], FixMatch [47], kNN-CLIP [17], MentorNet [24] No No No
+> Table S2: Extended Method Evaluation . Highlighted rows correspond to methods from the main paper (left), and bold font indicates best performance (right).
+> GT Mean of VLM, Confidence Label Labels Threshold, Class, & Dataset Method Operation per Class Recall Prec. F1F2
+> TTN DPrune ≤100 0.437 0.447 0.387 0.398 TTN Prune zero-shot 0.426 0.436 0.376 0.386 TTN DToken kNN Prune ≤100 0.367 0.508 0.373 0.360 TTN Token kNN Prune ≤100 0.357 0.512 0.367 0.352 CLIP kNN Prune ≤100 0.347 0.523 0.366 0.346
+> AL –zero-shot 0.453 0.400 0.362 0.387 CLIP kNN Relabel ≤100 0.402 0.285 0.275 0.312
+
+more context for related work, we compare the methodological setup and proce-dural requirements for several representative methods in Tab. S1. Importantly, only TTN and the AL baseline are zero-shot compatible with existing object de-tection frameworks. All other methods require ground-truth detection labels or, more commonly, invasive changes to the underlying model architecture, training pipeline, or even the core methodology itself for detection compatibility. To expand the method evaluation in Sec. 6, following kNN-CLIP [17], we implement kNN baselines that prune or relabel pseudo-labels based on the majority-vote consistency among the 16 nearest ground-truth CLIP embeddings (using ≤ 100 ground-truth labels per class). We also implement kNN baselines with TTN Token embeddings ( gi(fi) ∈ R512 in Sec. S1.2) to compare their la-bel pruning efficacy directly against the frozen CLIP embeddings ( fi ∈ R768 in Sec. S1.1). As shown in Tab. S2, both TTN and TTN D Token-based kNN outper-form CLIP, which supports the decision to include the TTN Tokenizer in the full TTN architecture (see Fig. S1). Furthermore, while TTN Token and CLIP kNN pruning outperform the AL baseline, zero-shot pruning with the full TTN ar-chitecture and corresponding semantic logic surpasses all kNN baselines despite their use of ground-truth labels . Notably, CLIP kNN relabeling decreases AL performance, which further motivates our focus on pruning-based approaches. 22 B. Griffin and J. Corso     
+
+> 0.1 0.2 0.5 12
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.50
+
+pw (log scale) 
+
+Recall       
+
+> AL [15] TTN TTN D
+> 0.1 0.2 0.5 12
+> 0.40
+> 0.45
+> 0.50
+> 0.55
+
+Precision     
+
+> 0.1 0.2 0.5 12
+> 0.32
+> 0.34
+> 0.36
+> 0.38
+> 0.40
+
+F1 Score     
+
+> 0.1 0.2 0.5 12
+> 0.32
+> 0.34
+> 0.36
+> 0.38
+> 0.40
+
+F2 Score 
+
+Fig. S2: Pruning Aggression ( pw ) vs. Mean Performance 
+
+## S3 Methodological Validation and Sensitivity Analysis 
+
+To quantitatively validate design decisions from the main paper, we include supplementary results for methodological ablations and sensitivity analyses in Fig. S2 and Tab. S3. While TTN is robust to many variations, ablations show TTN’s chosen pruning aggression ( pw = 1 ), sample distribution ( π1,2 = 12 ), token design ( gi ∈ R512 ), and number of input tokens (10 Reference, 1 Candidate) enable TTN to train from scratch on classification data then perform zero-shot pruning on detection labels with high F1 and F2 scores. Notably, training TTN from scratch with the lowest pruning aggression ( pw = 0 .1) causes TTN to simply accept all labels, which results in identical performance to the AL baseline. Subsequent to TTN training, the pruning reference set ablations in Tab. S3 reveal a trade-off. Reducing the self-referential pruning set size from ≤ 1,000 to 
+
+≤ 100 highest-confidence samples improves the reference set’s accuracy ( 63 .6% →
+
+70 .9% ) but degrades final pruning performance ( 0.386 → 0.381 F2 score) due to a reduction in contextual breadth. However, if available, using ≤ 80 higher-quality ground-truth labels bridges this contextual gap, enabling TTN to approach the pruning performance of fine-tuned TTN D (3.95 and 3.98 F2 scores respectively). For fine-tuned TTN D, increasing pw increases precision but also decreases recall, with the chosen pw = 0 .2 achieving the highest F2 score in Fig. S2. TTN D
+
+train distribution ablations reveal that OCG-Pseudo ( π3) is the best individual game—followed by OCG-Human and PLG—yet the nominal TTN D performs best in Tab. S3, validating that using all games is optimal. 
+
+## S4 Computational Efficiency & Scalability 
+
+To establish the computational efficiency and scalability of TTN pruning, we pro-vide a runtime comparison for several TTN configurations in Tab. S4. While run-time depends on the number of pseudo-labels, generating the underlying CLIP embeddings remains the primary computational bottleneck, requiring more time than TTN pruning in all cases. Standard TTN pruning averages 31 minutes per dataset, which scales down to less than one minute via class-wise parallelization. Turing Test Network 23 
+
+Table S3: TTN & TTN D Method Ablation Evaluation . Highlighted rows cor-respond to default settings (left), and bold font indicates best performance (right). 
+
+Mean of VLM, Confidence Threshold, Class, & Dataset Method Ablation Details Recall Prec. F1 F2
+
+Training Sample Distribution πk = P (S = k), P πk = 1 
+
+TTN D π1 = 12 , π2 = 14 , π3,4 = 18 0.437 0.447 0.387 0.398 
+
+TTN D OCG-Pseudo π1,3 = 12 , π2,4 = 0 0.431 0.451 0.385 0.394 TTN D Uniform π1,2,3,4 = 14 0.439 0.442 0.384 0.396 TTN D OCG-Human π1,2 = 12 , π3,4 = 0 0.434 0.441 0.380 0.393 TTN D PLG π1,4 = 12 , π2,3 = 0 0.408 0.459 0.372 0.376 
+
+TTN π1,2 = 12 , π3,4 = 0 0.426 0.436 0.376 0.386 
+
+TTN π1 = 14 , π2 = 34 , π3,4 = 0 0.415 0.442 0.374 0.381 TTN π1 = 34 , π2 = 14 , π3,4 = 0 0.385 0.467 0.373 0.366 
+
+Token Complexity gi ∈ Rn
+
+TTN n = 512 0.426 0.436 0.376 0.386 
+
+TTN n = 256 0.424 0.438 0.376 0.385 TTN n = 1,024 0.387 0.447 0.365 0.363 
+
+Number of Reference & Candidate Token Inputs 
+
+TTN 10 Reference, 2 Candidate 0.406 0.455 0.377 0.378 
+
+TTN 10 Reference, 1 Candidate 0.426 0.436 0.376 0.386 
+
+TTN 20 Reference, 1 Candidate 0.399 0.454 0.373 0.373 TTN 5 Reference, 1 Candidate 0.404 0.437 0.367 0.372 TTN 10 Reference, 5 Candidate 0.382 0.441 0.357 0.357 
+
+Pruning Reference Set Configuration (& Mean Accuracy) 
+
+TTN ≤ 80 GT Reference (100%) 0.442 0.427 0.379 0.395 TTN ≤ 1,000 Self-Referential (63.6%) 0.426 0.436 0.376 0.386 TTN ≤ 100 Self-Referential (70.9%) 0.414 0.448 0.376 0.381 
+
+Table S4: Runtime Comparison on a single NVIDIA L40S GPU. TTN ∗ is estimated runtime if pruning in parallel by class. Speedup via data parallelization is also viable. 
+
+Full Dataset Process Min. Max. Mean 
+
+TTN ∗ Pruning |G(c∗)| ≤ 1,000 Reference 0.8 s 0.33 h 54.5 s TTN D Pruning |G(c∗)| ≤ 80 Reference 6.1 s 0.35 h 167.7 s 
+
+TTN Pruning |G(c∗)| ≤ 100 Reference 8.1 s 0.42 h 205.8 s TTN Pruning |G(c∗)| ≤ 1,000 Reference 63.4 s 4.31 h 0.52 h Generate CLIP Embeddings 354.6 s 12.95 h 1.90 h Number of Pseudo-Labels 37,800 10,078,051 1,182,061 24 B. Griffin and J. Corso 
+
+> 50K
+> 0.1M
+> 0.2M
+> 0.4M
+> Number of Labels
+
+VOC     
+
+> 0.70
+> 0.75
+> 0.80
+> 0.85
+> Recall
+> 0.40
+> 0.60
+> 0.80
+> Precision
+> 0.40
+> 0.50
+> 0.60
+> 0.70
+> F1 Score
+> 0.1 0.3 0.5
+> 0.60
+> 0.70
+> 0.80
+> Confidence Threshold
+> F2 Score
+> AL [15] TTN TTN D
+> 0.5M
+> 1M
+> 2M
+> 4M
+
+COCO   
+
+> 0.50
+> 0.60
+> 0.40
+> 0.60
+> 0.80
+> 0.40
+> 0.50
+> 0.60
+> 0.1 0.3 0.5
+> 0.45
+> 0.50
+> 0.55
+> |
+> 0.5M
+> 1M
+> 2M
+> 4M
+
+LVIS   
+
+> 0.10
+> 0.15
+> 0.20
+> 0.10
+> 0.15
+> 0.07
+> 0.08
+> 0.1 0.3 0.5
+> 0.07
+> 0.08
+> 0.09
+> |
+> 0.2M
+> 0.4M
+> 0.8M
+> 1.6M
+> 3.2M
+
+BDD   
+
+> 0.20
+> 0.30
+> 0.40
+> 0.60
+> 0.22
+> 0.25
+> 0.28
+> 0.1 0.3 0.5
+> 0.20
+> 0.25
+> |
+
+Fig. S3: Label Evaluation across all Confidence Thresholds and Datasets .Results averaged over VLM model & class, but Number of Labels is total for all classes. 
+
+## S5 Extended Performance Benchmarks 
+
+We provide an extended suite of quantitative results supporting the efficacy of the Label Imitation Game (LIG) and corresponding TTN model. Relative to the experimental evaluation in Sec. 6, the following figures offer a more granular breakdown of performance across all four AL benchmark [15] datasets (VOC, COCO, LVIS, and BDD). For pseudo-label evaluation, we plot the number of labels, recall, precision, F1 score, and F2 score across all datasets in Fig. S3. For downstream model evaluation, we plot the mAP 50 results corresponding to each individual VLM on VOC in Fig. S4. For breadth, we plot the mAP 50 and Turing Test Network 25   
+
+> 0.1 0.3 0.5
+> 0.20
+> 0.40
+> 0.60
+> mAP 50
+
+GDINO     
+
+> AL [15] TTN TTN D
+> 0.1 0.3 0.5
+> 0.69
+> 0.70
+> 0.71
+> 0.72
+> Confidence Threshold
+
+YOLOE   
+
+> 0.1 0.3 0.5
+> 0.68
+> 0.70
+> 0.72
+
+YOLOW   
+
+> 0.1 0.3 0.5
+> 0.55
+> 0.60
+> 0.65
+> 0.70
+
+VOC Overall 
+
+Fig. S4: Downstream Model Evaluation across VLM Models and Confidence Thresholds on VOC . VOC Overall denotes the average over all VLM models. 
+
+> 0.55
+> 0.60
+> 0.65
+> 0.70
+> mAP 50
+
+VOC     
+
+> 0.1 0.3 0.5
+> 0.40
+> 0.45
+> 0.50
+> Confidence Threshold
+> mAP 50:95
+> AL [15] TTN TTN D
+> 0.40
+> 0.43
+> 0.46
+
+COCO   
+
+> 0.1 0.3 0.5
+> 0.26
+> 0.28
+> 0.30
+> 0.32
+> |
+> 0.054
+> 0.057
+> 0.060
+> A
+
+LVIS   
+
+> 0.1 0.3 0.5
+> 0.040
+> 0.042
+> |
+> 0.22
+> 0.25
+> 0.28
+
+BDD   
+
+> 0.1 0.3 0.5
+> 0.12
+> 0.14
+> 0.16
+> |
+
+Fig. S5: Downstream Model Evaluation across all Confidence Thresholds and Datasets . Results are average over all VLM models (see Fig. S4 right). 
+
+mAP 50:95 results across all datasets in Fig. S5. Finally, we plot the mAP 50 and mAP 50:95 results for the transfer-vulnerable classes identified in Sec. 6.4 of the main paper across all datasets in Fig. S6. 
+
+## S6 Experimental Protocol 
+
+Our experimental protocol is motivated by the comprehensive Auto-Labeling 
+
+(AL) benchmark [15]. To supplement the initial experiment setup in Sec. 6.1, we provide detailed descriptions of our experimental protocol for reproducability. 
+
+S6.1 Vision-Language Model Details 
+
+We use three state-of-the-art vision-language models (VLMs) for our pseudo-labeling experiments. YOLO-World (YOLOW) [6] and YOLOE [50] are both pre-trained on Objects365 [45], GQA [23], and Flickr30k [55] and implemented via Ultralytics [25]. Grounding DINO-Tiny (GDINO) [34] is pre-trained on Ob-jects365, GoldG [27], and Cap4M [31] and implemented via Hugging Face [51]. 26 B. Griffin and J. Corso 
+
+> 0.35
+> 0.40
+> 0.45
+> 0.50
+> mAP 50
+
+VOC v    
+
+> 0.1 0.3 0.5
+> 0.25
+> 0.30
+> Confidence Threshold
+> mAP 50:95
+> AL [15] TTN TTN D
+> 0.16
+> 0.18
+> 0.20
+
+COCO v  
+
+> 0.1 0.3 0.5
+> 0.09
+> 0.10
+> 0.11
+> 0.12
+> |
+> 0.000
+> 0.001
+> 0.002
+> A
+
+LVIS v  
+
+> 0.1 0.3 0.5
+> 0.000
+> 0.001
+> |
+> 0.005
+> 0.010
+> 0.015
+
+BDD v  
+
+> 0.1 0.3 0.5
+> 0.002
+> 0.006
+> 0.010
+> |
+
+Fig. S6: Downstream Vulnerable-Class Evaluation across all Confidence Thresholds and Datasets . Results are average over VLM models (see Fig. S4 right). 
+
+Notably, there is no direct data leakage between these VLM pre-training data and the object detection datasets in Sec. S6.2. 
+
+S6.2 Object Detection Dataset Details 
+
+For experiments and evaluation, we use the object detection datasets listed in Tab. S5, which vary in terms of application complexity and domain. All four datasets were originally labeled by human annotators, which enables us to di-rectly evaluate pseudo-labels (Sec. S6.3) and—after training lightweight detec-tors only on those pseudo-labels—downstream model performance on the unseen validation sets (Sec. S6.4). For the PASCAL Visual Object Classes Dataset (VOC) [9], we combine the original train and validation splits from the 2007 and 2012 challenges as a single train set for pseudo-labeling (16,551 images); after training models on pseudo-labels, we then use the original 2007 test split (4,952 images) for valida-tion. For the Microsoft Common Objects in COntext (COCO) [33], Large Vocabulary Instance Segmentation (LVIS) [19], and Berkeley DeepDrive 
+
+(BDD) datasets [56], we use the standard train splits for pseudo-labeling and downstream model training then the standard validation splits for subsequent model evaluation. For our detection-based evaluation, we do not use COCO crowd instances and all segmentation labels are converted to bounding boxes. 
+
+Remarks on LVIS . Two properties unique to LVIS require accommodation. First, while the training split comprises 1,203 classes, only 1,035 are represented in the validation split. Thus, we pseudo-label all 1,203 classes for pseudo-label evaluation and downstream model training, but the downstream model evalua-tion for mAP includes only the 1,035 classes available for validation. Second, LVIS uses verbose descriptions to differentiate its numerous classes. For example, class 242 is “chili/chili vegetable/chili pepper/chili pepper veg-Turing Test Network 27                      
+
+> Table S5: Object Detection Datasets . Labeling Cost based on AWS SageMaker. The total cost to pseudo-label all of the detection datasets with YOLOW is $1.18 [15].
+> Number of Labeling Dataset Classes Objects Cost Application
+> VOC [9] 20 40,058 $1,442 Basic object categories for web images COCO [33] 80 849,945 $30,598 Common objects, moderate complexity LVIS [19] 1,203 1,270,141 $45,725 Large vocabulary, high complexity BDD [56] 10 1,286,871 $46,327 Autonomous driving views & objects
+
+etable/chilli/chilli vegetable/chilly/chilly vegetable/chile/chile vegetable.” Un-fortunately, when prompted by LVIS’s 1,203 verbose class descriptions, GDINO runs out of memory due to architectural constraints (additional details in the AL benchmark paper [15]). For this reason, we omit GDINO from LVIS experiments. 
+
+S6.3 Pseudo-Label Evaluation Details 
+
+We directly evaluate pseudo-labels relative to ground truth on all four of the object detection datasets. Specifically, we use 
+
+Recall = TP TP+FN ∈ [0 , 1] , (S1) Precision = TP TP+FP ∈ [0 , 1] , (S2) 
+
+F1 Score = 2 Precision · Recall Precision + Recall = 2TP 2TP + FN + FP ∈ [0 , 1] , (S3) 
+
+F2 Score = 5 · Precision · Recall 
+
+4 · Precision + Recall = 5TP 5TP + 4FN + FP ∈ [0 , 1] , (S4) where true positives ( TP ) is the number of pseudo-labels with correct class label 
+
+and Intersection over Union (IoU) > 0.5, false positives ( FP ) is the number of pseudo-labels failing the TP criteria, and false negatives ( FN ) is the number of ground-truth labels without a corresponding TP . Notably, if TP, FP = 0 in Eq. (S2), Precision = 1 if FN = 0 and Precision = 0 if FN > 0. All pseudo-label evaluation metrics are calculated on a per-class basis then averaged together. 
+
+S6.4 Downstream Model Evaluation Details 
+
+For each dataset, we train a YOLO11n detector on the unlabeled training images paired with pseudo-labels for 100 epochs using the Ultralytics framework [26]. Using the final training weights, we evaluate these detectors on their respective human-labeled validation sets via the mean average precision, defined as 
+
+mAP 50 = 1
+
+|C| 
+
+X
+
+> ci∈C
+
+AP (ci)50 , (S5) where the average precision AP (ci)50 is taken over a discretized precision–recall curve with IoU > 0.5 for each object class ci [9]. Similarly, the mean average 28 B. Griffin and J. Corso 
+
+precision over the COCO [33] primary metric range is defined as 
+
+mAP 50:95 = 110 
+
+> 9
+
+X
+
+> k=0
+
+mAP IoU = 0 .5+0 .05 k, (S6) where each constituent mAP IoU is calculated according to Eq. (S5) using the corresponding intersection-over-union threshold.
