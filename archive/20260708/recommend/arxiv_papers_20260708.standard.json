@@ -1,0 +1,174 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-08T21:33:52.558154+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2607.05434v1",
+      "source": "arxiv",
+      "title": "Abductive Corroboration of Probabilistic AI Models for Forensic Synthetic Media Detection",
+      "abstract": "Artificial Intelligence (AI) models, at their core, apply general learnings from broad datasets to individual circumstances using probabilistic behaviour. This inductive approach stands in contrast to deductive reasoning approaches which seek to prove conclusions from their premises. However, research has shown that deductive reasoning with AI models is a challenging problem and in the real-world it may not always be feasible. An alternative way forward is to leverage abductive reasoning, seeking to corroborate the output of multiple approaches to identify the most likely conclusion from the factual matrix. We apply this to synthetic media detection in forensic settings, and find we are able to disproportionately lower the risk of false positives to true positive recall. We also provide the first empirical evaluation of OpenAI's rollout of SynthID on synthetic images and evaluate how complementary different synthetic media detection approaches are.",
+      "authors": [
+        "Junade Ali"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.CV",
+        "cs.CY"
+      ],
+      "published": "2026-07-03T11:54:32+00:00",
+      "link": "https://arxiv.org/pdf/2607.05434v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "applies AI models to forensic synthetic media detection",
+      "llm_evidence_cn": "将AI模型应用于取证合成媒体检测",
+      "llm_evidence": "将AI模型应用于取证合成媒体检测",
+      "canonical_evidence": "将AI模型应用于取证合成媒体检测",
+      "llm_tldr_en": "Proposes using abductive reasoning to corroborate multiple AI models for synthetic media detection, lowering the risk of false positives in forensic settings.",
+      "llm_tldr_cn": "针对取证场景中合成媒体检测的可靠性问题，提出利用溯因推理整合多个人工智能模型的输出，通过多角度验证降低误报风险，提升检测结论的可信度，为法证合成媒体检测提供了新的融合策略。",
+      "llm_tldr": "针对取证场景中合成媒体检测的可靠性问题，提出利用溯因推理整合多个人工智能模型的输出，通过多角度验证降低误报风险，提升检测结论的可信度，为法证合成媒体检测提供了新的融合策略。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.06254v1",
+      "source": "arxiv",
+      "title": "VendorBench-100: A Unified Cross-Paradigm Benchmark for Deepfake Image Detection",
+      "abstract": "Deepfake image detection is currently served by three fundamentally different paradigms: commercial APIs, zero-shot vision-language models (LLMs), and open-source detectors. Despite their widespread use, these paradigms are rarely evaluated under a common protocol, making direct comparison difficult. We introduce VendorBench-100, a cross-paradigm benchmark that evaluates 36 representative models using a single adversarial 100-image corpus, a unified output schema, and a common evaluation framework. To ensure reliable assessment under the corpus's intentional class imbalance, models are ranked primarily by the Matthews correlation coefficient (MCC), with ROC-AUC reported as a threshold-independent measure of ranking ability. Rather than maximizing dataset size, VendorBench-100 emphasizes challenging real-world scenarios through a curated taxonomy of eight edge-case families, including face swaps, text-to-video stills, AI photo edits, avatar compositing, opaque-provenance images, and compressed research frames. Our evaluation shows that commercial APIs achieve the strongest median performance, followed by vision LLMs and open-source detectors. However, individual open-source models remain competitive with the best vision LLMs. More importantly, we identify a consistent divergence between ranking ability (ROC-AUC) and operating-point quality (MCC), demonstrating that strong score discrimination does not necessarily produce reliable default-threshold decisions. This metric disagreement, rather than any single leaderboard ranking, is the central finding of the benchmark. We release the complete evaluation framework and benchmark results to support reproducible future research. The source code and data are available at: https://github.com/sharayu-20/vendorbench-100",
+      "authors": [
+        "Sharayu N. Deshmukh",
+        "Md Rashidunnabi",
+        "Nelton Tiago Gemo",
+        "Kurundkar G. D.",
+        "Mahamune M. R.",
+        "Nilesh K. Deshmukh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-07T13:22:00+00:00",
+      "link": "https://arxiv.org/pdf/2607.06254v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Benchmark evaluating deepfake image detection across three paradigms with unified protocol.",
+      "llm_evidence_cn": "跨范式基准测试，评估三种深度伪造图像检测范式的统一协议。",
+      "llm_evidence": "跨范式基准测试，评估三种深度伪造图像检测范式的统一协议。",
+      "canonical_evidence": "跨范式基准测试，评估三种深度伪造图像检测范式的统一协议。",
+      "llm_tldr_en": "Introduces VendorBench-100, a cross-paradigm benchmark that evaluates 36 deepfake image detectors (commercial APIs, zero-shot VLMs, open-source) using a unified adversarial 100-image corpus, ranking by MCC to enable fair comparison.",
+      "llm_tldr_cn": "当前深度伪造检测领域涵盖商业API、零样本视觉语言模型和开源检测器三种范式，但评估标准各异。本文提出跨范式基准VendorBench-100，采用统一对抗性图像集和输出模式，对36个代表模型进行评测，以马修斯相关系数(MCC)为核心指标结合ROC-AUC排名，实验揭示了各范式在对抗场景下的性能差异与脆弱性，为深度伪造图像检测评估建立了标准化框架，助力领域内公平比较与进步。",
+      "llm_tldr": "当前深度伪造检测领域涵盖商业API、零样本视觉语言模型和开源检测器三种范式，但评估标准各异。本文提出跨范式基准VendorBench-100，采用统一对抗性图像集和输出模式，对36个代表模型进行评测，以马修斯相关系数(MCC)为核心指标结合ROC-AUC排名，实验揭示了各范式在对抗场景下的性能差异与脆弱性，为深度伪造图像检测评估建立了标准化框架，助力领域内公平比较与进步。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.06354v1",
+      "source": "arxiv",
+      "title": "Generalized Synthetic Image Detection with Enhanced RGB-Noise Representation Learning",
+      "abstract": "The rapid advancement of large-scale generative models has accelerated the spread of highly deceptive AI-generated images, making generalized synthetic image detection a critical imperative. Existing forensic networks often struggle with cross-model generalization and realworld degradations due to their reliance on single-domain representations and conventional binary classification optimization. To overcome these limitations, we propose RNSIDNet, a novel forensic framework that achieves robust detection through enhanced RGB-Noise representation learning. Specifically, our method employs a dual-branch architecture where global RGB semantics, extracted by an attention-refined CLIP backbone, dynamically modulate highfrequency noise artifacts captured by Bayar convolutions via a Feature-wise Linear Modulation (FiLM) module. To further enhance the learned representations, we design a Hard Sample-aware Contrastive Learning (HSCL) strategy. By explicitly penalizing challenging training samples, HSCL reshapes the latent feature space to maximize the discriminative margin between pristine and synthetic domains. Extensive experiments across eight public benchmark datasets verify that our model achieves state-of-the-art performance, delivering superior generalization ability, robustness, and computational efficiency. Code and dataset will be publicly available on https://github.com/multimediaFor/RNSIDNet.",
+      "authors": [
+        "Zhen Li",
+        "Gang Cao",
+        "Tian Zhang",
+        "Lifang Yu",
+        "Shaowei Weng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CR"
+      ],
+      "published": "2026-07-07T14:52:22+00:00",
+      "link": "https://arxiv.org/pdf/2607.06354v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Generalized synthetic image detection using dual-branch RGB-noise network",
+      "llm_evidence_cn": "利用双分支RGB-噪声网络的广义合成图像检测",
+      "llm_evidence": "利用双分支RGB-噪声网络的广义合成图像检测",
+      "canonical_evidence": "利用双分支RGB-噪声网络的广义合成图像检测",
+      "llm_tldr_en": "Proposes RNSIDNet with dual-branch RGB-noise representation for robust cross-model synthetic image detection, improving generalization under real-world degradations.",
+      "llm_tldr_cn": "针对现有法医网络跨模型泛化能力弱和真实退化场景下性能下降的问题，提出RNSIDNet，通过注意力精炼的CLIP主干提取全局RGB语义并与高频噪声特征融合，显著提升了合成图像检测的泛化性和鲁棒性。",
+      "llm_tldr": "针对现有法医网络跨模型泛化能力弱和真实退化场景下性能下降的问题，提出RNSIDNet，通过注意力精炼的CLIP主干提取全局RGB语义并与高频噪声特征融合，显著提升了合成图像检测的泛化性和鲁棒性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.04811v1",
+      "source": "arxiv",
+      "title": "Hybrid Deep Learning for Traceability and Classification of Industrial Slate Tiles",
+      "abstract": "Applying deep learning to instance-aware reidentification of slate tiles and extraction site classification can improve production efficiency and quality control in the slate tile industry. These tasks are particularly important for handling natural materials where visual variability can make manual inspection costly and error-prone. We present a lightweight, hybrid deep learning approach that combines image matching and classification within a single framework. The system integrates a feature-matching branch based on XFeat with a MobileNetV3- based classification branch. The XFeat branch, combined with a LightGlue matching head, improves instance matching performance by +15.4% AUC. For classification, features from both backbones are shared and fused, resulting in a +10.9% accuracy improvement over a standard MobileNetV3 model. Our approach is evaluated on a newly created industrial dataset consisting of 2,610 slate tile images from six extraction sites. The results demonstrate the effectiveness of the proposed approach for object re-identification and classification in an industrial setting.",
+      "authors": [
+        "Soren Antebi",
+        "Stefan Eickeler",
+        "Sandra Halscheidt",
+        "Rene Schmitz",
+        "Michael Muellers",
+        "Dirk Hecker",
+        "Rafet Sifa"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-06T08:47:45+00:00",
+      "link": "https://arxiv.org/pdf/2607.04811v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Uses CNNs (MobileNetV3) for industrial slate tile classification",
+      "llm_evidence_cn": "使用CNN（MobileNetV3）进行工业石板图像分类",
+      "llm_evidence": "使用CNN（MobileNetV3）进行工业石板图像分类",
+      "canonical_evidence": "使用CNN（MobileNetV3）进行工业石板图像分类",
+      "llm_tldr_en": "Proposes a hybrid deep learning approach combining CNN-based classification with feature matching for slate tile classification and traceability, improving instance matching by 15.4% AUC.",
+      "llm_tldr_cn": "针对工业石板分类与实例重识别问题，提出一种轻量级混合深度学习框架。该框架结合基于XFeat的特征匹配分支与基于MobileNetV3的分类分支，并共享部分特征。实验表明，添加轻量级匹配头将实例匹配AUC提升15.4%，分类性能也有提升。该方法为自然材质产品的自动化质量管控提供了高效解决方案。",
+      "llm_tldr": "针对工业石板分类与实例重识别问题，提出一种轻量级混合深度学习框架。该框架结合基于XFeat的特征匹配分支与基于MobileNetV3的分类分支，并共享部分特征。实验表明，添加轻量级匹配头将实例匹配AUC提升15.4%，分类性能也有提升。该方法为自然材质产品的自动化质量管控提供了高效解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
