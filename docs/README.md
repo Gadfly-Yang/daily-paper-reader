@@ -6,34 +6,43 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-08
-- 运行时间：2026-07-08 21:39:17 UTC
+- 最新运行日期：2026-07-09
+- 运行时间：2026-07-09 21:44:11 UTC
 - 运行状态：成功
-- 本次总论文数：4
-- 精读区：3
-- 速读区：1
+- 本次总论文数：7
+- 精读区：5
+- 速读区：2
 
 ### 今日简报（AI）
-今天精读了两篇关于深度伪造检测的前沿研究，聚焦于让检测模型更可信、更可比较。  
-一篇用溯因推理验证模型在司法场景下的可靠性，另一篇推出覆盖多种范式的统一评测基准 VendorBench-100。  
-想提升数字内容的鉴伪能力，试试关注这类能“自证清白”和“统一比武”的新工具。
-- 详情：[/202607/08/README](/202607/08/README)
+今日精读聚焦监控场景的精准身份识别与AI篡改视频检测，两项研究均获高分验证。  
+值得关注的是，注意力增强的高效架构显著提升了模糊监控人像比对精度，而集成深度学习技术可有效揪出深度伪造视频。  
+未来不妨留意多尺度压缩痕迹分析这类轻量筛查方案，它可能让普通用户更易察觉图像造假。
+- 详情：[/202607/09/README](/202607/09/README)
 
 ### 精读区论文标签
-1. [Abductive Corroboration of Probabilistic AI Models for Forensic Synthetic Media Detection](/202607/08/2607.05434v1-abductive-corroboration-of-probabilistic-ai-models-for-forensic-synthetic-media-detection)  
+1. [Attention-Guided Efficientnet Architecture For Precise Criminal Identification in Surveillance Images](/202607/09/2607.03073v1-attention-guided-efficientnet-architecture-for-precise-criminal-identification-in-surveillance-images)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：将AI模型应用于取证合成媒体检测
-2. [VendorBench-100: A Unified Cross-Paradigm Benchmark for Deepfake Image Detection](/202607/08/2607.06254v1-vendorbench-100-a-unified-cross-paradigm-benchmark-for-deepfake-image-detection)  
+   evidence：使用带注意力的EfficientNet对监控图像进行分类。
+2. [Ensemble Deep Learning Approaches for AI-Altered Video Detection](/202607/09/2607.06872v1-ensemble-deep-learning-approaches-for-ai-altered-video-detection)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：跨范式基准测试，评估三种深度伪造图像检测范式的统一协议。
-3. [Generalized Synthetic Image Detection with Enhanced RGB-Noise Representation Learning](/202607/08/2607.06354v1-generalized-synthetic-image-detection-with-enhanced-rgb-noise-representation-learning)  
+   evidence：开发了一套多模态深度伪造检测系统，结合音频和视觉的集成模型
+3. [Why Fake ? Unveiling the Semantic Vocabulary of Deepfake Detectors](/202607/09/2607.07216v1-why-fake--unveiling-the-semantic-vocabulary-of-deepfake-detectors)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：利用双分支RGB-噪声网络的广义合成图像检测
+   evidence：分析深度伪造检测器决策过程以提供解释性
+4. [Face-trace: Open-Set Attribution and Progressive Discovery of Synthetic Face Generators](/202607/09/2607.07545v1-face-trace-open-set-attribution-and-progressive-discovery-of-synthetic-face-generators)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：开放集合成人脸生成器溯源用于多媒体取证
+5. [Show Me Examples: Inferring Visual Concepts from Image Sets](/202607/09/2607.02402v2-show-me-examples-inferring-visual-concepts-from-image-sets)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：提出从小样本图像集中推断视觉概念的任务和方法，支持少样本视觉推理。
 
 ### 速读区论文标签
-1. [Hybrid Deep Learning for Traceability and Classification of Industrial Slate Tiles](/202607/08/2607.04811v1-hybrid-deep-learning-for-traceability-and-classification-of-industrial-slate-tiles)  
+1. [Personalized Object Identification and Localization via In-Context Inference with Vision-Language Models](/202607/09/2607.00357v1-personalized-object-identification-and-localization-via-in-context-inference-with-vision-language-models)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：使用CNN（MobileNetV3）进行工业石板图像分类
+   evidence：提出少样本个性化物体识别与定位
+2. [Format-Controlled Multi-Scale JPEG Compression Response Analysis for Image-Level Forgery Screening](/202607/09/2607.06615v1-format-controlled-multi-scale-jpeg-compression-response-analysis-for-image-level-forgery-screening)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：利用JPEG压缩分析进行图像级伪造筛查的轻量级特征工程
 
 
 <div class="dpr-home-promo-card">

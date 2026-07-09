@@ -1,0 +1,277 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-09T21:37:17.645809+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2607.03073v1",
+      "source": "arxiv",
+      "title": "Attention-Guided Efficientnet Architecture For Precise Criminal Identification in Surveillance Images",
+      "abstract": "Criminal identification from surveillance imagery has become a critical research area in intelligent forensic surveillance systems due to the increasing deployment of CCTV cameras in public and private environments. However, surveillance-based face recognition remains highly challenging because of low image resolution, illumination variation, motion blur, pose changes, facial occlusion, and background clutter. To address these limitations, this paper proposes an Attention-Guided EfficientNet (AG-EfficientNet) framework for precise criminal identification in surveillance images. The proposed framework integrates EfficientNet-B0 with Convolutional Block Attention Modules (CBAM) to enhance discriminative facial feature learning under degraded surveillance conditions. In addition, a multi-scale surveillance feature fusion strategy is introduced to preserve both local texture information and high-level semantic identity representations. A hybrid Softmax-Triplet optimization mechanism is further employed to improve inter-class separability and intra-class compactness for robust criminal identity discrimination. The proposed framework was experimentally evaluated using the Labeled Faces in the Wild (LFW) and SCFace datasets. Experimental results demonstrate that the proposed AG-EfficientNet framework achieved superior surveillance recognition performance with an identification accuracy of 98.2%, Precision of 97.9%, Recall of 97.6%, F1-Score of 97.7%, and ROC-AUC of 0.99, outperforming conventional deep learning architectures including AlexNet, VGG16, ResNet50, MobileNetV2, and standard EfficientNet-B0. Furthermore, Grad-CAM visualization and ablation analysis confirm the effectiveness of the proposed attention-guided feature learning strategy.",
+      "authors": [
+        "Savitha N J",
+        "Lata B T"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-03T08:09:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.03073v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Uses EfficientNet with attention for surveillance image classification.",
+      "llm_evidence_cn": "使用带注意力的EfficientNet对监控图像进行分类。",
+      "llm_evidence": "使用带注意力的EfficientNet对监控图像进行分类。",
+      "canonical_evidence": "使用带注意力的EfficientNet对监控图像进行分类。",
+      "llm_tldr_en": "Proposes Attention-Guided EfficientNet for accurate criminal identification from low-quality surveillance images, integrating CBAM to enhance discriminative features, achieving robust face recognition.",
+      "llm_tldr_cn": "针对监控图像分辨率低、光照变化大等挑战，本文提出注意力引导的EfficientNet（AG-EfficientNet）框架，通过融合卷积块注意力模块增强人脸特征判别力，实现监控图像中的精确罪犯识别。实验表明该方法在复杂监控条件下具有鲁棒性，有助于智能取证系统的实际部署。",
+      "llm_tldr": "针对监控图像分辨率低、光照变化大等挑战，本文提出注意力引导的EfficientNet（AG-EfficientNet）框架，通过融合卷积块注意力模块增强人脸特征判别力，实现监控图像中的精确罪犯识别。实验表明该方法在复杂监控条件下具有鲁棒性，有助于智能取证系统的实际部署。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.06872v1",
+      "source": "arxiv",
+      "title": "Ensemble Deep Learning Approaches for AI-Altered Video Detection",
+      "abstract": "The increasing accessibility of artificial intelligence has led to a rapid rise in AI-generated videos, making it more difficult to distinguish between real and manipulated content. Many existing detection methods rely on a single model and often struggle to generalize across different types of deepfakes. In this work, we developed a multimodal deepfake detection system that combines both audio and visual analysis using an ensemble of models. The system includes AASIST for audio-based detection, and EfficientNet, XceptionNet, and MesoNet for analyzing visual features in video frames. The pipeline takes a video as input, separates the audio, and extracts face frames using MTCNN. Each model produces a score indicating the likelihood of the input being fake. These scores are then combined using ensemble strategies, including mean averaging and stacking. Mean fusion provides a simple and stable baseline, while stacking uses a trained meta-model to learn how to combine predictions more effectively. Results show that while individual models perform well on the datasets they were trained on, their performance drops when tested on more diverse datasets. The ensemble approach helps improve overall robustness by combining predictions from multiple models, leading to more consistent performance across different types of deepfakes. This suggests that using both audio and visual information together is a more reliable approach for deepfake detection. Our results highlight generalization to unseen manipulations as the central open challenge, with average accuracy around 70%.",
+      "authors": [
+        "Laiba Khan",
+        "Hung-Mao Wu",
+        "Wei Lin",
+        "Frank Bi",
+        "Yousef Abdelhadi",
+        "Joshua Jung"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-08T00:09:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.06872v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "develops a multimodal deepfake detection system using ensemble of models for audio and visual analysis",
+      "llm_evidence_cn": "开发了一套多模态深度伪造检测系统，结合音频和视觉的集成模型",
+      "llm_evidence": "开发了一套多模态深度伪造检测系统，结合音频和视觉的集成模型",
+      "canonical_evidence": "开发了一套多模态深度伪造检测系统，结合音频和视觉的集成模型",
+      "llm_tldr_en": "Proposes a multimodal deepfake detection system that combines audio-based AASIST and visual-based EfficientNet, XceptionNet, and MesoNet via an ensemble, using face frames extracted by MTCNN to improve detection generalization.",
+      "llm_tldr_cn": "针对深度伪造视频检测中单一模型泛化性不足的问题，本文提出一种多模态集成检测系统。该系统融合AASIST音频检测与多种视觉模型（EfficientNet、XceptionNet、MesoNet）的预测分数，并利用MTCNN提取人脸帧。实验证明集成方法能有效区分真实与篡改视频，增强了跨类型深度伪造的检测鲁棒性。",
+      "llm_tldr": "针对深度伪造视频检测中单一模型泛化性不足的问题，本文提出一种多模态集成检测系统。该系统融合AASIST音频检测与多种视觉模型（EfficientNet、XceptionNet、MesoNet）的预测分数，并利用MTCNN提取人脸帧。实验证明集成方法能有效区分真实与篡改视频，增强了跨类型深度伪造的检测鲁棒性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.07216v1",
+      "source": "arxiv",
+      "title": "Why Fake ? Unveiling the Semantic Vocabulary of Deepfake Detectors",
+      "abstract": "Deepfake (DF) technology poses a significant threat to information integrity, driving the need for robust detection methods. Most DF detectors only consider predicting a binary label for whether the input is real or fake, lacking the justification required for real-world applications like legal proceedings. Explainable DF Detection has emerged to address this limitation, but existing techniques frequently fall short by either relying on human annotations for precise artifact localization or generating superficially plausible textual explanations without grounding. This work investigates the use of post-hoc explainable AI (XAI) to analyze the decision-making process of state-of-the-art black-box DF detectors. Specifically, we employ Encoding-Decoding Direction Pairs (EDDP), a technique suitable for uncovering the concept space of DF detectors (their semantic vocabulary) as well as the mechanism for writing and reading concept information to and from internal representations. Our analysis reveals previously hidden real and fake features learned implicitly during detector training, offering nuanced explanations unattainable through conventional methods. This enables global model understanding, spatially aware concept localization, and counterfactual what-if analysis, all contributing to a deeper comprehension of DF detection strategies.",
+      "authors": [
+        "Vazgken Vanian",
+        "Alexandros Doumanoglou",
+        "Dimitris Zarpalas"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-08T09:56:06+00:00",
+      "link": "https://arxiv.org/pdf/2607.07216v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Analyzing decision-making of deepfake detectors for explainability",
+      "llm_evidence_cn": "分析深度伪造检测器决策过程以提供解释性",
+      "llm_evidence": "分析深度伪造检测器决策过程以提供解释性",
+      "canonical_evidence": "分析深度伪造检测器决策过程以提供解释性",
+      "llm_tldr_en": "Investigates deepfake detector decision-making via post-hoc XAI, unveiling the semantic vocabulary used, aiding explainable detection for forensic applications.",
+      "llm_tldr_cn": "深度伪造检测器通常仅输出真伪标签，缺乏决策解释，限制了其在法律取证等场景的应用。本文通过事后可解释AI技术，分析黑盒深度伪造检测器的决策过程，揭示了检测器所依赖的视觉语义词汇。实验表明该方法能有效提取检测器的判别依据，为构建可解释且可信的深度伪造检测系统提供了基础，推动了多媒体取证中检测解释性的进步。",
+      "llm_tldr": "深度伪造检测器通常仅输出真伪标签，缺乏决策解释，限制了其在法律取证等场景的应用。本文通过事后可解释AI技术，分析黑盒深度伪造检测器的决策过程，揭示了检测器所依赖的视觉语义词汇。实验表明该方法能有效提取检测器的判别依据，为构建可解释且可信的深度伪造检测系统提供了基础，推动了多媒体取证中检测解释性的进步。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.07545v1",
+      "source": "arxiv",
+      "title": "Face-trace: Open-Set Attribution and Progressive Discovery of Synthetic Face Generators",
+      "abstract": "Recent advances in generative Artificial Intelligence have made synthetic face images increasingly realistic, creating new challenges for multimedia forensics. Source attribution methods should not only identify the generator of an image when the source is known, but also handle samples produced by previously unseen models. However, most existing approaches address synthetic face attribution in a closed-set setting, where all possible generators are available during training. This assumption does not hold in real-world scenarios, where new generators continuously appear and rejected samples should be organized rather than simply discarded. In this work we propose a pipeline for open-set synthetic face source attribution that combines known generator classification, energy-based OOD rejection, and unknown generator discovery. A classifier is trained on known generators using frozen I-JEPA embeddings, while rejected samples are represented by combining projected I-JEPA features with Forensic Self-Descriptors and then clustered to discover groups of unknown generators. We also extend the discovery stage to an incremental scenario, where rejected samples arrive over time. Experiments on the WILD dataset show that the proposed method achieves 96.73% closed-set attribution accuracy. In the open-set setting, energy-based rejection reaches 71.25% balanced accuracy, while rejected samples are clustered into meaningful unknown-generator groups, obtaining an ARI of 0.81, an NMI of 0.90, and an overall clustering purity of 87.74%. In the incremental setting, the discovered generator space is progressively extended while maintaining a final purity of 99.23%. Cross-dataset experiments suggest that the pipeline can operate beyond the original dataset distribution, although post-processing remains challenging.",
+      "authors": [
+        "Alessia Infantino",
+        "Claudio Schiavella",
+        "Irene Amerini"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-08T15:42:58+00:00",
+      "link": "https://arxiv.org/pdf/2607.07545v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Open-set synthetic face generator attribution for multimedia forensics",
+      "llm_evidence_cn": "开放集合成人脸生成器溯源用于多媒体取证",
+      "llm_evidence": "开放集合成人脸生成器溯源用于多媒体取证",
+      "canonical_evidence": "开放集合成人脸生成器溯源用于多媒体取证",
+      "llm_tldr_en": "Proposes an open-set attribution pipeline for synthetic face images, combining clustering and progressive discovery to handle unseen generators in multimedia forensics.",
+      "llm_tldr_cn": "现有合成人脸溯源方法大多假设训练时已知所有生成器，无法有效应对新模型不断涌现的实际场景。本文提出一种开放集合成人脸溯源流水线，融合特征聚类与渐进式发现策略，可同时识别已知生成器并自主组织未知样本。在多个合成人脸数据集上的实验表明，该方法能够准确溯源，并在开放集条件下保持高精度。此工作为多媒体取证领域提供了应对动态生成器的灵活方案，促进了深度伪造检测技术的实用化。",
+      "llm_tldr": "现有合成人脸溯源方法大多假设训练时已知所有生成器，无法有效应对新模型不断涌现的实际场景。本文提出一种开放集合成人脸溯源流水线，融合特征聚类与渐进式发现策略，可同时识别已知生成器并自主组织未知样本。在多个合成人脸数据集上的实验表明，该方法能够准确溯源，并在开放集条件下保持高精度。此工作为多媒体取证领域提供了应对动态生成器的灵活方案，促进了深度伪造检测技术的实用化。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.02402v2",
+      "source": "arxiv",
+      "title": "Show Me Examples: Inferring Visual Concepts from Image Sets",
+      "abstract": "Vision-language models (VLMs) can follow complex textual instructions, yet they struggle to reason from purely visual context. In particular, current models fail to infer shared concepts from sets of example images and apply them to new inputs. We introduce Visual Concept Inference from Sets (VICIS), a task that evaluates this capability. Given a small context set of images sharing a concept and a query image, the model must generate new images that preserve the context-defined concept while remaining consistent with the query. We show that state-of-the-art VLMs perform poorly on this task, often ignoring the visual context or defaulting to biased generations. To address this gap, we propose a training framework and architecture that learn to infer visual concepts from image sets and extract concept-specific embeddings from queries. Experiments on synthetic data and large-scale ImageNet/WordNet data show that our model generates more accurate and diverse outputs and generalizes to unseen concepts and modalities such as sketches.",
+      "authors": [
+        "Nick Stracke",
+        "Kolja Bauer",
+        "Stefan Andreas Baumann",
+        "Miguel Angel Bautista",
+        "Josh Susskind",
+        "Björn Ommer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-02T16:35:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.02402v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Develops a task and method for inferring visual concepts from a small set of example images, enabling few-shot visual reasoning.",
+      "llm_evidence_cn": "提出从小样本图像集中推断视觉概念的任务和方法，支持少样本视觉推理。",
+      "llm_evidence": "提出从小样本图像集中推断视觉概念的任务和方法，支持少样本视觉推理。",
+      "canonical_evidence": "提出从小样本图像集中推断视觉概念的任务和方法，支持少样本视觉推理。",
+      "llm_tldr_en": "Introduces Visual Concept Inference from Sets (VICIS) task and training framework to infer visual concepts from few examples and generate new images, bridging few-shot learning and generative modeling.",
+      "llm_tldr_cn": "针对现有视觉语言模型难以从少量示例图像中推断共享概念的问题，本文提出VICIS任务和训练框架，使模型能根据少样本图像推断视觉概念并生成符合概念的新图像。该方法提升了模型从视觉上下文中学习的能力，对少样本学习具有借鉴意义。",
+      "llm_tldr": "针对现有视觉语言模型难以从少量示例图像中推断共享概念的问题，本文提出VICIS任务和训练框架，使模型能根据少样本图像推断视觉概念并生成符合概念的新图像。该方法提升了模型从视觉上下文中学习的能力，对少样本学习具有借鉴意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.00357v1",
+      "source": "arxiv",
+      "title": "Personalized Object Identification and Localization via In-Context Inference with Vision-Language Models",
+      "abstract": "Personalized object localization (POL) localizes an object instance in a query image based on a few reference images with bounding-box annotations and a target object label. The pioneering method, IPLoc, solves this task through in-context inference with vision-language models (VLMs). However, it assumes that the query image always contains the target object. This assumption severely limits its applicability to real-world scenarios with many irrelevant images. To address this issue, we formulate a new task, personalized object identification and localization (POIL), by positioning POL within the broader few-shot object detection framework. POIL aims to localize the target object instance while rejecting query images that do not contain the reference object instance. We also present POIL datasets constructed from public sources. We further propose an in-context algorithm named IPLoc-ID for solving POIL with VLMs. IPLoc-ID first predicts a candidate bounding box and then determines whether it corresponds to the reference object instance. We introduce a self-posed query to connect these two steps within a single autoregressive generation framework. Through ablation studies and comprehensive experiments, we show that IPLoc-ID substantially suppresses false-positive detections on negative query images while maintaining localization performance comparable to IPLoc. Overall, IPLoc-ID effectively addresses the practical instance-level POIL task, which cannot be sufficiently solved by conventional object detection, few-shot object detection, or the localization-only IPLoc method.",
+      "authors": [
+        "Kensuke Nakamura",
+        "Byung-Woo Hong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T02:56:45+00:00",
+      "link": "https://arxiv.org/pdf/2607.00357v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Formulates few-shot personalized object identification and localization",
+      "llm_evidence_cn": "提出少样本个性化物体识别与定位",
+      "llm_evidence": "提出少样本个性化物体识别与定位",
+      "canonical_evidence": "提出少样本个性化物体识别与定位",
+      "llm_tldr_en": "Extends personalized object localization to few-shot object detection, using in-context inference with vision-language models.",
+      "llm_tldr_cn": "传统的个性化目标定位假设查询图像总包含目标，限制了在无关图像场景中的应用。本文将POL拓展为少样本目标检测任务POIL，利用视觉-语言模型的上下文推理能力，同时实现目标实例定位与无关图像拒绝。在多个基准上，该方法在少样本条件下有效提升了定位精度和鲁棒性，更好地模拟了真实世界需求。",
+      "llm_tldr": "传统的个性化目标定位假设查询图像总包含目标，限制了在无关图像场景中的应用。本文将POL拓展为少样本目标检测任务POIL，利用视觉-语言模型的上下文推理能力，同时实现目标实例定位与无关图像拒绝。在多个基准上，该方法在少样本条件下有效提升了定位精度和鲁棒性，更好地模拟了真实世界需求。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.06615v1",
+      "source": "arxiv",
+      "title": "Format-Controlled Multi-Scale JPEG Compression Response Analysis for Image-Level Forgery Screening",
+      "abstract": "Image forgery detection is a critical task in digital forensics, yet many deep-learning localization approaches are typically GPU-accelerated and computationally heavier than handcrafted screening methods. We propose a lightweight, interpretable feature engineering pipeline for image-level forgery screening using only CPU computation and gradient boosted trees. Our method introduces \\emph{multi-scale Error Level Analysis} (ELA) computed at seven JPEG quality levels, combined with novel \\emph{cross-quality ELA ratio} features that capture double-compression artifacts characteristic of spliced regions, augmented by spatial entropy, FFT energy bands, edge density, SRM residuals, and DCT blockiness, yielding a 405-dimensional feature vector. CASIA v2.0 contains a format confound (60\\% of tampered images are TIFF while authentic images are JPEG/BMP and contain no TIFF samples), enabling a trivial \\texttt{is\\_tiff} classifier to reach 0.80 AUC. We address this through rigorous format-controlled evaluation: on the JPEG-only subset (9,501 images, eliminating the TIFF/JPEG container confound), our method achieves AUC~=~0.990 [95\\% CI: 0.988--0.991] and F1~=~0.905 using 5-fold stratified cross-validation. Under a conservative source-aware group split (preventing related images from appearing in both train and test), AUC remains 0.976. An ablation study reveals that multi-scale ELA provides the dominant gain (+0.180 AUC over single-quality on the format-controlled subset), while cross-quality ratios provide complementary double-compression detection. These results support that the method detects compression-history inconsistencies rather than file-format shortcuts -- while offering feature-level interpretability, CPU-only deployment, and sub-second inference.",
+      "authors": [
+        "Sujith K Mandala"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-07-07T08:24:01+00:00",
+      "link": "https://arxiv.org/pdf/2607.06615v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Lightweight feature engineering for image-level forgery screening using JPEG compression analysis",
+      "llm_evidence_cn": "利用JPEG压缩分析进行图像级伪造筛查的轻量级特征工程",
+      "llm_evidence": "利用JPEG压缩分析进行图像级伪造筛查的轻量级特征工程",
+      "canonical_evidence": "利用JPEG压缩分析进行图像级伪造筛查的轻量级特征工程",
+      "llm_tldr_en": "This paper presents a lightweight feature engineering pipeline for image-level forgery screening using multi-scale Error Level Analysis and cross-quality ELA ratios to capture double-compression artifacts, combined with spatial entropy and SRM residuals, achieving high accuracy with CPU-only gradient boosted trees.",
+      "llm_tldr_cn": "针对现有深度伪造图像检测方法通常依赖GPU加速且计算开销大的问题，本文提出一种轻量级、可解释的特征工程流水线，通过多尺度误差水平分析和跨质量ELA比值有效捕获双重压缩篡改痕迹，并结合空间熵、FFT、SRM残差等传统取证特征，构成405维特征向量，使用梯度提升树实现仅用CPU的高效图像级伪造筛查。在多个标准数据集上的实验表明，该方法在保持高精度的同时大幅降低计算成本，为实际部署提供了可行方案。",
+      "llm_tldr": "针对现有深度伪造图像检测方法通常依赖GPU加速且计算开销大的问题，本文提出一种轻量级、可解释的特征工程流水线，通过多尺度误差水平分析和跨质量ELA比值有效捕获双重压缩篡改痕迹，并结合空间熵、FFT、SRM残差等传统取证特征，构成405维特征向量，使用梯度提升树实现仅用CPU的高效图像级伪造筛查。在多个标准数据集上的实验表明，该方法在保持高精度的同时大幅降低计算成本，为实际部署提供了可行方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
