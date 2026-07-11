@@ -1,0 +1,130 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-11T21:10:08.691864+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2607.03069v1",
+      "source": "arxiv",
+      "title": "SafeGuard: A Multi-Agent Perception-Reasoning Framework for Social-Risk AI-Generated Video Detection",
+      "abstract": "As video generation paradigms evolve from localized manipulation to full-scene synthesis, AI-generated video detection becomes increasingly challenging, as forgeries exhibit coherent global structure and high perceptual realism. However, existing benchmarks are biased toward perceptual fidelity and primarily evaluate detectors based on perceptual artifacts, providing limited coverage of scenarios that require reasoning about violations of physical laws, structural coherence, or social logic. This dataset bias shapes current approaches and results in a Perception-Reasoning Gap: artifact-centric models capture low-level statistical irregularities yet lack semantic inference, whereas vision-language models perform semantic reasoning but remain insensitive to fine-grained forensic cues. To bridge this gap, we propose SafeGuard, a multi-agent framework that enables collaborative specialization between forensic perception and semantic reasoning. A hierarchical perceptual solver extracts fine-grained forensic evidence, while a self-reflective verifier enforces consistency between semantic inference and physical plausibility, forming an interpretable evidence chain. To support evaluation, we introduce SafeVid, a novel AI-generated video detection benchmark comprising 20K videos spanning 10 social risk categories, designed to evaluate physical plausibility, structural consistency, and the rationality of social behaviors. Extensive experiments demonstrate the generalization of SafeGuard, improving accuracy on SafeVid by +18.7% and consistently outperforming prior methods across four public benchmarks.",
+      "authors": [
+        "Wenlin Wu",
+        "Sheng Zhou",
+        "Peipei Song",
+        "Wenhao Wang",
+        "Junbin Xiao",
+        "Xun Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-03T08:03:35+00:00",
+      "link": "https://arxiv.org/pdf/2607.03069v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "multi-agent detection of AI-generated videos with social risks",
+      "llm_evidence_cn": "面向社会风险的AI生成视频多智能体检测",
+      "llm_evidence": "面向社会风险的AI生成视频多智能体检测",
+      "canonical_evidence": "面向社会风险的AI生成视频多智能体检测",
+      "llm_tldr_en": "Proposes SafeGuard, a multi-agent framework that combines perception and reasoning to detect AI-generated videos with social risks, bridging the perception-reasoning gap.",
+      "llm_tldr_cn": "现有AI生成视频检测方法多依赖感知伪造痕迹，难以应对需要推理物理规律或社会逻辑的复杂场景。本文提出SafeGuard框架，采用多智能体协作，融合感知与推理能力，针对社会风险视频进行检测。通过在包含物理规律冲突、结构不一致等场景的数据集上评估，SafeGuard显著超越单一范式方法，弥补感知与推理的鸿沟。",
+      "llm_tldr": "现有AI生成视频检测方法多依赖感知伪造痕迹，难以应对需要推理物理规律或社会逻辑的复杂场景。本文提出SafeGuard框架，采用多智能体协作，融合感知与推理能力，针对社会风险视频进行检测。通过在包含物理规律冲突、结构不一致等场景的数据集上评估，SafeGuard显著超越单一范式方法，弥补感知与推理的鸿沟。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.03797v1",
+      "source": "arxiv",
+      "title": "Probabilistic Robustness in Medical Image Classification",
+      "abstract": "Deep learning (DL) has shown strong performance in medical image classification, but its trustworthy deployment remains challenging in safety-critical clinical settings, where prediction errors under perturbations may lead to severe consequences. Existing studies mainly focus on adversarial robustness (AR) from a worst-case perspective; however, such settings may be less representative of real medical applications. In this work, we investigate probabilistic robustness (PR) as a more practical measure of model trustworthiness. To this end, we construct a set of natural corruption settings for medical image classification and systematically evaluate commonly used DL models on MedMNIST v2 dataset. Our study provides a statistically grounded perspective on assessing the trustworthiness of DL models, thereby supporting their more trustworthy deployment in medical imaging applications.",
+      "authors": [
+        "Yi Zhang",
+        "Siddartha Khastgir",
+        "Xingyu Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "eess.IV"
+      ],
+      "published": "2026-07-04T09:57:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.03797v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Studies probabilistic robustness of deep learning models for medical image classification",
+      "llm_evidence_cn": "研究深度学习模型在医学图像分类中的概率鲁棒性",
+      "llm_evidence": "研究深度学习模型在医学图像分类中的概率鲁棒性",
+      "canonical_evidence": "研究深度学习模型在医学图像分类中的概率鲁棒性",
+      "llm_tldr_en": "Investigates probabilistic robustness as a practical trustworthiness measure for medical image classification CNNs",
+      "llm_tldr_cn": "针对医学图像分类中对抗鲁棒性的局限性，本文研究概率鲁棒性作为更实用的模型可信度度量。通过构建自然损坏设置并在MedMNIST v2数据集上评估常用DL模型，提供了统计上有依据的模型信任度评估视角。",
+      "llm_tldr": "针对医学图像分类中对抗鲁棒性的局限性，本文研究概率鲁棒性作为更实用的模型可信度度量。通过构建自然损坏设置并在MedMNIST v2数据集上评估常用DL模型，提供了统计上有依据的模型信任度评估视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.08541v1",
+      "source": "arxiv",
+      "title": "VocaDet: Sample-Driven Open-Vocabulary Object Detection and Segmentation via Visual Tokenization and Vector Database Retrieval",
+      "abstract": "Open-vocabulary object detection and segmentation aim to recognize arbitrary objects beyond predefined categories. Although recent vision-language and reference-based approaches have significantly advanced this field, they often rely on text prompts, limited visual examples, or expensive feature matching procedures, making them difficult to scale to large and continuously expanding object repositories. In this work, we propose VocaDet, a sample-driven open-vocabulary object detection and segmentation framework that learns object concepts directly from user-provided positive and negative sample collections without model retraining. The key idea is to transform continuous visual representations into discrete visual vocabularies and perform efficient retrieval-based recognition through a scalable vector database. Specifically, we employ DINOv3 as the visual feature extractor and apply agglomerative clustering with adaptive clustering sensitivity to generate multi-granularity visual tokens. These visual tokens, together with position-debiased representations and spatial topology information, are stored as expandable object memories in a vector database. During inference, query images are converted into visual tokens and efficiently matched against the stored object memories for object localization and segmentation. Furthermore, a background filtering mechanism is introduced to remove frequently occurring background patterns and reduce redundant retrieval operations in practical fixed-camera scenarios. Experiments on the UA-DETRAC dataset demonstrate that VocaDet achieves effective open-vocabulary detection performance without conventional detector training, while supporting continuously expandable recognition capability as additional positive and negative samples are accumulated.",
+      "authors": [
+        "ZhiXin Sun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-09T14:35:37+00:00",
+      "link": "https://arxiv.org/pdf/2607.08541v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Sample-driven detection learns from few user-provided positive/negative samples without retraining",
+      "llm_evidence_cn": "样本驱动的检测方法能从少量用户提供的正负样本中学习，无需重新训练",
+      "llm_evidence": "样本驱动的检测方法能从少量用户提供的正负样本中学习，无需重新训练",
+      "canonical_evidence": "样本驱动的检测方法能从少量用户提供的正负样本中学习，无需重新训练",
+      "llm_tldr_en": "Introduces VocaDet, a sample-driven open-vocabulary detection framework that learns object concepts from few user-provided examples via visual tokenization and vector database retrieval, enabling scalable recognition without model retraining.",
+      "llm_tldr_cn": "针对开放词汇检测中的少样本学习难题，提出VocaDet框架。该框架通过视觉标记化和向量数据库检索，直接从用户提供的少量正负样本中学习物体概念，无需重新训练。实验表明其可扩展性强，为少样本物体检测提供了有效方案。",
+      "llm_tldr": "针对开放词汇检测中的少样本学习难题，提出VocaDet框架。该框架通过视觉标记化和向量数据库检索，直接从用户提供的少量正负样本中学习物体概念，无需重新训练。实验表明其可扩展性强，为少样本物体检测提供了有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -6,34 +6,33 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-10
-- 运行时间：2026-07-10 21:34:03 UTC
+- 最新运行日期：2026-07-11
+- 运行时间：2026-07-11 21:13:30 UTC
 - 运行状态：成功
-- 本次总论文数：4
-- 精读区：3
+- 本次总论文数：3
+- 精读区：2
 - 速读区：1
 
 ### 今日简报（AI）
-今日精读两篇高分论文，深挖人脸攻击统一检测与AI生成图像泛化识别，另速览扩散模型水印新方案。  
-最值得关注：细粒度语义引导可统一检测多种人脸伪造，生成式残差学习则从变换中捕捉痕迹实现强泛化。  
-建议开发者重点关注如何将这类“语义特征”和“残差学习”思路应用于自身安全检测任务，提升对未知攻击的鲁棒性。
-- 详情：[/202607/10/README](/202607/10/README)
+今日聚焦AI风险检测与医学图像鲁棒性：满分精读《SafeGuard》提出多智能体框架，精准揪出AI生成的社交风险视频。
+
+最值得关注的是AI视频鉴伪与医学模型概率鲁棒性——前者用感知推理协同识别欺骗性内容，后者为医疗AI的安全性给出了新的评估标准。
+
+普通读者可先速读视觉分词与向量检索的《VocaDet》，了解开放词汇检测的新思路，再深入上述安全方向。
+- 详情：[/202607/11/README](/202607/11/README)
 
 ### 精读区论文标签
-1. [Unified Face Attack Detection via Fine-Grained Semantic Guidance](/202607/10/2607.08156v1-unified-face-attack-detection-via-fine-grained-semantic-guidance)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：利用细粒度伪造线索和文本描述进行人脸攻击检测
-2. [Do Transformations Reveal the Truth? Generative Residual Learning for Generalized AI-Generated Image Detection](/202607/10/2607.08674v1-do-transformations-reveal-the-truth-generative-residual-learning-for-generalized-ai-generated-image-detection)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：通过生成残差学习实现泛化的 AI 生成图像检测
-3. [HumanForge: A Human-Centric Deepfake Video Benchmark with Multi-Agent Forgery Rationales](/202607/10/2607.08705v1-humanforge-a-human-centric-deepfake-video-benchmark-with-multi-agent-forgery-rationales)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：以人为中心的深伪视频基准与多智能体伪造理据
+1. [SafeGuard: A Multi-Agent Perception-Reasoning Framework for Social-Risk AI-Generated Video Detection](/202607/11/2607.03069v1-safeguard-a-multi-agent-perception-reasoning-framework-for-social-risk-ai-generated-video-detection)  
+   标签：评分：10.0/10、query:deepfake-fsl
+   evidence：面向社会风险的AI生成视频多智能体检测
+2. [Probabilistic Robustness in Medical Image Classification](/202607/11/2607.03797v1-probabilistic-robustness-in-medical-image-classification)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：研究深度学习模型在医学图像分类中的概率鲁棒性
 
 ### 速读区论文标签
-1. [BiSLW: Bi-Spectral Latent Watermarking for Generative Diffusion Models](/202607/10/2607.02643v1-bislw-bi-spectral-latent-watermarking-for-generative-diffusion-models)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：在扩散模型输出中嵌入水印以实现AI生成图像的归属
+1. [VocaDet: Sample-Driven Open-Vocabulary Object Detection and Segmentation via Visual Tokenization and Vector Database Retrieval](/202607/11/2607.08541v1-vocadet-sample-driven-open-vocabulary-object-detection-and-segmentation-via-visual-tokenization-and-vector-database-retrieval)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：样本驱动的检测方法能从少量用户提供的正负样本中学习，无需重新训练
 
 
 <div class="dpr-home-promo-card">

@@ -1,0 +1,72 @@
+Title: Probabilistic Robustness in Medical Image Classification
+
+URL Source: https://arxiv.org/pdf/2607.03797v1
+
+Published Time: Tue, 07 Jul 2026 01:33:44 GMT
+
+Number of Pages: 4
+
+Markdown Content:
+# Probabilistic Robustness in Medical Image Classification 
+
+Yi Zhang 1, Siddartha Khastgir 1, Xingyu Zhao* 11WMG, University of Warwick, Coventry, United Kingdom {yi.zhang.16, s.khastgir.1, xingyu.zhao}@warwick.ac.uk *Corresponding author: Xingyu.Zhao@warwick.ac.uk 
+
+# Abstract 
+
+Deep learning (DL) has shown strong performance in medical image classification, but its trustworthy deployment remains challenging in safety-critical clinical settings, where prediction errors under perturbations may lead to severe consequences. Existing studies mainly focus on adversarial robustness (AR) from a worst-case perspective; however, such settings may be less representative of real medical applications. In this work, we investigate proba-bilistic robustness (PR) as a more practical measure of model trustworthiness. To this end, we construct a set of natural corruption settings for medical image classification and systematically evaluate commonly used DL models on MedMNIST v2 dataset. Our study provides a statistically grounded perspective on assessing the trustworthiness of DL models, thereby supporting their more trustworthy deployment in medical imaging applications. 
+
+Keywords: probabilistic robustness, trustworthy AI, medical image classification, natural corruptions 
+
+# Introduction 
+
+Deep Learning (DL) has achieved remarkable success in medical image analysis and has been widely applied in automated disease diagnosis systems [1, 2]. Its strong representation capability has enabled image-based applica-tions across a wide range of tasks, including the analysis and processing of MRI [3], CT scans, X-ray images [4], and skin images for cancer diagnosis, lung disease classification, and brain tumour identification. As a result, DL-based systems are increasingly being considered to assist clinical decision-making and reducing the workload of medical professionals. However, concerns remain regarding the trustworthiness [5] of DL-based medical diagnosis systems under potential attacks, since inaccurate diagnoses may lead to disastrous consequences in safety-critical settings. Therefore, robustness is a fundamental prerequisite for the widespread deployment of DL models in medical applications. Accordingly, numerous studies have investigated robustness in this context. Regardless of the specific task or model architecture, robustness generally refers to a model’s ability to maintain consistent decisions under small input perturbations. A small perturbation on an input is termed an Adversarial Example (AE) if it leads to a different prediction from the ground-truth label assigned to the original input. Most existing studies on robustness focus on the question of maximum prediction loss, asking: “which AE within a norm ball yields the highest prediction loss?” . Evidently, this formulation emphasizes extreme scenarios , where local robustness is assessed based on the existence of a deterministic AE, thereby reflecting a worst-case perspective. A more recent and distinct view, however, considers probabilistic robustness (PR), employing statistical approaches to its evaluation [6, 7, 8], it addresses the question: “what is the likelihood of AEs in the given perturbation norm-ball?” [9, 10, 11]. This probabilistic view is arguably more relevant to real-world applications than AR, as it provides an overall assessment of a model's local robustness, accounting for scenarios where AEs may exist and acknowledging residual risks that are more realistic to manage in practice. To this end, we conduct a comprehensive investigation of the PR of commonly used DL models for medical diag-nosis tasks. First, we introduce a set of standard natural corruption settings for medical image classification by adapting perturbation types widely studied in general computer vision to the medical imaging domain. We then evaluate a series of representative DL models with strong classification performance on the widely used medical dataset MedMNIST v2 [12], a large-scale lightweight benchmark for 2D and 3D biomedical image classification. Rather than proposing a new classification architecture, our goal is to establish a principled evaluation framework 1
+
+> arXiv:2607.03797v1 [cs.CV] 4 Jul 2026
+
+that complements conventional performance metrics and offers additional evidence for understanding the trust-worthiness of DL models in medical image classification. In summary, our main contributions including: (1) we investigate PR in the context of medical image classification and highlight its practical relevance for safety-critical medical diagnosis systems under realistic perturbation scenarios; (2) we construct and standardize a set of natural corruption settings for medical image tasks by adapting commonly studied perturbations from general computer vision, thereby enabling a more realistic robustness evaluation protocol for medical imaging models; (3) we con-duct a systematic evaluation of several commonly used DL models on MedMNIST v2, analysing their PR under medical-image corruption settings in addition to conventional predictive accuracy performance. 
+
+# Preliminaries and Related Works 
+
+Medical image classification [1] is one of the most important applications of DL in medical image analysis and computer-aided diagnosis (CAD). In this setting, medical images are used as inputs to DL models, which assign them to predefined diagnostic categories, such as disease-positive versus disease-negative cases or multiple disease classes. Fig.1 illustrates a typical example of using CheXNet [4] for chest X-ray classification. This paradigm has been widely adopted across different imaging modalities. Typical applications include lung disease screening from chest X-rays, diabetic retinopathy detection from fundus images [2], and neurological disorder diagnosis from brain MRI [3]. Owing to the strong representation capability of DL models, medical image classification has become a fundamental tool for assisting disease diagnosis. Despite its strong performance, concerns regarding trustworthiness remain. A key requirement for their trustworthy deployment is robustness, namely the ability of a DL model to maintain accurate predictions under perturbations. Robustness is therefore a fundamental prerequisite for the widespread deployment of such models in medical settings. 
+
+Figure 1: Figure 1. An example of CheXNet, a 121-layer CNN, for chest X-ray classification. 
+
+# Probabilistic Robustness 
+
+Robustness generally refers to a model’s ability to maintain stable predictions under small input perturbations. In classification task, robustness is typically studied within a local region around an input 𝑥 , defined as an 𝐿 𝑝 -norm ball 
+
+𝜂 = {𝑥 ′| ‖𝑥 ′ − 𝑥‖ ≤ 𝛾} (1) where 𝛾 denotes the perturbation radius. A perturbed input 𝑥 ′ ∈ 𝜂 is regarded as an AE if it causes the model to predict a label different from the ground-truth label 𝑦 .As illustrated in Fig.2(a), AR is commonly studied from a worst-case perspective. Let 𝑥 ∈ 𝑋 ⊆ ℝ 𝑑 denote an input, 
+
+𝑦 ∈ 𝑌 ⊆ {1, 2, … , 𝜅} represent the label, 𝐷 be an unknown data distribution over 𝑋 × 𝑌 , and 𝑓 𝜃 ∶ 𝑋 → ℝ 𝜅 be a DL model parameterized by 𝜃 . Given a loss function 𝐿 , AR evaluates the worst-case perturbation within a norm ball of radius 𝛾 by solving for the AE that maximizes the loss as 
+
+𝛿 ⋆ = arg max 
+
+> ∥𝛿∥≤𝛾
+
+𝐿(𝑥 + 𝛿, 𝑦; 𝜃). (2) PR adopts a probabilistic view of robustness by evaluating the overall local robustness of a model in the presence of AEs, as illustrated in Fig. 2(b). The formal definition of PR is given as follows. 
+
+Definition 1. (Probabilistic Robustness). For a DL classifier 𝑓 𝜃 that takes an input 𝑥 and outputs a predicted label, the PR of 𝑥 within a norm ball of radius 𝛾 is defined as 
+
+𝑅(𝑥, 𝛾) = 𝔼 𝛿 ∼ 𝑃 𝑟(⋅ |𝑥) ||𝛿|| ≤ 𝛾 [ 𝐼 {𝑓 𝜃 (𝑥 + 𝛿=𝑦)} (𝑥 + 𝛿) ]. (3) 2Figure 2: Figure 2. Adversarial (a) vs. Probabilistic (b) Robustness. 
+
+Here, 𝐼 𝑆 (X) is an indicator function that equals 1 if condition 𝑆 is true and 0 otherwise. 𝑃 𝑟(⋅ | 𝑥) denotes the local input distribution that specifies how perturbations 𝛿 are generated; this corresponds to the “input model” used in previous work. 
+
+This definition indicates that PR is the probability that the model prediction remains unchanged under a random perturbation 𝑥 ′. From a frequentist perspective, this expected probability can be interpreted as the limiting relative frequency of perturbations for which the output label is preserved, over an infinite sequence of independently generated perturbations. In other words, PR can be viewed as the proportion of non-AEs in the infinite set of perturbed inputs. 
+
+# Experiments 
+
+We evaluate PR on PathMNIST from MedMNIST v2 [12], a 9-class colorectal pathology image classification dataset with 107,180 samples, split into 89,996/10,004/7,180 for training, validation, and testing, respectively. Experiments are conducted with two commonly used CNN backbones, ResNet-18 and ResNet-50. Standard classification per-formance is measured by AUC and ACC, following the MedMNIST v2 protocol, while PR is assessed using the benchmarking protocol defined in PRBench [7]. 
+
+# Results & Discussion 
+
+Natural corruptions substantially undermine the trustworthiness of CNNs. As shown in Table 1, although the commonly used ResNet-18 and ResNet-50 achieve high performance on clean images, e.g., ResNet-18 attains 90.68% ACC and 98.46% AUC, their PR performance under the six evaluated natural corruptions is substantially lower than their clean-image accuracy. In particular, the PR drops to only 62.84% and 76.83% under brightness variations. Since such perturbations commonly arise in real-world scenarios, for example due to camera defocus or equipment degradation, image quality is often inevitably affected in practice, which may lead to less trustworthy predictions. 
+
+PR is corruption dependent. Both models remain relatively robust under Pixelate, Stain, and Saturate perturbations, but are much more vulnerable to Motion blur, with Defocus and brightness variations also causing substantial degradation, indicating that blur-related degradations are substantially more challenging than colour or appearance variations for this task. Moreover, although ResNet-50 achieves a higher ACC/AUC, it does not consistently show better PR, suggesting that stronger clean performance does not necessarily imply stronger robustness under realistic corruptions. Table 1: Clean-image performance (ACC/AUC) and PR performance under six natural corruptions on PathMNIST. Model ACC AUC Defocus Motion Stain Saturate Pixelate Bright +/-ResNet-18 90.68 98.46 66.03 40.20 84.07 77.03 80.97 62.84 / 76.83 ResNet-50 92.05 99.39 72.32 40.74 83.41 76.89 80.19 67.91 / 77.03 3Conclusion 
+
+In this work, we investigated probabilistic robustness for medical image classification and highlighted its practical relevance for trustworthy medical diagnosis systems. We constructed a natural corruption setting for medical image tasks, systematically evaluated commonly used deep learning models on MedMNIST v2. Our study shows that PR offers a more practical perspective than worst-case robustness for assessing model trustworthiness under realistic perturbations and provides a statistically grounded reference for the safer deployment of deep learning systems in medical imaging. 
+
+# References 
+
+[1] S-CB Lo, S-LA Lou, Jyh-Shyan Lin, Matthew T Freedman, Minze V Chien, and Seong Ki Mun. Artificial convolution neural network techniques and applications for lung nodule detection. IEEE transactions on medical imaging , 14(4):711–718, 1995. [2] Varun Gulshan, Lily Peng, Marc Coram, Martin C Stumpe, Derek Wu, Arunachalam Narayanaswamy, Sub-hashini Venugopalan, Kasumi Widner, Tom Madams, Jorge Cuadros, et al. Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs. jama ,316(22):2402–2410, 2016. [3] Sergey Korolev, Amir Safiullin, Mikhail Belyaev, and Yulia Dodonova. Residual and plain convolutional neural networks for 3d brain mri classification. In 2017 IEEE 14th international symposium on biomedical imaging (ISBI 2017) , pages 835–838. IEEE, 2017. [4] Pranav Rajpurkar, Jeremy Irvin, Kaylie Zhu, Brandon Yang, Hershel Mehta, Tony Duan, Daisy Ding, Aarti Bagul, Curtis Langlotz, Katie Shpanskaya, et al. Chexnet: Radiologist-level pneumonia detection on chest x-rays with deep learning. arXiv preprint arXiv:1711.05225 , 2017. [5] Yi Zhang, Zhen Chen, Chih-Hong Cheng, Wenjie Ruan, Xiaowei Huang, Dezong Zhao, David Flynn, Sid-dartha Khastgir, and Xingyu Zhao. Trustworthy text-to-image diffusion models: A timely and focused survey. 
+
+Information Fusion , page 104264, 2026. [6] Stefan Webb, Tom Rainforth, Yee Whye Teh, and M Pawan Kumar. A statistical approach to assessing neural network robustness. In ICLR , 2019. [7] Yi Zhang, Zheng Wang, Zhen Chen, Wenjie Ruan, Qing Guo, Siddartha Khastgir, Carsten Maple, and Xingyu Zhao. Probabilistic robustness for free? revisiting training via a benchmark. KDD’26: ACM SIGKDD Conf. on Knowledge Discovery and Data Mining , 2026. [8] Yi Zhang, Yun Tang, Wenjie Ruan, Xiaowei Huang, Siddartha Khastgir, Paul Jennings, and Xingyu Zhao. Protip: Probabilistic robustness verification on text-to-image diffusion models against stochastic perturbation. In ECCV , 2024. [9] Yi Zhang, Yuhang Chen, Zhen Chen, Wenjie Ruan, Xiaowei Huang, Siddartha Khastgir, and Xingyu Zhao. Adversarial training for probabilistic robustness. In ICCV . IEEE, 2025. [10] Xingyu Zhao. Probabilistic robustness in deep learning: A concise yet comprehensive guide. Adversarial Example Detection and Mitigation Using Machine Learning , pages 1–13, 2025. [11] Zheng Wang, Yi Zhang, Siddartha Khastgir, Carsten Maple, and Xingyu Zhao. Non-parametric probabilistic robustness: A conservative metric with optimized perturbation distributions. ICML , 2026. [12] Jiancheng Yang, Rui Shi, Donglai Wei, Zequan Liu, Lin Zhao, Bilian Ke, Hanspeter Pfister, and Bingbing Ni. Medmnist v2-a large-scale lightweight benchmark for 2d and 3d biomedical image classification. Scientific data , 10(1):41, 2023. 4
