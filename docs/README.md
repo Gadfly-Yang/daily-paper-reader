@@ -6,33 +6,37 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-11
-- 运行时间：2026-07-11 21:13:30 UTC
+- 最新运行日期：2026-07-12
+- 运行时间：2026-07-12 20:17:47 UTC
 - 运行状态：成功
-- 本次总论文数：3
-- 精读区：2
-- 速读区：1
+- 本次总论文数：5
+- 精读区：1
+- 速读区：4
 
 ### 今日简报（AI）
-今日聚焦AI风险检测与医学图像鲁棒性：满分精读《SafeGuard》提出多智能体框架，精准揪出AI生成的社交风险视频。
-
-最值得关注的是AI视频鉴伪与医学模型概率鲁棒性——前者用感知推理协同识别欺骗性内容，后者为医疗AI的安全性给出了新的评估标准。
-
-普通读者可先速读视觉分词与向量检索的《VocaDet》，了解开放词汇检测的新思路，再深入上述安全方向。
-- 详情：[/202607/11/README](/202607/11/README)
+今日精读一篇量子启发的混合专家图像分类高分论文，并速览了无训练异常检测、虚假关联解耦及高效医疗图像分类等四篇前沿工作。  
+最值得关注的是量子电路启发的混合专家路由策略在图像分类上效果突出，以及生成随机化方法能有效打破模型对虚假相关性的依赖。  
+建议读者将量子启发的门控路由思想引入自己的多专家模型，并探索其在无监督场景下的迁移可能。
+- 详情：[/202607/12/README](/202607/12/README)
 
 ### 精读区论文标签
-1. [SafeGuard: A Multi-Agent Perception-Reasoning Framework for Social-Risk AI-Generated Video Detection](/202607/11/2607.03069v1-safeguard-a-multi-agent-perception-reasoning-framework-for-social-risk-ai-generated-video-detection)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：面向社会风险的AI生成视频多智能体检测
-2. [Probabilistic Robustness in Medical Image Classification](/202607/11/2607.03797v1-probabilistic-robustness-in-medical-image-classification)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：研究深度学习模型在医学图像分类中的概率鲁棒性
+1. [Image classification via a quantum-inspired strategy involving a mixture of experts](/202607/12/2607.07754v1-image-classification-via-a-quantum-inspired-strategy-involving-a-mixture-of-experts)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：利用量子启发混合专家和CNN进行图像分类
 
 ### 速读区论文标签
-1. [VocaDet: Sample-Driven Open-Vocabulary Object Detection and Segmentation via Visual Tokenization and Vector Database Retrieval](/202607/11/2607.08541v1-vocadet-sample-driven-open-vocabulary-object-detection-and-segmentation-via-visual-tokenization-and-vector-database-retrieval)  
+1. [ProCon: Projection-Consistency Memory for Training-Free Anomaly Detection](/202607/12/2607.04894v1-procon-projection-consistency-memory-for-training-free-anomaly-detection)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：基于记忆投影的训练无需异常检测，适用于伪造图像检测
+2. [Breaking Spurious Correlations via Generative Randomization and Cross-Variant Self-Supervised Learning](/202607/12/2607.05850v1-breaking-spurious-correlations-via-generative-randomization-and-cross-variant-self-supervised-learning)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：生成式随机化学习背景不变表征，有助于跨领域泛化
+3. [MSA-DCNN: A Data-Efficient Multi-Scale Deformable CNN for Medical Image Classification](/202607/12/2607.06083v1-msa-dcnn-a-data-efficient-multi-scale-deformable-cnn-for-medical-image-classification)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：与有限标注的图像分类数据高效方法
+4. [EdgeCompress: Coupling Multidimensional Model Compression and Dynamic Inference for EdgeAI](/202607/12/2607.06982v1-edgecompress-coupling-multidimensional-model-compression-and-dynamic-inference-for-edgeai)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：样本驱动的检测方法能从少量用户提供的正负样本中学习，无需重新训练
+   evidence：用于图像分类的CNN模型压缩，促进高效部署
 
 
 <div class="dpr-home-promo-card">

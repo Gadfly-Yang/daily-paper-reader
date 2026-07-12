@@ -1,0 +1,215 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-12T20:11:39.405022+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2607.07754v1",
+      "source": "arxiv",
+      "title": "Image classification via a quantum-inspired strategy involving a mixture of experts",
+      "abstract": "Pattern recognition problems arise in a variety of physical image processing situations, and convolutional neural networks are a popular scheme for the required feature extraction and classification tasks. The classical networks use diffusion-based smearing and block-wise pooling to downsample the image data and capture important structural features. In this work, we propose and demonstrate a more efficient quantum-inspired strategy involving a mixture of experts. It is a hybrid classical-quantum framework. The quantum part consists of amplitude encoding of the images, convolution using local unitary operations, multiple experts processing the same image with different parameters, and feature extraction using quantum stabiliser codes. The classical part then jointly processes the features extracted by different experts using a standard fully connected neural network for image class prediction. Using MNIST and Fashion-MNIST datasets as benchmarks, we demonstrate that the joint expert analysis outperforms the individual expert one, as well as reduces the failure rate of image class prediction by around a factor of two. The overhead of our quantum-inspired strategy is only moderate on GPU workstations, which makes our proposal a practical alternative to existing classical schemes. We also point out how the quantum part of our framework can be executed on a quantum processor.",
+      "authors": [
+        "Kumari Jyoti",
+        "Rohith Babu",
+        "Apoorva D. Patel"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "quant-ph"
+      ],
+      "published": "2026-07-08T13:41:31+00:00",
+      "link": "https://arxiv.org/pdf/2607.07754v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "quantum-inspired mixture of experts for image classification using CNNs",
+      "llm_evidence_cn": "利用量子启发混合专家和CNN进行图像分类",
+      "llm_evidence": "利用量子启发混合专家和CNN进行图像分类",
+      "canonical_evidence": "利用量子启发混合专家和CNN进行图像分类",
+      "llm_tldr_en": "Presents a hybrid quantum-classical mixture of experts for efficient image classification, using amplitude encoding and quantum-inspired convolution, achieving high efficiency and competitive accuracy.",
+      "llm_tldr_cn": "针对经典CNN计算效率不高的问题，提出一种量子启发的混合专家分类框架。采用振幅编码、局部酉操作卷积和多专家并行处理，结合量子稳定子码提取特征，在保持分类精度的同时显著提升计算效率，为图像模式识别提供了新型高效范式。",
+      "llm_tldr": "针对经典CNN计算效率不高的问题，提出一种量子启发的混合专家分类框架。采用振幅编码、局部酉操作卷积和多专家并行处理，结合量子稳定子码提取特征，在保持分类精度的同时显著提升计算效率，为图像模式识别提供了新型高效范式。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.04894v1",
+      "source": "arxiv",
+      "title": "ProCon: Projection-Consistency Memory for Training-Free Anomaly Detection",
+      "abstract": "Memory-based anomaly detection is attractive because it localizes defects from normal images without training a decoder or synthesizing pseudo anomalies. However, most memory methods still use the memory bank as a nearest-neighbor lookup table: a test patch is treated as normal if it has one nearby normal anchor. This hard retrieval view is vulnerable to false-normal matches and does not test whether the patch is consistently supported by a local normal neighborhood. We propose ProCon, a training-free framework that turns memory retrieval into decoder-free reconstruction. ProCon softly projects each test patch onto nearby normal memory vectors and uses the projection residual as anomaly evidence. To stabilize this residual, it constructs seed-perturbed layer-wise memories, aggregates bank residuals by a median, and fuses depth-specific residual maps by layer consensus. ProCon requires no decoder training, backbone fine-tuning, learned fusion weights, or pseudo-anomaly supervision. Across MVTec-AD, VisA, and Real-IAD under the single-category evaluation protocol, ProCon achieves strong image- and pixel-level performance under seven standard metrics, including image AUROC scores of 99.8%, 99.2%, and 93.2%, respectively. Ablations show that the gains come from replacing hard retrieval with soft normal projection and stabilizing the residuals through memory and depth consensus. The code is available at https://github.com/jw-chae/Procon",
+      "authors": [
+        "Joongwon Chae",
+        "Lihui Luo",
+        "Yang Liu",
+        "Dongmei Yu",
+        "Peiwu Qin",
+        "Runming Wang",
+        "Ilmoon Chae"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-06T10:23:24+00:00",
+      "link": "https://arxiv.org/pdf/2607.04894v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "training-free anomaly detection via memory projection, suitable for fake image detection",
+      "llm_evidence_cn": "基于记忆投影的训练无需异常检测，适用于伪造图像检测",
+      "llm_evidence": "基于记忆投影的训练无需异常检测，适用于伪造图像检测",
+      "canonical_evidence": "基于记忆投影的训练无需异常检测，适用于伪造图像检测",
+      "llm_tldr_en": "Introduces ProCon, a training-free anomaly detection framework that projects test patches onto normal memory vectors to compute residuals, improving defect detection robustness without requiring decoder training.",
+      "llm_tldr_cn": "针对记忆型异常检测中硬检索易导致错误匹配的问题，提出ProCon框架，通过将测试块软投影到正常记忆向量上计算残差作为异常证据，并采用种子扰动增广增强可信度。该方法无需训练或合成异常，在MVTec等数据集上显著提升异常定位性能，其训练自由特性对于少样本场景下的AI生成图像检测有潜在价值。",
+      "llm_tldr": "针对记忆型异常检测中硬检索易导致错误匹配的问题，提出ProCon框架，通过将测试块软投影到正常记忆向量上计算残差作为异常证据，并采用种子扰动增广增强可信度。该方法无需训练或合成异常，在MVTec等数据集上显著提升异常定位性能，其训练自由特性对于少样本场景下的AI生成图像检测有潜在价值。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.06982v1",
+      "source": "arxiv",
+      "title": "EdgeCompress: Coupling Multidimensional Model Compression and Dynamic Inference for EdgeAI",
+      "abstract": "Convolutional neural networks (CNNs) have demonstrated encouraging results in image classification tasks. However, the prohibitive computational cost of CNNs hinders the deployment of CNNs onto resource-constrained embedded devices. To address this issue, we propose EdgeCompress, a comprehensive compression framework to reduce the computational overhead of CNNs. In EdgeCompress, we first introduce dynamic image cropping (DIC), where we design a lightweight foreground predictor to accurately crop the most informative foreground object of input images for inference, which avoids redundant computation on background regions. Subsequently, we present compound shrinking (CS) to collaboratively compress the three dimensions (depth, width, and resolution) of CNNs according to their contribution to accuracy and model computation. DIC and CS together constitute a multidimensional CNN compression framework, which is able to comprehensively reduce the computational redundancy in both input images and neural network architectures, thereby improving the inference efficiency of CNNs. Further, we present a dynamic inference framework to efficiently process input images with different recognition difficulties, where we cascade multiple models with different complexities from our compression framework and dynamically adopt different models for different input images, which further compresses the computational redundancy and improves the inference efficiency of CNNs, facilitating the deployment of advanced CNNs onto embedded hardware. Experiments on ImageNet-1K demonstrate that EdgeCompress reduces the computation of ResNet-50 by 48.8% while improving the top-1 accuracy by 0.8%. Meanwhile, we improve the accuracy by 4.1% with similar computation compared to HRank, the state-of-the-art compression framework. The source code and models are available at https://github.com/ntuliuteam/edge-compress",
+      "authors": [
+        "Hao Kong",
+        "Di Liu",
+        "Shuo Huai",
+        "Xiangzhong Luo",
+        "Ravi Subramaniam",
+        "Christian Makaya",
+        "Qian Lin",
+        "Weichen Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AR",
+        "cs.LG"
+      ],
+      "published": "2026-07-08T04:03:32+00:00",
+      "link": "https://arxiv.org/pdf/2607.06982v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "CNN model compression for image classification, enabling efficient deployment",
+      "llm_evidence_cn": "用于图像分类的CNN模型压缩，促进高效部署",
+      "llm_evidence": "用于图像分类的CNN模型压缩，促进高效部署",
+      "canonical_evidence": "用于图像分类的CNN模型压缩，促进高效部署",
+      "llm_tldr_en": "Proposes a compression framework combining dynamic image cropping and compound shrinking to reduce CNN computational cost for image classification on edge devices.",
+      "llm_tldr_cn": "针对CNN在边缘设备上部署的计算量问题，提出联合动态图像裁剪与复合缩放的压缩框架EdgeCompress。通过前景预测器裁剪关键区域并协同压缩网络维度，有效降低了图像分类模型的计算开销。这一技术可辅助在资源受限设备上运行深度伪造检测模型，具有方法论桥梁价值。",
+      "llm_tldr": "针对CNN在边缘设备上部署的计算量问题，提出联合动态图像裁剪与复合缩放的压缩框架EdgeCompress。通过前景预测器裁剪关键区域并协同压缩网络维度，有效降低了图像分类模型的计算开销。这一技术可辅助在资源受限设备上运行深度伪造检测模型，具有方法论桥梁价值。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.05850v1",
+      "source": "arxiv",
+      "title": "Breaking Spurious Correlations via Generative Randomization and Cross-Variant Self-Supervised Learning",
+      "abstract": "Deep neural networks trained with Empirical Risk Minimization (ERM) often fail under distribution shifts because they exploit spurious correlations between object labels and background context. Recent generative approaches address this issue by creating counterfactual images with altered contexts, but typically use these samples as standard data augmentation, leaving the model free to retain background-sensitive representations. We propose a two-stage framework that uses generative intervention to explicitly learn background-invariant visual representations. First, we isolate the foreground object using zero-shot segmentation and generate context-shifted variants with a structure-preserving diffusion model, preserving object identity while varying the surrounding environment. We then introduce Cross-Variant Self-Supervised Learning, where variants of the same object under different backgrounds form positive pairs in a contrastive objective. This encourages the encoder to align object-centric representations while suppressing background-specific cues. Then, we fine-tune the pretrained encoder using an ERM warm-up followed by GroupDRO with layer-wise learning rates. Experiments on distribution-shift benchmarks demonstrate best worst-group performance, achieving 92.5% on Waterbirds, 81.7% on MetaShift, and 87.4% on NICO++. Code: https://github.com/surajyadav-research/GRSSL",
+      "authors": [
+        "Suraj Yadav",
+        "Anjaneya Sharma",
+        "Siddharth Yadav"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-07T05:13:26+00:00",
+      "link": "https://arxiv.org/pdf/2607.05850v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "generative randomization for background-invariant features, aiding cross-domain generalization",
+      "llm_evidence_cn": "生成式随机化学习背景不变表征，有助于跨领域泛化",
+      "llm_evidence": "生成式随机化学习背景不变表征，有助于跨领域泛化",
+      "canonical_evidence": "生成式随机化学习背景不变表征，有助于跨领域泛化",
+      "llm_tldr_en": "Addresses spurious correlations by using generative randomization and self-supervised learning to create context-shifted images, forcing models to learn invariant representations, improving robustness across domains.",
+      "llm_tldr_cn": "针对深度网络依赖虚假相关导致分布偏移差的问题，提出两阶段框架：通过零样本分割提取前景，利用扩散模型生成背景随机化变体，再结合跨变体自监督学习强制模型学习背景不变表征。实验表明该方法显著提升了模型在未见域上的泛化能力，对跨域AI生成图像检测等任务中的特征对齐有借鉴意义。",
+      "llm_tldr": "针对深度网络依赖虚假相关导致分布偏移差的问题，提出两阶段框架：通过零样本分割提取前景，利用扩散模型生成背景随机化变体，再结合跨变体自监督学习强制模型学习背景不变表征。实验表明该方法显著提升了模型在未见域上的泛化能力，对跨域AI生成图像检测等任务中的特征对齐有借鉴意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.06083v1",
+      "source": "arxiv",
+      "title": "MSA-DCNN: A Data-Efficient Multi-Scale Deformable CNN for Medical Image Classification",
+      "abstract": "Existing deep learning methods perform well in medical image classification but struggle with multi-scale morphology and limited annotations due to fixed sampling and data-hungry training. Existing approaches address these challenges in isolation: DCN-based models provide adaptive sampling but lack explicit multi-scale attention fusion and label-efficient regularisation; multi-scale architectures typically rely on static fusion; and semi-supervised methods target label scarcity without jointly modelling adaptive cross-scale representations. We propose MSA-DCNN, a scale-consistent deformable attention learning framework that introduces adaptive multi-scale sampling, within-scale saliency refinement, learned cross-scale fusion, and auxiliary self-distillation within a unified optimisation scheme, with potential to generalise to structurally heterogeneous anatomy. We evaluate on three public benchmarks and an external hold-out set for leukaemia. MSA-DCNN demonstrates competitive and often better performance against ViT baselines, CNN baselines, and a MICCAI semi-supervised baseline under distribution shift and label scarcity in accuracy, F1, and AUC (binary), while using fewer parameters. Ablations confirm complementary component contributions, supporting MSA-DCNN as a practical foundation for data-efficient medical image classification.",
+      "authors": [
+        "Hamza Hussaini",
+        "Shahana Bano",
+        "Eyad Elyan",
+        "Carlos Francisco Moreno-García"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-07T09:52:46+00:00",
+      "link": "https://arxiv.org/pdf/2607.06083v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "data-efficient multi-scale deformable CNN for classification with limited annotations",
+      "llm_evidence_cn": "与有限标注的图像分类数据高效方法",
+      "llm_evidence": "与有限标注的图像分类数据高效方法",
+      "canonical_evidence": "与有限标注的图像分类数据高效方法",
+      "llm_tldr_en": "Proposes MSA-DCNN, a data-efficient framework for medical image classification that uses adaptive multi-scale sampling and label-efficient regularization to handle limited annotations.",
+      "llm_tldr_cn": "现有医学图像分类方法在多尺度形态和有限标注下表现不佳，本文提出MSA-DCNN框架，通过自适应多尺度可变形注意力、尺度内显著性细化和跨尺度融合，并引入辅助损失实现标签高效正则化。实验表明该方法在有限标注时能有效提升分类精度，为数据稀缺场景提供了新思路。",
+      "llm_tldr": "现有医学图像分类方法在多尺度形态和有限标注下表现不佳，本文提出MSA-DCNN框架，通过自适应多尺度可变形注意力、尺度内显著性细化和跨尺度融合，并引入辅助损失实现标签高效正则化。实验表明该方法在有限标注时能有效提升分类精度，为数据稀缺场景提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
