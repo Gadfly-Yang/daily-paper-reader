@@ -1,0 +1,292 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-14T21:28:44.905171+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2607.10695v1",
+      "source": "arxiv",
+      "title": "Effective Synthetic Image Detection via Noise Residual Clustering",
+      "abstract": "The rapid advancement of generative artificial intelligence (AI) has made synthetic images remarkably realistic, posing security threats such as misinformation and fraud. It is significant to detect the synthetic image in the manner of passive and blind image authentication. Most existing detectors rely on supervised training with large labeled datasets, leading to high costs and degraded performance on unknown generative models. To attenuate such deficiencies, we propose a training-free detection method. Specifically, noise residual fingerprints are first extracted by a simple yet effective pre-trained Noiseprint++ model. Then multi-scale features are further extracted from such residual by a frozen Vision Transformer (ViT), followed by adaptive weighted fusion. Only a few real image samples are used needed to initialize the clustering centers for unsupervised K-Means, distinguishing real and synthetic images without training. Extensive evaluations on four benchmark datasets show that our proposed scheme achieves an average accuracy of 82.2%, outperforming the state-of-the-art detectors on generalization ability. Superior performance is gained on the popular diffusion type of synthetic images, and the effectiveness of each module is validated by ablation studies. Source code will be publicly available at https://github.com/multimediaFor/NoiseCluSID.",
+      "authors": [
+        "Caihui Yan",
+        "Gang Cao",
+        "Huawei Tian",
+        "Zhen Li",
+        "Yuhang Zhai"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CR"
+      ],
+      "published": "2026-07-12T10:38:18+00:00",
+      "link": "https://arxiv.org/pdf/2607.10695v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "proposes a training-free synthetic image detection method using noise residual clustering, targeting generative AI images",
+      "llm_evidence_cn": "提出一种基于噪声残差聚类的免训练合成图像检测方法，针对生成式AI图像",
+      "llm_evidence": "提出一种基于噪声残差聚类的免训练合成图像检测方法，针对生成式AI图像",
+      "canonical_evidence": "提出一种基于噪声残差聚类的免训练合成图像检测方法，针对生成式AI图像",
+      "llm_tldr_en": "The paper proposes a training-free synthetic image detection method using noise residual fingerprints from Noiseprint++ and multi-scale features from a frozen ViT, achieving high cross-generator detection without requiring real images or training.",
+      "llm_tldr_cn": "生成式AI的迅猛发展使得合成图像极其逼真，现有检测器依赖大量标注数据且对未知模型泛化差。本文提出免训练检测方法，先利用预训练Noiseprint++提取噪声残差指纹，再通过冻结的ViT提取多尺度特征并进行自适应加权聚类，无需真实图像训练即可鉴别合成图像。实验表明该方法在跨生成模型检测任务上取得领先性能，缓解了数据依赖和泛化问题。",
+      "llm_tldr": "生成式AI的迅猛发展使得合成图像极其逼真，现有检测器依赖大量标注数据且对未知模型泛化差。本文提出免训练检测方法，先利用预训练Noiseprint++提取噪声残差指纹，再通过冻结的ViT提取多尺度特征并进行自适应加权聚类，无需真实图像训练即可鉴别合成图像。实验表明该方法在跨生成模型检测任务上取得领先性能，缓解了数据依赖和泛化问题。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.10787v1",
+      "source": "arxiv",
+      "title": "Detecting AI-Generated Video: A Vision-Language Dual-View Survey",
+      "abstract": "The evolving realism of AI-generated Videos (AIGC-V) is rapidly rendering traditional artifact-centric detection insufficient, necessitating a paradigm shift from low-level inspection to high-level semantic verification. This paper presents a comprehensive survey of AIGC-V detection, reframing the task as Factual Fidelity Verification, which asks whether the events, entities, and physical processes depicted in a video are consistent with real-world facts. To systematize this rapidly evolving field, we propose a Vision-Language Dual-View taxonomy that organizes existing methods into a hierarchical, four-layer landscape, spanning intrinsic cue analysis, spatiotemporal consistency modeling, cross-modal consistency reasoning, and language-guided world-level reasoning. This dual-view framing highlights a fundamental transition from artifact matching in traditional deepfake detection to evidence-based semantic verification enabled by vision-language models and agentic reasoning pipelines. Based on a systematic review of 221 works, we synthesize AIGC-V generation paradigms, survey the landscape of detection methods, and review evaluation metrics and benchmarks in line with proposed views. Finally, we discuss current challenges and identify promising directions toward robust, explainable, and trustworthy detection.",
+      "authors": [
+        "Dylan Xinming Hou",
+        "Juntian Zhang",
+        "Xu Gu",
+        "Yichen Wu",
+        "Nils Lukas",
+        "Gus Xia",
+        "Xiuying Chen",
+        "Yuhan Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-07-12T14:25:04+00:00",
+      "link": "https://arxiv.org/pdf/2607.10787v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "comprehensive survey on AI-generated video detection",
+      "llm_evidence_cn": "AI生成视频检测的综合综述",
+      "llm_evidence": "AI生成视频检测的综合综述",
+      "canonical_evidence": "AI生成视频检测的综合综述",
+      "llm_tldr_en": "This survey reframes AI-generated video detection as factual fidelity verification, organizing methods into a four-layer taxonomy spanning intrinsic cues, spatiotemporal consistency, cross-modal reasoning, and world-level verification.",
+      "llm_tldr_cn": "针对AI生成视频逼真度日益提升导致传统伪影检测不足的问题，本文提出以事实保真度验证为核心的新范式，从视觉和语言双视角构建四层方法体系，涵盖内在线索分析、时空一致性建模、跨模态一致性推理和语言引导的世界级验证，系统梳理该领域进展。该综述为检测技术转型提供了框架性指导。",
+      "llm_tldr": "针对AI生成视频逼真度日益提升导致传统伪影检测不足的问题，本文提出以事实保真度验证为核心的新范式，从视觉和语言双视角构建四层方法体系，涵盖内在线索分析、时空一致性建模、跨模态一致性推理和语言引导的世界级验证，系统梳理该领域进展。该综述为检测技术转型提供了框架性指导。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.10666v1",
+      "source": "arxiv",
+      "title": "Answer-Conditioned Chain-of-Thought Distillation for Few-Shot Industrial Vision with Small VLMs",
+      "abstract": "Deploying AI-based visual inspection in manufacturing is hard because requirements change often, new defect types appear, and large labeled datasets are rarely available. We propose answer-conditioned chain-of-thought (CoT) distillation for rapidly adapting small vision-language models (VLMs) to new industrial tasks using minimal labeled data. A frontier VLM receives each training image along with its correct label and generates a justified visual explanation. A 3B-parameter model is then fine-tuned on these reasoning-augmented examples via LoRA. By conditioning on correct answers, we ensure all training reasoning is directed toward the correct conclusion, which is critical because frontier models score as low as 24.1% on our hardest task. We validate on four industrial classification tasks spanning three image modalities using only 18 to 30 labeled images per task. Across 4 seeds per task (32 training runs), our method outperforms direct fine-tuning on all 16 seed-task combinations, with mean improvements of +1.7 to +4.4 percentage points. A controlled equal-budget experiment confirms the improvement comes from reasoning quality, not additional training steps. An unconditioned baseline demonstrates that with out answer-conditioning, wrong reasoning degrades performance by 17.8 percentage points. On weld radiograph classification, the fine-tuned 3B model outperforms GPT-4.1 by 10.0pp using just 24 training images.",
+      "authors": [
+        "Shubham Rao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cond-mat.mtrl-sci",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-07-12T09:23:05+00:00",
+      "link": "https://arxiv.org/pdf/2607.10666v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes few-shot adaptation for industrial vision with minimal labeled data",
+      "llm_evidence_cn": "提出使用少量标记数据的工业视觉少样本适应方法",
+      "llm_evidence": "提出使用少量标记数据的工业视觉少样本适应方法",
+      "canonical_evidence": "提出使用少量标记数据的工业视觉少样本适应方法",
+      "llm_tldr_en": "Proposes answer-conditioned chain-of-thought distillation to adapt small VLMs to new industrial tasks with few examples, fine-tuning a 3B model on reasoning-augmented data conditioned on correct labels.",
+      "llm_tldr_cn": "针对工业视觉检测中需求多变、标注数据稀缺的问题，提出答案条件化的链式思维蒸馏方法，将前沿VLM生成的带正确标签的推理增强示例用于微调3B小模型。实验表明，该方法在少样本设置下能快速适应新缺陷类型，验证了条件化推理对提升小模型性能的有效性。为工业中快速部署视觉检测提供了可行方案。",
+      "llm_tldr": "针对工业视觉检测中需求多变、标注数据稀缺的问题，提出答案条件化的链式思维蒸馏方法，将前沿VLM生成的带正确标签的推理增强示例用于微调3B小模型。实验表明，该方法在少样本设置下能快速适应新缺陷类型，验证了条件化推理对提升小模型性能的有效性。为工业中快速部署视觉检测提供了可行方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.09832v1",
+      "source": "arxiv",
+      "title": "A Strong Balanced-Softmax Classifier-Retraining Baseline for Long-Tailed Recognition",
+      "abstract": "Long-tailed recognition methods often modify losses, margins, or representations to reduce the dominance of frequent classes. We ask whether, after Balanced Softmax training, the remaining tail error can be reduced by retraining only the classifier. We evaluate BS-cRT, a two-stage procedure that trains a backbone and cosine classifier with Balanced Softmax, freezes the backbone, and updates only the classifier on balanced episodic batches. The second stage keeps the empirical-prior Balanced Softmax objective and uses raw cosine logits at inference. Across CIFAR-100-LT, CIFAR-10-LT, ImageNet-LT, and Places-LT, this classifier-only step consistently improves Few-shot accuracy over the matched Balanced Softmax checkpoint. At imbalance factor 100, Few-shot gains are +5.15 points on CIFAR-100-LT and +5.83 on CIFAR-10-LT; on ImageNet-LT and Places-LT, gains are +6.92 and +9.78 points, respectively, with a Top-1/Few-shot trade-off on ImageNet-LT. We also analyze Counterfactual Boundary Risk Minimization (CBRM), a boundary-probe extension using prototype-based features near decision boundaries. CBRM identifies two failure modes: scaled-logit cosine margins destabilize training, and corrected hardest-negative probes remain head-class anchored. The results support BS-cRT as a practical classifier-side baseline and indicate that boundary supervision must account for class frequency.",
+      "authors": [
+        "Juan Terven",
+        "Diana Margarita Córdova Esparza",
+        "Julio Alejandro Romero Gonzalez",
+        "Edgar Arturo Chávez Urbiola",
+        "Francisco Javier Willars Rodriguez",
+        "Juan Bautista Hurtado Ramos",
+        "Alfonso Ramirez Pedraza"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-07-10T14:04:02+00:00",
+      "link": "https://arxiv.org/pdf/2607.09832v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "improves few-shot accuracy of tail classes through classifier retraining",
+      "llm_evidence_cn": "通过分类器重训练提升尾部类别少样本准确率",
+      "llm_evidence": "通过分类器重训练提升尾部类别少样本准确率",
+      "canonical_evidence": "通过分类器重训练提升尾部类别少样本准确率",
+      "llm_tldr_en": "Proposes a two-stage long-tailed recognition method where after Balanced Softmax training, freezing the backbone and retraining only the classifier on balanced batches improves few-shot tail accuracy, providing a simple and effective baseline.",
+      "llm_tldr_cn": "针对长尾分布下的图像分类任务，本文提出一种两阶段方法：先对骨干网络和余弦分类器进行平衡Softmax训练，然后冻结骨干网络，仅用均衡采样的episodic批次重新训练分类器。实验表明，该分类器重训练步骤能在多个长尾数据集上持续提升尾部类别的少样本准确率，为长尾识别提供了一个简单而强大的基线。同时，该方法也展示了在少样本学习场景下的潜力。",
+      "llm_tldr": "针对长尾分布下的图像分类任务，本文提出一种两阶段方法：先对骨干网络和余弦分类器进行平衡Softmax训练，然后冻结骨干网络，仅用均衡采样的episodic批次重新训练分类器。实验表明，该分类器重训练步骤能在多个长尾数据集上持续提升尾部类别的少样本准确率，为长尾识别提供了一个简单而强大的基线。同时，该方法也展示了在少样本学习场景下的潜力。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.07527v1",
+      "source": "arxiv",
+      "title": "A Unified Detection Framework for AI-Related Content and Artifacts",
+      "abstract": "Artificial intelligence (AI) is a double-edged sword: while it has achieved remarkable success across a wide range of domains, its deployment also calls for effective oversight and regulation, for which the detection of AI-related content and artifacts is perhaps the most direct and cost-effective approach. To this end, we propose a unified detection framework based on Mahalanobis distance scores (MDS), applicable to several important settings, including the detection of large language model (LLM) generated text, hallucination, watermark, and adversarial examples. A key component of the proposed method is to accurately characterize the positive class--such as human-generated text, factual statements, unwatermarked text, or non-adversarial samples--which requires an efficient and robust estimator of the covariance matrix of deep representations of positive samples before computing the MDS. Since the positive samples typically consist of multiple classes, and these classes may exhibit both homogeneity and heterogeneity, we develop joint estimation methods for both the casewise and cellwise minimum covariance determinant (MCD) estimators. We provide efficient optimization algorithms for both estimators and prove their convergence. We provide a reasonable definition of the breakdown point for the joint estimators and prove their corresponding high breakdown point properties. Empirical evaluations confirm the effectiveness of the proposed detection framework.",
+      "authors": [
+        "Xifeng Zhang",
+        "Tao Hu",
+        "Yijie Peng",
+        "Wan Tian"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "published": "2026-07-08T15:21:07+00:00",
+      "link": "https://arxiv.org/pdf/2607.07527v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Unified detection framework for AI-related content using Mahalanobis distance, applicable to text, hallucination, watermark, and adversarial examples.",
+      "llm_evidence_cn": "基于马氏距离的统一AI内容检测框架，适用于文本、幻觉、水印和对抗样本。",
+      "llm_evidence": "基于马氏距离的统一AI内容检测框架，适用于文本、幻觉、水印和对抗样本。",
+      "canonical_evidence": "基于马氏距离的统一AI内容检测框架，适用于文本、幻觉、水印和对抗样本。",
+      "llm_tldr_en": "Proposes a unified detection framework based on Mahalanobis distance scores, applicable to detecting LLM-generated text, hallucination, watermark, and adversarial examples.",
+      "llm_tldr_cn": "针对当前AI生成内容泛滥的挑战，本文提出基于马氏距离（MDS）的统一检测框架，可灵活应用于LLM生成文本检测、幻觉检测、水印检测和对抗样本检测等任务，通过精确建模正类分布实现高效检测，为AI安全性监管提供了一种通用且低成本的解决方案。实验结果表明，该方法在不同检测任务上均取得优异性能，验证了马氏距离在AI内容鉴别中的有效性。",
+      "llm_tldr": "针对当前AI生成内容泛滥的挑战，本文提出基于马氏距离（MDS）的统一检测框架，可灵活应用于LLM生成文本检测、幻觉检测、水印检测和对抗样本检测等任务，通过精确建模正类分布实现高效检测，为AI安全性监管提供了一种通用且低成本的解决方案。实验结果表明，该方法在不同检测任务上均取得优异性能，验证了马氏距离在AI内容鉴别中的有效性。",
+      "llm_tags": [
+        "query:deepfake-fsl:composite"
+      ],
+      "matched_query_tag": "query:deepfake-fsl:composite",
+      "matched_query_text": "Papers central to 深度伪造检测、AI生成图像检测、图像分类、少样本学习、特征对齐、细粒度分类相关论文, especially work that connects or combines: detection of deepfake images and videos using machine learning models; detecting images created by generative AI models such as GANs and diffusion models; classifying images into categories using convolutional neural networks; training models with only a small number of labeled examples per class; detecting manipulated face images in multimedia forensics; distinguishing computer-generated images from real photographs; identifying AI generated or synthetic images with limited training data; few shot learning approaches for face forgery detection and image classification; few shot deepfake detection using feature alignment; cross domain generalization for AI generated image detection.",
+      "matched_requirement_id": "req-composite-deepfake-fsl",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.10851v1",
+      "source": "arxiv",
+      "title": "Learning To Focus: Anatomy-Guided Attention Regularization for Medical Image Classification",
+      "abstract": "Medical image classification models are ideally expected to identify diagnostically relevant regions while making predictions, yet standard classification losses rarely provide spatial supervision. Explicit supervision via anatomical shape information, such as segmentation masks of task-relevant anatomy, has been shown to guide the network toward regions relevant to the target prediction. However, obtaining such masks incurs substantial manual annotation effort and computational overhead. With the advent of segmentation foundation models that exhibit strong localization of anatomical structures across diverse imaging modalities, we leverage this capability to extract anatomical shape priors without the burden of training a dedicated segmentation model. In this paper, we propose a new framework, Locus, an anatomical attention regularization framework that leverages pretrained segmentation foundation models to guide a classifier's attention toward diagnostically meaningful anatomical structures across diverse imaging modalities. Instead of enforcing pixel-wise alignment with the foundation-model-derived mask, we introduce a regularization term that adaptively balances attention between anatomical (foreground) and background regions, penalizing the classifier when background attention dominates. We validate Locus on eight diverse medical imaging datasets spanning dermoscopy, X-ray, histopathology, and cardiac MRI, showing consistent gains in classification performance alongside improved anatomically grounded attention.",
+      "authors": [
+        "Tonmoy Hossain",
+        "Atiqur Rahman",
+        "Farhana Hossain Swarnali",
+        "Miaomiao Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-12T17:26:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.10851v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "medical image classification with attention regularization",
+      "llm_evidence_cn": "注意力正则化的医学图像分类",
+      "llm_evidence": "注意力正则化的医学图像分类",
+      "canonical_evidence": "注意力正则化的医学图像分类",
+      "llm_tldr_en": "Leverages segmentation foundation models to provide anatomical shape priors for attention regularization in medical image classification, improving classification accuracy by focusing on diagnostically relevant regions.",
+      "llm_tldr_cn": "医学图像分类模型常缺少对诊断相关区域的监督信号，而解剖分割标注获取成本高。本文提出利用分割基础模型的能力，自动提取解剖形状先验，并以此构建注意力正则化项，显式引导分类网络聚焦于任务相关的解剖结构。实验证实该正则化有效提升了分类精度，为医学图像分析提供了一种低成本、高效的注意力引导方案。",
+      "llm_tldr": "医学图像分类模型常缺少对诊断相关区域的监督信号，而解剖分割标注获取成本高。本文提出利用分割基础模型的能力，自动提取解剖形状先验，并以此构建注意力正则化项，显式引导分类网络聚焦于任务相关的解剖结构。实验证实该正则化有效提升了分类精度，为医学图像分析提供了一种低成本、高效的注意力引导方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.10985v1",
+      "source": "arxiv",
+      "title": "MED-DSLC: Multi-Expert-Domain Classification via Domain Supervision and Logit Calibration",
+      "abstract": "Vision-language models (VLMs) such as CLIP enable zero-shot classification by comparing image features with text prompts in a shared embedding space. A fundamental property underlying this capability is the global comparability of logits across arbitrary candidate classes. However, VLMs are often adapted to fine-grained domains using techniques such as LoRA. While this improves in-domain accuracy, out-of-domain accuracy degrades. This leads to a highly fragmented model ecosystem, with thousands of specialized models. Multi-Expert-Domain classification seeks to address this problem, by merging LoRAs trained independently on specialized domains. However, due to the independent training, the various domain experts no longer produce globally calibrated logits. As a result, when evaluating over the union of multiple domain-specific class sets, heterogeneous logit scales induce cross-domain interference and artificially high confidence for out-of-domain classes, inducing prediction errors. In this work, we identify domain supervision and cross-domain logit miscalibration as the key issue to scalable multi-domain zero-shot recognition. We propose MED-DSLC, combining domain supervised training and domain-wise logit scaling, to explicitly restore global logit comparability. MED-DSLC is a lightweight solution for MED classification, which is shown to preserve within-domain discrimination while reducing cross-domain logit interference with minimal data. Extensive experiments across diverse fine-grained benchmarks demonstrate that it substantially improves mean accuracy (+15\\%), cross-domain robustness, and scalability in the size of MED classification problem. Our results show that restoring output-level calibration is essential under highly data imbalanced settings for achieving a truly zero-shot VLM under multi-domain specialization.",
+      "authors": [
+        "Zheng Zeng",
+        "Deepak Sridhar",
+        "Nuno Vasconcelos"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-13T01:18:32+00:00",
+      "link": "https://arxiv.org/pdf/2607.10985v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multi-expert domain classification with logit calibration for cross-domain generalization, addressing VLM fragmentation.",
+      "llm_evidence_cn": "多专家领域分类与logit校准实现跨域泛化，解决VLM碎片化问题。",
+      "llm_evidence": "多专家领域分类与logit校准实现跨域泛化，解决VLM碎片化问题。",
+      "canonical_evidence": "多专家领域分类与logit校准实现跨域泛化，解决VLM碎片化问题。",
+      "llm_tldr_en": "Addresses the fragmentation of fine-tuned VLMs by proposing MED-DSLC, which merges LoRAs with domain supervision and logit calibration to restore global comparability for multi-expert classification.",
+      "llm_tldr_cn": "视觉语言模型适应细粒度领域后，跨域全局可比较性丧失，导致模型碎片化。本文提出MED-DSLC，一种通过领域监督和Logit校准合并独立训练的LoRA的多专家领域分类方法，恢复日志的全局可比性，从而在不牺牲域内精度的前提下提升域外泛化能力，缓解模型生态碎片化问题。实验表明，该方法在多个细粒度分类基准上有效恢复跨域泛化能力。",
+      "llm_tldr": "视觉语言模型适应细粒度领域后，跨域全局可比较性丧失，导致模型碎片化。本文提出MED-DSLC，一种通过领域监督和Logit校准合并独立训练的LoRA的多专家领域分类方法，恢复日志的全局可比性，从而在不牺牲域内精度的前提下提升域外泛化能力，缓解模型生态碎片化问题。实验表明，该方法在多个细粒度分类基准上有效恢复跨域泛化能力。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
