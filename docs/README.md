@@ -6,43 +6,49 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-14
-- 运行时间：2026-07-14 21:37:00 UTC
+- 最新运行日期：2026-07-15
+- 运行时间：2026-07-15 21:07:58 UTC
 - 运行状态：成功
-- 本次总论文数：7
+- 本次总论文数：9
 - 精读区：3
-- 速读区：4
+- 速读区：6
 
 ### 今日简报（AI）
-今日精读两篇满分论文，深挖合成图像与AI视频的检测新范式；速读则覆盖长尾分类、统一检测框架与医学图像注意力优化。
-最值得关注的是“噪声残差聚类”让合成图像检测更精准，以及从视觉-语言双视角审视AI生成视频的综述，全景式把握前沿。
-建议读者可先试用噪声残差方法检测手边图片，再结合综述梳理视频生成风险，逐步形成多模态鉴伪思维。
-- 详情：[/202607/14/README](/202607/14/README)
+1) 今日精读3篇、速读6篇，聚焦小样本学习、合成图像归因与多模态校准。
+2) 最值得关注：《Steering Diffusion Models via Class-Contrastive Influence》用小样本医学分类获满分，开创了扩散模型引导新范式；《Representation and Reference Selection in Training-Free Synthetic Image Attribution》则在免训练溯源上给出了表征与参考选择的关键结论。
+3) 建议读者尝试将类别对比影响的扩散引导思路迁移到工业缺陷检测等小样本场景，并关注免训练溯源方法在数据安全中的应用潜力。
+- 详情：[/202607/15/README](/202607/15/README)
 
 ### 精读区论文标签
-1. [Effective Synthetic Image Detection via Noise Residual Clustering](/202607/14/2607.10695v1-effective-synthetic-image-detection-via-noise-residual-clustering)  
+1. [Steering Diffusion Models via Class-Contrastive Influence for Few-Shot Medical Classification](/202607/15/2607.12464v1-steering-diffusion-models-via-class-contrastive-influence-for-few-shot-medical-classification)  
    标签：评分：10.0/10、query:deepfake-fsl
-   evidence：提出一种基于噪声残差聚类的免训练合成图像检测方法，针对生成式AI图像
-2. [Detecting AI-Generated Video: A Vision-Language Dual-View Survey](/202607/14/2607.10787v1-detecting-ai-generated-video-a-vision-language-dual-view-survey)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：AI生成视频检测的综合综述
-3. [Answer-Conditioned Chain-of-Thought Distillation for Few-Shot Industrial Vision with Small VLMs](/202607/14/2607.10666v1-answer-conditioned-chain-of-thought-distillation-for-few-shot-industrial-vision-with-small-vlms)  
+   evidence：提出类对比影响度量，选择对少样本医学图像分类有用的合成样本
+2. [Representation and Reference Selection in Training-Free Synthetic Image Attribution](/202607/15/2607.12052v1-representation-and-reference-selection-in-training-free-synthetic-image-attribution)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：提出使用少量标记数据的工业视觉少样本适应方法
+   evidence：采用免训练参考方法的合成图像归因
+3. [MBTI: A Multi-Branch Efficient Fine-Tuning Framework for Hyperspectral Image Classification with Foundation Models](/202607/15/2607.12782v1-mbti-a-multi-branch-efficient-fine-tuning-framework-for-hyperspectral-image-classification-with-foundation-models)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：在有限标注样本下适应下游分类任务
 
 ### 速读区论文标签
-1. [A Strong Balanced-Softmax Classifier-Retraining Baseline for Long-Tailed Recognition](/202607/14/2607.09832v1-a-strong-balanced-softmax-classifier-retraining-baseline-for-long-tailed-recognition)  
+1. [TabPFN beyond Tabular Data: Calibration and Accuracy on Multimodal Embeddings](/202607/15/2607.11007v1-tabpfn-beyond-tabular-data-calibration-and-accuracy-on-multimodal-embeddings)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：通过分类器重训练提升尾部类别少样本准确率
-2. [A Unified Detection Framework for AI-Related Content and Artifacts](/202607/14/2607.07527v1-a-unified-detection-framework-for-ai-related-content-and-artifacts)  
+   evidence：评估了TabPFN作为冻结编码器的少样本分类头
+2. [Data Safety: Synthetic Data Quality Analysis Using CIFAKE Dataset](/202607/15/2607.12165v1-data-safety-synthetic-data-quality-analysis-using-cifake-dataset)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：利用CIFAKE数据集分析合成图像与真实图像的差异,帮助区分计算机生成与真实图像.
+3. [Rough Path Signature-Guided Geometry Augmentation for Few-Shot Industrial Surface Defect Detection](/202607/15/2607.12245v1-rough-path-signature-guided-geometry-augmentation-for-few-shot-industrial-surface-defect-detection)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：每类5-50张标注图像的少样本工业缺陷检测
+4. [MQAdapter: Multi-Modal Quantum Adapter for Coarse-to-Fine VLM Fine-tuning](/202607/15/2607.12418v1-mqadapter-multi-modal-quantum-adapter-for-coarse-to-fine-vlm-fine-tuning)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：提出粗细粒度结合的VLM微调方法用于少样本分类的细粒度判别
+5. [Integrating Large Language Models and Graph Convolutional Networks for Semi-Supervised Image Classification](/202607/15/2607.09104v1-integrating-large-language-models-and-graph-convolutional-networks-for-semi-supervised-image-classification)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：基于马氏距离的统一AI内容检测框架，适用于文本、幻觉、水印和对抗样本。
-3. [Learning To Focus: Anatomy-Guided Attention Regularization for Medical Image Classification](/202607/14/2607.10851v1-learning-to-focus-anatomy-guided-attention-regularization-for-medical-image-classification)  
+   evidence：采用半监督图像分类减少标注工作量
+6. [Statistical Non-linear Reconstruction Loss for Image Anomaly Detection](/202607/15/2607.12866v1-statistical-non-linear-reconstruction-loss-for-image-anomaly-detection)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：注意力正则化的医学图像分类
-4. [MED-DSLC: Multi-Expert-Domain Classification via Domain Supervision and Logit Calibration](/202607/14/2607.10985v1-med-dslc-multi-expert-domain-classification-via-domain-supervision-and-logit-calibration)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：多专家领域分类与logit校准实现跨域泛化，解决VLM碎片化问题。
+   evidence：提出基于重建的异常检测方法，可用于识别训练数据有限的AI生成图像
 
 
 <div class="dpr-home-promo-card">

@@ -1,0 +1,367 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-15T21:00:09.863531+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2607.12464v1",
+      "source": "arxiv",
+      "title": "Steering Diffusion Models via Class-Contrastive Influence for Few-Shot Medical Classification",
+      "abstract": "When labeled data are scarce, off-the-shelf diffusion models can augment training sets for few-shot medical image classification, but not all generated samples are equally useful for the downstream task. Existing approaches largely improve synthetic data by increasing realism, diversity, or domain adaptation, while overlooking a more fundamental question: how should sample usefulness for classification be measured and optimized? We address this with Class-Contrastive Influence (C2I), a criterion that quantifies a sample's usefulness through its gradient-based influence on the classifier. We find that effective samples exhibit a strong C2I gap: their loss gradients align with validation gradients from the same class and oppose those from other classes. Our analysis further suggests that such high-C2I samples are hard, boundary-proximal examples that help refine the decision boundary and improve robustness. Building on this insight, we fine-tune diffusion models with reinforcement learning using a C2I-based reward to steer generation toward class-informative samples. Across several few-shot medical imaging benchmarks, C2I-guided generation improves downstream accuracy and robustness over diffusion-based augmentation baselines, showing that synthetic augmentation is most effective when guided by task usefulness rather than image quality alone.",
+      "authors": [
+        "Jeeyung Kim",
+        "Erfan Esmaeili",
+        "Qiang Qiu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-07-14T07:45:46+00:00",
+      "link": "https://arxiv.org/pdf/2607.12464v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "proposes Class-Contrastive Influence to select useful synthetic samples for few-shot medical image classification",
+      "llm_evidence_cn": "提出类对比影响度量，选择对少样本医学图像分类有用的合成样本",
+      "llm_evidence": "提出类对比影响度量，选择对少样本医学图像分类有用的合成样本",
+      "canonical_evidence": "提出类对比影响度量，选择对少样本医学图像分类有用的合成样本",
+      "llm_tldr_en": "Addresses few-shot medical image classification by proposing Class-Contrastive Influence (C2I) to measure and optimize usefulness of diffusion-generated augmentation samples; effective samples align gradients with same-class validation data and oppose gradients of other classes.",
+      "llm_tldr_cn": "针对少样本医学图像分类中合成样本有用性难以评估的问题，提出类对比影响（C2I）准则，通过梯度影响量化样本对分类器的贡献。发现有效样本具有较大C2I差距，即其损失梯度与同类验证数据对齐、与异类相悖。实验表明，基于C2I选择的样本能显著提升少样本分类性能。",
+      "llm_tldr": "针对少样本医学图像分类中合成样本有用性难以评估的问题，提出类对比影响（C2I）准则，通过梯度影响量化样本对分类器的贡献。发现有效样本具有较大C2I差距，即其损失梯度与同类验证数据对齐、与异类相悖。实验表明，基于C2I选择的样本能显著提升少样本分类性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.12052v1",
+      "source": "arxiv",
+      "title": "Representation and Reference Selection in Training-Free Synthetic Image Attribution",
+      "abstract": "Synthetic image attribution aims at identifying the generator responsible for a given AI-generated image. Training-free reference-based attribution methods are easily scalable, since newly emerging generators can be incorporated by adding source-specific references rather than retraining a task-specific classifier. Their performance depends on two coupled factors: the representation space used for comparison and the way source-specific references are constructed. However, the interaction between these two factors remains largely unexplored. In this paper, we provide a controlled analysis of this interaction using references and off-the-shelf pretrained representations. We study representations extracted from different layers of CLIP and DINOv2, along with three reference selection methods with varying semantic constraints: arbitrary, semantically aligned, and resynthesis-based references. Our results show that attribution accuracy consistently peaks at intermediate representation levels, indicating that source-discriminative cues are more accessible before strong semantic abstraction dominates. We further show that intermediate representations are not completely semantically neutral, making reference selection critical: semantically constrained references reduce query-reference mismatch and improve attribution, especially under limited reference budgets. Resynthesis is most useful in low-reference regimes, while semantically aligned references provide a better accuracy-cost trade-off when a moderate-sized reference pool is available. Our findings show that training-free reference-based attribution should be understood as the interaction between where images are compared, how the reference set is constructed, and how many references are available.",
+      "authors": [
+        "Meiling Li",
+        "Pietro Bongini",
+        "Benedetta Tondi",
+        "Mauro Barni"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CR"
+      ],
+      "published": "2026-07-13T18:10:39+00:00",
+      "link": "https://arxiv.org/pdf/2607.12052v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "synthetic image attribution using training-free reference-based methods",
+      "llm_evidence_cn": "采用免训练参考方法的合成图像归因",
+      "llm_evidence": "采用免训练参考方法的合成图像归因",
+      "canonical_evidence": "采用免训练参考方法的合成图像归因",
+      "llm_tldr_en": "Analyzes the interaction between representation space and reference construction in training-free synthetic image attribution, showing how off-the-shelf pretrained representations from CLIP and DINO affect attribution performance.",
+      "llm_tldr_cn": "免训练参考合成图像归因方法因无需重新训练分类器而易于扩展到新生成器，但其性能取决于表示空间和参考构建方式的耦合。本文对CLIP和DINO等预训练表示的不同层进行了控制性分析，研究了这两种因素的交互作用。实验表明，选择合适的表示层和参考策略能显著提升归因准确率，为可扩展的AI生成图像检测提供了实用指导。",
+      "llm_tldr": "免训练参考合成图像归因方法因无需重新训练分类器而易于扩展到新生成器，但其性能取决于表示空间和参考构建方式的耦合。本文对CLIP和DINO等预训练表示的不同层进行了控制性分析，研究了这两种因素的交互作用。实验表明，选择合适的表示层和参考策略能显著提升归因准确率，为可扩展的AI生成图像检测提供了实用指导。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.12782v1",
+      "source": "arxiv",
+      "title": "MBTI: A Multi-Branch Efficient Fine-Tuning Framework for Hyperspectral Image Classification with Foundation Models",
+      "abstract": "Hyperspectral foundation models learn transferable spectral-spatial representations from large-scale unlabeled data. They provide an effective paradigm for adapting to downstream hyperspectral image (HSI) classification tasks with limited labeled samples. However, spectral band configurations vary substantially across sensors, which makes direct model transfer difficult. Existing adaptation strategies often compress, select, or reshape the original spectra to match model-specific input requirements. These operations may discard useful spectral information and weaken local spectral continuity. To address this problem, we propose MBTI, a Multi-Branch efficient fine-tuning framework for Hyperspectral Image classification. MBTI adapts hyperspectral foundation models to downstream classification tasks while preserving full-band spectral information. First, we introduce a spectral-continuity-preserving multi-branch preprocessing strategy. The original HSI is divided into multiple continuous spectral subsets, and a band reuse mechanism is used when the remaining bands cannot form a complete branch. This avoids invalid padding and unnecessary spectral loss. Second, independent Low-Rank Adaptation (LoRA) modules are inserted into each branch. They enable different spectral intervals to learn task-specific discriminative features while keeping most pre-trained parameters frozen. Finally, a multi-branch channel attention fusion module adaptively recalibrates and integrates features from all spectral branches. Experiments on three public hyperspectral datasets show that MBTI achieves competitive and superior performance compared with representative classification methods. Under the final rank-8 configuration, only about 2.33\\%--2.36\\% of the parameters are trainable. The code will be available at https://github.com/Azhenmiddleblock/MBTI/tree/main.",
+      "authors": [
+        "Mingzhen Xu",
+        "Haonan Guo",
+        "Di Wang",
+        "Yinghua Qu",
+        "Zhiliang Zhou",
+        "Lei Zhang",
+        "Huiwen Yao",
+        "Rui Zhao",
+        "Fengxiang Wang",
+        "Gang Wan",
+        "Bo Du",
+        "Liangpei Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-14T13:58:10+00:00",
+      "link": "https://arxiv.org/pdf/2607.12782v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "adapting to downstream classification with limited labeled samples",
+      "llm_evidence_cn": "在有限标注样本下适应下游分类任务",
+      "llm_evidence": "在有限标注样本下适应下游分类任务",
+      "canonical_evidence": "在有限标注样本下适应下游分类任务",
+      "llm_tldr_en": "Proposes a multi-branch fine-tuning framework to adapt hyperspectral foundation models to downstream tasks with limited labeled samples, addressing sensor-specific band variations without discarding spectral information.",
+      "llm_tldr_cn": "高光谱影像分类中，不同传感器的波段配置差异导致基础模型迁移困难，且有限标注样本加剧了这一挑战。本文提出MBTI多分支高效微调框架，通过保留原始光谱信息并适应不同波段输入，有效利用少量标注样本微调预训练基础模型。实验表明，该方法在多个高光谱分类数据集上优于现有波段压缩或选择策略，为少样本高光谱分类提供了高效解决方案。",
+      "llm_tldr": "高光谱影像分类中，不同传感器的波段配置差异导致基础模型迁移困难，且有限标注样本加剧了这一挑战。本文提出MBTI多分支高效微调框架，通过保留原始光谱信息并适应不同波段输入，有效利用少量标注样本微调预训练基础模型。实验表明，该方法在多个高光谱分类数据集上优于现有波段压缩或选择策略，为少样本高光谱分类提供了高效解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.11007v1",
+      "source": "arxiv",
+      "title": "TabPFN beyond Tabular Data: Calibration and Accuracy on Multimodal Embeddings",
+      "abstract": "Few-shot multimodal classification commonly attaches a lightweight head, such as $k$-nearest neighbors, logistic regression, or a linear SVM, to a frozen pretrained encoder. Although computationally efficient, these heads can produce poorly calibrated confidence scores, limiting their reliability in calibration-sensitive applications. We evaluate TabPFN as a plug-and-play, zero-gradient classification head for frozen image, text, and audio encoders. Across 22{,}820 evaluation episodes spanning 14 datasets, 11 encoders, and three modalities, TabPFN achieves the best mean rank among nine classification heads on both negative log-likelihood (NLL) and expected calibration error (ECE). At a representative setting, it reduces NLL by 48--62\\% and ECE by 2.1--5.3$\\times$ relative to the average of the eight baselines while matching or exceeding their average accuracy. Its accuracy advantage is conditional, concentrating at moderate-to-high shot counts and low-to-moderate feature dimensions ($k \\ge 50$, $d \\le 32$), and diminishing when labeled data are scarce, feature dimensions are high, or competing methods approach ceiling accuracy. In targeted backbone-adaptation experiments, replacing the trained linear head with TabPFN substantially improves calibration while preserving competitive accuracy. These results provide empirical guidance for using TabPFN as a training-free head in calibration-sensitive multimodal classification. To support transparency and reproducibility, we publicly release the source code, experiment configurations, and evaluation scripts in our GitHub repository: https://github.com/Jingxiang-Zhang/tabpfn-multimodal-embeddings.",
+      "authors": [
+        "Jingxiang Zhang",
+        "Lujia Zhong",
+        "Zijie Zhu",
+        "Shuo Huang",
+        "Yuang Xu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-13T02:11:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.11007v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "evaluates TabPFN as a few-shot classification head for frozen encoders",
+      "llm_evidence_cn": "评估了TabPFN作为冻结编码器的少样本分类头",
+      "llm_evidence": "评估了TabPFN作为冻结编码器的少样本分类头",
+      "canonical_evidence": "评估了TabPFN作为冻结编码器的少样本分类头",
+      "llm_tldr_en": "Evaluates TabPFN as a zero-gradient, plug-and-play classification head for few-shot multimodal classification, achieving best calibration and accuracy across 22,820 episodes spanning image, text, and audio modalities.",
+      "llm_tldr_cn": "该论文针对少样本多模态分类中传统分类头校准性能差的问题，评估了TabPFN作为冻结编码器的即插即用分类头，无需梯度更新。实验覆盖14个数据集、11种编码器和三种模态的22,820个评估回合，TabPFN在负对数似然和期望校准误差上均取得最佳平均排名，显著降低了校准误差，提升了少样本分类的可靠性和准确度。",
+      "llm_tldr": "该论文针对少样本多模态分类中传统分类头校准性能差的问题，评估了TabPFN作为冻结编码器的即插即用分类头，无需梯度更新。实验覆盖14个数据集、11种编码器和三种模态的22,820个评估回合，TabPFN在负对数似然和期望校准误差上均取得最佳平均排名，显著降低了校准误差，提升了少样本分类的可靠性和准确度。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.09104v1",
+      "source": "arxiv",
+      "title": "Integrating Large Language Models and Graph Convolutional Networks for Semi-Supervised Image Classification",
+      "abstract": "While the growing availability of image data has driven significant advances, labeling datasets remains costly and time-consuming. Therefore, semi-supervised approaches such as Graph Convolutional Networks (GCNs), which learn from both labeled and unlabeled data, have emerged as a promising solution. One of the primary challenges in applying GCNs to image classification is graph construction, since, unlike in citation networks or similar domains, images typically do not come with a predefined structural representation. For visual data, most studies construct graphs based on the similarity between feature vectors from pretrained deep learning backbones, typically by employing kNN or reciprocal kNN algorithms. Although Large Language Models (LLMs) have shown remarkable capability in capturing high-level semantics, their integration with GCNs for image classification remains underexplored. Aiming to fill this gap, our approach uses a Vision Language Model (VLM) to generate textual image descriptions, which are then processed by an LLM to estimate semantic similarity scores between connected images. These scores guide the pruning of edges in kNN and reciprocal kNN graphs, filtering out semantically irrelevant neighbors. Experimental results reveal that leveraging LLMs for graph refinement can improve classification accuracy, particularly for kNN graphs and some backbones. The source code is publicly available at http://gcnllm.lucasvalem.com.",
+      "authors": [
+        "Camila Piscioneri Magalhães",
+        "Lucas Pascotti Valem"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-10T05:39:41+00:00",
+      "link": "https://arxiv.org/pdf/2607.09104v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses semi-supervised image classification to reduce labeling effort",
+      "llm_evidence_cn": "采用半监督图像分类减少标注工作量",
+      "llm_evidence": "采用半监督图像分类减少标注工作量",
+      "canonical_evidence": "采用半监督图像分类减少标注工作量",
+      "llm_tldr_en": "Proposes a semi-supervised image classification method combining LLMs and GCNs, using graph construction from pretrained features to leverage both labeled and unlabeled data, reducing dependency on expensive annotations.",
+      "llm_tldr_cn": "提出一种结合大语言模型与图卷积网络的半监督图像分类方法。通过从预训练特征构建图结构，同时利用有标签和无标签数据，减少对昂贵标注的依赖。实验表明该方法在标注受限情况下有效提升分类性能，为低成本图像分类提供可行方案。",
+      "llm_tldr": "提出一种结合大语言模型与图卷积网络的半监督图像分类方法。通过从预训练特征构建图结构，同时利用有标签和无标签数据，减少对昂贵标注的依赖。实验表明该方法在标注受限情况下有效提升分类性能，为低成本图像分类提供可行方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.12165v1",
+      "source": "arxiv",
+      "title": "Data Safety: Synthetic Data Quality Analysis Using CIFAKE Dataset",
+      "abstract": "Recently, the societal implementation of high-performance image classification models has expanded rapidly. While these models require vast amounts of training data to improve performance, securing sufficient real images is often impractical. As a means to compensate for this shortage, the use of synthetic data is becoming widespread. However, synthetic images are not necessarily equivalent to real images for training purposes. This study systematically analyzes the differences between two types of synthetic images created by different generation methods and real images from three perspectives: high-dimensional feature space, low-level statistics in color space, and the model training process. Furthermore, it experimentally verifies how synthetic data should be utilized by considering realistic data mixing scenarios. This enables the proposal of an evaluation and application strategy for performing preliminary assessments on synthetic images of unknown quality and safely incorporating them into training. This research aims to contribute to enhancing the reliability and safety of image classification models utilizing synthetic images.",
+      "authors": [
+        "Kuniko Paxton",
+        "Amila Akagić",
+        "Koorosh Aslansefat",
+        "Dhavalkumar Thakker",
+        "Yiannis Papadopoulos"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-13T21:18:15+00:00",
+      "link": "https://arxiv.org/pdf/2607.12165v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Analyzes differences between synthetic and real images using CIFAKE dataset, aiding distinction of computer-generated vs real.",
+      "llm_evidence_cn": "利用CIFAKE数据集分析合成图像与真实图像的差异,帮助区分计算机生成与真实图像.",
+      "llm_evidence": "利用CIFAKE数据集分析合成图像与真实图像的差异,帮助区分计算机生成与真实图像.",
+      "canonical_evidence": "利用CIFAKE数据集分析合成图像与真实图像的差异,帮助区分计算机生成与真实图像.",
+      "llm_tldr_en": "Systematically analyzes quality differences between two types of synthetic images and real images using CIFAKE dataset, from high-dimensional features, color statistics, and training process perspectives.",
+      "llm_tldr_cn": "针对合成数据在图像分类模型训练中的有效性不明的问题,利用CIFAKE数据集系统分析两种合成图像与真实图像在高维特征空间、颜色统计和训练过程中的差异。实验揭示了合成图像与真实图像的多种分布差异,为合成图像质量评估和生成图像检测提供了理论依据。",
+      "llm_tldr": "针对合成数据在图像分类模型训练中的有效性不明的问题,利用CIFAKE数据集系统分析两种合成图像与真实图像在高维特征空间、颜色统计和训练过程中的差异。实验揭示了合成图像与真实图像的多种分布差异,为合成图像质量评估和生成图像检测提供了理论依据。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.12866v1",
+      "source": "arxiv",
+      "title": "Statistical Non-linear Reconstruction Loss for Image Anomaly Detection",
+      "abstract": "Reconstruction-based methods are a cornerstone of unsupervised image anomaly detection, but they remain vulnerable to \\emph{outlier leakage}, where standard mean squared error (MSE) loss drives the model to faithfully reconstruct anomalous patterns. We propose a Non-linear Reconstruction Loss that applies a sigmoid-based squashing function to suppress high-magnitude features, preventing outliers from dominating optimization while preserving sensitivity to normal patterns. In addition, we introduce a statistical calibration scheme that selects the scaling factor $k$ from the confidence interval (CI) of the normal feature distribution, enabling data-driven control of the suppression strength. Our approach achieves competitive or superior anomaly detection performance compared to state-of-the-art methods, reaching 99.0\\% Image-AUROC and 97.3\\% Pixel-AUROC on MVTec-AD, and 95.3\\% Image-AUROC and 99.0\\% Pixel-AUROC on VisA. These results indicate that non-linear gradient suppression is an effective mechanism for mitigating outlier leakage and improving anomaly localization in unified industrial inspection settings. The implementation is available at https://github.com/mintii13/Statistical-Non-linear-Reconstruction-Loss.git.",
+      "authors": [
+        "Nguyen Minh Tri",
+        "Hoang Khuong Duy",
+        "Huynh Cong Viet Ngu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-14T15:18:24+00:00",
+      "link": "https://arxiv.org/pdf/2607.12866v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Proposes reconstruction-based anomaly detection applicable to identifying AI-generated images with limited training data",
+      "llm_evidence_cn": "提出基于重建的异常检测方法，可用于识别训练数据有限的AI生成图像",
+      "llm_evidence": "提出基于重建的异常检测方法，可用于识别训练数据有限的AI生成图像",
+      "canonical_evidence": "提出基于重建的异常检测方法，可用于识别训练数据有限的AI生成图像",
+      "llm_tldr_en": "Addresses outlier leakage in reconstruction-based anomaly detection by introducing a non-linear loss with sigmoid squashing and statistical calibration, achieving competitive anomaly detection performance.",
+      "llm_tldr_cn": "该论文针对基于重建的异常检测中存在的离群值泄漏问题，提出了一种非线性重建损失，利用S形压缩函数抑制高幅度特征，防止异常模式被过度重建。同时引入一种统计校准方案，从正常特征分布的置信区间中选择缩放因子，实现数据驱动的抑制强度控制。在多个图像数据集上的实验表明，该方法在异常检测任务上取得竞争性甚至优越的性能，为无监督检测异常样本提供了一种有效工具。",
+      "llm_tldr": "该论文针对基于重建的异常检测中存在的离群值泄漏问题，提出了一种非线性重建损失，利用S形压缩函数抑制高幅度特征，防止异常模式被过度重建。同时引入一种统计校准方案，从正常特征分布的置信区间中选择缩放因子，实现数据驱动的抑制强度控制。在多个图像数据集上的实验表明，该方法在异常检测任务上取得竞争性甚至优越的性能，为无监督检测异常样本提供了一种有效工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "identifying AI generated or synthetic images with limited training data",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.12245v1",
+      "source": "arxiv",
+      "title": "Rough Path Signature-Guided Geometry Augmentation for Few-Shot Industrial Surface Defect Detection",
+      "abstract": "Few-shot industrial defect detection remains difficult for standard supervised detectors, which achieve poor performance on boundary-dominated industrial defects. This paper proposes rough path signature-guided geometry augmentation (RPS-GA), a geometry-aware approach in which Canny edge contours are treated as ordered planar paths whose truncated second-order signature responses, especially the antisymmetric Lévy-area term, are aggregated into a spatial map that highlights boundary-related structure through two fusion operators, SIG-AUG and SGAA. The approach is evaluated on NEU-DET and PCB-Defect under a few-shot protocol with 5, 10, 20, or 50 labeled images per class, using an unmodified YOLOv8n detector throughout. Compared with the baseline, RPS-GA delivers large gains when supervision is limited, although the margin shrinks as more labels become available. On NEU-DET, SIG-AUG raises 10-shot mAP@0.5 from 0.341 to 0.583, whereas on PCB-Defect, SGAA improves 10-shot mAP@0.5 from 0.086 to 0.299 and yields usable detection at 5-shot where the baseline fails entirely. These trends are confirmed by multi-seed evaluation across independent random partitions. Overall, the results indicate that second-order path-signature geometry offers a practical way to strengthen few-shot industrial defect detection without meta-learning or detector redesign.",
+      "authors": [
+        "Jiaqi Kuang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "math.PR"
+      ],
+      "published": "2026-07-14T01:14:58+00:00",
+      "link": "https://arxiv.org/pdf/2607.12245v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "few-shot industrial defect detection with 5-50 labeled images per class",
+      "llm_evidence_cn": "每类5-50张标注图像的少样本工业缺陷检测",
+      "llm_evidence": "每类5-50张标注图像的少样本工业缺陷检测",
+      "canonical_evidence": "每类5-50张标注图像的少样本工业缺陷检测",
+      "llm_tldr_en": "Proposes rough path signature-guided geometry augmentation for few-shot defect detection, leveraging Canny edge contours and signature responses to improve boundary-sensitive detection with minimal labeled data.",
+      "llm_tldr_cn": "该论文针对少样本工业缺陷检测中标准检测器对边界敏感缺陷性能不佳的问题，提出基于粗糙路径签名的几何增强方法。将Canny边缘轮廓视为有序平面路径，利用二阶签名响应的Lévy面积项生成空间增强图，通过SIG-AUG和SGAA融合算子改进YOLOv8n检测器在NEU-DET和PCB-Defect数据集上的少样本检测精度。",
+      "llm_tldr": "该论文针对少样本工业缺陷检测中标准检测器对边界敏感缺陷性能不佳的问题，提出基于粗糙路径签名的几何增强方法。将Canny边缘轮廓视为有序平面路径，利用二阶签名响应的Lévy面积项生成空间增强图，通过SIG-AUG和SGAA融合算子改进YOLOv8n检测器在NEU-DET和PCB-Defect数据集上的少样本检测精度。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.12418v1",
+      "source": "arxiv",
+      "title": "MQAdapter: Multi-Modal Quantum Adapter for Coarse-to-Fine VLM Fine-tuning",
+      "abstract": "Large-scale Vision-Language Models have demonstrated impressive transfer learning capabilities across a wide range of tasks. For few-shot classification, we observe that VLMs exhibit a notable ability to filter candidate categories and thus achieve high Top-K accuracy. However, they often struggle with fine-grained discrimination among visually similar categories, resulting in unsatisfactory Top-1 performance, as shown in Figure 1. Existing studies on VLM adapters generally focus on global alignment between visual and textual representations in the feature space, but fail to exploit semantically similar categories to refine fine-grained visual representations. Based on these observations, we propose a novel coarse-to-fine VLM fine-tuning approach for few-shot learning that leverages quantum computation, termed the Multi-Modal Quantum Adapter (MQAdapter). Specifically, MQAdapter first retrieves the Top-K category candidates most similar to the input image and uses them as semantic anchors. It then employs a cross-modal quantum learning mechanism to refine visual features under the guidance of these anchors. The core of this mechanism is the encoding of visual and textual features into quantum states. By leveraging quantum entanglement and superposition in a high-dimensional Hilbert space, MQAdapter effectively models higher-order cross-modal interactions, producing more discriminative representations than traditional Euclidean adapters. MQAdapter is parameter-efficient and can be integrated with various existing fine-tuning algorithms to achieve further performance gains. Evaluations on 15 datasets demonstrate the effectiveness of MQAdapter while requiring fewer trainable parameters.",
+      "authors": [
+        "Yumiao Zhao",
+        "Bo Jiang",
+        "Min Lu",
+        "Xiao Wang",
+        "Jin Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-14T06:46:24+00:00",
+      "link": "https://arxiv.org/pdf/2607.12418v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "proposes coarse-to-fine VLM fine-tuning for few-shot classification with fine-grained discrimination",
+      "llm_evidence_cn": "提出粗细粒度结合的VLM微调方法用于少样本分类的细粒度判别",
+      "llm_evidence": "提出粗细粒度结合的VLM微调方法用于少样本分类的细粒度判别",
+      "canonical_evidence": "提出粗细粒度结合的VLM微调方法用于少样本分类的细粒度判别",
+      "llm_tldr_en": "Addresses the limitation of VLMs in fine-grained few-shot classification by proposing a coarse-to-fine fine-tuning approach that exploits semantically similar categories to refine visual representations, improving Top-1 accuracy.",
+      "llm_tldr_cn": "该论文针对视觉语言模型在少样本分类中细粒度判别能力不足、Top-1准确率低的问题，提出了一种从粗到细的微调方法，利用语义相似的类别细化视觉表示，通过MQAdapter实现更精确的类别区分，从而在少样本分类任务中提升细粒度识别性能。",
+      "llm_tldr": "该论文针对视觉语言模型在少样本分类中细粒度判别能力不足、Top-1准确率低的问题，提出了一种从粗到细的微调方法，利用语义相似的类别细化视觉表示，通过MQAdapter实现更精确的类别区分，从而在少样本分类任务中提升细粒度识别性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
