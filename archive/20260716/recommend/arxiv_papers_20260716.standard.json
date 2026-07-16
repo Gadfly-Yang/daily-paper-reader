@@ -1,0 +1,127 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-16T20:42:49.980467+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2607.13234v1",
+      "source": "arxiv",
+      "title": "Continuously Evolving Deepfake Detection: An Architecture and Public-Benchmark Evaluation of a Dynamic Detection System",
+      "abstract": "Deepfake detectors that achieve near-perfect scores on academic benchmarks collapse on real-world content: recent in-the-wild evaluations report AUC drops of 45-50% for state-of-the-art open-source models. We argue this gap is structural: static detectors are trained once against a moving generative frontier. We present BitMind Forensics (BMF), trained through Bittensor SN34, an open adversarial competition that continually refreshes the training distribution. We evaluate one dated export comprising image, general-video, and human-video checkpoints across nineteen public datasets: the canonical face-swap suites (FaceForensics++, Celeb-DF v1/v2/++, DFDC, DFD, UADFV, DF40) and recent in-the-wild and AI-generated-media benchmarks (Sumsub, Deepfake-Eval-2024, WildRF, Community Forensics, AIGCDetectBench, GenImage, AI-GenBench, AIGIBench, RAID, GenVidBench, GenVideo-100K). BMF reaches 0.936 AUC on Sumsub's original images and 0.872 pooled AUC over its full four-condition manipulation battery (1.4M images), staying robust under perturbation (0.855 JPEG, 0.799 downscaled), while GPEN enhancement improves detection (0.996). On Deepfake-Eval-2024, it matches the best commercial detector on images (0.915 vs 0.90) and exceeds it on video (0.822 vs 0.79), far above the best open-source detectors (0.56 and 0.63). It reaches 0.991 AUC on a 21-generator AI-image panel and 0.918 on GenVidBench, and exceeds the FF++-trained frontier on DFDC (0.947 vs 0.843) and Celeb-DF v2 (0.9985 vs 0.956), both contamination-audited, with statistical parity on Celeb-DF++. In a temporal study, successive dated exports improve on held-out media from generators absent from the static baseline's training (image 0.842 to 0.902; video 0.864 to 0.936). Our evaluation harness is public, and at publication the production API serves the exact evaluated snapshot for independent verification.",
+      "authors": [
+        "Ken Jon Miyachi",
+        "Dylan Uys"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-14T19:53:09+00:00",
+      "link": "https://arxiv.org/pdf/2607.13234v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Deepfake detection system with continual training for evolving generative threats",
+      "llm_evidence_cn": "具有持续训练的深度伪造检测系统，应对不断演变的生成威胁",
+      "llm_evidence": "具有持续训练的深度伪造检测系统，应对不断演变的生成威胁",
+      "canonical_evidence": "具有持续训练的深度伪造检测系统，应对不断演变的生成威胁",
+      "llm_tldr_en": "Presents BitMind Forensics, a deepfake detection system trained via an open adversarial competition that continually updates the training distribution, and evaluates it on 19 public datasets, showing improved robustness over static detectors on in-the-wild content.",
+      "llm_tldr_cn": "现有深度伪造检测器在学术基准上表现良好，但在真实世界内容中性能急剧下降。本文提出BitMind Forensics，通过开放对抗竞赛Bittensor SN34持续刷新训练分布，构建动态检测系统。在一套包含19个公开数据集的评估中，该系统在真实场景和AI生成内容上的鲁棒性显著优于静态检测器，为解决深度伪造检测的结构性差距提供了有效方案。",
+      "llm_tldr": "现有深度伪造检测器在学术基准上表现良好，但在真实世界内容中性能急剧下降。本文提出BitMind Forensics，通过开放对抗竞赛Bittensor SN34持续刷新训练分布，构建动态检测系统。在一套包含19个公开数据集的评估中，该系统在真实场景和AI生成内容上的鲁棒性显著优于静态检测器，为解决深度伪造检测的结构性差距提供了有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.08201v1",
+      "source": "arxiv",
+      "title": "TMI: Text-to-Image Meets Image-to-Image for Complementary Data Synthesis to Boost Long-Tailed Instance Segmentation",
+      "abstract": "Large-vocabulary instance segmentation is constrained by long-tailed category distributions and fine-grained inter-class ambiguity. While data synthesis offers a promising alternative, current paradigms have complementary limitations: text-to-image (T2I) methods inherit noisy pseudo-labels and struggle on rare classes, whereas copy-paste methods compromise contextual realism. To address these issues, we propose a hybrid pipeline coupling T2I generation with context-aware image-to-image (I2I) editing. The T2I branch provides broad category and scene diversity, while a teacher-student scheme ensures label reliability by selectively retaining only prompt-specified categories. To strengthen supervision for rare classes, we introduce VRAIN (Verified Rare-class Augmentation via INstructed editing), a novel I2I editor. VRAIN inserts high-confidence instances at semantically appropriate locations within in-the-wild scenes, yielding semantically coherent and visually natural edits that reduce domain gaps and enable targeted augmentation. On the LVIS benchmark, our method surpasses existing baselines, improving overall AP by up to +4.0 points and rare-class AP by up to +9.5 points, while scaling effectively with backbone capacity. Our project page is available at https://seokhunchoi.github.io/TMI",
+      "authors": [
+        "Hyeonseop Song",
+        "Seokhun Choi",
+        "Hoseok Do"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-09T07:59:29+00:00",
+      "link": "https://arxiv.org/pdf/2607.08201v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Combines text-to-image and image-to-image generation to synthesize training data for rare classes, addressing long-tailed instance segmentation, analogous to few-shot learning.",
+      "llm_evidence_cn": "结合文本到图像和图像到图像生成，为稀有类别合成训练数据，解决长尾实例分割中的少样本难题。",
+      "llm_evidence": "结合文本到图像和图像到图像生成，为稀有类别合成训练数据，解决长尾实例分割中的少样本难题。",
+      "canonical_evidence": "结合文本到图像和图像到图像生成，为稀有类别合成训练数据，解决长尾实例分割中的少样本难题。",
+      "llm_tldr_en": "Proposes a hybrid pipeline that uses T2I for diversity and I2I editing for context, with teacher-student label refinement, to boost long-tailed instance segmentation, effectively a data synthesis approach for classes with few examples.",
+      "llm_tldr_cn": "针对长尾分布下稀有类别标注数据稀缺导致实例分割性能差的问题，提出T2I与上下文感知I2I结合的混合管道，通过教师-学生方案确保伪标签可靠性，为少样本类别合成多样化且场景逼真的训练图像，显著提升分割精度。",
+      "llm_tldr": "针对长尾分布下稀有类别标注数据稀缺导致实例分割性能差的问题，提出T2I与上下文感知I2I结合的混合管道，通过教师-学生方案确保伪标签可靠性，为少样本类别合成多样化且场景逼真的训练图像，显著提升分割精度。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.13437v1",
+      "source": "arxiv",
+      "title": "CLIP-Guided Label-Free Discriminative Region Scoring for Fine-Grained Classification",
+      "abstract": "Recent vision models such as CLIP and SAM enable training-free segmentation and semantic encoding for fine-grained classification. A common approach is to compare the representations of segmented image regions with the text prompt embeddings of the corresponding labels. However, it remains unclear how different local regions and CLIP-based scoring strategies affect the selection of discriminative evidence, especially when ground-truth labels are unavailable. In this paper, we propose a unified CLIP-guided label-free region scoring framework for fine-grained classification. The framework evaluates cosine similarity-based, margin-based, and entropy-based scoring strategies using both SAM-generated masks and random crops, and introduces two label-free pseudo-label variants based on global image embeddings and local region embeddings. We conduct experiments on five fine-grained classification datasets to systematically compare different region generation methods and scoring strategies. The results show that Soft Negative Margin scoring achieves the strongest performance, and pseudo-label scoring closely approximates true-label performance. Although SAM produces semantically meaningful masks, random-crop-based pseudo-label scoring consistently outperforms SAM-based scoring across all datasets, suggesting that random crops preserve surrounding information and provide more stable semantic context when pseudo-labels are noisy. In addition, SAM masks benefit from aggregating embeddings from all regions, whereas random crops tend to perform better with a smaller top-k subset. These findings provide new insights for fine-grained classification.",
+      "authors": [
+        "Yujie Zhu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-15T04:40:36+00:00",
+      "link": "https://arxiv.org/pdf/2607.13437v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Label-free fine-grained classification using CLIP and SAM, enabling classification without any labeled examples",
+      "llm_evidence_cn": "利用CLIP和SAM的无标签细粒度分类，无需标注样本即可实现分类",
+      "llm_evidence": "利用CLIP和SAM的无标签细粒度分类，无需标注样本即可实现分类",
+      "canonical_evidence": "利用CLIP和SAM的无标签细粒度分类，无需标注样本即可实现分类",
+      "llm_tldr_en": "The paper proposes a unified CLIP-guided framework for scoring discriminative regions in fine-grained classification without labels, benchmarking various strategies and showing competitive performance to supervised methods.",
+      "llm_tldr_cn": "针对细粒度分类中缺少标签的场景，本文提出了一个统一的CLIP引导的无标签判别区域评分框架，系统比较了基于余弦相似度、间隔和熵等多种评分策略，并探讨了SAM掩膜和随机裁剪对区域选择的影响，实验表明，该方法在多个细粒度基准上能够接近甚至超越有监督方法的性能，为少样本甚至零样本图像分类提供了新思路。",
+      "llm_tldr": "针对细粒度分类中缺少标签的场景，本文提出了一个统一的CLIP引导的无标签判别区域评分框架，系统比较了基于余弦相似度、间隔和熵等多种评分策略，并探讨了SAM掩膜和随机裁剪对区域选择的影响，实验表明，该方法在多个细粒度基准上能够接近甚至超越有监督方法的性能，为少样本甚至零样本图像分类提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
