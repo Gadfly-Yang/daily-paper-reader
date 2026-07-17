@@ -6,31 +6,34 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-16
-- 运行时间：2026-07-16 20:46:49 UTC
+- 最新运行日期：2026-07-17
+- 运行时间：2026-07-17 20:08:11 UTC
 - 运行状态：成功
-- 本次总论文数：3
+- 本次总论文数：4
 - 精读区：1
-- 速读区：2
+- 速读区：3
 
 ### 今日简报（AI）
-今日深度剖析了一篇满分论文，探索能持续对抗生成式伪造的动态检测系统；同时速览了用文生图辅助长尾分割、用CLIP定位细粒度判别区域的两项技术。  
-最值得关注的是：构建自适应升级的深度伪造防御架构，以及合成数据在破解样本不均衡难题上的新思路。  
-建议关注AI安全动态，产业应用可优先评估合成数据对冷门类别的提升效果。
-- 详情：[/202607/16/README](/202607/16/README)
+今日精读一篇满分论文《GlobalForge》探索鲁棒AI生成图像检测，并速读体育视频事件定位、自监督视觉学习范式与人脸对应点发现等方向进展。  
+最值得关注的是AI图像鉴伪面临跨模型泛化新基准与方法，以及自监督学习中预训练-微调与联合训练的选择之争。  
+建议从业者追踪识别技术演进的同时，务实评估多路线自监督策略对自身任务效率的提升。
+- 详情：[/202607/17/README](/202607/17/README)
 
 ### 精读区论文标签
-1. [Continuously Evolving Deepfake Detection: An Architecture and Public-Benchmark Evaluation of a Dynamic Detection System](/202607/16/2607.13234v1-continuously-evolving-deepfake-detection-an-architecture-and-public-benchmark-evaluation-of-a-dynamic-detection-system)  
+1. [GlobalForge: Towards Robust AI-Generated Image Detection](/202607/17/2607.14684v1-globalforge-towards-robust-ai-generated-image-detection)  
    标签：评分：10.0/10、query:deepfake-fsl
-   evidence：具有持续训练的深度伪造检测系统，应对不断演变的生成威胁
+   evidence：基于全局结构推理的鲁棒AI生成图像检测
 
 ### 速读区论文标签
-1. [TMI: Text-to-Image Meets Image-to-Image for Complementary Data Synthesis to Boost Long-Tailed Instance Segmentation](/202607/16/2607.08201v1-tmi-text-to-image-meets-image-to-image-for-complementary-data-synthesis-to-boost-long-tailed-instance-segmentation)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：结合文本到图像和图像到图像生成，为稀有类别合成训练数据，解决长尾实例分割中的少样本难题。
-2. [CLIP-Guided Label-Free Discriminative Region Scoring for Fine-Grained Classification](/202607/16/2607.13437v1-clip-guided-label-free-discriminative-region-scoring-for-fine-grained-classification)  
+1. [Temporal Feature Distillation for Label-Efficient Precise Event Spotting in Sports Videos](/202607/17/2607.10998v1-temporal-feature-distillation-for-label-efficient-precise-event-spotting-in-sports-videos)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：利用CLIP和SAM的无标签细粒度分类，无需标注样本即可实现分类
+   evidence：利用时序特征蒸馏的半监督学习，在有限标签下实现精确事件识别
+2. [Self-Supervised Visual Representation Learning: Pretrain-Finetuning or Joint Training?](/202607/17/2607.13192v1-self-supervised-visual-representation-learning-pretrain-finetuning-or-joint-training)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：比较自监督视觉表征学习范式，有助于有限标签学习
+3. [Emergent Region-Level Facial Correspondence in Frozen Vision Foundation Models](/202607/17/2607.14423v1-emergent-region-level-facial-correspondence-in-frozen-vision-foundation-models)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：冻结DINOv3特征提供无需训练的区域级面部对应，实现面部特征对齐
 
 
 <div class="dpr-home-promo-card">

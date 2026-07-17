@@ -1,0 +1,176 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-17T20:03:42.997614+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2607.14684v1",
+      "source": "arxiv",
+      "title": "GlobalForge: Towards Robust AI-Generated Image Detection",
+      "abstract": "AI-generated image (AIGI) detectors achieve strong accuracy on clean benchmarks, but their performance drops sharply after images are propagated through real-world channels. We trace this fragility to what these detectors actually learn: they overfit to local artifacts left by generators in small spatial neighborhoods, which are easily destroyed by common propagation degradations such as JPEG compression and blur. Instead, we shift the discriminative cue from fragile local artifacts to more robust global structure. Building on this, we propose GlobalForge, a framework with two complementary modules. The Local Information Bottleneck (LIB) suppresses local components to block shortcut learning, while the Global Structural Reasoning (GSR) module forces every token to gather evidence from distant regions. Both modules are trained jointly under a contrastive structural loss based on degradation that keeps the resulting features stable under degradation. To support fine-grained robustness evaluation, we further introduce RealDeg-Bench, covering 7 common degradation operators and multi-step compound chains. GlobalForge improves average BAcc on 8 in-the-wild benchmark groups by $\\mathbf{5.89\\%}$ over the previous state-of-the-art, and is clearly ahead of representative baselines on RealDeg-Bench under both single and compound degradations. Code is available at https://anonymous.4open.science/r/GlobalForge-BE0F/.",
+      "authors": [
+        "Manni Cui",
+        "Ruiqi Liu",
+        "Dianyuan Zou",
+        "Ziheng Qin",
+        "Jingrui Xu",
+        "ZiAn Wang",
+        "Jianglan Wei",
+        "Han Zhou",
+        "Yu Liu",
+        "Yan Wang",
+        "Shu Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-16T07:44:43+00:00",
+      "link": "https://arxiv.org/pdf/2607.14684v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "robust AI-generated image detection with global structural reasoning",
+      "llm_evidence_cn": "基于全局结构推理的鲁棒AI生成图像检测",
+      "llm_evidence": "基于全局结构推理的鲁棒AI生成图像检测",
+      "canonical_evidence": "基于全局结构推理的鲁棒AI生成图像检测",
+      "llm_tldr_en": "Proposes GlobalForge to detect AI-generated images robustly against real-world distortions by focusing on global structure instead of fragile local artifacts.",
+      "llm_tldr_cn": "针对AI生成图像检测器在现实传播中性能骤降的问题，提出GlobalForge框架，通过局部信息瓶颈抑制局部伪影学习，并利用全局结构推理引导模型关注鲁棒特征。实验表明该方法在JPEG压缩、模糊等退化下显著提升检测鲁棒性，为可信AI生成内容鉴别提供了新方案。",
+      "llm_tldr": "针对AI生成图像检测器在现实传播中性能骤降的问题，提出GlobalForge框架，通过局部信息瓶颈抑制局部伪影学习，并利用全局结构推理引导模型关注鲁棒特征。实验表明该方法在JPEG压缩、模糊等退化下显著提升检测鲁棒性，为可信AI生成内容鉴别提供了新方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.10998v1",
+      "source": "arxiv",
+      "title": "Temporal Feature Distillation for Label-Efficient Precise Event Spotting in Sports Videos",
+      "abstract": "Precise Event Spotting (PES) requires distinguishing visually similar yet semantically distinct adjacent frames, making it fundamentally different from image classification and coarse action recognition. Although self-distillation methods such as DINO have shown strong representation learning ability in images, we find that directly applying them to PES is ineffective: without supervised guidance, subtle but crucial motion cues are often suppressed as noise, leading to representations that are insensitive to precise event boundaries. To address this, we propose Temporal Feature Distillation, a semi-supervised objective that aligns temporally informative backbone features, rather than projection-head outputs, to preserve motion-sensitive and boundary-aware cues for frame-level localization. A supervised warm-up with a ramp-up schedule further stabilizes training by ensuring that meaningful event cues are learned before unlabeled distillation begins. We also introduce Transformer Gate Shift, a multi-scale gated shifting module that injects motion-aware temporal information into Vision Transformers. Experiments on four fine-grained sports benchmarks show consistent improvements over fully supervised and semi-supervised baselines. Under 10\\% supervision on FSPerf, our method improves mAP by 4.54 points over the strongest competing approach, and with only 80\\% labeled data, it matches or surpasses the fully supervised 100\\% baseline on two of the four datasets.",
+      "authors": [
+        "Hao Xu",
+        "Xinyu Wei",
+        "Sam Wells",
+        "Sunil Aryal"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-13T01:53:46+00:00",
+      "link": "https://arxiv.org/pdf/2607.10998v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Semi-supervised learning with temporal feature distillation for label-efficient fine-grained event spotting",
+      "llm_evidence_cn": "利用时序特征蒸馏的半监督学习，在有限标签下实现精确事件识别",
+      "llm_evidence": "利用时序特征蒸馏的半监督学习，在有限标签下实现精确事件识别",
+      "canonical_evidence": "利用时序特征蒸馏的半监督学习，在有限标签下实现精确事件识别",
+      "llm_tldr_en": "Proposes a semi-supervised temporal feature distillation method to preserve motion sensitivity for precise event spotting in sports videos with limited labels.",
+      "llm_tldr_cn": "为解决体育视频中精确事件识别需要区分差异细微的相邻帧、且标注有限的问题，本文提出了时序特征蒸馏方法，通过对齐具有时序信息的骨干特征而非投影头输出，在半监督目标下保持运动敏感性。实验表明该方法在少标签场景下有效提升了事件边界检测精度，为细粒度视频理解提供了高效标注学习途径。",
+      "llm_tldr": "为解决体育视频中精确事件识别需要区分差异细微的相邻帧、且标注有限的问题，本文提出了时序特征蒸馏方法，通过对齐具有时序信息的骨干特征而非投影头输出，在半监督目标下保持运动敏感性。实验表明该方法在少标签场景下有效提升了事件边界检测精度，为细粒度视频理解提供了高效标注学习途径。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.13192v1",
+      "source": "arxiv",
+      "title": "Self-Supervised Visual Representation Learning: Pretrain-Finetuning or Joint Training?",
+      "abstract": "Self-supervision is a powerful technique for learning visual representations from unlabeled data. Existing techniques primarily adopt a two-stage approach for self-supervised learning (SSL): a pretraining stage on unlabeled data followed by a finetuning stage on labeled data. While this pipeline has demonstrated extreme effectiveness, the interaction between self-supervised and supervised learning objectives remains insufficiently understood. In this work, we systematically investigate whether jointly optimizing the self-supervised and supervised objectives during training provides a better alternative. We compare two training paradigms: (1) the aforementioned pretraining followed by finetuning (PFT) and (2) joint training (JT), where self-supervised and supervised losses are optimized simultaneously in the same network. Across eight representative SSL methods and diverse computer vision tasks on natural, medical, crisis response, and remote sensing data, we evaluate performance under varying percentages of labeled data. Our results reveal that the relative effectiveness of PFT and JT depends strongly on the task at hand, the availability of labeled data, and the complexity of the domain. We find that JT consistently improves data and training efficiency while being robust in low-label settings, while PFT is more reliable in more specialized domains. We further analyze representation quality, robustness, and cross-domain generalization, providing new insights into how self-supervised and supervised objectives interact during optimization. We establish a comprehensive empirical benchmark for hybrid SSL-based semi-supervised learning and offer practical guidance for selecting appropriate training strategies across diverse vision applications.",
+      "authors": [
+        "Nusrat Munia",
+        "Tyler Ward",
+        "Nishat Nayla",
+        "Matthew A. Massey",
+        "Abdullah-Al-Zubaer Imran"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-14T18:45:04+00:00",
+      "link": "https://arxiv.org/pdf/2607.13192v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "compares self-supervised learning paradigms for visual representation that can aid learning with limited labels",
+      "llm_evidence_cn": "比较自监督视觉表征学习范式，有助于有限标签学习",
+      "llm_evidence": "比较自监督视觉表征学习范式，有助于有限标签学习",
+      "canonical_evidence": "比较自监督视觉表征学习范式，有助于有限标签学习",
+      "llm_tldr_en": "Investigates whether joint training of self-supervised and supervised objectives outperforms pretrain-finetune for visual representations, providing insights for data-efficient learning.",
+      "llm_tldr_cn": "针对自监督学习范式中预训练-微调与联合训练的交互理解不足问题，系统比较两种训练方式对视觉表征学习的影响。实验表明联合训练在某些条件下可提升性能，为少样本学习中的自监督预训练应用提供了指导。",
+      "llm_tldr": "针对自监督学习范式中预训练-微调与联合训练的交互理解不足问题，系统比较两种训练方式对视觉表征学习的影响。实验表明联合训练在某些条件下可提升性能，为少样本学习中的自监督预训练应用提供了指导。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.14423v1",
+      "source": "arxiv",
+      "title": "Emergent Region-Level Facial Correspondence in Frozen Vision Foundation Models",
+      "abstract": "Frozen self-supervised vision models can align parts of generic objects, but it remains unclear whether this correspondence extends to human faces, where global layout is shared while identity-specific appearance varies sharply. We test whether frozen DINOv3 features define a region-level facial coordinate system: a feature space in which eyes, brows, nose, mouth, skin, and hair remain distinguishable across people and across time without face-specific training. Using DINOv3 ViT-L/16 patch embeddings and FaRL only as a face-part labeling interface, we evaluate cross-identity nearest-neighbor matching and temporal label propagation on 200 CelebDF-v2 real videos. DINOv3 achieves 83.0% region-level semantic accuracy under unconstrained cross-identity matching, compared with a 23.0% area-weighted random baseline, and 95.5% temporal tracking accuracy without a learned temporal module. A no-FaRL control collapses to 0.9%, showing that FaRL supplies semantic initialization while DINOv3 supplies dense spatial correspondence. The strongest correspondence appears at an intermediate layer: block 18 gives a 4.93x same-region versus cross-region discrimination ratio, compared with 1.48x at the final block. Against CLIP ViT-L/14, DINOv3 shows only a small aggregate advantage but a +16.8 pp gain on anatomical regions, indicating that image-level contrastive supervision captures coarse facial layout but not fine-grained anatomical identity. These results establish frozen DINOv3 as a strong zero-shot representation for region-level facial correspondence and identify intermediate self-supervised features as the most useful layer for dense face analysis.",
+      "authors": [
+        "Izaldein Al-Zyoud",
+        "Abdulmotaleb El Saddik"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "eess.IV"
+      ],
+      "published": "2026-07-15T23:23:28+00:00",
+      "link": "https://arxiv.org/pdf/2607.14423v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "frozen DINOv3 features provide region-level facial correspondence without training, enabling feature alignment for faces",
+      "llm_evidence_cn": "冻结DINOv3特征提供无需训练的区域级面部对应，实现面部特征对齐",
+      "llm_evidence": "冻结DINOv3特征提供无需训练的区域级面部对应，实现面部特征对齐",
+      "canonical_evidence": "冻结DINOv3特征提供无需训练的区域级面部对应，实现面部特征对齐",
+      "llm_tldr_en": "We test whether frozen DINOv3 features define a region-level facial coordinate system, achieving 83.0% semantic accuracy on real videos from CelebDF-v2, showing that self-supervised features can align facial parts without face-specific training.",
+      "llm_tldr_cn": "本文探究冻结的自监督视觉模型能否在无面部特定训练下形成区域级面部坐标。利用DINOv3 ViT-L/16补丁嵌入和FaRL标注接口，在200个CelebDF-v2真实视频上评估跨身份最近邻匹配和时间标签传播。实验显示DINOv3在无约束跨身份设置下达到83.0%区域语义准确率，表明冻结基础模型可区分眼睛、眉毛等面部区域，为少样本面部特征对齐提供可行路径。",
+      "llm_tldr": "本文探究冻结的自监督视觉模型能否在无面部特定训练下形成区域级面部坐标。利用DINOv3 ViT-L/16补丁嵌入和FaRL标注接口，在200个CelebDF-v2真实视频上评估跨身份最近邻匹配和时间标签传播。实验显示DINOv3在无约束跨身份设置下达到83.0%区域语义准确率，表明冻结基础模型可区分眼睛、眉毛等面部区域，为少样本面部特征对齐提供可行路径。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot deepfake detection using feature alignment",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
