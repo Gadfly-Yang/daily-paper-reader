@@ -1,0 +1,69 @@
+{
+  "label": "2026-07-18",
+  "date": "2026-07-18",
+  "generated_at": "2026-07-18T21:05:32",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202607/18/2607.09086v1-subtoken-vision-transformer-for-fine-grained-recognition",
+      "section": "deep",
+      "title_en": "Subtoken Vision Transformer for Fine-grained Recognition",
+      "authors": "Jie Zhu, Ivy Zhang, Minchul Kim, Xiaoming Liu",
+      "date": "2026-07-10",
+      "pdf": "https://arxiv.org/pdf/2607.09086v1",
+      "score": "9.0",
+      "evidence": "子令牌ViT用于细粒度视觉识别",
+      "tldr": "细粒度视觉识别中，标准ViT将固定图像块压缩为单个标记，难以捕捉决定性局部细节。SubViT提出在判别性块上使用多个子标记，保留全局上下文，并以两阶段训练策略实现轻量级路由。在广义类别发现任务上，SubViT将DINOv2的平均新类别准确率从81.3%提升至84.7%，延迟仅增0.50ms，FLOPs增加3.4%，相比Retina Patch延迟降低73.8%，展现出高效细粒度识别能力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "We present Subtoken Vision Transformer (SubViT), a selective image tokenization method for fine-grained visual recognition. Standard Vision Transformers compress each fixed-size patch into a single token, although fine-grained distinctions often depend on localized variations within only a few patches. SubViT addresses this mismatch by representing discriminative patches with multiple subtokens while retaining the original token sequence for global context, thereby allocating additional capacity where it is most needed. Since attention heads encode complementary semantics and extracting attention maps at inference requires an extra backbone forward, we adopt a two-stage training strategy. Stage 1 fine-tunes the ViT using subdivision regions sampled from random attention heads, exposing the model to diverse subdivision patterns. Stage 2 identifies informative attention maps through feature-degradation distances and distills them into a lightweight single-map router, which directly predicts deterministic token-importance scores without a separate attention forward. We evaluate SubViT on Generalized Category Discovery (GCD), a challenging task requiring both fine-grained discrimination and generalization to unlabeled novel categories. Across CUB, FGVC-Aircraft, and Stanford Cars, SubViT improves the average novel-category accuracy of DINOv2 from $81.3\\%$ to $84.7\\%$, with only $0.50$ ms additional latency and $3.4\\%$ more FLOPs, while reducing latency by $73.8\\%$ relative to Retina Patch. Results on CIFAR-10 and ImageNet-100 demonstrate its broader applicability.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/18/2607.10777v1-red-sphere-hyperspherical-residual-edge-debiasing-for-cross-population-fundus-disease-domain-generalization",
+      "section": "deep",
+      "title_en": "RED-Sphere: Hyperspherical Residual Edge Debiasing for Cross-Population Fundus Disease Domain Generalization",
+      "authors": "Yan Lin, Ziheng Wang, Shuang Chen, Amir Atapour-Abarghouei, Stephen McGough",
+      "date": "2026-07-12",
+      "pdf": "https://arxiv.org/pdf/2607.10777v1",
+      "score": "8.0",
+      "evidence": "提出一种用于图像分类的域泛化方法，直接匹配基于卷积神经网络的图像分类需求。",
+      "tldr": "医学图像分类器通常在单一源人群上训练，但部署时需面对外观、采集方式和疾病流行率不同的人群，此时群体相关低层线索与病灶特征共享边缘结构，现有方法难以解耦。RED-Sphere框架利用边缘和特征能量先验估计捷径敏感噪声，通过残差软门控抑制主导响应，并以反事实启发一致性损失和球面原型增强角度语义证据。在严格的跨人群眼底病分类实验中，AMD和DR的宏F1平均提升1.28和2.98点，AUC和PR-AUC也提高。该工作为医疗影像稳健分类提供了一种不依赖人群标注的即插即用方案。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Medical image classifiers are often trained within one source population, yet clinical deployment requires robustness to patients whose appearance, acquisition style, and disease prevalence differ from the source cohort. Existing fairness and robustness methods often require group supervision or treat appearance variation as an undifferentiated nuisance, which is insufficient when population-correlated low-level cues and lesion evidence share edge and texture structure. We study a strict source-only cross-population setting, where external populations are unseen during optimization, validation, scheduling, hyperparameter and model selection. We propose RED-Sphere, a plug-and-play robustness framework for image classification under unseen population shifts. It estimates shortcut-sensitive nuisance responses with an edge and feature energy prior, attenuates dominant responses through residual soft gating, regularizes masked nuisance views with counterfactual-inspired consistency and separation losses, and predicts labels with normalized spherical prototypes. It favours angular semantic evidence over source-correlated activation magnitude while preserving lesion structure. Although demonstrated on 2D Scanning Laser Ophthalmoscopy (SLO) fundus classification for Age-Related Macular Degeneration (AMD) and Diabetic Retinopathy (DR), RED-Sphere is not tied to retinal anatomy: the same principle can be adapted with modality-specific nuisance priors wherever appearance shortcuts and semantic evidence are entangled. Under a strict White-only Harvard-FairVision protocol, RED-Sphere improves held-out macro-F1 across all 20 task and backbone comparisons, with average gains of 1.28 and 2.98 F1 points on AMD and DR. Gains in AUC and PR-AUC, visual diagnostics, ablations, and sensitivity analyses further support stronger external semantic alignment and more stable angular disease geometry.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/18/2607.15246v1-armor-agentic-orchestration-of-a-multi-domain-primitive-set-for-transferable-attacks-on-deepfake-detectors",
+      "section": "quick",
+      "title_en": "ARMOR++: Agentic Orchestration of a Multi-Domain Primitive Set for Transferable Attacks on Deepfake Detectors",
+      "authors": "Christos Korgialas, Gabriel Lee Jun Rong, Dion Jia Xu Ho, Pai Chet Ng, Xiaoxiao Miao, Konstantinos N. Plataniotis",
+      "date": "2026-07-16",
+      "pdf": "https://arxiv.org/pdf/2607.15246v1",
+      "score": "7.0",
+      "evidence": "针对深度伪造检测器的可迁移攻击",
+      "tldr": "深度伪造检测器在黑盒迁移下可靠性下降，现有攻击缺乏语义且跨架构迁移不佳。ARMOR++框架利用Qwen2.5-VL VLM提供语义先验，并由Qwen3 LLM协调五种基元的自适应选择与熵正则化混合，实现高可迁移攻击。在AADD-2025基准上，不同质量图像下ARMOR++均优于基线，盲目标ASR大幅提升，面对防御仍具优势。这揭示了当前检测器的残留可靠性差距，展示了智能体编排在发现漏洞中的有效性。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "The reliability of deepfake detectors frequently degrades under black-box adversarial transfer, as these models often rely on fragile, architecture-dependent forensic cues. Existing transfer attacks often lack semantic awareness and struggle to maintain effectiveness under strict no-query constraints, particularly when perturbations are transferred from convolutional surrogates to transformer-based targets. To address these limitations, this paper introduces ARMOR++, a robust multi-agent framework designed for high-transferability deepfake evasion. The framework leverages the Qwen2.5-VL Vision-Language Model (VLM) to supply spatial semantic priors, while the Qwen3 Large Language Model (LLM) orchestrates primitive selection, adaptive hyperparameter reparameterization, and entropy-regularized perturbation mixing. By integrating five complementary primitives, spanning dense optimization, saliency-based methods, spatial transformations, frequency-domain perturbations, and block-structured modifications, ARMOR++ effectively targets heterogeneous inductive biases. Rigorous evaluation on the AADD-2025 benchmark demonstrates that ARMOR++ significantly outperforms existing agentic and non-agentic baselines across both low- and high-quality image regimes. Statistical analysis confirms a substantial gain in blind-target Attack Success Rate (ASR) over the state-of-the-art agentic baseline, with further performance advantages evidenced against non-agentic benchmarks and under robust defensive configurations. These findings highlight a significant residual reliability gap in current deepfake detector deployments and demonstrate the efficacy of agentic orchestration in identifying latent vulnerabilities.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/18/2607.12094v1-sparse-autoencoders-for-interpretable-out-of-distribution-detection",
+      "section": "quick",
+      "title_en": "Sparse Autoencoders for Interpretable Out-of-Distribution Detection",
+      "authors": "Ayush Karmacharya, Luke Luschwitz, Lucia Romero, Yanan Niu, Joseph Campbell",
+      "date": "2026-07-13",
+      "pdf": "https://arxiv.org/pdf/2607.12094v1",
+      "score": "6.0",
+      "evidence": "使用稀疏自编码器进行分布外检测，可应用于将合成图像作为分布外样本检测",
+      "tldr": "分布外（OOD）检测对模型安全部署至关重要，但现有方法多关注输出层，忽视中间层丰富表征。本文提出利用稀疏自编码器从中间层激活学习可解释特征，发现分布内外样本激活特征集差异显著，据此设计基于余弦相似度的OOD评分。该方法在标准基准上取得最优性能，并能解释分布偏移如何影响网络表征，增强了模型的可信度与可解释性。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Reliable detection of out-of-distribution (OOD) samples is crucial for the safe deployment of machine learning models. Neural networks often produce overconfident predictions for inputs that deviate from their training data, leading to significant degradation in performance. While many OOD detection methods focus on the final output layer, they neglect the rich hierarchical information present in intermediate network layers. This paper introduces a novel approach that leverages sparse autoencoders (SAEs) to learn interpretable features from these intermediate activations. We find that in-distribution (ID) and OOD data activate distinct sets of these sparse features. We propose a new OOD score derived from the cosine similarity between the sparse feature activations of a test sample and the mean activations of ID classes. Our post-hoc detection method not only achieves state-of-the-art performance on standard OOD detection benchmarks, but yields interpretable insights into how distribution shift affects learned representations.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

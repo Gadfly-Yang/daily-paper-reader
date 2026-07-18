@@ -1,0 +1,173 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-18T21:00:32.047191+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2607.09086v1",
+      "source": "arxiv",
+      "title": "Subtoken Vision Transformer for Fine-grained Recognition",
+      "abstract": "We present Subtoken Vision Transformer (SubViT), a selective image tokenization method for fine-grained visual recognition. Standard Vision Transformers compress each fixed-size patch into a single token, although fine-grained distinctions often depend on localized variations within only a few patches. SubViT addresses this mismatch by representing discriminative patches with multiple subtokens while retaining the original token sequence for global context, thereby allocating additional capacity where it is most needed. Since attention heads encode complementary semantics and extracting attention maps at inference requires an extra backbone forward, we adopt a two-stage training strategy. Stage 1 fine-tunes the ViT using subdivision regions sampled from random attention heads, exposing the model to diverse subdivision patterns. Stage 2 identifies informative attention maps through feature-degradation distances and distills them into a lightweight single-map router, which directly predicts deterministic token-importance scores without a separate attention forward. We evaluate SubViT on Generalized Category Discovery (GCD), a challenging task requiring both fine-grained discrimination and generalization to unlabeled novel categories. Across CUB, FGVC-Aircraft, and Stanford Cars, SubViT improves the average novel-category accuracy of DINOv2 from $81.3\\%$ to $84.7\\%$, with only $0.50$ ms additional latency and $3.4\\%$ more FLOPs, while reducing latency by $73.8\\%$ relative to Retina Patch. Results on CIFAR-10 and ImageNet-100 demonstrate its broader applicability.",
+      "authors": [
+        "Jie Zhu",
+        "Ivy Zhang",
+        "Minchul Kim",
+        "Xiaoming Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-10T04:07:23+00:00",
+      "link": "https://arxiv.org/pdf/2607.09086v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "fine-grained visual recognition with subtoken ViT",
+      "llm_evidence_cn": "子令牌ViT用于细粒度视觉识别",
+      "llm_evidence": "子令牌ViT用于细粒度视觉识别",
+      "canonical_evidence": "子令牌ViT用于细粒度视觉识别",
+      "llm_tldr_en": "Proposes Subtoken ViT that assigns multiple subtokens to discriminative patches, enhancing fine-grained recognition by allocating extra capacity to critical regions.",
+      "llm_tldr_cn": "提出子令牌ViT，对判别性图像块分配多个子令牌以增强细粒度识别能力，通过在关键区域增加表示容量来解决ViT固定分块导致的细节损失问题。",
+      "llm_tldr": "提出子令牌ViT，对判别性图像块分配多个子令牌以增强细粒度识别能力，通过在关键区域增加表示容量来解决ViT固定分块导致的细节损失问题。",
+      "llm_tags": [
+        "query:deepfake-fsl:composite"
+      ],
+      "matched_query_tag": "query:deepfake-fsl:composite",
+      "matched_query_text": "Papers central to 深度伪造检测、AI生成图像检测、图像分类、少样本学习、特征对齐、细粒度分类相关论文, especially work that connects or combines: detection of deepfake images and videos using machine learning models; detecting images created by generative AI models such as GANs and diffusion models; classifying images into categories using convolutional neural networks; training models with only a small number of labeled examples per class; detecting manipulated face images in multimedia forensics; distinguishing computer-generated images from real photographs; identifying AI generated or synthetic images with limited training data; few shot learning approaches for face forgery detection and image classification; few shot deepfake detection using feature alignment; cross domain generalization for AI generated image detection.",
+      "matched_requirement_id": "req-composite-deepfake-fsl",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.10777v1",
+      "source": "arxiv",
+      "title": "RED-Sphere: Hyperspherical Residual Edge Debiasing for Cross-Population Fundus Disease Domain Generalization",
+      "abstract": "Medical image classifiers are often trained within one source population, yet clinical deployment requires robustness to patients whose appearance, acquisition style, and disease prevalence differ from the source cohort. Existing fairness and robustness methods often require group supervision or treat appearance variation as an undifferentiated nuisance, which is insufficient when population-correlated low-level cues and lesion evidence share edge and texture structure. We study a strict source-only cross-population setting, where external populations are unseen during optimization, validation, scheduling, hyperparameter and model selection. We propose RED-Sphere, a plug-and-play robustness framework for image classification under unseen population shifts. It estimates shortcut-sensitive nuisance responses with an edge and feature energy prior, attenuates dominant responses through residual soft gating, regularizes masked nuisance views with counterfactual-inspired consistency and separation losses, and predicts labels with normalized spherical prototypes. It favours angular semantic evidence over source-correlated activation magnitude while preserving lesion structure. Although demonstrated on 2D Scanning Laser Ophthalmoscopy (SLO) fundus classification for Age-Related Macular Degeneration (AMD) and Diabetic Retinopathy (DR), RED-Sphere is not tied to retinal anatomy: the same principle can be adapted with modality-specific nuisance priors wherever appearance shortcuts and semantic evidence are entangled. Under a strict White-only Harvard-FairVision protocol, RED-Sphere improves held-out macro-F1 across all 20 task and backbone comparisons, with average gains of 1.28 and 2.98 F1 points on AMD and DR. Gains in AUC and PR-AUC, visual diagnostics, ablations, and sensitivity analyses further support stronger external semantic alignment and more stable angular disease geometry.",
+      "authors": [
+        "Yan Lin",
+        "Ziheng Wang",
+        "Shuang Chen",
+        "Amir Atapour-Abarghouei",
+        "Stephen McGough"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-12T14:12:14+00:00",
+      "link": "https://arxiv.org/pdf/2607.10777v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Proposes a domain generalization method for image classification, directly matching convolutional neural network based image categorization.",
+      "llm_evidence_cn": "提出一种用于图像分类的域泛化方法，直接匹配基于卷积神经网络的图像分类需求。",
+      "llm_evidence": "提出一种用于图像分类的域泛化方法，直接匹配基于卷积神经网络的图像分类需求。",
+      "canonical_evidence": "提出一种用于图像分类的域泛化方法，直接匹配基于卷积神经网络的图像分类需求。",
+      "llm_tldr_en": "Addresses domain shift in medical image classification; introduces RED-Sphere, a hyperspherical residual edge debiasing framework; achieves robust cross-population performance; contribution applicable to other classification tasks.",
+      "llm_tldr_cn": "针对医学图像分类中的域偏移问题，提出RED-Sphere即超球面残差边缘去偏框架，通过学习不变特征表示，在跨人群眼底疾病分类中取得鲁棒性能。该方法作为可插拔模块，可泛化至其他图像分类任务，提升模型在分布外数据的准确性。",
+      "llm_tldr": "针对医学图像分类中的域偏移问题，提出RED-Sphere即超球面残差边缘去偏框架，通过学习不变特征表示，在跨人群眼底疾病分类中取得鲁棒性能。该方法作为可插拔模块，可泛化至其他图像分类任务，提升模型在分布外数据的准确性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.15246v1",
+      "source": "arxiv",
+      "title": "ARMOR++: Agentic Orchestration of a Multi-Domain Primitive Set for Transferable Attacks on Deepfake Detectors",
+      "abstract": "The reliability of deepfake detectors frequently degrades under black-box adversarial transfer, as these models often rely on fragile, architecture-dependent forensic cues. Existing transfer attacks often lack semantic awareness and struggle to maintain effectiveness under strict no-query constraints, particularly when perturbations are transferred from convolutional surrogates to transformer-based targets. To address these limitations, this paper introduces ARMOR++, a robust multi-agent framework designed for high-transferability deepfake evasion. The framework leverages the Qwen2.5-VL Vision-Language Model (VLM) to supply spatial semantic priors, while the Qwen3 Large Language Model (LLM) orchestrates primitive selection, adaptive hyperparameter reparameterization, and entropy-regularized perturbation mixing. By integrating five complementary primitives, spanning dense optimization, saliency-based methods, spatial transformations, frequency-domain perturbations, and block-structured modifications, ARMOR++ effectively targets heterogeneous inductive biases. Rigorous evaluation on the AADD-2025 benchmark demonstrates that ARMOR++ significantly outperforms existing agentic and non-agentic baselines across both low- and high-quality image regimes. Statistical analysis confirms a substantial gain in blind-target Attack Success Rate (ASR) over the state-of-the-art agentic baseline, with further performance advantages evidenced against non-agentic benchmarks and under robust defensive configurations. These findings highlight a significant residual reliability gap in current deepfake detector deployments and demonstrate the efficacy of agentic orchestration in identifying latent vulnerabilities.",
+      "authors": [
+        "Christos Korgialas",
+        "Gabriel Lee Jun Rong",
+        "Dion Jia Xu Ho",
+        "Pai Chet Ng",
+        "Xiaoxiao Miao",
+        "Konstantinos N. Plataniotis"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-16T17:45:13+00:00",
+      "link": "https://arxiv.org/pdf/2607.15246v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "deepfake detector evasion with transferable attacks",
+      "llm_evidence_cn": "针对深度伪造检测器的可迁移攻击",
+      "llm_evidence": "针对深度伪造检测器的可迁移攻击",
+      "canonical_evidence": "针对深度伪造检测器的可迁移攻击",
+      "llm_tldr_en": "Proposes ARMOR++, a multi-agent framework using VLMs and LLMs to generate transferable adversarial perturbations that evade deepfake detectors across architectures.",
+      "llm_tldr_cn": "提出ARMOR++多智能体框架，利用视觉语言模型和大语言模型生成可迁移的对抗扰动，使深度伪造检测器在不同架构下均出现性能下降，揭示了检测模型的脆弱性。",
+      "llm_tldr": "提出ARMOR++多智能体框架，利用视觉语言模型和大语言模型生成可迁移的对抗扰动，使深度伪造检测器在不同架构下均出现性能下降，揭示了检测模型的脆弱性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.12094v1",
+      "source": "arxiv",
+      "title": "Sparse Autoencoders for Interpretable Out-of-Distribution Detection",
+      "abstract": "Reliable detection of out-of-distribution (OOD) samples is crucial for the safe deployment of machine learning models. Neural networks often produce overconfident predictions for inputs that deviate from their training data, leading to significant degradation in performance. While many OOD detection methods focus on the final output layer, they neglect the rich hierarchical information present in intermediate network layers. This paper introduces a novel approach that leverages sparse autoencoders (SAEs) to learn interpretable features from these intermediate activations. We find that in-distribution (ID) and OOD data activate distinct sets of these sparse features. We propose a new OOD score derived from the cosine similarity between the sparse feature activations of a test sample and the mean activations of ID classes. Our post-hoc detection method not only achieves state-of-the-art performance on standard OOD detection benchmarks, but yields interpretable insights into how distribution shift affects learned representations.",
+      "authors": [
+        "Ayush Karmacharya",
+        "Luke Luschwitz",
+        "Lucia Romero",
+        "Yanan Niu",
+        "Joseph Campbell"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-13T19:13:40+00:00",
+      "link": "https://arxiv.org/pdf/2607.12094v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "OOD detection using sparse autoencoders, applicable to detecting synthetic images as out-of-distribution",
+      "llm_evidence_cn": "使用稀疏自编码器进行分布外检测，可应用于将合成图像作为分布外样本检测",
+      "llm_evidence": "使用稀疏自编码器进行分布外检测，可应用于将合成图像作为分布外样本检测",
+      "canonical_evidence": "使用稀疏自编码器进行分布外检测，可应用于将合成图像作为分布外样本检测",
+      "llm_tldr_en": "Proposes using sparse autoencoders on intermediate activations to detect OOD samples via a cosine similarity score, showing distinct sparse feature activation patterns for in-distribution vs OOD data.",
+      "llm_tldr_cn": "针对神经网络对分布外（OOD）样本产生过度自信预测的问题，提出利用稀疏自编码器从中间层激活学习可解释特征，发现分布内和分布外数据激活不同稀疏特征集，并基于余弦相似度设计新OOD评分，在多个基准上取得优越的检测性能。该方法为可靠OOD检测提供了新思路。",
+      "llm_tldr": "针对神经网络对分布外（OOD）样本产生过度自信预测的问题，提出利用稀疏自编码器从中间层激活学习可解释特征，发现分布内和分布外数据激活不同稀疏特征集，并基于余弦相似度设计新OOD评分，在多个基准上取得优越的检测性能。该方法为可靠OOD检测提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "identifying AI generated or synthetic images with limited training data",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
