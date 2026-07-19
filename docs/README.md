@@ -6,34 +6,26 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-18
-- 运行时间：2026-07-18 21:05:11 UTC
+- 最新运行日期：2026-07-19
+- 运行时间：2026-07-19 21:02:45 UTC
 - 运行状态：成功
-- 本次总论文数：4
-- 精读区：2
-- 速读区：2
+- 本次总论文数：1
+- 精读区：1
+- 速读区：0
 
 ### 今日简报（AI）
-今日聚焦视觉精准与公平：精读细粒度识别新架构 SubToken ViT 和跨人群眼底病泛化方法 RED-Sphere。
-最值得看的是子令牌拆解如何提升细微差异判别力，以及超球面残差去偏缓解不同人群的眼底图像漂移。
-建议读者深入子令牌设计思路，并思考去偏策略在更多医疗影像公平性中的迁移潜力。
-- 详情：[/202607/18/README](/202607/18/README)
+用信息论视角拆解生成模型水印的取证问题，一篇 8.0 分的论文把“该藏多深、能查多准”说清楚了。  
+核心结论：水印的鲁棒性与隐蔽性存在理论上的最优权衡，并给出了具体的信息量下界与检测上限。  
+想看透模型溯源安全，不妨从这篇的信息论推导入手，建立一套量化的风险思维。
+- 详情：[/202607/19/README](/202607/19/README)
 
 ### 精读区论文标签
-1. [Subtoken Vision Transformer for Fine-grained Recognition](/202607/18/2607.09086v1-subtoken-vision-transformer-for-fine-grained-recognition)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：子令牌ViT用于细粒度视觉识别
-2. [RED-Sphere: Hyperspherical Residual Edge Debiasing for Cross-Population Fundus Disease Domain Generalization](/202607/18/2607.10777v1-red-sphere-hyperspherical-residual-edge-debiasing-for-cross-population-fundus-disease-domain-generalization)  
+1. [Watermark Forensics for Generative Models: An Information-Theoretic Perspective](/202607/19/2607.13003v1-watermark-forensics-for-generative-models-an-information-theoretic-perspective)  
    标签：评分：8.0/10、query:deepfake-fsl
-   evidence：提出一种用于图像分类的域泛化方法，直接匹配基于卷积神经网络的图像分类需求。
+   evidence：水印取证用于检测GAN和扩散模型等生成的AI内容。
 
 ### 速读区论文标签
-1. [ARMOR++: Agentic Orchestration of a Multi-Domain Primitive Set for Transferable Attacks on Deepfake Detectors](/202607/18/2607.15246v1-armor-agentic-orchestration-of-a-multi-domain-primitive-set-for-transferable-attacks-on-deepfake-detectors)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：针对深度伪造检测器的可迁移攻击
-2. [Sparse Autoencoders for Interpretable Out-of-Distribution Detection](/202607/18/2607.12094v1-sparse-autoencoders-for-interpretable-out-of-distribution-detection)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：使用稀疏自编码器进行分布外检测，可应用于将合成图像作为分布外样本检测
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">

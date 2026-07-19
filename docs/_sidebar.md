@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-07-19 <!--dpr-date:20260719-->
+    * 精读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/19/2607.13003v1-watermark-forensics-for-generative-models-an-information-theoretic-perspective" data-sidebar-item="{&quot;title&quot;: &quot;Watermark Forensics for Generative Models: An Information-Theoretic Perspective&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.13003v1-watermark-forensics-for-generative-models-an-information-theoretic-perspective&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;水印取证用于检测GAN和扩散模型等生成的AI内容。&quot;}">Watermark Forensics for Generative Models: An Information-Theoretic Perspective</a>
   * 2026-07-18 <!--dpr-date:20260718-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/18/2607.09086v1-subtoken-vision-transformer-for-fine-grained-recognition" data-sidebar-item="{&quot;title&quot;: &quot;Subtoken Vision Transformer for Fine-grained Recognition&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.09086v1-subtoken-vision-transformer-for-fine-grained-recognition&quot;, &quot;score&quot;: &quot;9.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;子令牌ViT用于细粒度视觉识别&quot;}">Subtoken Vision Transformer for Fine-grained Recognition</a>
