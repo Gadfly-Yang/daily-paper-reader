@@ -1,0 +1,39 @@
+{
+  "label": "2026-07-20",
+  "date": "2026-07-20",
+  "generated_at": "2026-07-20T20:17:30",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202607/20/2607.15321v1-rethinking-the-readout-unlocking-video-backbones-for-ai-generated-video-detection",
+      "section": "deep",
+      "title_en": "Rethinking the Readout: Unlocking Video Backbones for AI-Generated Video Detection",
+      "authors": "Manni Cui, Ziheng Qin, ZiAn Wang, Ruiqi Liu, Dianyuan Zou, Jianglan Wei, Han Zhou, Yu Liu, Jingrui Xu, Wenhao Wang, Zhenyu Zhang",
+      "date": "2026-07-16",
+      "pdf": "https://arxiv.org/pdf/2607.15321v1",
+      "score": "9.0",
+      "evidence": "利用视频骨干网络捕获帧间不一致性进行AI生成视频检测",
+      "tldr": "AI生成视频检测依赖帧间不一致时序伪影，但视频骨干的标准全局读取过度时空聚合，压缩了关键局部动态。本文提出Velocity Gated Patch Velocity Profiling (V-PVP)，一种轻量级读取层，用双流处理块速度场替换聚合层。在AIGVDBench上，冻结骨干时达到95.28 AUC，一致提升多种骨干性能。该即插即用模块重新激活视频骨干时序潜力，恢复其在AIGV检测的优势。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "AI-generated videos (AIGVs) typically contain subtle temporal artifacts that arise from inter-frame inconsistencies rather than within individual frames. A detector that captures such artifacts should therefore benefit from video pretrained backbones over image only ones. In practice, however, video backbones with standard global readouts often fail to outperform strong image pretrained probes on AIGV benchmarks. We attribute this gap to excessive spatiotemporal aggregation in the readout. Video pretrained backbones tend to compress each frame into a single global descriptor. This compression suppresses local patch level temporal dynamics and discards inter patch relations, which are precisely the cues that AIGV detection most reliably depends on. Based on this, we propose Velocity Gated Patch Velocity Profiling (V-PVP), a lightweight readout that replaces only the aggregation layer with two parallel streams over the patch velocity field, adding only about $0.5$M trainable parameters. V-PVP serves as a general plug-and-play module that consistently improves performance across diverse video backbones under both end-to-end fine-tuning and linear probing settings. Our method reaches \\textbf{95.28} AUC on AIGVDBench while keeping the backbone fully frozen. The results show that simply replacing the aggregation layer reactivates the temporal potential of frozen video backbones, restoring their advantage on AIGV detection. Code is available at https://anonymous.4open.science/r/PVP-81B3/.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/20/2607.15974v1-embodied-active-learning-under-limited-annotation-and-navigation-budget-for-object-detection",
+      "section": "quick",
+      "title_en": "Embodied Active Learning under Limited Annotation and Navigation Budget for Object Detection",
+      "authors": "Hadrien Crassous, Mohamed Yassine Kabouri, Minahil Raza, Joni Pajarinen, Riad Akrour",
+      "date": "2026-07-17",
+      "pdf": "https://arxiv.org/pdf/2607.15974v1",
+      "score": "6.0",
+      "evidence": "有限标注预算的主动学习实现少样本检测",
+      "tldr": "在导航和标注预算双重受限下，让物体检测器适配新环境极具挑战。本文提出一种具身主动学习框架，利用空间一致性来发现标签矛盾的图像，从而指导机器人规划采集路径和挑选最具价值的样本进行标注，并针对检测器的弱点重新训练。在AI2-THOR仿真和真实Spot机器人上，该方法在相同成本下取得了最优检测精度。这为预算紧张的机器人感知系统自适应提供了新思路。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "This paper studies how to adapt a computer vision object detector to an unknown environment under both a robot navigation time and annotation budget constraint. Our approach selects informative robot trajectories and image samples to retrain the detector, explicitly targeting its failure cases. Formally, the approach is an embodied variant of batch active learning, where at each round an agent has a limited navigation budget to collect candidate samples and a limited annotation budget for the most relevant images. We leverage spatial consistency to identify images with inconsistent labels, which are likely to provide the greatest improvement to the vision model. We evaluate the approach using different active learning objectives on large scenes from the AI2-THOR simulator and on a real-world setup using a Boston Dynamics Spot robot with the real-time object detector YOLOv5. Through comparison against several baselines, our experimental results show that spatial inconsistency helps guide the agent and select relevant images without external supervision, achieving the highest detection accuracy at the end of the adaptation process under the same budget. The open-source project can be found at https://mkabouri.github.io/embodied-active-learning-od",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

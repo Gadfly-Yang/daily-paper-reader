@@ -1,0 +1,102 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-20T20:12:45.877959+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2607.15321v1",
+      "source": "arxiv",
+      "title": "Rethinking the Readout: Unlocking Video Backbones for AI-Generated Video Detection",
+      "abstract": "AI-generated videos (AIGVs) typically contain subtle temporal artifacts that arise from inter-frame inconsistencies rather than within individual frames. A detector that captures such artifacts should therefore benefit from video pretrained backbones over image only ones. In practice, however, video backbones with standard global readouts often fail to outperform strong image pretrained probes on AIGV benchmarks. We attribute this gap to excessive spatiotemporal aggregation in the readout. Video pretrained backbones tend to compress each frame into a single global descriptor. This compression suppresses local patch level temporal dynamics and discards inter patch relations, which are precisely the cues that AIGV detection most reliably depends on. Based on this, we propose Velocity Gated Patch Velocity Profiling (V-PVP), a lightweight readout that replaces only the aggregation layer with two parallel streams over the patch velocity field, adding only about $0.5$M trainable parameters. V-PVP serves as a general plug-and-play module that consistently improves performance across diverse video backbones under both end-to-end fine-tuning and linear probing settings. Our method reaches \\textbf{95.28} AUC on AIGVDBench while keeping the backbone fully frozen. The results show that simply replacing the aggregation layer reactivates the temporal potential of frozen video backbones, restoring their advantage on AIGV detection. Code is available at https://anonymous.4open.science/r/PVP-81B3/.",
+      "authors": [
+        "Manni Cui",
+        "Ziheng Qin",
+        "ZiAn Wang",
+        "Ruiqi Liu",
+        "Dianyuan Zou",
+        "Jianglan Wei",
+        "Han Zhou",
+        "Yu Liu",
+        "Jingrui Xu",
+        "Wenhao Wang",
+        "Zhenyu Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-16T07:57:31+00:00",
+      "link": "https://arxiv.org/pdf/2607.15321v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "AI-generated video detection using video backbones to capture inter-frame inconsistencies",
+      "llm_evidence_cn": "利用视频骨干网络捕获帧间不一致性进行AI生成视频检测",
+      "llm_evidence": "利用视频骨干网络捕获帧间不一致性进行AI生成视频检测",
+      "canonical_evidence": "利用视频骨干网络捕获帧间不一致性进行AI生成视频检测",
+      "llm_tldr_en": "Proposes to rethink video backbone readouts for AI-generated video detection, showing that fine-grained spatiotemporal readouts capture temporal artifacts better than global pooling, improving detection performance.",
+      "llm_tldr_cn": "针对AI生成视频检测中视频骨干网络性能不如图像骨干的问题，指出全局读取出过度压缩时空特征，提出采用细粒度局部时空读出来的方法来捕获帧间不一致性，从而提升检测性能，为深度伪造视频鉴定提供新思路。",
+      "llm_tldr": "针对AI生成视频检测中视频骨干网络性能不如图像骨干的问题，指出全局读取出过度压缩时空特征，提出采用细粒度局部时空读出来的方法来捕获帧间不一致性，从而提升检测性能，为深度伪造视频鉴定提供新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.15974v1",
+      "source": "arxiv",
+      "title": "Embodied Active Learning under Limited Annotation and Navigation Budget for Object Detection",
+      "abstract": "This paper studies how to adapt a computer vision object detector to an unknown environment under both a robot navigation time and annotation budget constraint. Our approach selects informative robot trajectories and image samples to retrain the detector, explicitly targeting its failure cases. Formally, the approach is an embodied variant of batch active learning, where at each round an agent has a limited navigation budget to collect candidate samples and a limited annotation budget for the most relevant images. We leverage spatial consistency to identify images with inconsistent labels, which are likely to provide the greatest improvement to the vision model. We evaluate the approach using different active learning objectives on large scenes from the AI2-THOR simulator and on a real-world setup using a Boston Dynamics Spot robot with the real-time object detector YOLOv5. Through comparison against several baselines, our experimental results show that spatial inconsistency helps guide the agent and select relevant images without external supervision, achieving the highest detection accuracy at the end of the adaptation process under the same budget. The open-source project can be found at https://mkabouri.github.io/embodied-active-learning-od",
+      "authors": [
+        "Hadrien Crassous",
+        "Mohamed Yassine Kabouri",
+        "Minahil Raza",
+        "Joni Pajarinen",
+        "Riad Akrour"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-07-17T14:07:46+00:00",
+      "link": "https://arxiv.org/pdf/2607.15974v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "active learning with limited annotation budget for few-shot detection",
+      "llm_evidence_cn": "有限标注预算的主动学习实现少样本检测",
+      "llm_evidence": "有限标注预算的主动学习实现少样本检测",
+      "canonical_evidence": "有限标注预算的主动学习实现少样本检测",
+      "llm_tldr_en": "This paper proposes embodied active learning for object detection under limited annotation and navigation budgets. It selects informative samples using spatial consistency, significantly improving detection performance with fewer labels, relevant to few-shot learning.",
+      "llm_tldr_cn": "本文研究在机器人导航和标注预算受限条件下，如何将目标检测器适应到未知环境。方法采用具身主动学习范型，通过空间一致性识别标签不一致的图像，选择最具信息量的样本进行重训练。实验表明，该方法在有限的导航和标注资源下显著提升了检测性能，为少样本目标检测提供了新思路。",
+      "llm_tldr": "本文研究在机器人导航和标注预算受限条件下，如何将目标检测器适应到未知环境。方法采用具身主动学习范型，通过空间一致性识别标签不一致的图像，选择最具信息量的样本进行重训练。实验表明，该方法在有限的导航和标注资源下显著提升了检测性能，为少样本目标检测提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
