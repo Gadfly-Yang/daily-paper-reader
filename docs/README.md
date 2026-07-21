@@ -6,28 +6,37 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-20
-- 运行时间：2026-07-20 20:17:11 UTC
+- 最新运行日期：2026-07-21
+- 运行时间：2026-07-21 21:46:42 UTC
 - 运行状态：成功
-- 本次总论文数：2
-- 精读区：1
-- 速读区：1
+- 本次总论文数：5
+- 精读区：3
+- 速读区：2
 
 ### 今日简报（AI）
-今天精读了一篇高分论文，重新思考视频模型读出机制，解锁对抗AI生成视频的检测新思路。  
-最值得关注的是：优化视频骨干网络的读出设计能显著提升伪造视频检测，而具身主动学习在有限资源下的目标检测探索也提供了新视角。  
-建议读者不妨把今天对“读出”的重新理解，迁移到日常图像检测流程里做一次小实验。
-- 详情：[/202607/20/README](/202607/20/README)
+今日精研人脸伪造检测前沿，聚焦增量学习与频域可解释性，复现两项高分方案。  
+最值得看的是密度感知的区域重放实现记忆高效增量检测，以及基于FFT的可解释空频融合框架（均9.0分）。  
+建议对比这两种方法在真实数据流下的鲁棒性，思考如何将检测可解释性转化为用户可读的风险提示。
+- 详情：[/202607/21/README](/202607/21/README)
 
 ### 精读区论文标签
-1. [Rethinking the Readout: Unlocking Video Backbones for AI-Generated Video Detection](/202607/20/2607.15321v1-rethinking-the-readout-unlocking-video-backbones-for-ai-generated-video-detection)  
+1. [InfoDense: Density-Aware Regional Decisive Replay for Memory-Efficient Incremental Face Forgery Detection](/202607/21/2607.16873v1-infodense-density-aware-regional-decisive-replay-for-memory-efficient-incremental-face-forgery-detection)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：利用视频骨干网络捕获帧间不一致性进行AI生成视频检测
+   evidence：增量式人脸伪造检测
+2. [An Explainable FFT-Based Spatial-Frequency Fusion Framework for Deepfake Detection](/202607/21/2607.17441v1-an-explainable-fft-based-spatial-frequency-fusion-framework-for-deepfake-detection)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：基于FFT的空间-频率融合用于深度伪造检测
+3. [Simple Domain Generalization for Strong Pixel-Level Image Tampering Detection in Modern VLMs](/202607/21/2607.18230v1-simple-domain-generalization-for-strong-pixel-level-image-tampering-detection-in-modern-vlms)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：研究跨不同VLM生成篡改的像素级图像篡改检测域泛化，直接解决AI生成图像的跨域检测问题。
 
 ### 速读区论文标签
-1. [Embodied Active Learning under Limited Annotation and Navigation Budget for Object Detection](/202607/20/2607.15974v1-embodied-active-learning-under-limited-annotation-and-navigation-budget-for-object-detection)  
+1. [OFD-Net: Teacher-Free Reliable Semi-supervised Medical Image Segmentation with Orthogonal Feature Disentanglement Net of Foreground-Background](/202607/21/2607.16705v1-ofd-net-teacher-free-reliable-semi-supervised-medical-image-segmentation-with-orthogonal-feature-disentanglement-net-of-foreground-background)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：有限标注预算的主动学习实现少样本检测
+   evidence：有限标注下的半监督医学图像分割学习
+2. [SGN: A Similarity-based Generative Network for Data Generation under Distribution Shift](/202607/21/2607.18072v1-sgn-a-similarity-based-generative-network-for-data-generation-under-distribution-shift)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：从少量标记样本生成目标域数据，辅助少样本学习
 
 
 <div class="dpr-home-promo-card">

@@ -1,0 +1,226 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-21T21:41:39.257819+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2607.16873v1",
+      "source": "arxiv",
+      "title": "InfoDense: Density-Aware Regional Decisive Replay for Memory-Efficient Incremental Face Forgery Detection",
+      "abstract": "The rapid evolution of face forgery techniques has introduced an increasing variety of manipulations. Incremental Face Forgery Detection (IFFD), which incrementally adds new forgery data to fine-tune previously trained models, has emerged as a promising approach to handle evolving forgery threats. However, conventional replay-based IFFD methods suffer from catastrophic forgetting. Storing full historical images under limited memory often either fails to preserve subtle forgery cues or introduces domain bias, reducing the model's ability to learn intrinsic and transferable manipulation characteristics. In this paper, we propose a Density-Aware Regional Decisive replay strategy, termed InfoDense, to address these challenges. InfoDense prioritizes artifact-dense and forgery-critical regions, significantly reducing storage requirements while maintaining high-fidelity forgery evidence. We first introduce InfoDense Cut to localize decisive patches using CLIP-based embeddings. Then, InfoDense Select ranks candidate segments by combining latent-space representativeness and decisive patch counts, ensuring both diversity and information density in the replay buffer. Finally, InfoDense Fuse reconstructs unbiased training inputs by adaptively merging stored segments with current-task samples, enhancing knowledge retention and generalization. Extensive experiments on challenging incremental deepfake benchmarks demonstrate that InfoDense effectively mitigates catastrophic forgetting while improving cross-domain generalization.",
+      "authors": [
+        "Jikang Cheng",
+        "Hao Shen",
+        "Xueyi Zhang",
+        "Guangcheng Wang",
+        "Zhongyuan Wang",
+        "Renye Yan",
+        "Baojin Huang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-18T16:25:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.16873v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "incremental face forgery detection",
+      "llm_evidence_cn": "增量式人脸伪造检测",
+      "llm_evidence": "增量式人脸伪造检测",
+      "canonical_evidence": "增量式人脸伪造检测",
+      "llm_tldr_en": "Proposes InfoDense, a density-aware regional decisive replay strategy for memory-efficient incremental face forgery detection to combat catastrophic forgetting.",
+      "llm_tldr_cn": "针对人脸伪造技术不断演变带来的增量检测需求，本文提出InfoDense，一种密度感知的区域决定性重放策略。传统重放方法受限于内存容量，难以保留细微伪造线索或引入域偏差，导致灾难性遗忘。InfoDense通过选择信息量高且决定性的样本区域进行重放，有效缓解遗忘，并提升模型学习本质可迁移伪造特征的能力。实验表明，该方法在内存有限条件下显著提升了增量人脸伪造检测的性能，为应对持续涌现的伪造威胁提供了实用解决方案。",
+      "llm_tldr": "针对人脸伪造技术不断演变带来的增量检测需求，本文提出InfoDense，一种密度感知的区域决定性重放策略。传统重放方法受限于内存容量，难以保留细微伪造线索或引入域偏差，导致灾难性遗忘。InfoDense通过选择信息量高且决定性的样本区域进行重放，有效缓解遗忘，并提升模型学习本质可迁移伪造特征的能力。实验表明，该方法在内存有限条件下显著提升了增量人脸伪造检测的性能，为应对持续涌现的伪造威胁提供了实用解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.17441v1",
+      "source": "arxiv",
+      "title": "An Explainable FFT-Based Spatial-Frequency Fusion Framework for Deepfake Detection",
+      "abstract": "Deepfake generation has raised growing concerns regarding digital media authenticity, misinformation, identity fraud, and public trust. Recent studies show that combining spatial and frequency features leads to stronger detection results than using independently. This paper presents MSCA-FFT, a Fast Fourier Transform (FFT)-based multi-scale cross-attention framework for image-level deepfake detection. The model combines a partially fine-tuned Xception spatial branch with an FFT-based frequency branch. The frequency branch processes the log-scaled FFT magnitude spectrum through shallow convolutional layers, avoiding inverse frequency-to-image reconstruction used in DCT-based pipelines. The spatial and frequency representations are refined by transformer encoders, fused through cross-attention, and passed to an MLP classifier for real/fake prediction. Experimental results show that MSCA-FFT achieves consistently higher performance than the DCT-based state-of-the-art spatial-frequency fusion method and the compared baseline models. The ablation study further indicates that the FFT-based frequency branch provides complementary spectral cues when fused with spatial features. In addition, FFT-based frequency analysis and Grad-CAM/LIME explanations show consistent evidence around manipulation-sensitive facial regions, including the eyes, mouth, nose, and facial boundaries.",
+      "authors": [
+        "Pamela Kirui",
+        "Cho Hyuk",
+        "Qingzhong Liu",
+        "Haodi Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-19T23:45:40+00:00",
+      "link": "https://arxiv.org/pdf/2607.17441v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "FFT-based spatial-frequency fusion for deepfake detection",
+      "llm_evidence_cn": "基于FFT的空间-频率融合用于深度伪造检测",
+      "llm_evidence": "基于FFT的空间-频率融合用于深度伪造检测",
+      "canonical_evidence": "基于FFT的空间-频率融合用于深度伪造检测",
+      "llm_tldr_en": "Presents MSCA-FFT, a deepfake detection framework that fuses spatial features from a fine-tuned Xception and frequency features from FFT magnitude spectrum via multi-scale cross-attention, achieving high accuracy and explainability.",
+      "llm_tldr_cn": "针对深度伪造检测中空间与频率特征融合不足的问题，提出MSCA-FFT框架，结合部分微调的Xception空间分支和基于FFT的频率分支，通过多尺度交叉注意力机制融合特征，无需逆变换。实验表明该框架在多个数据集上实现高精度检测，并增强了可解释性。",
+      "llm_tldr": "针对深度伪造检测中空间与频率特征融合不足的问题，提出MSCA-FFT框架，结合部分微调的Xception空间分支和基于FFT的频率分支，通过多尺度交叉注意力机制融合特征，无需逆变换。实验表明该框架在多个数据集上实现高精度检测，并增强了可解释性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.18230v1",
+      "source": "arxiv",
+      "title": "Simple Domain Generalization for Strong Pixel-Level Image Tampering Detection in Modern VLMs",
+      "abstract": "Modern vision-language models (VLMs) have significantly improved image generation and editing capabilities, making pixel-level image tampering detection increasingly important yet challenging under cross-model and out-of-distribution shifts. This work studies domain generalization for pixel-level image tampering detection in modern VLMs like ChatGPT, Gemini, Qwen-Image, etc., aiming to learn tampering localization models that remain robust across diverse VLM-generated manipulation distributions. We propose a simple yet effective domain-generalized training framework built on two practical strategies. First, we introduce a balanced minibatch sampling scheme that strategically samples tampered and real images in each minibatch, preventing biased optimization toward either manipulated artifacts or clean-image priors and avoiding training collapse, ensuring that each optimization step receives proper sampled gradient signals. Second, we adopt a simple late-injection strategy, where the detector is first trained on large-scale base data until stable convergence, and then exposed to a small amount of newly selected supporting data from emerging VLM distributions, improving adaptability without overfitting to limited new domains. Together, these components provide a simple yet strong recipe for improving pixel-level tampering localization and OOD robustness across modern VLMs. Despite the conceptual simplicity, our framework outperforms the prior state-of-the-art PIXAR by a large margin of 26.1% and 26.8% relative improvement in average gIoU and cIoU, respectively, across OOD VLMs of GPT-Images-2.0, Gemini-3.1, FLUX.2, and Seedream 4.5. Our code is available at https://github.com/VILA-Lab/PIXAR-DG",
+      "authors": [
+        "Yi Tang",
+        "Xinyi Shang",
+        "Jiacheng Cui",
+        "Sondos Mahmoud Bsharat",
+        "Jiacheng Liu",
+        "Xiaohan Zhao",
+        "Tran Dinh Tien",
+        "Ahmed Elhagry",
+        "Salwa K. Al Khatib",
+        "Tianjun Yao",
+        "Yonina C. Eldar",
+        "Jing-Hao Xue",
+        "Hao Li",
+        "Salman Khan",
+        "Zhiqiang Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-20T17:58:13+00:00",
+      "link": "https://arxiv.org/pdf/2607.18230v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Studies domain generalization for pixel-level image tampering detection across VLM-generated manipulations, directly addressing cross-domain AI-generated image detection.",
+      "llm_evidence_cn": "研究跨不同VLM生成篡改的像素级图像篡改检测域泛化，直接解决AI生成图像的跨域检测问题。",
+      "llm_evidence": "研究跨不同VLM生成篡改的像素级图像篡改检测域泛化，直接解决AI生成图像的跨域检测问题。",
+      "canonical_evidence": "研究跨不同VLM生成篡改的像素级图像篡改检测域泛化，直接解决AI生成图像的跨域检测问题。",
+      "llm_tldr_en": "This paper proposes a simple domain generalization framework for pixel-level image tampering detection in modern VLMs, using balanced minibatch sampling to handle distribution shifts across generative models, achieving robust detection of AI-manipulated images.",
+      "llm_tldr_cn": "针对现代视觉语言模型（如ChatGPT、Gemini）生成的篡改图像，本文提出一种简单的域泛化训练框架，通过平衡小批量采样等策略，使像素级篡改检测模型在不同模型生成分布间保持鲁棒。实验表明该方法有效提升了跨域篡改检测的泛化能力，为应对多样化的AI图像操纵提供了实用解决方案。",
+      "llm_tldr": "针对现代视觉语言模型（如ChatGPT、Gemini）生成的篡改图像，本文提出一种简单的域泛化训练框架，通过平衡小批量采样等策略，使像素级篡改检测模型在不同模型生成分布间保持鲁棒。实验表明该方法有效提升了跨域篡改检测的泛化能力，为应对多样化的AI图像操纵提供了实用解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.16705v1",
+      "source": "arxiv",
+      "title": "OFD-Net: Teacher-Free Reliable Semi-supervised Medical Image Segmentation with Orthogonal Feature Disentanglement Net of Foreground-Background",
+      "abstract": "Semi-supervised learning (SSL) is an effective solution for medical image segmentation with limited annotations. Existing SSL methods mainly rely on pseudo-labels generated by teacher-student supervision or cross-network consistency. However, these methods lack an explicit structural reference for judging pseudo-label quality. Low-quality pseudo-labels may lead to unreliable training, error accumulation and confirmation bias when processing unlabeled data with substantial appearance variations. To address this issue, we proposed OFD-Net, a teacher-free single-network framework for reliable semi-supervised medical image segmentation. OFD-Net employs an Orthogonal Feature Disentanglement Module (OFDM) to capture OFD features for reliable SSL by disentangling unlabeled data into background and foreground representations with a reliable structural distribution, thereby effectively reducing error accumulation and alleviating confirmation bias among unlabeled data. Specifically, OFD-Net explicitly employs a Disentanglement Guidance Module (DGM) to inject the resulting structural priors of foreground-background into the decoder by deformable convolution processing, and outputs predictions with clearer foreground representations. Based on DGM and the OFDM, we further develop a reliability-aware pseudo-label learning mechanism that evaluates unlabeled supervision according to the structural consistency between the main prediction and the disentangled foreground-background responses, and then down-weights unreliable regions during training. Extensive experiments on four public medical image segmentation benchmarks, namely ISIC-2016, Kvasir-SEG, Synapse, and ACDC, validate the effectiveness of OFD-Net. These results confirm that orthogonal foreground-background disentanglement enables OFD-Net to establish an efficient and reliable training paradigm within a teacher-free single-network framework.",
+      "authors": [
+        "Shao-feng Jiang",
+        "Zhe-yang Jing",
+        "Qin Lu",
+        "Huan-huan Shi",
+        "Zhen Chen",
+        "Cong-xuan zhang",
+        "Chen Yi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-18T08:39:40+00:00",
+      "link": "https://arxiv.org/pdf/2607.16705v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Semi-supervised learning with limited annotations for medical image segmentation",
+      "llm_evidence_cn": "有限标注下的半监督医学图像分割学习",
+      "llm_evidence": "有限标注下的半监督医学图像分割学习",
+      "canonical_evidence": "有限标注下的半监督医学图像分割学习",
+      "llm_tldr_en": "Proposes a teacher-free semi-supervised framework for medical image segmentation with limited labels, using orthogonal feature disentanglement to assess pseudo-label quality, improving reliability.",
+      "llm_tldr_cn": "针对医学图像分割标注数据稀缺的问题，本文提出无教师半监督框架OFD-Net，通过正交特征解耦分离前景与背景，从而评估伪标签可靠性，避免错误累积。实验表明该方法在有限标注下有效减轻确认偏差，提升分割性能。",
+      "llm_tldr": "针对医学图像分割标注数据稀缺的问题，本文提出无教师半监督框架OFD-Net，通过正交特征解耦分离前景与背景，从而评估伪标签可靠性，避免错误累积。实验表明该方法在有限标注下有效减轻确认偏差，提升分割性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.18072v1",
+      "source": "arxiv",
+      "title": "SGN: A Similarity-based Generative Network for Data Generation under Distribution Shift",
+      "abstract": "Generative models trained on a source domain often produce samples that are poorly aligned with shifted target domains, limiting their effectiveness for target-domain data augmentation. Although target-specific adaptation can reduce this mismatch, it typically requires additional optimization and domain-specific parameters. We propose a Similarity-based Generative Network (SGN), a reusable framework that is trained once on labeled source data and applied to new target domains without parameter updates. SGN learns a latent space structured by label-induced pairwise similarities while preserving reconstructive information through an encoder-decoder architecture. At generation time, a small labeled representative set from the target domain is encoded and combined in the learned latent space, allowing the generated samples to inherit target-specific characteristics while maintaining class consistency. We further analyze the realizability and dimensionality requirements of the proposed similarity structure. Experiments on image and tabular datasets demonstrate the effectiveness of SGN for target-guided data augmentation under source-to-target distribution shifts.",
+      "authors": [
+        "Jiaqi Zhu",
+        "Xincheng Chen",
+        "Yuncheng Wu",
+        "Zhaojing Luo",
+        "Beng Chin Ooi"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-20T15:40:51+00:00",
+      "link": "https://arxiv.org/pdf/2607.18072v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "generates target-domain samples from a small labeled set, aiding few-shot learning",
+      "llm_evidence_cn": "从少量标记样本生成目标域数据，辅助少样本学习",
+      "llm_evidence": "从少量标记样本生成目标域数据，辅助少样本学习",
+      "canonical_evidence": "从少量标记样本生成目标域数据，辅助少样本学习",
+      "llm_tldr_en": "Proposes SGN, a generative model that learns structured latent space from source data and uses a small target labeled set to generate target-aligned samples, enabling data augmentation for domains with limited labels.",
+      "llm_tldr_cn": "提出相似性生成网络SGN，通过源域标记数据学习标签诱导的成对相似性结构化隐空间，在目标域仅需少量标记代表集即可生成目标对齐样本，无需参数更新。这为少样本场景下的数据增强提供了可重用的框架，在多个基准上验证了其缓解分布偏移的有效性。",
+      "llm_tldr": "提出相似性生成网络SGN，通过源域标记数据学习标签诱导的成对相似性结构化隐空间，在目标域仅需少量标记代表集即可生成目标对齐样本，无需参数更新。这为少样本场景下的数据增强提供了可重用的框架，在多个基准上验证了其缓解分布偏移的有效性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
