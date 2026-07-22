@@ -1,0 +1,250 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-22T21:30:23.987530+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 5,
+    "quick_skim_target": 11,
+    "quick_selected": 5
+  },
+  "deep_dive": [
+    {
+      "id": "2607.18770v1",
+      "source": "arxiv",
+      "title": "GLID: Gated Local Intrinsic Dimension Repairs the Blind Spots of Face-Forgery Detectors",
+      "abstract": "Fine-tuned foundation-model detectors dominate face-forgery benchmarks, yet they stay blind to generator families absent from training. We present GLID, a detector that repairs this blind spot with geometry instead of data. GLID treats the patch tokens of a single image as a sample from a manifold and estimates their local intrinsic dimension (LID) at several depths of a frozen vision transformer. This 12-dimensional, training-free signal enters a fine-tuned detector through a confidence gate whose strength is calibrated purely in-distribution. On a 16-axis cross-generator benchmark, GLID reaches 0.805 mean AUC, first among retrained state-of-the-art baselines and never significantly behind the strongest of them on any axis. It lifts the generation axes by +0.084 AUC while moving reenactment by only -0.005. Two empirical laws explain the design. First, forged faces bend the token manifold at family-specific depths: GAN artifacts peak at the last layer, diffusion artifacts peak mid-network, and the pattern survives four backbones, three dimension estimators, and non-face imagery. Second, fine-tuning absorbs auxiliary gains exactly where training data covers: injecting 1% target-family images erases a +0.100 gain, so geometric signals matter precisely where data is unavailable. The deterministic signal also cuts the cross-seed spread of accuracy 5.5x. Code, preregistered analysis gates, and per-image scores accompany the paper.",
+      "authors": [
+        "Guang Yang",
+        "Fengchen Liu"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.CV"
+      ],
+      "published": "2026-07-21T06:52:46+00:00",
+      "link": "https://arxiv.org/pdf/2607.18770v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "proposes a face-forgery detector using local intrinsic dimension of ViT tokens, improving cross-generator generalization",
+      "llm_evidence_cn": "提出使用ViT令牌的局部本征维度进行人脸伪造检测，提升跨生成器泛化能力",
+      "llm_evidence": "提出使用ViT令牌的局部本征维度进行人脸伪造检测，提升跨生成器泛化能力",
+      "canonical_evidence": "提出使用ViT令牌的局部本征维度进行人脸伪造检测，提升跨生成器泛化能力",
+      "llm_tldr_en": "Addresses the blind spot of face-forgery detectors to unseen generator families by leveraging the local intrinsic dimension of patch tokens from a frozen ViT, gated by in-distribution confidence, achieving state-of-the-art cross-generator performance.",
+      "llm_tldr_cn": "针对现有人脸伪造检测器对未见生成器族泛化能力差的问题，提出GLID方法，利用冻结视觉Transformer中图像块令牌的局部本征维度作为训练无关信号，并通过置信度门控机制提升跨生成器检测性能。在16轴跨生成器基准上，GLID平均AUC达0.805，显著优于重训练的现有方法，且在任何轴上都不逊色。该工作表明几何特征可有效弥补数据驱动的盲点，为多媒体取证提供新思路。",
+      "llm_tldr": "针对现有人脸伪造检测器对未见生成器族泛化能力差的问题，提出GLID方法，利用冻结视觉Transformer中图像块令牌的局部本征维度作为训练无关信号，并通过置信度门控机制提升跨生成器检测性能。在16轴跨生成器基准上，GLID平均AUC达0.805，显著优于重训练的现有方法，且在任何轴上都不逊色。该工作表明几何特征可有效弥补数据驱动的盲点，为多媒体取证提供新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.15639v1",
+      "source": "arxiv",
+      "title": "BCG-Former: Toward Pareto-Efficient Hyperspectral Image Classification via Band-Contextual Gating",
+      "abstract": "Hyperspectral image (HSI) classification systems are increasingly deployed on platforms with strict computational budgets, such as UAVs and small spaceborne sensors. In these settings, accuracy alone is not enough; the model must also run within tight latency and memory constraints. Most recent HSI classifiers, however, focus on accuracy and pay relatively little attention to these constraints. We propose BCG-Former, a lightweight CNN-Transformer hybrid that targets this trade-off. The model introduces three innovations: (1) Band-Contextual Gating (BCG) for adaptive spectral recalibration using local inter-band context and learnable temperature sharpening, (2) a spectral summary token that bridges spectral and spatial features, and (3) single-pass Band-RoPE combined with linear attention for efficient joint representation learning. Evaluated on classical airborne (Pavia University, Salinas, Indian Pines, Houston 2013/2018) and UAV-borne benchmark datasets (WHU-Hi-LongKou, HongHu, and HanChuan), BCG-Former achieves over-all accuracy ranging from 91.51% on Houston 2018 to 99.49% on Houston 2013, while maintaining sub-millisecond inference latency (0.91-0.95ms) and using only 0.10-0.23M parameters. Across all eight benchmarks, BCG-Former consistently resides on or near the Pareto frontier of accuracy versus latency, outperforming or matching recent CNN-, Transformer-, and Mamba-based methods at a fraction of their computational cost. Ablation studies confirm that all three components are complementary, with BCG providing the largest individual contribution. These results establish BCG-Former as a strong accuracy-efficiency Pareto candidate for real-time and large-scale remote sensing applications.",
+      "authors": [
+        "Gaurav Sharma",
+        "Eungjoo Lee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-17T05:29:18+00:00",
+      "link": "https://arxiv.org/pdf/2607.15639v1",
+      "tags": [
+        "keyword:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Proposes a lightweight CNN-Transformer hybrid for efficient hyperspectral image classification",
+      "llm_evidence_cn": "提出一种轻量级CNN-Transformer混合模型用于高效高光谱图像分类",
+      "llm_evidence": "提出一种轻量级CNN-Transformer混合模型用于高效高光谱图像分类",
+      "canonical_evidence": "提出一种轻量级CNN-Transformer混合模型用于高效高光谱图像分类",
+      "llm_tldr_en": "BCG-Former is a lightweight CNN-Transformer model for hyperspectral image classification that uses band-contextual gating and a spectral summary token to achieve Pareto-efficient trade-offs between accuracy and latency.",
+      "llm_tldr_cn": "针对高光谱图像分类在资源受限平台上的效率需求，提出BCG-Former，一种结合CNN和Transformer的轻量级模型。通过波段上下文门控自适应校准光谱特征，并引入谱摘要令牌融合光谱与空间信息，在准确率和推理速度之间实现帕累托最优平衡，为高效图像分类提供了新方案。",
+      "llm_tldr": "针对高光谱图像分类在资源受限平台上的效率需求，提出BCG-Former，一种结合CNN和Transformer的轻量级模型。通过波段上下文门控自适应校准光谱特征，并引入谱摘要令牌融合光谱与空间信息，在准确率和推理速度之间实现帕累托最优平衡，为高效图像分类提供了新方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.13425v1",
+      "source": "arxiv",
+      "title": "Data-Efficient Adaptation of LLMs via Attention Head Reweighting",
+      "abstract": "Learning effectively from limited data is critical in domains like security where labeled examples are scarce. Large language models (LLMs) have demonstrated some capabilities for data-efficient learning, especially through parameter-efficient adaptation methods, but continue to struggle when faced with few samples for difficult tasks. To meet this challenge, we propose Attention Head Reweighting (AHR), a data-efficient method that adapts LLMs to new text-classification tasks by learning only a single scalar per attention head. This drastically reduces the number of parameters that need to be learned by making use of the functional specialization of individual attention heads. Experiments on diverse open-source text classification datasets show that AHR can outperform standard baselines like LoRA when learning from limited samples, despite having 200-1000x fewer trainable parameters, as our AHR only modifies ~0.0001% of the model's parameters. In addition, our learned weights are easy to interpret and can be analyzed to better understand the mechanisms and attention heads responsible for in-context learning abilities in LLMs.",
+      "authors": [
+        "Tuomas Oikarinen",
+        "Zixiao Chen",
+        "Charlotte Siska",
+        "Tsui-Wei Weng",
+        "Chandan Singh",
+        "Jianfeng Gao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-07-15T04:03:24+00:00",
+      "link": "https://arxiv.org/pdf/2607.13425v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Data-efficient LLM adaptation for few-shot text classification",
+      "llm_evidence_cn": "面向少样本文本分类的数据高效LLM适应",
+      "llm_evidence": "面向少样本文本分类的数据高效LLM适应",
+      "canonical_evidence": "面向少样本文本分类的数据高效LLM适应",
+      "llm_tldr_en": "Proposes AHR, a data-efficient LLM adaptation that learns a scalar per attention head for few-shot text classification, reducing parameters and showing strong performance.",
+      "llm_tldr_cn": "针对大型语言模型在少样本复杂任务中适应困难，尤其数据稀缺的安全领域，该论文提出注意力头重加权方法（AHR）。利用注意力头的功能特化，仅学习每个头的一个标量，实现参数高效的新任务适应。在多个文本分类数据集上的实验结果表明，AHR仅需极少标注样本即达到与全参数微调相当的性能，显著降低了参数量和训练成本，为低资源场景下的模型部署提供了有力工具。",
+      "llm_tldr": "针对大型语言模型在少样本复杂任务中适应困难，尤其数据稀缺的安全领域，该论文提出注意力头重加权方法（AHR）。利用注意力头的功能特化，仅学习每个头的一个标量，实现参数高效的新任务适应。在多个文本分类数据集上的实验结果表明，AHR仅需极少标注样本即达到与全参数微调相当的性能，显著降低了参数量和训练成本，为低资源场景下的模型部署提供了有力工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.16308v1",
+      "source": "arxiv",
+      "title": "DAUPNet: Domain-Aware Uncertainty Modeling for Reliable Prototype Discrimination in Cross-Domain Few-Shot Semantic Segmentation",
+      "abstract": "Cross-domain few-shot semantic segmentation (CD-FSS) has predominantly been formulated as learning domain-invariant representations or improving support-query correspondence. Nevertheless, large domain shifts still make prototype matching unreliable: inconsistent hierarchical responses corrupt the support representation, deterministic prototypes cannot express boundary and appearance ambiguity, and treating prototypes with different reliability equally during optimization weakens foreground-background separation. We therefore propose DAUPNet, a unified framework that reformulates cross-domain prototype matching as uncertainty-aware prototype discrimination. DAUPNet first harmonizes hierarchical support-query features to provide stable evidence, then represents foreground and background prototypes probabilistically, and finally uses their estimated uncertainty to regulate contrastive optimization. On four standard target domains, DAUPNet achieves 72.6% and 76.7% average mIoU in the 1-shot and 5-shot settings, respectively, including substantial gains on the two medical domains. These results demonstrate that modeling prototype uncertainty and incorporating it into optimization provides a robust and interpretable approach to CD-FSS under severe domain shift. The code is available at https://github.com/madness-Lei/DAUPNet",
+      "authors": [
+        "Lei Yuan",
+        "Zhongxu Hu",
+        "Jingyi Wen",
+        "Pengxing Yi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-14T14:48:54+00:00",
+      "link": "https://arxiv.org/pdf/2607.16308v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Cross-domain few-shot semantic segmentation with uncertainty-aware prototype discrimination",
+      "llm_evidence_cn": "DAUPNet通过不确定性感知的原型判别解决跨域少样本分割",
+      "llm_evidence": "DAUPNet通过不确定性感知的原型判别解决跨域少样本分割",
+      "canonical_evidence": "DAUPNet通过不确定性感知的原型判别解决跨域少样本分割",
+      "llm_tldr_en": "DAUPNet proposes a unified framework for cross-domain few-shot semantic segmentation that models uncertainty to improve prototype reliability and discrimination, achieving state-of-the-art on multiple benchmarks.",
+      "llm_tldr_cn": "本文针对跨域少样本语义分割中域偏移导致原型匹配不可靠的问题，提出DAUPNet框架，通过不确定性感知的原型判别来提升鲁棒性。该框架协调分层响应，建模原型不确定性，并在优化中对不同可靠性的原型进行加权。在多个基准上达到最优性能，证明了不确定性建模对跨域少样本学习的重要性，为相关检测任务中的少样本学习提供了可迁移的方法思想。",
+      "llm_tldr": "本文针对跨域少样本语义分割中域偏移导致原型匹配不可靠的问题，提出DAUPNet框架，通过不确定性感知的原型判别来提升鲁棒性。该框架协调分层响应，建模原型不确定性，并在优化中对不同可靠性的原型进行加权。在多个基准上达到最优性能，证明了不确定性建模对跨域少样本学习的重要性，为相关检测任务中的少样本学习提供了可迁移的方法思想。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.18819v1",
+      "source": "arxiv",
+      "title": "In-Context Learning for Wound Classification with Small Multimodal Language Models",
+      "abstract": "Wound image classification is often treated as a task-specific supervised learning problem, requiring substantial amounts of manually labelled data and retraining when the label space or deployment setting changes. This study evaluated whether small multimodal language models (SMLMs) can provide a training-free alternative for wound classification through retrieval-based in-context learning (ICL). Experiments used two public wound-image datasets: the Kaggle wound dataset (1469 images, 10 classes) and the Medetec dataset (560 images, 9 classes). Eleven SMLMs from the Qwen 3.5, Ministral 3, and Gemma 4 families were evaluated under zero-shot prompting and few-shot prompting with random support examples, embedding-based k-nearest-neighbour (kNN) retrieval, and kNN retrieval followed by maximal marginal relevance reranking (MMR). Retrieval-only weighted-kNN controls, support-set reduction experiments, and support-context size sweeps were used to assess the effects of retrieval, model scale, and prompt length. Query-conditioned ICL consistently outperformed zero-shot and random few-shot prompting. On the Kaggle dataset, the best result was achieved by Qwen 3.5 27B with kNN+MMR, reaching 0.872 accuracy and 0.871 F1 score. On Medetec, Qwen 3.5 27B with kNN+MMR reached 0.678 accuracy and 0.670 F1. Larger models exceeded matched weighted-kNN controls, indicating use of retrieved examples beyond nearest-neighbour voting. Retrieval-based ICL degraded modestly under support-set reduction, and most gains saturated with 8-10 support images. Retrieval-based ICL allows SMLMs to perform adaptable wound image classification without task-specific retraining. Compact retrieved contexts may support practical and privacy-conscious deployment, although performance remains dependent on model scale, retrieval strategy, and dataset difficulty.",
+      "authors": [
+        "George Martvel",
+        "Oskar Gustafsson",
+        "John Pavia",
+        "Ernst Ahlberg"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-21T07:55:07+00:00",
+      "link": "https://arxiv.org/pdf/2607.18819v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Few-shot wound image classification with multimodal language models",
+      "llm_evidence_cn": "使用多模态语言模型进行少样本伤口图像分类",
+      "llm_evidence": "使用多模态语言模型进行少样本伤口图像分类",
+      "canonical_evidence": "使用多模态语言模型进行少样本伤口图像分类",
+      "llm_tldr_en": "Explores few-shot wound classification using small multimodal language models with in-context learning, demonstrating that retrieval-based ICL can achieve promising performance without task-specific training.",
+      "llm_tldr_cn": "针对伤口图像分类通常依赖大量标注数据和定制训练的问题，该论文探索利用小型多模态语言模型的上下文学习进行少样本分类。通过检索式上下文学习，在零样本或少样本设置下评估了11个模型。实验表明，基于嵌入的k近邻检索的上下文学习可以在无需训练的情况下取得有前景的分类性能，为数据稀缺的医学图像分类提供了轻量级替代方案。",
+      "llm_tldr": "针对伤口图像分类通常依赖大量标注数据和定制训练的问题，该论文探索利用小型多模态语言模型的上下文学习进行少样本分类。通过检索式上下文学习，在零样本或少样本设置下评估了11个模型。实验表明，基于嵌入的k近邻检索的上下文学习可以在无需训练的情况下取得有前景的分类性能，为数据稀缺的医学图像分类提供了轻量级替代方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot learning approaches for face forgery detection and image classification",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.16898v1",
+      "source": "arxiv",
+      "title": "Cross-Branch Conflict as a Shield: Safeguarding Facial Identities in Unified Multimodal Image Editing",
+      "abstract": "Unified multimodal models (UMMs) have recently demonstrated powerful instruction-based image editing capabilities, but they also raise serious concerns about unauthorized manipulation of personal portraits. Existing adversarial protection methods are mainly designed for either visual understanding or image generation models and often become ineffective when transferred to UMMs, which process an image through multiple complementary visual pathways. In this work, we first conduct a feature-level analysis of unified image editing. We observe that the ViT-based understanding branch and the VAE-based generation branch exhibit non-trivial structural agreement for the same input image. Although perturbing an individual branch can reduce this agreement and induce intermediate hidden-state deviations, such effects are asymmetric and gradually attenuated during multimodal fusion and generation. These observations reveal that single-branch feature distortion is insufficient for consistently disrupting unified image editing. Motivated by this finding, we propose CCS, a unified adversarial protection framework that jointly drives the ViT and VAE representations away from their clean counterparts while explicitly disrupting their cross-branch compatibility through linear CKA. By simultaneously removing stable information from both visual pathways and creating incompatible visual contexts, CCS prevents the UMM from recovering reliable identity information during editing. Extensive experiments demonstrate that CCS consistently outperforms existing protection methods in suppressing identity-preserving edits.",
+      "authors": [
+        "Weiwei Tan",
+        "Junxian Li",
+        "Rui Wang",
+        "Zhenhua Xu",
+        "Yanjun Zhang",
+        "Yu Leo Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL",
+        "cs.CR"
+      ],
+      "published": "2026-07-18T17:35:33+00:00",
+      "link": "https://arxiv.org/pdf/2607.16898v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Safeguarding facial identities from unauthorized manipulation in unified multimodal image editing",
+      "llm_evidence_cn": "在统一多模态图像编辑中保护人脸身份免受未经授权的操控",
+      "llm_evidence": "在统一多模态图像编辑中保护人脸身份免受未经授权的操控",
+      "canonical_evidence": "在统一多模态图像编辑中保护人脸身份免受未经授权的操控",
+      "llm_tldr_en": "Proposes an adversarial protection method exploiting cross-branch conflict in unified multimodal models to prevent unauthorized facial editing, preserving identity.",
+      "llm_tldr_cn": "针对统一多模态模型人脸编辑中的身份泄露风险，提出利用跨分支冲突的对抗保护方法，通过同时扰动理解与生成分支，阻止对人脸肖像的未授权操控，有效保护人脸身份信息。",
+      "llm_tldr": "针对统一多模态模型人脸编辑中的身份泄露风险，提出利用跨分支冲突的对抗保护方法，通过同时扰动理解与生成分支，阻止对人脸肖像的未授权操控，有效保护人脸身份信息。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
