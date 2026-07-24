@@ -1,0 +1,69 @@
+{
+  "label": "2026-07-24",
+  "date": "2026-07-24",
+  "generated_at": "2026-07-24T20:37:34",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202607/24/2607.20579v1-deepfake-news-detection-a-multimodal-framework-integrating-lipnet-deepspeech-and-resnet-for-enhanced-audio-visual-analysis",
+      "section": "deep",
+      "title_en": "Deepfake News Detection: A Multimodal Framework Integrating LipNet, DeepSpeech and ResNET for Enhanced Audio-Visual Analysis",
+      "authors": "Ameena Khan, Muhammad Ahsan Aziz, Muhammad Junaid Asif, Naeem Akhter, Rana Fayyaz Ahmad",
+      "date": "2026-07-22",
+      "pdf": "https://arxiv.org/pdf/2607.20579v1",
+      "score": "10.0",
+      "evidence": "提出一种利用音频和视觉分析检测深度伪造视频的多模态框架，集成 LipNet、DeepSpeech 和 ResNET。",
+      "tldr": "随着生成式AI的发展，深度伪造新闻视频通过操纵面部表情和语音来欺骗观众，对数字媒体真实性构成严重威胁。为此，本文提出一种多模态框架，从唇动、音频和视频帧中联合提取特征，分别利用LipNet编码唇动、DeepSpeech2编码语音、BlazeFace和ResNet18编码面部特征，并拼接特征后由随机森林、MLP和LSTM集成模型分类。在FakeAVCeleb数据集上，采用增强音频特征后准确率达到94%，优于现有基线。结果表明该框架鲁棒性强，具有实际应用潜力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Deepfake news refers to AI-generated (or AI ma-nipulated) multimedia content intentionally generated to deceive audiences by manipulating the facial expressions, or speech while maintaining the realistic appearance. The rapid progress of generative AI has made the synthesis of highly realistic fake videos and cloned voices widely accessible, posing a serious threat to the authenticity of digital news media. This paper presents a multi-modal framework that discerns the authenticity of video content by jointly exploiting audio and visual cues, thereby addressing the challenge of detecting the deepfake videos. We proposed a framework that involves features extraction from lip movements, audio content and video frames. Lip movements and speech content are encoded using the LipNet and DeepSpeech2 models, while facial features are extracted by leveraging the use of BlazeFace and represented with ResNet18. The extracted feature vectors are concatenated into a holistic video representation and classified with an ensemble of machine learning and deep learning models, including Random Forest (RF), Multi-layer Perceptron (MLP) and Long Short-Term Memory (LSTM) networks. Exten-sive experiments performed on the FakeAVCeleb dataset shows that the proposed approach attains an accuracy of 94% using augmented audio features, outperforming a state-of-the-art multi-modal ensemble baseline. The results confirm the robustness and practical potential of the proposed framework for deepfake news detection.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/24/2607.20900v1-dino-vpt-hierarchical-visual-prompt-tuning-for-joint-physical-digital-face-anti-spoofing",
+      "section": "deep",
+      "title_en": "DINO-VPT: Hierarchical Visual Prompt Tuning for Joint Physical-Digital Face Anti-Spoofing",
+      "authors": "Pierre Gallin-Martel, Mika Feng, Koichi Ito, Takafumi Aoki",
+      "date": "2026-07-23",
+      "pdf": "https://arxiv.org/pdf/2607.20900v1",
+      "score": "10.0",
+      "evidence": "提出仅用视觉信息的轻量级面部反欺骗框架，通过层次化视觉提示调优检测物理和数字攻击（含深度伪造）。",
+      "tldr": "面对物理与数字欺骗攻击日益多样化的挑战，统一活体检测模型需求迫切，但现有视觉语言模型依赖复杂的多模态融合与外部文本编码器。本文提出轻量级纯视觉框架DINO-VPT，利用分层视觉提示调优，通过提示路由网络动态注入特征，有效解耦多样欺骗伪影。在UniAttackData基准上，DINO-VPT以更高精度超越基于多模态的SOTA方法。该工作证明，精心设计的纯视觉架构无需多模态监督即可在统一活体检测中达到领先水平。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "With the increasing diversity of spoofing attacks, there is a growing demand for unified Face Anti-Spoofing (FAS) models capable of detecting both physical and digital threats. While existing Vision-Language Models (VLMs) demonstrate high generalization in this context, they heavily rely on complex multimodal fusion and external text encoders. In this paper, we propose DINO-VPT, a lightweight, vision-only framework leveraging hierarchical visual prompt tuning. By dynamically injecting prompts conditioned on input features via a Prompt Routing Network (PRN), our method effectively disentangles diverse spoofing artifacts without requiring multimodal fusion. Evaluations on the UniAttackData benchmark demonstrate that DINO-VPT achieves higher accuracy than state-of-the-art VLM-based methods. Our results indicate that a properly structured vision-only architecture can achieve state-of-the-art performance in unified FAS without the need for multimodal supervision.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/24/2607.21007v1-explainable-deepfake-detection-challenge",
+      "section": "deep",
+      "title_en": "Explainable Deepfake Detection Challenge",
+      "authors": "Abhijeet Narang, Kartik Kuckreja, Shreya Ghosh, Muhammad Haris Khan, Usman Tariq, Jianfei Cai, Abhinav Dhall",
+      "date": "2026-07-23",
+      "pdf": "https://arxiv.org/pdf/2607.21007v1",
+      "score": "10.0",
+      "evidence": "面向深度伪造检测与解释生成的基准挑战",
+      "tldr": "当前深度伪造检测正从单一分类转向联合解释视觉证据，但在实际验证中用户需要了解判别依据。ACM Multimedia 2026的可解释检测挑战赛基于百万级XPlainVerse数据集，要求参赛方法同时提供真伪标签及面向技术用户和普通用户的详细与简洁解释。评估综合分类准确率与语义相似度、简洁性及意图感知定位指标，并公开了评估脚本与基线模型。该挑战旨在推动下一代可解释检测器的研发，促进用户信任和实际部署。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Deepfake detection is moving beyond binary classification decisions toward systems that can also explain the visual evidence supporting those decisions. This transition is important for real-world verification settings, where diverse users need to understand not only whether an image is manipulated, but also why it is considered suspicious. The Explainable Deepfake Detection Challenge at ACM Multimedia 2026 is designed to benchmark this joint capability. Built on XPlainVerse, a million-scale benchmark for explainable deepfake detection, the challenge evaluates methods on image classification and grounded natural-language explanation generation. Participants submit a real/fake label together with two explanations for each image: a detailed complex explanation for technical users and a concise simple explanation for general users. The evaluation combines classification metrics with semantic similarity, simplicity, and intent-aware grounding metrics that assess whether explanations identify the relevant manipulated entities and supporting visual evidence. The methodologies developed through the challenge will contribute to the development of next-generation explainable deepfake detectors. Evaluation script, baseline models, and accompanying code are available on https://github.com/Abhijeet8901/XPlainVerse-ACMChallenge.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/24/2607.21004v1-auch-net-action-unit-based-consistency-aware-hypergraph-network-for-cross-domain-few-shot-facial-expression-recognition",
+      "section": "quick",
+      "title_en": "AUCH-Net: Action Unit-Based Consistency-Aware Hypergraph Network for Cross-Domain Few-Shot Facial Expression Recognition",
+      "authors": "Xinhan Qiu, Yan Yan, Rui Zhu, Si Chen, Hanzi Wang",
+      "date": "2026-07-23",
+      "pdf": "https://arxiv.org/pdf/2607.21004v1",
+      "score": "7.0",
+      "evidence": "针对跨域小样本面部表情识别，直接满足少样本标注示例训练要求。",
+      "tldr": "跨域小样本面部表情识别（CF-FER）面临域差异大和目标样本少等挑战，导致可迁移特征学习困难。本文提出基于动作单元（AU）的一致性感知超图网络AUCH-Net，通过AU特征和视觉特征学习模块及关系一致性损失，实现AU与表情类别的有效连接，从而学习可迁移表示。在实验室和自然场景数据集上，AUCH-Net持续超越现有方法，验证了AU关系建模在跨域小样本FER中的巨大潜力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Recently, cross-domain few-shot facial expression recognition (CF-FER) has received considerable attention. However, the performance of existing CF-FER methods is still unsatisfactory due to inferior transferable feature learning under large domain discrepancy and limited target samples. Fortunately, the action units (AUs), which indicate the movements of different facial muscles, provide consistent conceptual semantics for describing expressions within and across domains. Inspired by this, we propose a novel Action Unit-based Consistency-aware Hypergraph Network (AUCH-Net), which constructs consistency-aware hypergraphs on AUs, for CF-FER. Specifically, AUCH-Net presents a new AU feature learning (AFL) module and a new visual feature learning (VFL) module. The AFL module learns AU features under the guidance of a novel relation consistency loss and an AU regularization loss, while the VFL module learns visual features supervised by a relation consistency loss and a classification loss. By learning consistent AU features, AUCH-Net effectively models the connections between AUs and expression categories. As a result, we can bridge the gap between fine-grained facial variations and high-level expression categories, greatly facilitating the learning of transferable feature representations.Extensive experiments on both in-the-lab and in-the-wild datasets show that our method consistently outperforms several state-of-the-art methods. Our results clearly show that modeling the relationships among AUs holds significant potential for FER under cross-domain few-shot scenarios.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
