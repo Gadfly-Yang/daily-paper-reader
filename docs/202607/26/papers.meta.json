@@ -1,0 +1,54 @@
+{
+  "label": "2026-07-26",
+  "date": "2026-07-26",
+  "generated_at": "2026-07-26T20:49:54",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202607/26/2607.16725v1-semi-supervised-conditional-generative-learning-through-stochastic-interpolation-and-sufficient-representations",
+      "section": "quick",
+      "title_en": "Semi-Supervised Conditional Generative Learning through Stochastic Interpolation and Sufficient Representations",
+      "authors": "Changyu Liu, Yuling Jiao, Jian Huang",
+      "date": "2026-07-18",
+      "pdf": "https://arxiv.org/pdf/2607.16725v1",
+      "score": "7.0",
+      "evidence": "提出半监督框架，通过将生成分解为标签相关潜采样和重建，仅需少量标签",
+      "tldr": "半监督条件生成中，标记数据稀缺，无标注数据丰富但结构信息难以有效利用，直接环境空间建模面临维度灾难，生成质量受限。本文提出RepG，结合条件随机插值与低维充分表示，将生成过程分解为低维潜在空间的条件采样和高维重建两阶段，监督学习聚焦于低维空间，仅需少量标签，大量无标注数据用于重建，从而隔离条件依赖建模于低维流形。理论上，推导出KL散度误差分解，涵盖阶段估计误差与条件互信息偏差；针对深度网络，建立非渐近收敛率，证明RepG收敛速率由潜在空间低内在维度决定，严格优于环境空间直接建模，并通过极小极大下界验证速率最优性。该方法有效规避维度灾难，大幅提升样本效率，为半监督条件生成提供了高效、可扩展且理论完备的新范式。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Conditional generative modeling remains a challenging problem in semi-supervised settings where labeled data is scarce but unlabeled samples are abundant. To effectively leverage structural information embedded within the unlabeled dataset and compensate for sparse conditioning signals, we propose a semi-supervised framework combining conditional stochastic interpolation with low-dimensional latent representations. RepG decomposes generation into two stages: label-dependent latent sampling and high-dimensional reconstruction. This isolates the supervised learning of conditional dependencies to a low-dimensional space, requiring few labels while utilizing the abundant unlabeled data purely for reconstruction. Theoretically, we establish an error decomposition showing that the Kullback-Leibler divergence of RepG comprises stage-wise estimation errors and a structural bias quantified by conditional mutual information. For deep neural network estimators, we derive non-asymptotic convergence rates proving that RepG significantly improves sample complexity. By confining the supervised estimation burden to the low intrinsic dimension of the latent representation, RepG achieves a strictly faster convergence rate. Complemented by a minimax lower bound, our theoretical results demonstrate that this method effectively mitigates the curse of dimensionality inherent in direct ambient-space generative modeling.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/26/2607.20874v1-webly-supervised-multi-label-recognition-evaluation-benchmark-and-dual-branch-multi-label-contrastive-learning",
+      "section": "quick",
+      "title_en": "Webly Supervised Multi-Label Recognition: Evaluation Benchmark and Dual-Branch Multi-Label Contrastive Learning",
+      "authors": "Zhihua Xu, Zhijing Yang, Yufeng Yang, Tianshui Chen",
+      "date": "2026-07-23",
+      "pdf": "https://arxiv.org/pdf/2607.20874v1",
+      "score": "6.0",
+      "evidence": "基于网络监督的多标签图像识别",
+      "tldr": "网络监督多标签识别因缺乏统一基准而研究不足。本文构建了包含Web-COCO和Web-Pascal的WS-MLR基准，两个数据集共约30万张网络图片，分别对应80和20个类别。提出双分支多标签对比学习框架DBMLCL，利用实例级和类别级表征的相似度来识别修正噪声标签。实验显示DBMLCL显著优于现有方法，为该领域建立了公平比较的基础。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Training deep learning models with freely available web images can reduce their dependence on costly manual annotations. Although webly supervised learning has been widely studied for single-label recognition, its multi-label counterpart remains underexplored, partly due to the lack of unified benchmarks and fair comparison protocols. To address this gap, we construct a benchmark for webly supervised multi-label recognition (WS-MLR), including Web-COCO and Web-Pascal, and re-implement representative baselines under a unified setting. The two datasets cover the same 80 and 20 categories as MS-COCO and Pascal VOC, respectively, and contain about 300 thousand images retrieved from the Internet using category-word combinations as search keywords. We further propose a Dual-Branch Multi-Label Contrastive Learning (DBMLCL) framework, which learns category-specific instance-level and category-level representations together with their similarities to identify and correct noisy labels. Extensive experiments on the benchmark demonstrate that DBMLCL achieves superior performance compared to representative baselines.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/26/2607.21127v1-toward-interpretable-speech-deepfake-detection-using-artifact-specific-experts-and-calibrated-detection-scores",
+      "section": "quick",
+      "title_en": "Toward Interpretable Speech Deepfake Detection using Artifact-Specific Experts and Calibrated Detection Scores",
+      "authors": "Viola Negroni, Xin Wang, Wanying Ge, Paolo Bestagini, Junichi Yamagishi, Stefano Tubaro",
+      "date": "2026-07-23",
+      "pdf": "https://arxiv.org/pdf/2607.21127v1",
+      "score": "6.0",
+      "evidence": "基于特定伪影专家的可解释深度伪造检测，方法可迁移至视觉深度伪造",
+      "tldr": "语音深度伪造检测在高风险场景中面临可解释性不足的问题。提出基于特定伪影专家的可解释框架，每个专家检测一种合成伪影并输出校准对数似然比作为证据分数。实验表明五个专家能捕获目标伪影并提供有意义证据，在多个生成管道上捕获可解释信号。该工作为检测决策提供了透明、可理解的证据支持。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "In this work, we propose an interpretable framework for speech deepfake detection based on artifact-specific expert models. Rather than relying on black-box decisions, the framework provides human-understandable evidence, which is critical in high-stakes settings. Each expert is trained to detect a specific speech synthesis artifact, and its output is calibrated into a log-likelihood ratio that serves as an interpretable evidence score. We evaluate five artifact-specific experts and show that, with proper calibration, they can capture their target artifacts and produce meaningful evidence. Importantly, each expert estimates only the presence of its assigned artifact rather than directly performing the final decision. Their outputs are aggregated into an ensemble to produce the actual real-versus-fake classification, while maintaining interpretability by indicating how strongly each expert supports or contradicts a fake classification. Results show that artifact-specific experts capture interpretable signals of synthetic speech across multiple generation pipelines.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
