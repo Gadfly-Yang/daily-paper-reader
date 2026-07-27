@@ -1,0 +1,247 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-27T20:35:04.183058+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2607.21776v1",
+      "source": "arxiv",
+      "title": "Physiological Signals as a Forensic Modality for Talking-Face Deepfake Detection",
+      "abstract": "Talking-face (TF) deepfake generation synthesizes photore- alistic facial video from a static source image and an au- dio signal, producing forgeries that current image-based detectors consistently fail to identify. Unlike face-swap ma- nipulation, TF synthesis has no underlying real video from which to inherit physiological characteristics, making re- mote photoplethysmography (rPPG) a uniquely motivated detection modality for this forgery category. We propose a detection framework that extracts per-video rPPG wave- forms via RhythmFormer and trains a suite of lightweight classifiers to distinguish real from synthesized physiologi- cal signals. Evaluated on the TF subset of Celeb-DF++ un- der a strict subject-independent protocol, where test identi- ties are completely separated from training identities, our 1D ResNet achieves an AUC of 0.806 and EER of 27.8%, placing it within 2.4 points of the best published general- purpose detector (Effort, ICML 2025) while operating ex- clusively on the physiological channel. We document a con- trolled reproduction study of DeepFakesON-Phys, the rep- resentative prior rPPG detector, demonstrating degrada- tion from AUC 0.999 on legacy face-swap data to 0.622 on the TF subset of Celeb-DF++. We further show that detec- tion difficulty is strongly method-dependent: AUC ranges from 0.985 (Real3DPortrait) to 0.690 (IP-LAP) across the seven TF generators, with the ranking remaining perfectly stable across all evaluation protocols. This spread reflects an interpretable physiological property of each generator rather than evaluation noise, and constitutes the primary theoretical contribution of the work.",
+      "authors": [
+        "Othmane Harraq",
+        "Tamer Aldwairi"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CR",
+        "cs.CV",
+        "cs.MM"
+      ],
+      "published": "2026-07-23T19:47:15+00:00",
+      "link": "https://arxiv.org/pdf/2607.21776v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Talking-face deepfake detection using physiological signals",
+      "llm_evidence_cn": "使用生理信号进行说话人脸深度伪造检测",
+      "llm_evidence": "使用生理信号进行说话人脸深度伪造检测",
+      "canonical_evidence": "使用生理信号进行说话人脸深度伪造检测",
+      "llm_tldr_en": "Proposes a deepfake detection framework that uses remote photoplethysmography (rPPG) extracted from talking-face videos to distinguish real from synthesized faces, achieving strong performance on Celeb-DF++ under subject-independent protocol.",
+      "llm_tldr_cn": "针对说话人脸深度伪造，提出基于远程光电容积脉搏波（rPPG）的检测框架。利用RhythmFormer提取视频级rPPG波形，训练轻量分类器区分真实与合成生理信号。在Celeb-DF++数据集上使用独立测试协议评估，证明生理信号可有效检测传统图像检测器无法识别的TF合成伪造，为多媒体取证提供了新模态。",
+      "llm_tldr": "针对说话人脸深度伪造，提出基于远程光电容积脉搏波（rPPG）的检测框架。利用RhythmFormer提取视频级rPPG波形，训练轻量分类器区分真实与合成生理信号。在Celeb-DF++数据集上使用独立测试协议评估，证明生理信号可有效检测传统图像检测器无法识别的TF合成伪造，为多媒体取证提供了新模态。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.22010v1",
+      "source": "arxiv",
+      "title": "How Meta-Learning Shapes LoRA Adapter Geometry in Speech Deepfake Detection",
+      "abstract": "Meta-learning for domain generalization (MLDG) improves out-of-distribution speech deepfake detection over empirical risk minimization (ERM) when both objectives train low-rank adapters on the same frozen self-supervised speech model. Because the architecture and adapter capacity are held fixed, this gap points to differences in how the training objective shapes the adapter, yet the field characterizes objectives through error rates rather than through the geometry of the solution they reach. We introduce a descriptive diagnostic for this question: holding architecture, rank, data, and seeds fixed and varying only the objective, we use the empirical Fisher on the finished adapter to compare the geometry that ERM and MLDG leave behind. We characterize each adapter with effective-rank diagnostics that separate where the adapter changes from where those changes matter to the loss, resolved by projection and by depth. Applied to ERM and MLDG, the diagnostic shows that the objective does not reshape all adapter projections alike: the loss-relevant update concentrates in the query and key projections while becoming more distributed in the output projection, consistently across six corpora and most strongly in the upper layers. The same contrast appears in the merged update independently of the low-rank factorization, indicating that it reflects the geometry of the effective update rather than the parameterization. These results show that the gap between ERM and MLDG is not only a difference in error rate, but a difference in how loss-relevant capacity is organized inside the adapter, and that loss-aware adapter geometry is a way to see it.",
+      "authors": [
+        "Ivan Kukanov",
+        "Janne Laakkonen",
+        "Ville Hautamäki"
+      ],
+      "primary_category": "eess.AS",
+      "categories": [
+        "eess.AS"
+      ],
+      "published": "2026-07-24T06:15:39+00:00",
+      "link": "https://arxiv.org/pdf/2607.22010v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Studies meta-learning for domain generalization in speech deepfake detection, directly addressing deepfake detection with ML",
+      "llm_evidence_cn": "研究元学习用于语音深度伪造检测的域泛化，直接涉及机器学习深度伪造检测",
+      "llm_evidence": "研究元学习用于语音深度伪造检测的域泛化，直接涉及机器学习深度伪造检测",
+      "canonical_evidence": "研究元学习用于语音深度伪造检测的域泛化，直接涉及机器学习深度伪造检测",
+      "llm_tldr_en": "Analyzes how meta-learning for domain generalization improves speech deepfake detection over ERM, comparing adapter geometry through empirical Fisher, providing insights for robust detection.",
+      "llm_tldr_cn": "针对语音深度伪造检测中的域泛化，比较元学习与经验风险最小化训练的低秩适配器，通过经验Fisher分析适配器几何特性，揭示元学习带来的改进源于更好的特征空间结构，为提升检测鲁棒性提供理论依据。",
+      "llm_tldr": "针对语音深度伪造检测中的域泛化，比较元学习与经验风险最小化训练的低秩适配器，通过经验Fisher分析适配器几何特性，揭示元学习带来的改进源于更好的特征空间结构，为提升检测鲁棒性提供理论依据。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.22087v1",
+      "source": "arxiv",
+      "title": "FAIR: Feature-Augmented Implicit Regularization for AI-generated Fake Image Detection",
+      "abstract": "Generalization remains a critical bottleneck in AI-generated image detection. Because many modern generators are proprietary or adversarially modified, existing detectors overfit to the low-level textural patterns of accessible training data, resulting in severe failures on unseen domains. Conventional regularization techniques (e.g., $L_1$/$L_2$ norms, Dropout) apply indiscriminate parametric constraints and fail to provide the domain-invariant structure necessary for cross-generator robustness. To address this, we propose Feature-Augmented Implicit Regularization (FAIR). FAIR introduces an orthogonal, macro-structural prior, specifically, Scene Composition Structure (SCS), during training to geometrically constrain the model's optimization trajectory. By augmenting the primary feature space with domain-invariant SCS features, FAIR explicitly penalizes texture-biased shortcut learning. Crucially, this structural prior is entirely discarded at inference, yielding a smoothed, generalized decision boundary with zero architectural or computational overhead. Extensive evaluations across five massive benchmarks demonstrate that integrating FAIR into state-of-the-art detectors significantly improves cross-generator generalization, boosting accuracy by up to 8.04% and establishing new state-of-the-art robustness in zero-shot transfer scenarios.",
+      "authors": [
+        "Md Redwanul Haque",
+        "Manzur Murshed",
+        "Manoranjan Paul",
+        "Tsz-Kwan Lee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-24T08:34:56+00:00",
+      "link": "https://arxiv.org/pdf/2607.22087v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "FAIR uses Scene Composition Structure to improve cross-generator generalization in AI-generated image detection",
+      "llm_evidence_cn": "FAIR利用场景构图结构改善AI生成图像检测的跨生成器泛化",
+      "llm_evidence": "FAIR利用场景构图结构改善AI生成图像检测的跨生成器泛化",
+      "canonical_evidence": "FAIR利用场景构图结构改善AI生成图像检测的跨生成器泛化",
+      "llm_tldr_en": "Introducing FAIR, a feature-augmented implicit regularization that uses Scene Composition Structure as a macro-prior to achieve cross-generator robustness for AI-generated image detection.",
+      "llm_tldr_cn": "针对AI生成图像检测的跨域泛化瓶颈，提出特征增强隐式正则化FAIR，通过引入场景构图结构作为正交先验，约束模型优化方向，在多个未见生成器上显著提升检测鲁棒性，为伪造检测域泛化提供新思路。",
+      "llm_tldr": "针对AI生成图像检测的跨域泛化瓶颈，提出特征增强隐式正则化FAIR，通过引入场景构图结构作为正交先验，约束模型优化方向，在多个未见生成器上显著提升检测鲁棒性，为伪造检测域泛化提供新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.21897v1",
+      "source": "arxiv",
+      "title": "ISPCloak: Weaponizing ISP for Optimization-Free Physical Camouflage against Deepfake Detectors",
+      "abstract": "The rapid advancement of generative models has spurred the critical need to evaluate the worst-case robustness of deepfake detectors. In this paper, we reveal a fundamental blind spot in current forensic paradigms: while existing detectors excel at capturing digital synthesis artifacts, their effectiveness drops drastically when AI-generated content is cloaked in authentic physical imaging characteristics. We posit that genuine photographs inherently possess hardware-intrinsic statistical signatures, which are imperceptible footprints imprinted by optical sensors and Image Signal Processing (ISP) pipelines, and are fundamentally absent in purely data-driven generative models. Driven by this insight, we propose ISPCloak, a novel optimization-free adversarial attack framework that explicitly weaponizes the ISP pipeline to mislead the judgment of deepfake detectors. Rather than relying on computationally expensive gradient perturbations, our method first employs an Invertible ISP network to project images into the RAW domain. Then, we seamlessly imprint the complex statistical priors of real cameras onto AI-generated images by injecting realistic Poisson-Gaussian sensor noise and conducting forward ISP reconstruction. Synergized with generative artifact suppression and adaptive masking, this streamlined physical simulation enables ultra-fast generation of adversarial examples. Extensive experiments show that embedding authentic physical perturbations fundamentally disrupts a broad range of current detection mechanisms, yielding universally evasive adversarial examples with imperceptible visual alterations.",
+      "authors": [
+        "Jiale Zhao",
+        "Jiajun Wan",
+        "Lei Tang",
+        "Ye Qin",
+        "Kebing Jin",
+        "Jinghui Qin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CR"
+      ],
+      "published": "2026-07-24T01:59:53+00:00",
+      "link": "https://arxiv.org/pdf/2607.21897v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Attack on deepfake detectors by adding physical imaging signatures to synthetic images",
+      "llm_evidence_cn": "通过为合成图像添加物理成像特征规避深度伪造检测器",
+      "llm_evidence": "通过为合成图像添加物理成像特征规避深度伪造检测器",
+      "canonical_evidence": "通过为合成图像添加物理成像特征规避深度伪造检测器",
+      "llm_tldr_en": "ISPCloak reveals that adding authentic ISP characteristics to AI-generated images can fool deepfake detectors, highlighting a robustness blind spot.",
+      "llm_tldr_cn": "现有深度伪造检测器擅长捕获数字合成伪影，但当AI生成内容被添加真实物理成像特征时，检测效果大幅下降。本文提出ISPCloak，利用光学传感器和图像信号处理管道固有的硬件统计特征作为天然伪装，无需优化即可使合成图像规避检测。该方法揭示了检测器依赖合成伪影的致命弱点，为提升检测鲁棒性提供新视角。",
+      "llm_tldr": "现有深度伪造检测器擅长捕获数字合成伪影，但当AI生成内容被添加真实物理成像特征时，检测效果大幅下降。本文提出ISPCloak，利用光学传感器和图像信号处理管道固有的硬件统计特征作为天然伪装，无需优化即可使合成图像规避检测。该方法揭示了检测器依赖合成伪影的致命弱点，为提升检测鲁棒性提供新视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.22072v1",
+      "source": "arxiv",
+      "title": "Alleviating Regional Shortcuts for Few-Shot Class-Incremental Learning",
+      "abstract": "Few-shot class-incremental learning (FSCIL) aims to incrementally learn novel classes with only a few samples while avoiding forgetting base classes. However, current methods show a tendency to misclassify novel-class samples into base classes, which we find to be caused by the excessive focus on base-class-discriminative regions on novel-class samples. In this work, we aim to explore the underlying mechanism for an interpretation and solution. We first provide a compositional view to analyze the transferred and reused spatial patterns on novel-class samples. Then, through extensive experiments and theoretical analysis, we identify both empirically and theoretically that a shortcut exists in the model's base-class training, which naturally forms the excessive focus on only the most discriminative regions (primitives), which we term as the regional shortcut. Finally, based on this interpretation, to address this problem, we propose a compositional-learning-based method to learn two primitive sets (a common set and a discriminative set), which alleviates the regional shortcut by constraining the model to learn and utilize the common primitive set for base- and novel-class recognition. Extensive experiments on standard FSCIL benchmarks demonstrate the effectiveness of our approach, yielding consistent improvements over existing state-of-the-art methods in both accuracy and interpretability.",
+      "authors": [
+        "Haichen Zhou",
+        "Yazhe Lyu",
+        "Yixiong Zou",
+        "Ruixuan Li",
+        "Yuhua Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-24T08:14:44+00:00",
+      "link": "https://arxiv.org/pdf/2607.22072v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "few-shot class-incremental learning addresses training with limited labeled examples",
+      "llm_evidence_cn": "少样本类增量学习处理有限标注样本训练",
+      "llm_evidence": "少样本类增量学习处理有限标注样本训练",
+      "canonical_evidence": "少样本类增量学习处理有限标注样本训练",
+      "llm_tldr_en": "The paper investigates why few-shot class-incremental models misclassify novel classes, identifying regional shortcuts from base training causing biased attention. It proposes a solution to alleviate these shortcuts, improving novel-class accuracy.",
+      "llm_tldr_cn": "本文研究少样本类增量学习中模型将新类误分为基类的问题，发现原因是模型过度关注基类判别区域形成的快捷学习。提出缓解区域快捷的方法，通过分析空间模式重用，从理论和实验验证了快捷的存在，并在多个数据集上提升了新类分类性能，为少样本学习提供了改进方向。",
+      "llm_tldr": "本文研究少样本类增量学习中模型将新类误分为基类的问题，发现原因是模型过度关注基类判别区域形成的快捷学习。提出缓解区域快捷的方法，通过分析空间模式重用，从理论和实验验证了快捷的存在，并在多个数据集上提升了新类分类性能，为少样本学习提供了改进方向。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.22212v1",
+      "source": "arxiv",
+      "title": "Deep Convolutional Large-Margin $\\ell_p$-SVDD for Visual Anomaly Detection",
+      "abstract": "Visual anomaly detection requires adaptive representations and reliable decision boundaries, particularly when anomalous training samples are scarce and class distributions are highly imbalanced. Classical kernel-based methods yield principled geometric decision regions but typically operate on fixed features, while deep detectors learn task-specific representations but often fail to provide an explicit margin-aware kernel boundary. In this study, we propose DLM-SVDD, a deep large-margin novelty-detection framework that jointly learns convolutional features and an explicit kernel-based decision boundary. By drawing on the large-margin $\\ell_p$-Support Vector Data Description ($\\ell_p$-SVDD) approach, the proposed method performs explicit margin maximization and nonlinear slack penalization while adapting the representation to the target task. To train the proposed model, we present an optimization scheme that alternates between a Frank--Wolfe--based update of the convex dual boundary and a CNN update step operating on a smooth margin-violation loss induced by the recovered boundary. To improve scalability, we analyze the efficiency--accuracy trade-offs for different kernel approximation strategies, deriving practical propositions for large-scale anomaly detection.   Extensive experiments on multiple standard benchmarks show consistent performance improvements over the baseline and strong overall performance compared with state-of-the-art methods while illustrating that the proposed joint representation--boundary learning scheme remains effective under severe imbalanced class distributions.",
+      "authors": [
+        "Alireza Dastmalchi Saei",
+        "Shervin Rahimzadeh Arashloo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-07-24T11:30:03+00:00",
+      "link": "https://arxiv.org/pdf/2607.22212v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "anomaly detection with scarce anomalous samples for synthetic image identification",
+      "llm_evidence_cn": "利用稀缺异常样本进行异常检测，可用于合成图像识别",
+      "llm_evidence": "利用稀缺异常样本进行异常检测，可用于合成图像识别",
+      "canonical_evidence": "利用稀缺异常样本进行异常检测，可用于合成图像识别",
+      "llm_tldr_en": "Presents a deep one-class SVM (DLM-SVDD) for visual anomaly detection with limited anomalous training samples, jointly learning features and a large-margin kernel boundary, beneficial for few-shot deepfake detection.",
+      "llm_tldr_cn": "提出深度大间隔单类SVDD（DLM-SVDD）框架，用于在异常训练样本稀缺时进行视觉异常检测。通过联合学习卷积特征和显式核决策边界，最大化异常与正常间的间隔。该方法在处理类别严重不均衡和异常样本极少场景时表现出色，可作为有限的训练数据下检测AI生成图像的基础方法。",
+      "llm_tldr": "提出深度大间隔单类SVDD（DLM-SVDD）框架，用于在异常训练样本稀缺时进行视觉异常检测。通过联合学习卷积特征和显式核决策边界，最大化异常与正常间的间隔。该方法在处理类别严重不均衡和异常样本极少场景时表现出色，可作为有限的训练数据下检测AI生成图像的基础方法。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "identifying AI generated or synthetic images with limited training data",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
