@@ -1,0 +1,175 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-28T21:48:19.280413+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2607.22808v1",
+      "source": "arxiv",
+      "title": "Hybrid Semantic and Spectral Ensemble for Robust Synthetic Image Source Attribution",
+      "abstract": "The rapid advancement of text-to-image (T2I) models has necessitated robust Synthetic Image Source Attribution (SIA) methodologies. A critical challenge in SIA is the distribution shift between pristine training images and real-world deployed images, which undergo unknown post-processing operations such as JPEG compression and blurring. In this work, proposed for the DLMMDD Challenge at ICANN 2026, we introduce a dual-branch ensemble framework fusing Semantic Deep Learning with Mathematical Forensic Feature Extraction. The semantic branch employs EfficientNet-B0 regularized with Exponential Moving Averaging (EMA) and Label Smoothing. The forensic branch extracts 126 mathematical features -- including SVD spectral profiles and Local Binary Patterns -- from high-pass noise residuals, compressed via Truncated SVD and classified with XGBoost. Evaluated on a dataset of 10 generators where 55% of the test set is degraded, our approach achieves a private leaderboard accuracy of 95.60%. Furthermore, the entire pipeline is highly computationally efficient, requiring no GPU acceleration and executing end-to-end on a standard CPU in under 6.5 hours, highlighting the practicality and scalability of mathematical forensics for real-world deployment.",
+      "authors": [
+        "Md. Ajwad Hossain"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.GR",
+        "eess.IV"
+      ],
+      "published": "2026-07-24T17:22:33+00:00",
+      "link": "https://arxiv.org/pdf/2607.22808v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Synthetic image source attribution for AI-generated images",
+      "llm_evidence_cn": "合成图像来源归因用于AI生成图像检测",
+      "llm_evidence": "合成图像来源归因用于AI生成图像检测",
+      "canonical_evidence": "合成图像来源归因用于AI生成图像检测",
+      "llm_tldr_en": "Proposes a dual-branch ensemble fusing semantic deep learning with forensic feature extraction for robust synthetic image source attribution, addressing distribution shifts from post-processing.",
+      "llm_tldr_cn": "针对文本到图像模型合成图像来源归因中的分布偏移问题，提出一种融合语义深度学习和数学取证特征提取的双分支集成框架。语义分支使用EfficientNet-B0，取证分支提取126维手工特征，两者结合提升对JPEG压缩等后处理的鲁棒性。实验表明该方法在DLMMDD挑战中取得优异性能，为真实场景下的合成图像检测提供了有效方案。",
+      "llm_tldr": "针对文本到图像模型合成图像来源归因中的分布偏移问题，提出一种融合语义深度学习和数学取证特征提取的双分支集成框架。语义分支使用EfficientNet-B0，取证分支提取126维手工特征，两者结合提升对JPEG压缩等后处理的鲁棒性。实验表明该方法在DLMMDD挑战中取得优异性能，为真实场景下的合成图像检测提供了有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.22745v1",
+      "source": "arxiv",
+      "title": "AI-generated Images Challenge Visual Trust in High-risk Scenarios",
+      "abstract": "Rapid advances in image generation are eroding the evidentiary value of visual content in settings where authenticity can affect public safety and personal reputation. Yet existing detection benchmarks rarely examine synthetic images in public- and individual-safety contexts, where misleading visual content may carry substantial risks. Here we introduce SafeIMG, a safety-oriented benchmark spanning 12 public- and individual-safety scenarios generated using GPT Image 2. Unlike benchmarks centred on generic imagery and image-level labels, SafeIMG evaluates not only whether detectors recognise synthetic images, but also whether their decisions reflect human-identified anomalies. To this end, SafeIMG provides human annotations that localise suspicious regions and explain local artefacts and higher-level commonsense or physical inconsistencies. We evaluate specialized synthetic-image detectors and vision-language models (VLMs), and find that neither provides reliable detection. The strongest VLM identifies only 49.5% of generated images, whereas the best specialised detector identifies 33.1%, compared with 81.7% accuracy for human evaluators. Model explanations cover only 29.8\\% of human-annotated anomalies and predominantly capture local defects in text, faces and hands. Their coverage falls to 15.0% for commonsense conflicts and 12.0% for physical inconsistencies, while detection performance deteriorates further after dissemination-induced image degradation. These findings show that current detectors lack the accuracy, explanatory alignment and robustness needed to evaluate AI-generated images reliably across public- and individual-safety settings.",
+      "authors": [
+        "Yi-Zhi Wang",
+        "Yichen Xiao",
+        "Linan Yue",
+        "Weibo Gao",
+        "Yichao Du",
+        "Pengfei Fang",
+        "Shimin Di",
+        "Min-Ling Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-23T06:56:49+00:00",
+      "link": "https://arxiv.org/pdf/2607.22745v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Benchmark for evaluating detectors on AI-generated images in safety scenarios",
+      "llm_evidence_cn": "针对安全场景中AI生成图像检测器的评估基准",
+      "llm_evidence": "针对安全场景中AI生成图像检测器的评估基准",
+      "canonical_evidence": "针对安全场景中AI生成图像检测器的评估基准",
+      "llm_tldr_en": "Introduces SafeIMG, a benchmark for AI-generated image detection in high-risk public and individual safety scenarios, with human-annotated suspicious regions to assess detector faithfulness.",
+      "llm_tldr_cn": "现有检测基准很少考察公共和个人安全场景中的合成图像，而这些场景下错误视觉内容可能带来重大风险。本文提出SafeIMG，一个面向安全的基准，涵盖12种安全场景，由GPT Image 2生成。不同于仅提供图像级标签的基准，SafeIMG不仅评估检测器能否识别合成图像，还评估其决策是否与人类标注的异常区域一致，提供了可疑区域的局部标注。该基准有助于推动更可信的AI生成图像检测研究。",
+      "llm_tldr": "现有检测基准很少考察公共和个人安全场景中的合成图像，而这些场景下错误视觉内容可能带来重大风险。本文提出SafeIMG，一个面向安全的基准，涵盖12种安全场景，由GPT Image 2生成。不同于仅提供图像级标签的基准，SafeIMG不仅评估检测器能否识别合成图像，还评估其决策是否与人类标注的异常区域一致，提供了可疑区域的局部标注。该基准有助于推动更可信的AI生成图像检测研究。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.24016v1",
+      "source": "arxiv",
+      "title": "DailyBench: A Unified Benchmark for AI-Generated and Manipulated Images from Modern Generative Models",
+      "abstract": "Recent advances in generative models have shifted AI-generated image detection from identifying easily distinguishable, fully synthetic images to identifying highly realistic content generated by both modern generation and manipulation pipelines. However, existing detection benchmarks are often built with outdated generative models and primarily emphasize full-image synthesis, creating a growing mismatch between benchmark data and the images encountered in real-world generation and editing scenarios. To bridge this gap, we introduce DailyBench, a high-quality unified benchmark for evaluating whether AI-generated image detectors can generalize across both modern full-image synthesis and object-level manipulation. DailyBench contains two complementary subsets: FakeBench, which includes high-quality images synthesized by recent open-source and commercial generative models, and ManipulationBench, which introduces challenging object-level edits applied to real images using advanced image-conditional models. This design makes DailyBench a realistic testbed for studying both generator-level generalization and manipulation-aware detection under subtle local edits. Experiments on DailyBench reveal substantial robustness gaps in current detectors: methods reporting 91-96% balanced accuracy on GenImage drop to 60-76% on FakeBench and 54-66% on ManipulationBench. These results show that existing detectors remain poorly generalized to realistic synthesis and manipulation, highlighting DailyBench as a rigorous testbed for developing robust and manipulation-aware AI-generated image detection methods. The project is available at https://dailybench.github.io/",
+      "authors": [
+        "Xin Jiang",
+        "Hao Tang",
+        "Junyao Gao",
+        "Meiqi Cao",
+        "Fei Shen",
+        "Dongming Zhang",
+        "Yongdong Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-27T05:27:35+00:00",
+      "link": "https://arxiv.org/pdf/2607.24016v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Benchmark for evaluating generalization of AI-generated image detectors across modern synthesis and manipulation",
+      "llm_evidence_cn": "评估AI生成图像检测器跨现代合成和编辑任务泛化性的基准",
+      "llm_evidence": "评估AI生成图像检测器跨现代合成和编辑任务泛化性的基准",
+      "canonical_evidence": "评估AI生成图像检测器跨现代合成和编辑任务泛化性的基准",
+      "llm_tldr_en": "DailyBench introduces a unified benchmark for AI-generated image detection, covering both full-image synthesis and object-level manipulation from modern generative models, addressing the gap in evaluation for real-world scenarios.",
+      "llm_tldr_cn": "DailyBench提出了一个统一的AI生成图像检测基准，涵盖现代生成模型的全图合成和对象级操作，弥补了现有基准与真实世界场景之间的差距。该基准包含多样化的生成源和操作类型，强调评估检测器在不同任务上的泛化能力，为开发更鲁棒的检测器提供了重要工具。",
+      "llm_tldr": "DailyBench提出了一个统一的AI生成图像检测基准，涵盖现代生成模型的全图合成和对象级操作，弥补了现有基准与真实世界场景之间的差距。该基准包含多样化的生成源和操作类型，强调评估检测器在不同任务上的泛化能力，为开发更鲁棒的检测器提供了重要工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.22725v1",
+      "source": "arxiv",
+      "title": "Structural Preservation Governs Data Augmentation in Deep Learning-Based Laser Speckle Material Classification",
+      "abstract": "Data augmentation is routinely used to improve generalization in image classification, but the assumptions underlying standard policies are poorly matched to coherent imaging. Laser speckle patterns are not generic textures; they arise from coherent interference, and their discriminative content is carried by structured stochastic spatial and frequency statistics. This study examines how controlled augmentation perturbations influence speckle-based material classification on the SensiCut dataset. We train ResNet18 and EfficientNet-B0 under a parametric augmentation framework comprising rotation, Gaussian blur, independent Gaussian noise, spatially correlated speckle-aware noise, intensity jitter, and spatial masking, and evaluate test performance using macro F1-score averaged over three random seeds. Separate ordinary least squares models link augmentation parameters to performance for each architecture. Across both models, Gaussian blur exerts a strong negative effect (p < 0.001), indicating that low-pass filtering suppresses high-frequency structure that is informative for material discrimination. Independent pixel-wise noise is likewise harmful (p = 0.003 for EfficientNet-B0 and p = 0.001 for ResNet18), consistent with disruption of local spatial coherence. In contrast, spatially correlated perturbations yield significant positive coefficients (p = 0.004 for EfficientNet-B0 and p = 0.001 for ResNet18), showing that variability can improve robustness when it preserves speckle organization. The fitted models explain a substantial fraction of performance variation (R2 = 0.796 for EfficientNet-B0 and R2 = 0.879 for ResNet18). These results show that, in laser speckle imaging, augmentation effectiveness is determined primarily by structural preservation rather than perturbation magnitude. The findings motivate physics-aware augmentation design for coherent optical sensing.",
+      "authors": [
+        "Mohamed Abdallah Salem",
+        "Nourhan Zein Diab"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-07-22T04:21:58+00:00",
+      "link": "https://arxiv.org/pdf/2607.22725v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "image classification with CNN data augmentation for material classification",
+      "llm_evidence_cn": "基于CNN数据增广的激光散斑材料分类",
+      "llm_evidence": "基于CNN数据增广的激光散斑材料分类",
+      "canonical_evidence": "基于CNN数据增广的激光散斑材料分类",
+      "llm_tldr_en": "Investigates how controlled data augmentation affects deep learning-based material classification from laser speckle patterns, training ResNet and EfficientNet.",
+      "llm_tldr_cn": "数据增广常用于提升图像分类泛化性，但标准策略不适用于激光散斑等相干成像。本文研究参数化增广（旋转、模糊、噪声等）对散斑材料分类的影响，训练ResNet18和EfficientNet-B0，发现保持散斑结构统计特性对分类性能至关重要。",
+      "llm_tldr": "数据增广常用于提升图像分类泛化性，但标准策略不适用于激光散斑等相干成像。本文研究参数化增广（旋转、模糊、噪声等）对散斑材料分类的影响，训练ResNet18和EfficientNet-B0，发现保持散斑结构统计特性对分类性能至关重要。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
