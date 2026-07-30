@@ -1,0 +1,39 @@
+{
+  "label": "2026-07-30",
+  "date": "2026-07-30",
+  "generated_at": "2026-07-30T21:44:02",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202607/30/2607.27113v1-veritas-value-aware-on-policy-distillation-for-perception-enhanced-aigi-detection",
+      "section": "deep",
+      "title_en": "Veritas++: Value-aware On-Policy Distillation for Perception-Enhanced AIGI Detection",
+      "authors": "Hao Tan, Jun Lan, Zichang Tan, Ajian Liu, Zijian Yu, Chuanbiao Song, Huijia Zhu, Weiqiang Wang, Jun Wan, Zhen Lei",
+      "date": "2026-07-29",
+      "pdf": "https://arxiv.org/pdf/2607.27113v1",
+      "score": "9.0",
+      "evidence": "通过感知增强的多模态推理改进AI生成图像检测。",
+      "tldr": "AI生成图像技术迅猛发展，合成图像在开放媒体中泛滥，鲁棒且通用的AIGI检测至关重要。现有多模态大模型检测器虽具透明性，但存在感知瓶颈：仅关注视觉组织，忽视细粒度异常。为此，我们提出Veritas++，以细粒度视觉、语义异常和像素差异感知为基座，通过面向感知的学习（PoRL）和价值感知在线策略蒸馏（VaOPD）强化推理。在多个基准上，该方法获得强泛化性，有效弥补感知差距，赋予检测无缝增益。该工作为感知增强的AIGI检测提供了新范式，有力推动视觉内容鉴伪研究。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "The growing capability of image generation models has made synthetic images a routine presence in open media, making robust and generalizable AI-Generated Image (AIGI) detection increasingly essential. While multi-modal large language models (MLLMs) offer a transparent alternative to black-box binary scoring, we observe that current MLLM-based detectors still exhibit notable perception bottlenecks in capturing fine-grained anomalies. They primarily focus on how visual evidence is organized and synthesized, leaving the intrinsic perception less optimized. To mitigate this gap, we present Veritas++, a perception-enhanced reasoning framework that establishes reliable perception as the foundation of authenticity reasoning. Rather than directly optimizing the model's explanatory ability, we ground AIGI detection on three basic perception abilities, i.e., capturing fine-grained visual details, semantic anomalies and pixel-level differences. Building on this insight, we introduce Perception-oriented Learning (PoRL), which replaces open-ended description supervision with verifiable rewards to explicitly strengthen these capacities. To further integrate enhanced perception with reasoning, we introduce Value-aware On-Policy Distillation (VaOPD), an adaptive distillation mechanism that prioritizes high-value distillation signals over uniform supervision, internalizing perception-aware reasoning through a privileged self-teacher. Extensive experiments across standard, in-the-wild and emerging benchmarks demonstrate that Veritas++ achieves promising generalization. The perception learning effectively bridges the perception gap and yields seamless gains on detection, while VaOPD further enables efficient capability evolvement without sacrificing existing performance. Code and checkpoints are available at https://github.com/EricTan7/VeritasPP.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202607/30/2607.26641v1-fakeidet3-db-refining-digital-attacks-and-patch-extraction-for-secure-id-benchmarking",
+      "section": "deep",
+      "title_en": "FakeIDet3-DB: Refining Digital Attacks and Patch Extraction for Secure ID Benchmarking",
+      "authors": "Muñoz-Haro Javier, Teruel Andres, Tolosana Ruben, DeAlcala Daniel, Vera-Rodriguez Ruben, Morales Aythami, Fierrez Julian",
+      "date": "2026-07-29",
+      "pdf": "https://arxiv.org/pdf/2607.26641v1",
+      "score": "8.0",
+      "evidence": "证件上生成式AI篡改的数据库",
+      "tldr": "身份文件认证依赖高精度安全图案的结构完整性，但生成式AI可实施局部高保真篡改以绕过检测，训练取证模型却受隐私法规制约，只能使用缺乏真实复杂视觉图案的合成ID。为解决这一领域差距，本文提出FakeIDet3-DB，首个基于真实政府签发ID的数字篡改数据库，包含复制-移动、换脸、修复等经典与生成式攻击，并采用图像细化去伪影。同时设计了隐私感知补丁提取算法PACE，利用积分图和距离驱动非极大抑制，智能生成低个人隐私风险但语义丰富的匿名补丁，从6.4K图像中提取约520万补丁。实验显示，最先进模型检测等错误率高达32.45%，定位AUC-ROC仅83.48%，揭示了现有技术对这类攻击的检测与定位能力严重不足，为隐私兼容的ID安全研究奠定了基准。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Identity document (ID) authentication relies on the structural integrity of complex, high-frequency security patterns. However, advanced Generative AI models can now inject localized, high-fidelity manipulations, creating deceptive attacks that bypass standard verification. Training robust image forensic models to detect these anomalies is hindered by privacy regulations, forcing reliance on synthetic templates lacking the intricate visual patterns of real IDs. To bridge this domain gap, we introduce FakeIDet3-DB, the first comprehensive database of digital manipulations on real, government-issued IDs. FakeIDet3-DB encompasses classical (e.g., copy-move) and Generative AI-driven manipulations (e.g., face-swapping, inpainting) enhanced with advanced image refinement procedures to suppress visual artifacts. In addition, to comply with strict data protection regulations (e.g., GDPR), we adopt a recently-proposed framework based on patches. In order to maximize forensic utility, we formulate privacy-aware patch extraction from a real ID as a geometrically constrained image processing problem. We propose PACE, a Pseudo-Anonymized Contextual patch Extraction algorithm, which leverages Integral Image mapping and distance-driven Non-Maximum Suppression (NMS). PACE efficiently contours anonymization masks that prevent Personally Identifiable Information (PII) leakage while maximizing semantic density in peri-censorship regions, yielding almost 5.2M patches extracted from more than 6.4K images from real/fake IDs. Furthermore, an extensive evaluation of the proposed FakeIDet3-DB is performed using state-of-the-art models, showcasing they all struggle to detect and locate attacks coming from generative and classic techniques (32.45\\% EER in detection and 83.48\\% AUC-ROC in localization).",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
