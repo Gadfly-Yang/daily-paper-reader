@@ -1,0 +1,133 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-01T21:17:14.273926+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2607.26432v1",
+      "source": "arxiv",
+      "title": "FAS-R1: A Unified Multi-Task MLLM for Reasoning Face Anti-Spoofing",
+      "abstract": "Face anti-spoofing (FAS) is increasingly expected to provide not only bona fide/spoof decisions, but also attack semantics and image-grounded evidence for human inspection. Existing discriminative FAS models remain largely label-centric, while recent MLLM-based methods offer structured outputs but still rely mainly on supervised fine-tuning, often producing template-like rationales and weak optimization for difficult attacks. We propose FAS-R1, a two-stage reasoning-oriented MLLM framework for unified FAS prediction, covering authenticity classification, attack-type recognition and spoof-region localization. FAS-R1 first uses FAS-R1-23K, a high-quality long-CoT dataset, for cold-start supervised fine-tuning, and then performs FAS-specific GRPO post-training. Degradation-Simulated Augmentation (DSA) encourages stable spoof-cue reasoning across visual-quality shifts, while Difficulty-Aware GRPO (DA-GRPO) mitigates easy-sample dominance that may leave difficult task--attack groups under-optimized, especially for subtle or ambiguous attacks such as makeup and mask attacks. The main 3B FAS-R1 model achieves 98.75\\% authenticity accuracy, 93.33\\% attack-type accuracy, and 96.30/94.73\\% AP@40/AP@50 in-domain. It also outperforms the compared systems in cross-domain authenticity generalization and answer-and-rationale quality. Experiments with different base models further show favorable scaling behavior. The code will be released soon.",
+      "authors": [
+        "Hongyang Wang",
+        "Yichen Shi",
+        "Hongrui Li",
+        "Yiru Huo",
+        "Jun Feng",
+        "Zitong Yu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-29T03:19:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.26432v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "reasoning-based multi-task MLLM for face anti-spoofing, covering authenticity classification, attack-type recognition, and spoof-region localization directly addresses manipulated face detection in multimedia forensics",
+      "llm_evidence_cn": "基于推理的多任务多模态大模型用于人脸反欺骗，包含真伪分类、攻击类型识别、伪造区域定位，直接匹配人脸篡改检测需求",
+      "llm_evidence": "基于推理的多任务多模态大模型用于人脸反欺骗，包含真伪分类、攻击类型识别、伪造区域定位，直接匹配人脸篡改检测需求",
+      "canonical_evidence": "基于推理的多任务多模态大模型用于人脸反欺骗，包含真伪分类、攻击类型识别、伪造区域定位，直接匹配人脸篡改检测需求",
+      "llm_tldr_en": "This paper presents FAS-R1, a two-stage reasoning-oriented MLLM for unified face anti-spoofing. It uses a long-CoT dataset and GRPO post-training to generate not only spoof decisions but also attack semantics and evidence. This directly tackles the requirement of detecting manipulated face images by providing explainable reasoning, which is crucial for multimedia forensics.",
+      "llm_tldr_cn": "本文提出FAS-R1，一个两阶段的推理导向多模态大语言模型框架，用于统一的人脸反欺骗任务。第一阶段利用高质量长思维链数据集进行监督微调，第二阶段通过GRPO后训练增强复杂攻击的优化。该模型不仅能判断真伪，还能识别攻击类型并定位伪造区域，并提供可解释的推理证据，契合多媒体取证中对篡改人脸图像检测的需求。",
+      "llm_tldr": "本文提出FAS-R1，一个两阶段的推理导向多模态大语言模型框架，用于统一的人脸反欺骗任务。第一阶段利用高质量长思维链数据集进行监督微调，第二阶段通过GRPO后训练增强复杂攻击的优化。该模型不仅能判断真伪，还能识别攻击类型并定位伪造区域，并提供可解释的推理证据，契合多媒体取证中对篡改人脸图像检测的需求。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.26993v2",
+      "source": "arxiv",
+      "title": "Foundation Models for Face Presentation Attack Detection: A Unified Linear-Probing Benchmark",
+      "abstract": "Face presentation attack detection (PAD) remains challenging under cross-dataset evaluation, where domain shift degrades models trained on a single dataset. The scarcity of large-scale labeled data motivates adapting pretrained vision models rather than training task-specific architectures from scratch, raising a fundamental question: do general-purpose vision foundation models encode PAD-relevant information accessible with minimal task-specific training? To investigate, we systematically evaluate 24 frozen encoders, including self-supervised vision transformers, vision-language encoders, and supervised CNNs, using a unified linear-probing protocol on the MCIO benchmark (MSU-MFSD, CASIA-FASD, Replay-Attack, OULU-NPU). The backbone remains fixed, and only a lightweight linear head is trained to isolate the PAD information already present in the pretrained representation. Results show that frozen foundation-model representations can support strong intra-dataset PAD performance with only a linear classifier, but this performance does not reliably transfer across datasets. Model scale is beneficial within several families, although the effect is not monotonic and is strongly mediated by architecture and pretraining. InternViT-6B achieves the lowest mean intra-dataset error, whereas CLIP ViT-B/32 offers the most favorable cross-dataset transfer-compute trade-off among the evaluated probes. These findings suggest that while pretrained representations contain PAD-relevant information, explicit adaptation remains necessary to address domain shift.",
+      "authors": [
+        "Peter Lorenz",
+        "Anjith George",
+        "Sébastien Marcel"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-29T14:52:25+00:00",
+      "link": "https://arxiv.org/pdf/2607.26993v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "linear probing of foundation models for face presentation attack detection",
+      "llm_evidence_cn": "对基础模型进行线性探测以检测人脸呈现攻击",
+      "llm_evidence": "对基础模型进行线性探测以检测人脸呈现攻击",
+      "canonical_evidence": "对基础模型进行线性探测以检测人脸呈现攻击",
+      "llm_tldr_en": "Systematically evaluates 24 frozen vision encoders for face presentation attack detection using linear probing, revealing which foundation models best capture PAD-relevant features.",
+      "llm_tldr_cn": "针对人脸呈现攻击检测中标注数据稀缺和跨库泛化难的问题，系统性评估了24种冻结视觉编码器（包括自监督视觉Transformer和CNN等），通过统一线性探测协议在公开基准上测试。研究发现某些基础模型编码了丰富的PAD相关信息，仅需少量任务特定训练即可取得有竞争力的性能，为轻量级人脸伪造检测提供了基准。",
+      "llm_tldr": "针对人脸呈现攻击检测中标注数据稀缺和跨库泛化难的问题，系统性评估了24种冻结视觉编码器（包括自监督视觉Transformer和CNN等），通过统一线性探测协议在公开基准上测试。研究发现某些基础模型编码了丰富的PAD相关信息，仅需少量任务特定训练即可取得有竞争力的性能，为轻量级人脸伪造检测提供了基准。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.26565v2",
+      "source": "arxiv",
+      "title": "Representation Trajectories Matters: Complementary Evidence for OOD Detection and Image Classification",
+      "abstract": "Vision models do not form a representation at once; each block revises it. We ask whether the resulting computation path contains evidence that the final representation discards, and whether that evidence improves OOD detection and image classification on clean and shifted data. Unlike approaches that treat intermediate layers as separate snapshots, we retain sample identity across depth and study the transformations connecting successive states. We separate class-coherent transport from input-specific innovation, and coordinate movement from relational reorganization. Across supervised, self-supervised, vision--language, hierarchical, and convolutional encoders, these paths show strong sample-specific continuity and architecture-specific depth profiles that recur across datasets. They are also practically useful. An ID-only transition-surprise score complements strong final-state detectors, reducing FPR95 in 131/152 non-saturated comparisons on a balanced OpenOOD grid; gains are largest for visually disruptive and semantically far shifts, and remain positive on near-OOD for most detectors. Frozen update probes improve 71/72 clean model--dataset cases, while shifted-data gains vary with architecture and corruption type. Computation paths therefore provide a broadly useful reliability signal whose value is determined jointly by model organization and the shift encountered.",
+      "authors": [
+        "Ignacio M. De la Jara",
+        "Cristian Rodriguez-Opazo",
+        "Hamed Damirchi",
+        "Stephen Gould",
+        "Damith Ranasinghe"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-29T07:35:59+00:00",
+      "link": "https://arxiv.org/pdf/2607.26565v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "representation trajectories for OOD detection and image classification can help distinguish real vs. computer-generated images",
+      "llm_evidence_cn": "利用表征轨迹进行OOD检测和图像分类，有助于区分真实与计算机生成图像",
+      "llm_evidence": "利用表征轨迹进行OOD检测和图像分类，有助于区分真实与计算机生成图像",
+      "canonical_evidence": "利用表征轨迹进行OOD检测和图像分类，有助于区分真实与计算机生成图像",
+      "llm_tldr_en": "This paper proposes using representation trajectories across network depth to capture complementary evidence for OOD detection and image classification. It separates class-coherent transport from input-specific innovation. The method improves detection of out-of-distribution samples, which can be applied to identifying computer-generated images versus real photographs.",
+      "llm_tldr_cn": "本文研究视觉模型中逐块修订的表征轨迹，提出分离类别一致传输与输入特定创新，以提取最终表征丢弃的互补证据。该方法在监督、自监督、视觉语言等多种编码器上显著提升了OOD检测和图像分类性能。由于计算机生成图像可视为分布外样本，此方法为区分真实与生成图像提供了一种新的通用途径。",
+      "llm_tldr": "本文研究视觉模型中逐块修订的表征轨迹，提出分离类别一致传输与输入特定创新，以提取最终表征丢弃的互补证据。该方法在监督、自监督、视觉语言等多种编码器上显著提升了OOD检测和图像分类性能。由于计算机生成图像可视为分布外样本，此方法为区分真实与生成图像提供了一种新的通用途径。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

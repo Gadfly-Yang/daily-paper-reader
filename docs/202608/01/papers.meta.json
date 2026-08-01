@@ -1,0 +1,54 @@
+{
+  "label": "2026-08-01",
+  "date": "2026-08-01",
+  "generated_at": "2026-08-01T21:20:12",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202608/01/2607.26432v1-fas-r1-a-unified-multi-task-mllm-for-reasoning-face-anti-spoofing",
+      "section": "deep",
+      "title_en": "FAS-R1: A Unified Multi-Task MLLM for Reasoning Face Anti-Spoofing",
+      "authors": "Hongyang Wang, Yichen Shi, Hongrui Li, Yiru Huo, Jun Feng, Zitong Yu",
+      "date": "2026-07-29",
+      "pdf": "https://arxiv.org/pdf/2607.26432v1",
+      "score": "9.0",
+      "evidence": "基于推理的多任务多模态大模型用于人脸反欺骗，包含真伪分类、攻击类型识别、伪造区域定位，直接匹配人脸篡改检测需求",
+      "tldr": "现有人脸活体检测方法多限于标签级决策或产生模板化解释，难以应对复杂攻击。FAS-R1提出两阶段推理框架，通过冷启动监督微调和奖励引导优化统一进行真实性判别、攻击分类和区域定位。该方法结合退化模拟增强与难度感知优化，有效提升困难攻击下的推理鲁棒性。3B参数模型域内准确率达98.75%，跨域泛化显著，展现了多任务统一推理的潜力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Face anti-spoofing (FAS) is increasingly expected to provide not only bona fide/spoof decisions, but also attack semantics and image-grounded evidence for human inspection. Existing discriminative FAS models remain largely label-centric, while recent MLLM-based methods offer structured outputs but still rely mainly on supervised fine-tuning, often producing template-like rationales and weak optimization for difficult attacks. We propose FAS-R1, a two-stage reasoning-oriented MLLM framework for unified FAS prediction, covering authenticity classification, attack-type recognition and spoof-region localization. FAS-R1 first uses FAS-R1-23K, a high-quality long-CoT dataset, for cold-start supervised fine-tuning, and then performs FAS-specific GRPO post-training. Degradation-Simulated Augmentation (DSA) encourages stable spoof-cue reasoning across visual-quality shifts, while Difficulty-Aware GRPO (DA-GRPO) mitigates easy-sample dominance that may leave difficult task--attack groups under-optimized, especially for subtle or ambiguous attacks such as makeup and mask attacks. The main 3B FAS-R1 model achieves 98.75\\% authenticity accuracy, 93.33\\% attack-type accuracy, and 96.30/94.73\\% AP@40/AP@50 in-domain. It also outperforms the compared systems in cross-domain authenticity generalization and answer-and-rationale quality. Experiments with different base models further show favorable scaling behavior. The code will be released soon.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/01/2607.26993v2-foundation-models-for-face-presentation-attack-detection-a-unified-linear-probing-benchmark",
+      "section": "deep",
+      "title_en": "Foundation Models for Face Presentation Attack Detection: A Unified Linear-Probing Benchmark",
+      "authors": "Peter Lorenz, Anjith George, Sébastien Marcel",
+      "date": "2026-07-29",
+      "pdf": "https://arxiv.org/pdf/2607.26993v2",
+      "score": "8.0",
+      "evidence": "对基础模型进行线性探测以检测人脸呈现攻击",
+      "tldr": "人脸呈现攻击检测面临跨数据集域偏移挑战，且大规模标注数据稀缺。为探究通用视觉基础模型是否包含PAD相关信息，本文对24个冻结编码器进行统一线性探测评估。实验显示，冻结表示在数据集内表现强劲但跨域迁移有限，其中InternViT-6B取得最低数据集内误差，CLIP ViT-B/32则提供最优跨数据集迁移-计算权衡。该工作揭示了预训练表示中蕴含PAD信息，但需显式适应以应对域偏移。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Face presentation attack detection (PAD) remains challenging under cross-dataset evaluation, where domain shift degrades models trained on a single dataset. The scarcity of large-scale labeled data motivates adapting pretrained vision models rather than training task-specific architectures from scratch, raising a fundamental question: do general-purpose vision foundation models encode PAD-relevant information accessible with minimal task-specific training? To investigate, we systematically evaluate 24 frozen encoders, including self-supervised vision transformers, vision-language encoders, and supervised CNNs, using a unified linear-probing protocol on the MCIO benchmark (MSU-MFSD, CASIA-FASD, Replay-Attack, OULU-NPU). The backbone remains fixed, and only a lightweight linear head is trained to isolate the PAD information already present in the pretrained representation. Results show that frozen foundation-model representations can support strong intra-dataset PAD performance with only a linear classifier, but this performance does not reliably transfer across datasets. Model scale is beneficial within several families, although the effect is not monotonic and is strongly mediated by architecture and pretraining. InternViT-6B achieves the lowest mean intra-dataset error, whereas CLIP ViT-B/32 offers the most favorable cross-dataset transfer-compute trade-off among the evaluated probes. These findings suggest that while pretrained representations contain PAD-relevant information, explicit adaptation remains necessary to address domain shift.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/01/2607.26565v2-representation-trajectories-matters-complementary-evidence-for-ood-detection-and-image-classification",
+      "section": "quick",
+      "title_en": "Representation Trajectories Matters: Complementary Evidence for OOD Detection and Image Classification",
+      "authors": "Ignacio M. De la Jara, Cristian Rodriguez-Opazo, Hamed Damirchi, Stephen Gould, Damith Ranasinghe",
+      "date": "2026-07-29",
+      "pdf": "https://arxiv.org/pdf/2607.26565v2",
+      "score": "7.0",
+      "evidence": "利用表征轨迹进行OOD检测和图像分类，有助于区分真实与计算机生成图像",
+      "tldr": "视觉模型通过多层逐步修正表示，但最终表示可能遗漏计算路径中的互补证据。本文研究连续层间转换，保留样本在深度上的身份，分离类别传输与输入创新、坐标运动与关系重组。跨多种编码器发现路径具有样本特异性连续性和架构特定轮廓，且在不同数据集上重现。基于ID的转变惊奇分数可补充强检测器，在OpenOOD网格的131/152个非饱和比较中降低FPR95，对视觉破坏和语义远偏移增益最大；冻结更新探针改善71/72个干净数据分类。计算路径提供广泛有用的可靠性信号，增益由模型架构与偏移类型共同决定。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Vision models do not form a representation at once; each block revises it. We ask whether the resulting computation path contains evidence that the final representation discards, and whether that evidence improves OOD detection and image classification on clean and shifted data. Unlike approaches that treat intermediate layers as separate snapshots, we retain sample identity across depth and study the transformations connecting successive states. We separate class-coherent transport from input-specific innovation, and coordinate movement from relational reorganization. Across supervised, self-supervised, vision--language, hierarchical, and convolutional encoders, these paths show strong sample-specific continuity and architecture-specific depth profiles that recur across datasets. They are also practically useful. An ID-only transition-surprise score complements strong final-state detectors, reducing FPR95 in 131/152 non-saturated comparisons on a balanced OpenOOD grid; gains are largest for visually disruptive and semantically far shifts, and remain positive on near-OOD for most detectors. Frozen update probes improve 71/72 clean model--dataset cases, while shifted-data gains vary with architecture and corruption type. Computation paths therefore provide a broadly useful reliability signal whose value is determined jointly by model organization and the shift encountered.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
