@@ -1,0 +1,135 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-02T20:51:57.887133+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2607.26723v1",
+      "source": "arxiv",
+      "title": "FARI: Robust One-Step Inversion for Watermarking in Diffusion Models",
+      "abstract": "Inversion-based watermarking is a promising approach to authenticate diffusion-generated images, yet practical use is bottlenecked by inversion that is both slow and error-prone. While the primary challenge in the watermarking setting is robustness against external distortions, existing approaches over-optimize internal truncation error, and because that error scales with the sampler step size, they are inherently confined to high-NFE (number of function evaluations) regimes that cannot meet the dual demands of speed and robustness. In this work, we have two key observations: (i) the inversion trajectory has markedly lower curvature than the forward generation path does, making it highly compressible and amenable to low-NFE approximation; and (ii) in inversion for watermark verification, the trade-off between speed and truncation error is less critical, since external distortions dominate the error. A faster inverter provides a dual benefit: it is not only more efficient, but it also enables end-to-end adversarial training to directly target robustness, a task that is computationally prohibitive for the original, lengthy inversion trajectories. Building on this, we propose \\textbf{FARI} (\\textbf{F}ast \\textbf{A}symmetric \\textbf{R}obust \\textbf{I}nversion), a one-step inversion framework paired with lightweight adversarial LoRA fine-tuning of the denoiser for watermark extraction. While consolidation slightly increases internal error, FARI delivers large gains in both speed and robustness: with approximately 20 minutes of fine-tuning on a single NVIDIA RTX A6000 GPU, it surpasses 50-step DDIM inversion on watermark-verification robustness while dramatically reducing inference time. Code and pretrained models are available at https://github.com/0xD009/FARI.",
+      "authors": [
+        "Jindong Yang",
+        "Han Fang",
+        "Weiming Zhang",
+        "Nenghai Yu",
+        "Kejiang Chen"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI"
+      ],
+      "published": "2026-07-29T10:13:55+00:00",
+      "link": "https://arxiv.org/pdf/2607.26723v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Watermarking authentications diffusion-generated images to detect AI-generated content",
+      "llm_evidence_cn": "水印认证扩散生成的图像以检测AI生成内容",
+      "llm_evidence": "水印认证扩散生成的图像以检测AI生成内容",
+      "canonical_evidence": "水印认证扩散生成的图像以检测AI生成内容",
+      "llm_tldr_en": "FARI proposes a robust one-step inversion method for watermarking diffusion models, enabling efficient and resilient authentication of generated images against distortions, thus supporting the detection of AI-generated content in practical settings.",
+      "llm_tldr_cn": "FARI针对扩散模型水印中反演步骤慢且易错的问题，提出鲁棒的一步反演方法，利用反演轨迹低曲率特性实现低NFE鲁棒水印嵌入与验证。实验表明该方法在保持快速的同时能抵抗多种失真，为扩散生成图像的认证与AI生成内容检测提供了实用工具，推动了生成图像溯源技术的进步。",
+      "llm_tldr": "FARI针对扩散模型水印中反演步骤慢且易错的问题，提出鲁棒的一步反演方法，利用反演轨迹低曲率特性实现低NFE鲁棒水印嵌入与验证。实验表明该方法在保持快速的同时能抵抗多种失真，为扩散生成图像的认证与AI生成内容检测提供了实用工具，推动了生成图像溯源技术的进步。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.25318v1",
+      "source": "arxiv",
+      "title": "Beyond Background Bias: Saliency-Driven Prototype Alignment for Dataset Distillation",
+      "abstract": "Dataset distillation aims to synthesize compact datasets that can approximate the performance of full-data training while significantly reducing computational and storage costs. However, diffusion-based distillation methods often struggle to preserve structural coherence and generalization, especially in visually complex domains. This issue often stems from latent prototypes that are weakly aligned with class-discriminative regions and contaminated by irrelevant background, thereby degrading generation quality and generalization. To address this limitation, we propose a saliency-driven distillation framework that constructs class-discriminative latent prototypes to enhance representativeness and generalization. The framework proceeds in two stages: (1) ensemble Grad-CAM saliency is used to construct prototypes emphasizing high-confidence regions, and (2) hard prototype refinement is then applied to construct challenging yet class-consistent prototypes, thereby enhancing discriminability and diversity. Importantly, the diffusion backbones (e.g., LDM and DiT) remain frozen; only lightweight classifiers used for saliency extraction are trained. Extensive experiments across multiple benchmarks demonstrate consistent performance improvements over strong baselines. Code will be released.",
+      "authors": [
+        "Yawen Zou",
+        "Wenqi Cai",
+        "Guang Li",
+        "Ling Xiao",
+        "Chunzhi Gu",
+        "Chao Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-28T06:05:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.25318v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Dataset distillation generates few-shot synthetic training sets for efficient classification",
+      "llm_evidence_cn": "数据集蒸馏生成少样本合成训练集以实现高效分类",
+      "llm_evidence": "数据集蒸馏生成少样本合成训练集以实现高效分类",
+      "canonical_evidence": "数据集蒸馏生成少样本合成训练集以实现高效分类",
+      "llm_tldr_en": "The paper proposes a saliency-driven prototype alignment method for dataset distillation, creating compact synthetic datasets that preserve class-discriminative features, improving few-shot classification with limited labeled data.",
+      "llm_tldr_cn": "针对扩散蒸馏方法中潜在原型与类别判别区域对齐不佳、受背景干扰的问题，提出显著性驱动的原型对齐框架，通过生成类别判别原型提升合成数据的代表性和泛化能力。实验表明该方法在少样本分类任务上性能优于现有蒸馏方法，为利用有限标注数据训练模型提供了更有效的途径。",
+      "llm_tldr": "针对扩散蒸馏方法中潜在原型与类别判别区域对齐不佳、受背景干扰的问题，提出显著性驱动的原型对齐框架，通过生成类别判别原型提升合成数据的代表性和泛化能力。实验表明该方法在少样本分类任务上性能优于现有蒸馏方法，为利用有限标注数据训练模型提供了更有效的途径。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.25522v1",
+      "source": "arxiv",
+      "title": "I2VShield: An Efficient Proactive Defense Framework against DiT-based Image-to-Video Models",
+      "abstract": "The rapid advancement of video generation models has led to the increasing misuse of image-to-video (I2V) models. Although substantial progress has been made in detecting AI-generated videos, proactive defenses against I2V models remain underexplored. In particular, current proactive defenses against I2V models predominantly rely on gradient-based adversarial attacks, which require defenders to possess GPUs with substantial memory resources (VRAM) to generate adversarial examples. To address this issue, we propose I2VShield, a privacy protection method based on generative adversarial attacks tailored to Diffusion Transformer (DiT)-based I2V models. The proposed method primarily consists of two components: (1) a text-adaptive perturbation generation framework integrating adversarial learning to mitigate computational overhead while maintaining visual imperceptibility; and (2) an untargeted Multimodal Attention Disruption (MAD) attack that exploits the inherent vulnerabilities of DiT-based I2V models, maximizing the deviation of the internal attention features from their clean states. Extensive experiments demonstrate that our approach achieves highly competitive protection performance across various datasets and mainstream DiT-based I2V models, particularly in disrupting spatiotemporal coherence, while substantially reducing computational costs.",
+      "authors": [
+        "Yimao Guo",
+        "Zuomin Qu",
+        "Wei Lu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-28T10:05:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.25522v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "proactive defense against DiT-based image-to-video models, related to deepfake mitigation",
+      "llm_evidence_cn": "针对基于DiT的图像到视频模型的主动防御，与深度伪造防御相关",
+      "llm_evidence": "针对基于DiT的图像到视频模型的主动防御，与深度伪造防御相关",
+      "canonical_evidence": "针对基于DiT的图像到视频模型的主动防御，与深度伪造防御相关",
+      "llm_tldr_en": "I2VShield proposes a generative adversarial attack-based proactive defense against Diffusion Transformer image-to-video models, enabling resource-efficient protection from deepfake creation with limited GPU memory.",
+      "llm_tldr_cn": "为应对图像到视频模型的滥用问题，本文提出I2VShield，一种低显存需求的生成对抗攻击方法。该方法通过文本自适应扰动和生成对抗策略，在不依赖大内存GPU的情况下实现主动防御。实验验证了其有效性，为深度伪造防御提供了高效解决方案。",
+      "llm_tldr": "为应对图像到视频模型的滥用问题，本文提出I2VShield，一种低显存需求的生成对抗攻击方法。该方法通过文本自适应扰动和生成对抗策略，在不依赖大内存GPU的情况下实现主动防御。实验验证了其有效性，为深度伪造防御提供了高效解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

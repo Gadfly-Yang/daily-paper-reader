@@ -1,0 +1,411 @@
+Title: Beyond Background Bias: Saliency-Driven Prototype Alignment for Dataset Distillation
+
+URL Source: https://arxiv.org/pdf/2607.25318v1
+
+Published Time: Wed, 29 Jul 2026 00:32:57 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+> 1
+
+# Beyond Background Bias: Saliency-Driven Prototype Alignment for Dataset Distillation 
+
+Yawen Zou 1,Wenqi Cai 1, Guang Li 2, Ling Xiao 2, Chunzhi Gu 3, Chao Zhang 11University of Toyama, 2Hokkaido University, 3University of Fukui 
+
+Abstract —Dataset distillation aims to synthesize compact datasets that can approximate the performance of full-data training while significantly reducing computational and storage costs. However, diffusion-based distillation methods often struggle to preserve structural coherence and generalization, especially in visually complex domains. This issue often stems from latent prototypes that are weakly aligned with class-discriminative regions and contaminated by irrelevant background, thereby degrading generation quality and generalization. To address this limitation, we propose a saliency-driven distillation framework that constructs class-discriminative latent prototypes to enhance representativeness and generalization. The framework proceeds in two stages: (1) ensemble Grad-CAM saliency is used to construct prototypes emphasizing high-confidence regions, and (2) hard-prototype refinement is then applied to construct challenging yet class-consistent prototypes, thereby enhancing discriminability and diversity. Importantly, the diffusion backbones (e.g., LDM and DiT) remain frozen; only lightweight classifiers used for saliency extraction are trained. Extensive experiments across multiple benchmarks demonstrate consistent performance improvements over strong baselines. Code will be released. 
+
+Index Terms —Dataset Distillation; Diffusion Models; Grad-CAM; Saliency-Guided Prototypes 
+
+I. I NTRODUCTION 
+
+Deep learning continues to advance by scaling model capac-ity and dataset size, but the resulting demands on computation, storage, and data curation have become critical bottlenecks for both research and deployment. To address these challenges, data-centric approaches such as coreset selection [ 1], [ 2], [ 3]and dataset distillation [ 4], [ 5], [ 6], [ 7 ] have been widely explored as means to reduce training cost while preserving performance. Coreset selection [ 8 ], [ 9] selects a compact subset that retains the statistical and structural properties of the original dataset, but it remains fundamentally constrained by the need to sample real data, which limits both condensation efficiency and privacy. In contrast, dataset distillation [ 4], [ 10 ], [ 11 ] aims to synthesize a small surrogate dataset that captures the essential supervisory information of the full dataset, enabling comparable performance with substantially reduced computational overhead. Conventional dataset distillation approaches can be broadly categorized into three families: meta-learning–based, matching-based, and decoupled frameworks [ 4], [ 12 ], [ 13 ], [ 14 ], [ 15 ], which often incur substantial computational costs and generalize poorly across architectures. Generative dataset distillation alleviates these limitations by leveraging GANs [ 16 ], [ 17 ], [ 18 ] and diffusion models [ 19 ], [ 20 ], [ 21 ], [ 22 ] to encode dataset knowledge into generators and synthesize compact surrogate datasets in latent space, thereby avoiding the high cost of pixel-space optimization. Among these, diffusion-based methods have shown particular strength due to their ability to generate high-fidelity images. D 4M [ 19 ] and VLCP [ 22 ]are built upon latent diffusion models (LDMs) [ 23 ]: D 4Msynthesizes data from class prototypes in the latent space, while VLCP conditions the model on both visual and textual prototypes to improve semantic alignment. In contrast, Minimax [20 ] and MGD 3 [21 ] adopt DiT backbones: Minimax fine-tunes a DiT using a minimax objective to produce representative and diverse distilled data, whereas MGD 3 introduces a mode-guided sampling strategy to generate diverse images without requiring additional fine-tuning on most datasets, except ImageWoof. While generative distillation has achieved notable success, how latent initializations are optimized to capture class-discriminative features remains largely under-explored. In latent diffusion models (LDMs) [ 23 ], latent initialization together with label conditioning jointly influences image fidelity, structural coherence, and diversity. However, existing methods such as D4M, VLCP, and MGD 3 typically adopt K-Means cluster centers as latent prototypes without considering whether these latents capture category-specific patterns. As illustrated in the architecture overview in Fig. 1 (b), most prior works [19 ], [ 21 ], [ 22 ] rely on clustering raw latents produced by a VAE encoder that compresses the entire image without spatial discrimination. This design introduces irrelevant background context into prototype construction. Such a structural limitation weakens alignment between synthesized images and class-relevant features. The visual consequences are evident in Fig. 1 (a). MGD 3 prototypes may capture coarse, low-frequency shapes with ambiguous object boundaries. Conversely, the closest approach, which selects the nearest sample as the prototype, yields instance-specific representations. This biases the generator toward individual exemplars rather than capturing the broader class structure. Motivated by this observation, we introduce a saliency-guided and hard-prototype refinement framework designed to prioritize class-discriminative information and capture chal-lenging patterns. Unlike prior methods that cluster raw latents containing background-dominant context, our approach refines latent features via saliency-aware masking before prototype gen-eration. Specifically, we first extract VAE features and train an ensemble of lightweight classifiers. For each image, Grad-CAM [24 ] maps are aggregated through voting to identify regions critical for classification. The VAE features are then refined by amplifying activations within these regions to emphasize class-discriminative information. We subsequently apply K-arXiv:2607.25318v1 [cs.CV] 28 Jul 2026 2Image    
+
+> Encoder
+> Prototypes
+> Raw
+> Latent
+> Image
+> Decoder
+> Image
+> Encoder Raw
+> Latent
+> Step 1: Saliency -Guided
+> Prototypes
+> Step 2: Hard -Prototype
+> Refinement
+> Image
+> Decoder
+> Baseline (Prior Works)
+> Proposed (Ours)
+> MGD 3 Close stOurs
+> (a) Visual Comparison (b) Architecture Overview
+> Fig. 1. (a) Visual comparison of prototypes. Baseline methods produce background-biased prototypes, while ours focus on class-discriminative regions through saliency guidance. (b) Architecture overview. In contrast to the conventional clustering of raw latents, the proposed framework incorporates saliency masking and hard-prototype refinement to yield more diverse and discriminative prototypes.
+
+Means clustering to the refined latents to obtain class-specific prototypes that better capture discriminative features. Finally, we perform confidence-aware hard-prototype refinement, which adjusts prototype difficulty according to classifier confidence while preserving class-consistent semantics and encouraging intra-class diversity. This strategy yields informative hard prototypes that capture challenging class-consistent patterns and improve downstream performance. The framework is plug-and-play and can be seamlessly integrated with different diffusion backbones, achieving state-of-the-art results on both classification and transfer-learning benchmarks without fine-tuning the diffusion model. The main contributions are summarized as follows:  
+
+> •
+
+We introduce a saliency-guided prototype construction strategy that aggregates Grad-CAM maps from an en-semble of lightweight classifiers to enhance critical VAE features, enabling prototypes to focus on class-relevant regions in diffusion-based dataset distillation.  
+
+> •
+
+We further apply hard-prototype refinement to capture challenging patterns, enhancing discriminability and di-versity while preserving class-consistent semantics.  
+
+> •
+
+Extensive experiments across multiple datasets and IPC settings demonstrate that our plug-and-play method con-sistently improves diffusion-based distillation methods in both classification and transfer learning scenarios. II. R ELATED WORK 
+
+Dataset distillation aims to synthesize compact surrogate datasets that achieve performance comparable to full-data training at reduced computational cost [ 4 ]. It has found applications in privacy-preserving learning [ 25 ], [ 26 ], [ 27 ], medical data sharing [ 28 ], [ 29 ], and federated learning [ 30 ], [ 31 ]. Existing approaches can be broadly grouped into non-generative and generative methods. 
+
+Non-generative Dataset Distillation Methods. Early dataset distillation methods adopt a bilevel optimization framework to synthesize data that approximates the training dynamics of full datasets. Wang et al. [ 4 ] used backpropagation through time (BPTT) to unroll the inner-loop updates when optimizing synthetic images, while KIP [ 32 ] replaced the neural learner with kernel ridge regression (KRR) to reduce computational overhead. Subsequent work focused on matching training behavior between real and synthetic data, either by aligning gradients or optimization trajectories [ 33 ], [ 34 ], [ 35 ], or by minimizing distributional discrepancy through measures such as maximum mean discrepancy (MMD) [36 ], [ 37 ]. Decoupled formulations further improved efficiency. SRe 2L[13 ] decomposed condensation into Squeeze–Recover–Relabel stages, matching batch-normalization statistics and employing soft labels for stability, while CDA [ 14 ] introduced curriculum data augmentation to refine gradients from global to local dynamics. More recently, EDF [ 6] enhanced class-relevant regions in pixel space via Grad-CAM and continued optimizing synthetic data using gradient matching, yielding gains on more complex datasets. In contrast, our approach incorporates saliency guidance directly in the latent space of diffusion models, constructing class-discriminative latent prototypes that steer the generative process without performing pixel-level optimization. 
+
+Generative Dataset Distillation Methods. Recent work has incorporated GANs and diffusion models into dataset distillation to synthesize high-quality surrogate datasets with improved scalability and efficiency. Early efforts largely focused on GAN-based strategies. Zhao et al. [ 16 ] introduced IT-GAN, which leverages a pretrained GAN and optimizes latent codes of informative examples to preserve learning-relevant information. Wang et al. [ 17 ] further trained a GAN to align ensemble logits between real and synthetic data, enabling diverse sample synthesis from random noise. More recently, diffusion-based methods have gained prominence due to their superior image fidelity. Su et al. [ 19 ] proposed D 4M, which inputs K-Means cluster centers as latent prototypes into a latent diffusion model to enhance distillation efficiency and cross-architecture generalization. Zou et al. [ 22 ] integrated category-wise text and image prototypes to guide diffusion-based generation within a vision–language framework. Gu et al. [ 20 ] fine-tuned a Diffusion Transformer (DiT) under a minimax objective to generate representative and diverse distilled datasets, while Chan-Santiago et al. [ 21 ] introduced a mode-guided diffusion strategy that produces diverse images without fine-tuning. Despite these advances, existing generative approaches typically cluster raw latent without ensuring prototypes capture the 3"Saluki, gazelle hound" 
+
+"vacuum, vacuum cleaner" 
+
+"cocktail shaker" 
+
+> …
+
+Boundary -close 
+
+> …
+> …
+> 0-th
+> Cluster
+> 1-th
+> Cluster
+> N-th
+> Cluster
+> Number of
+> Clusters
+> per Class
+
+Original Images  Image Features 
+
+> Number of
+> Original
+> Images
+> per Class
+> Saluki
+> Shaker
+> Vacuum
+
+Clusters per Class 
+
+Model Pool 
+
+> …
+
+Image Prototype 
+
+per Cluster 
+
+> Hard
+> Prototypes
+
+Pre -trained 
+
+Diffusion Models 
+
+Image 
+
+Decoder 
+
+Image 
+
+Encoder 
+
+Distilled Images 
+
+> Saluki
+> Shaker
+> Vacuum
+
+Compute Train 
+
+α*Consensus Cam 
+
+β*Image Features 
+
+> Number of
+> Original
+> Images
+> per Class
+
+Consensus Cam 
+
+Vote 
+
+Grad -CAM 
+
+(per model) 
+
+> …
+> …
+> …
+
+Binary Masks 
+
+(per model) 
+
+Threshold 
+
+K-Means 
+
+Clustering 
+
+> …
+
+Label Texts 
+
+Text 
+
+Encoder 
+
+A
+
+> Model #1
+> Model #2
+> Model # M
+
+Fig. 2. Overview of the proposed saliency-guided dataset distillation framework. The method consists of two stages: (i) constructing class-discriminative latent prototypes using Grad-CAM ensemble saliency, and (ii) refining the prototypes according to classifier confidence to construct hard prototypes. A denotes element-wise addition. 
+
+intrinsic dataset structure. III. P RELIMINARIES 
+
+A. Dataset Distillation 
+
+Dataset distillation aims to construct a compact synthetic dataset S = {(˜ xi, ˜yi)}NS 
+
+> i=1
+
+from a large-scale dataset T =
+
+{(xi, y i)}NT
+
+> i=1
+
+, where NS ≪ NT . The objective is to enable a model trained on S to achieve performance comparable to one trained on T . Formally, let A(·) denote the accuracy on the test dataset, then A(fS ) ≈ A(fT ), where fS and fT are models learned on S and T , respectively. The size of the distilled dataset is typically specified in terms of images per class (IPC), i.e., |S| = IPC × C for C classes. After distillation, standard networks are trained on S and evaluated on the test set of T
+
+to assess how well the synthetic dataset preserves the essential information of the original data. 
+
+B. Latent Diffusion Model 
+
+The latent diffusion model (LDM) is a variant of diffusion models in which data generation is performed in the latent space rather than pixel space. A variational autoencoder (VAE) with an encoder-decoder pair ( E, D) is typically used to map images to and from this latent space, i.e., z = E(x) and 
+
+ˆx = D(z), where z is the derived latent. Given a conditioning vector c (e.g., class labels), the training of LDM follows a simplified denoising objective that minimizes the error between the predicted and ground-truth noise ϵ:
+
+L(θ) = ϵ − ϵθ (zt, c ) 22, (1) where zt denotes the noisy latent at timestep t, and ϵθ is the noise-prediction network. 
+
+Algorithm 1 Saliency-Guided Prototype Construction 
+
+1: Input: Encoder E; classifier ensemble F = {f (m)}Mm=1 ;dataset D; CAM operator CAM (·); thresholds (τcam , υ ); IPC per class 
+
+2: Output: Class-wise prototypes P
+
+3: Initialize per-class latent buffers Zy ← ∅, ∀y
+
+4: for each (x, y ) ∈ D do 
+
+5: z ← E(x) ▷ z ∈ R4×H×W
+
+6: for m = 1 to M do 
+
+7: A(m) ← CAM (f (m), z )
+
+8: B(m)(i, j ) ← 1A(m)(i, j ) ≥ τcam 
+
+
+
+9: end for 
+
+10: R(i, j ) ← 1 P Mm=1 B(m)(i, j ) ≥ υ ▷ voting 
+
+11: ˜z ← βz + α(z ⊙ R) ▷ Enhancing salient regions 
+
+12: Append ˜z to Zy
+
+13: end for 
+
+14: /* Prototype generation via K-Means */ 
+
+15: P ← ∅
+
+16: for all classes y do 
+
+17: Xy ← { vectorize(˜ z) : ˜ z ∈ Z y }
+
+18: {c(1)  
+
+> y
+
+, . . . , c (IPC)  
+
+> y
+
+} ← KMeans (Xy , K =IPC) 
+
+19: P ← P ∪ { reshape( c(j) 
+
+> y
+
+, shape (z)) : j = 1 , . . . , IPC }
+
+20: end for 
+
+21: return P
+
+IV. M ETHOD 
+
+We propose a two-stage distillation framework that first constructs prototypes that are class-discriminative and then refines them into hard prototypes, thereby improving both representativeness and discriminability. As illustrated in Fig. 2, 4                                                                
+
+> ImageNette ImageIDC Method IPC = 10 IPC = 20 IPC = 50 IPC = 10 IPC = 20 IPC = 50
+> Random 54.2 ±1.6 63.5 ±0.5 76.1 ±1.1 48.1 ±0.8 52.5 ±0.9 68.1 ±0.7 DiT [38] 59.1 ±0.7 64.8 ±1.2 73.3 ±0.9 54.1 ±0.4 58.9 ±0.2 64.3 ±0.6 DM [36] 60.8 ±0.6 66.5 ±1.1 76.2 ±0.4 52.8 ±0.5 58.5 ±0.4 69.1 ±0.8 MinMax [20] 62.0 ±0.2 66.8 ±0.4 76.6 ±0.2 53.1 ±0.2 59.0 ±0.4 69.6 ±0.2 DMGD [39] 66.0 ±0.3 72.1 ±0.5 78.8 ±0.9 55.0 ±0.7 61.4 ±0.7 71.0 ±1.3 D4M [19] 61.3 ±1.3 71.2 ±2.0 77.5 ±0.8 54.1 ±1.1 62.2 ±0.2 72.8 ±1.5 D4M+Ours 67.5 ±1.8 72.6 ±1.9 79.0 ±0.1 58.1 ±1.9 64.2 ±0.2 73.6 ±1.5 MGD 3[21] 66.4 ±2.4 71.2 ±0.5 79.5 ±1.3 55.9 ±2.1 61.9 ±0.9 72.1 ±0.8 MGD 3+Ours 67.9 ±0.8 73.9 ±2.8 80.9 ±0.8 59.7 ±1.5 63.8 ±1.6 74.1 ±1.5
+> TABLE I. Quantitative evaluation on ImageNette and ImageIDC against state-of-the-art methods under different IPC settings (all at 256 ×256 resolution) with ResNetAP-10. The best mean is in bold, and the second best is underlined.
+
+we begin by encoding images using a VAE and training an ensemble of lightweight classifiers on the latent features. The Grad-CAM maps from this ensemble are aggregated through majority voting to identify salient, class-relevant regions. We then enhance activations within these regions to obtain saliency-guided latent features, followed by K-Means clustering to construct class-specific prototypes. Finally, we perform hard-prototype refinement by adjusting each prototype toward a moderate-confidence regime through classifier-guided updates, while intra-class repulsion encourages diversity. Together, these stages yield representative and diverse prototypes for downstream distillation. 
+
+A. Saliency-Guided Prototype Construction 
+
+Unlike prior works [ 19 ], [ 21 ] that directly cluster raw VAE-extracted latents, we introduce a saliency-guided module that emphasizes class-discriminative information before prototype construction. Specifically, we train an ensemble {f (m)}Mm=1 of M lightweight classifiers (e.g., ResNet-18) using the standard cross-entropy loss: 
+
+L(m) = CE  f (m)(z), y , (2) where the latent z = E(x) ∈ R4×H×W is obtained from the VAE encoder E(·). The ensemble encourages saliency stability across random initializations, reducing variance in Grad-CAM estimates. For each image, Grad-CAM maps are extracted from the third layer of each classifier, upsampled to (H, W ) via bilinear interpolation, and smoothed using a 3 × 3 averaging filter to mitigate speckle noise. After max-normalization, each map is binarized, and a spatial position (i, j ) is activated if it receives at least υ positive votes among the M classifiers. The resulting aggregated saliency mask R ∈ {0, 1}H×W
+
+highlights class-relevant regions. Guided by R, we refine the latent representation as: 
+
+˜z = β z + α (z ⊙ R), (3) where ⊙ denotes the Hadamard product, and (α, β ) control the balance between enhanced class-discriminative activations and original latent features. This refinement amplifies activations within these salient regions, resulting in more informative features for prototype construction. To identify class prototypes, we perform K-Means clustering on the saliency-refined latent features ˜z for each class, where the number of clusters is set to the target IPC. Due to saliency guidance, the resulting centroids capture discriminative regions while mitigating background bias, resulting in compact and informative latent representations for each class. The complete saliency-guided prototype construction procedure is summarized in Algorithm 1. 
+
+B. Hard-Prototype Refinement 
+
+Although saliency guidance highlights features that distin-guish each class, some prototypes remain too easy and provide little useful challenge for downstream training. We therefore define hard prototypes as class-consistent representations with moderate classifier confidence. We refine any prototype whose confidence lies outside a preset interval and apply intra-class repulsion to promote diverse coverage of class-specific patterns. At iteration r, given a prototype cr with label y, we compute its logits ℓr = f (cr ) and class confidence pr = softmax( ℓr )y .Let Ry denote the retained class-y prototypes whose confidence lies within [plow , p high ]. We define the intra-class separation term as 
+
+Drep (cr ) = 1
+
+|R y |
+
+X 
+
+> ck∈R y
+
+ 1 − cos( cr , c k)2, (4) where Drep (cr ) = 0 if Ry is empty. The confidence-dependent refinement objective is 
+
+J (cr ; pr ) = 
+
+
+
+λce CE( ℓr , y ) + λrep Drep (cr ), pr > p high ,
+
+−λce CE( ℓr , y ) + λrep Drep (cr ), pr < p low .
+
+(5) For prototypes whose confidence lies outside the target interval, we apply the following iterative signed-gradient refinement: 
+
+cr+1 = cr + ηr sign( ∇cJ (cr ; pr )) , pr /∈ [plow , p high ],
+
+(6) where ηr = η
+
+
+
+1 + rT −1
+
+
+
+. The classification term encourages lower confidence for overly easy prototypes and higher con-fidence for insufficiently confident ones, while the separation term promotes intra-class diversity. Refinement stops once the confidence enters the target interval, after which the refined prototype is added to Ry .5
+
+IPC (Ratio) Test Model Random Herding DiT DM IDC-1 GLaD MinMax DMGD MGD 3 Ours Full 
+
+10 (0.8%) ConvNet-6 24.3 ±1.1 26.7 ±0.5 34.2 ±1.1 26.9 ±1.2 33.3 ±1.1 33.8 ±0.9 37.0 ±1.0 32.9 ±0.5 34.7 ±1.1 35.1 ±1.5 86.4 ±0.2 ResNetAP-10 29.4 ±0.8 32.0 ±0.3 34.7 ±0.5 30.3 ±1.2 39.1 ±0.5 32.9 ±0.9 39.2 ±1.3 39.2 ±1.3 40.4 ±1.9 42.1 ±2.5 87.5 ±0.5 ResNet-18 27.7 ±0.9 30.2 ±1.2 34.7 ±0.4 33.4 ±0.7 37.3 ±0.2 31.7 ±0.8 37.6 ±0.9 41.6 ±0.2 38.5 ±2.5 43.5 ±3.5 89.3 ±1.2 20 (1.6%) ConvNet-6 29.1 ±0.7 29.5 ±0.3 36.1 ±0.8 29.9 ±1.0 35.5 ±0.8 N/A 37.6 ±0.2 37.3 ±0.4 39.0 ±3.5 40.1 ±1.8 86.4 ±0.2 ResNetAP-10 32.7 ±0.4 34.9 ±0.1 41.1 ±0.8 35.2 ±0.6 43.4 ±0.3 N/A 45.8 ±0.5 45.8 ±0.9 43.6 ±1.6 47.0 ±1.1 87.5 ±0.5 ResNet-18 29.7 ±0.5 32.2 ±0.6 40.5 ±0.5 29.8 ±1.7 38.6 ±0.2 N/A 42.5 ±0.6 47.9 ±1.0 41.9 ±2.1 49.4 ±2.0 89.3 ±1.2 50 (3.8%) ConvNet-6 41.3 ±0.6 40.3 ±0.7 46.5 ±0.8 44.4 ±1.0 43.9 ±1.2 N/A 53.9 ±0.6 52.3 ±0.3 54.5 ±1.6 54.5 ±1.0 86.4 ±0.2 ResNetAP-10 47.2 ±1.3 49.1 ±0.7 49.3 ±0.2 47.1 ±1.1 48.3 ±1.0 N/A 56.3 ±1.0 60.2 ±1.1 56.5 ±1.9 61.5 ±1.5 87.5 ±0.5 ResNet-18 47.9 ±1.8 48.3 ±1.2 50.1 ±0.5 46.2 ±0.6 48.3 ±0.8 N/A 57.1 ±0.6 61.8 ±2.0 58.3 ±1.4 63.7 ±0.8 89.3 ±1.2 70 (5.4%) ConvNet-6 46.3 ±0.6 46.2 ±0.6 50.1 ±1.2 47.5 ±0.8 48.9 ±0.7 N/A 55.7 ±0.9 55.0 ±0.8 55.1 ±2.5 57.5 ±1.4 86.4 ±0.2 ResNetAP-10 50.8 ±0.6 53.4 ±1.4 54.3 ±0.9 51.7 ±0.8 52.8 ±1.8 N/A 58.3 ±0.2 63.4 ±1.0 60.2 ±2.4 63.6 ±1.6 87.5 ±0.5 ResNet-18 52.1 ±1.0 49.7 ±0.8 51.5 ±1.0 51.9 ±0.8 51.1 ±1.7 N/A 58.8 ±0.7 66.5 ±1.2 59.7 ±2.7 67.3 ±0.3 89.3 ±1.2 100 (7.7%) ConvNet-6 52.2 ±0.4 54.4 ±1.1 53.4 ±0.3 55.0 ±1.3 53.2 ±0.9 N/A 61.1 ±0.7 59.1 ±0.7 60.1 ±1.2 61.5 ±2.2 86.4 ±0.2 ResNetAP-10 59.4 ±1.0 61.7 ±0.9 58.3 ±0.8 56.4 ±0.8 56.1 ±0.9 N/A 64.5 ±0.2 67.7 ±0.6 66.5 ±1.0 68.5 ±0.3 87.5 ±0.5 ResNet-18 61.5 ±1.3 59.3 ±0.7 58.9 ±1.3 60.2 ±1.0 58.3 ±1.2 N/A 65.7 ±0.4 66.9 ±0.5 68.8 ±0.7 70.7 ±0.7 89.3 ±1.2   
+
+> TABLE II. Quantitative evaluation on ImageWoof against state-of-the-art methods under different IPC settings and model architectures (all at 256 ×256 resolution). N/A indicates results that are not available in the original papers.
+
+C. Image Synthesis via LDM 
+
+Finally, we employ a latent diffusion model (LDM) condi-tioned on the refined prototypes and their corresponding class labels to synthesize diverse and representative images. The text encoder τθ embeds the class label Lc, providing textual conditioning to the U-Net denoiser during the diffusion process. For a noised prototype latent ztc at timestep t, the synthesis is formulated as: Output = D Ut
+
+ Concat  ztc, τ θ (Lc) , (7) where Ut denotes the denoiser and D is the VAE decoder. Following prior diffusion-based distillation frameworks such as D 4M [ 19 ] and MGD 3 [ 21 ], we utilize pretrained VAE and diffusion backbones for efficient image generation. In contrast to these methods, our approach conditions the diffusion process on K-Means centroids derived from saliency-refined latents, rather than raw latents, thereby guiding generation toward class-discriminative regions. In practice, all diffusion components remain frozen, and only the lightweight classifiers used for Grad-CAM are trained. This design allows the refined prototypes to be seamlessly integrated into existing frameworks such as D 4M and MGD 3, achieving consistent performance gains with modest additional computational overhead. V. E XPERIMENTS 
+
+A. Datasets 
+
+We evaluate our method on high-resolution benchmarks, including ImageNet-1K and its subsets: ImageIDC, ImageNette, and the more challenging fine-grained ImageWoof dataset. Additionally, results on ImageNet-100 and the low-resolution CIFAR-10 and CIFAR-100 datasets are provided in the Sup-plementary Material. 
+
+B. Implementation Details 
+
+Results are averaged over three runs with different random seeds. Each lightweight classification model in the ensemble is trained for 50 epochs with a learning rate of 1 × 10 −3.We set the ensemble size to M =10 for all experiments except ImageWoof, where M =5 is used. We set the confidence interval to [plow , p high ] = [0 .4, 0.7] in all experiments. Additional hyperparameters are provided in Section 2 of the Supplementary Material, and the corresponding sensitivity analysis is provided in Section 3. 
+
+Classification Evaluation. We consider two evaluation pro-tocols: hard-label and soft-label. In the hard-label setting, a classifier is trained from scratch on the distilled dataset with hard class labels and evaluated on the original test set with standard augmentations (random resized crop and CutMix). Following MinMax [ 20 ], we report results under multiple IPC settings on ImageNet-100, ImageNette, and ImageIDC. In the soft-label setting, a pre-trained teacher ϕT produces region-level soft labels yi,m = ϕT (xi,m ) for the m-th crop of image 
+
+i. The student model ϕS is then trained on the distilled dataset via cross-entropy against these labels. Following MGD 3 [21], we conduct evaluations on ImageNet-1K. 
+
+Transfer Learning Evaluation. Following KRR-ST [ 40 ], we first pre-train a randomly initialized feature extractor fω with a linear head hW by minimizing the mean-squared error on the distilled dataset (Xs, Y s):
+
+min  
+
+> ω,W
+> 12
+
+∥fω (Xs)W − Ys∥2 
+
+> F
+
+.
+
+We then discard hW and fine-tune fω on the target dataset with a newly initialized task-specific head hQ using cross-entropy loss. 
+
+C. Comparison with SOTA Methods 
+
+We compare our method with diffusion-based approaches, including MinMax Diffusion [ 20 ], D 4M [ 19 ], MGD 3 [21 ], and DMGD [ 39 ], as well as decoupled methods (SRe 2L [ 13 ]) and selection-based approach Herding [ 2 ]. Our method achieves superior performance in most settings across several bench-marks. 6
+
+Method CIFAR10 CIFAR100 Aircraft Cars Dogs Flowers w/o pre [40] 88.66 ±0.09 66.62 ±0.32 42.45 ±0.46 23.62 ±0.70 24.59 ±0.46 59.39 ±0.29 Random 88.46 ±0.09 65.97 ±0.08 40.09 ±0.46 20.92 ±0.42 23.08 ±0.40 56.81 ±0.40 FRePo [41] 87.88 ±0.20 65.23 ±0.47 39.03 ±0.35 20.00 ±0.73 22.05 ±0.45 52.50 ±0.51 KRR-ST [40] 89.33 ±0.19 68.04 ±0.22 57.17 ±0.16 46.95 ±0.37 35.51 ±0.45 70.45 ±0.34 Ours 90.40 ±0.15 69.21 ±0.06 58.68 ±0.75 47.58 ±0.58 35.71 ±0.56 75.94 ±0.39  
+
+> TABLE III. Quantitative evaluation on transfer learning from ImageNet-1K distilled data at IPC = 10 (0.8%). A randomly initialized ConvNet-4 is pre-trained on the distilled dataset and fine-tuned on target datasets. Results are reported as the mean and standard deviation over three runs. The best result is shown in bold, and the second best is underlined. MGD 3is our base model.
+
+Method ResNet-18 ResNet-50 ResNet-101 SRe 2L 46.8 ±0.2 55.6 ±0.3 60.8 ±0.5 G-VBSM 51.8 ±0.4 58.7 ±0.3 61.0 ±0.4 EDC 58.0 ±0.2 64.3 ±0.2 64.9 ±0.2 D4M 55.2 ±0.1 62.4 ±0.1 63.4 ±0.1 MGD 3 60.2 ±0.1 64.6 ±0.4 67.7 ±0.4 
+
+Ours 61.9 ±0.1 67.0 ±0.2 67.6 ±0.2 Full 69.8 80.9 81.9  
+
+> TABLE IV. Quantitative comparison of Top-1 accuracy on ImageNet-1K at IPC = 50 using MGD 3as the base model.
+
+ImageNette and ImageIDC. To evaluate the effectiveness of our method, we conduct experiments on ImageNette and ImageIDC under multiple IPC settings by integrating our saliency-guided prototype module into D 4M and MGD 3 (Tab. I). Our module boosts MGD 3 with gains of up to +2.7% on ImageNette and +3.8% on ImageIDC. When incorporated into D 4M, it yields maximum gains of 6.2% and 4.0% on ImageNette and ImageIDC, respectively. These results demonstrate the effectiveness and broad applicability of our approach across different datasets and IPC settings. 
+
+Performance on ImageWoof. We evaluate our method on Im-ageWoof under five IPC settings using ConvNet-6, ResNetAP-10, and ResNet-18. As shown in Tab. II, our method achieves the best result among all distilled-data methods in 14 of the 15 settings; the sole exception is ConvNet-6 at IPC = 10, where MinMax performs best, and our method ranks second. Compared with MGD 3, our method achieves higher accuracy in 14 of the 15 settings and yields an average improvement of 3.2%. The gains are particularly pronounced on ResNet-18, where our method surpasses MGD 3 by 5.0%, 7.5%, 5.4%, 7.6%, and 1.9% at IPC = 10, 20, 50, 70, and 100, respectively. Consistent improvements over MGD 3 are also observed on ResNetAP-10 across all IPC settings. Moreover, compared with the state-of-the-art DMGD, our method achieves higher accuracy across all 15 settings, with the largest improvement of 3.8% on ResNet-18 at IPC = 100. These results demonstrate the effectiveness and strong cross-architecture generalization of our distilled data. 
+
+Performance on Larger Models. To evaluate scalability with larger models, we use distilled ImageNet-1K data at IPC = 50 and test on ResNet-50 and ResNet-101 in addition to ResNet-18 (Tab. IV). Compared with the strong diffusion baseline MGD 3, our method improves top-1 accuracy by +1.7% on ResNet-18 and +2.4% on ResNet-50, and remains comparable MGD 3Original  Ours                       
+
+> Fig. 3. Qualitative results on ImageNet-1K. Visualization of synthesized chainsaw samples. SG HP IPC 10 20 50 MGD 3––66.4 ±2.4 71.2 ±0.5 79.5 ±1.3 Ours
+> ✓–66.6 ±0.6 73.2 ±2.5 80.6 ±1.0 –✓66.3 ±1.1 71.4 ±2.5 80.4 ±0.2
+> ✓✓67.9 ±0.8 73.9 ±2.8 80.9 ±0.8
+> TABLE V. Component ablation on saliency guidance (SG) and hard-prototype (HP) under different IPCs.
+
+on ResNet-101 (-0.1%). This gap falls within MGD 3’s own standard deviation (±0.4), suggesting comparable performance at this backbone. This may be partly attributable to a capacity-saturation effect at ResNet-101, where the backbone’s substan-tial representational capacity narrows the headroom for further gains from synthesis-quality improvements at this IPC level. This quantitative advantage is supported by the synthesized samples in Fig. 3. As exemplified by the chainsaw class, our method produces structurally coherent and detailed images that exhibit superior semantic alignment and visual fidelity relative to the baseline. 
+
+Performance on Transfer Learning. Following KRR-ST [ 40 ], we assess transferability using distilled ImageNet-1K data at IPC = 10. As shown in Tab. III, our method achieves the best accuracy on six downstream datasets, with an average gain of +1.7% and the largest improvement on Flowers (+5.5%). These results demonstrate the generalization and transferability of our distilled data across both coarse- and fine-grained classification tasks. 
+
+Computational Cost. Our method keeps the diffusion back-7
+
+Method Prec. (%) ↑ Dens. ↑ Cov. (%) ↑ FID ↓
+
+MGD 3 90.73 ±0.76 1.17 ±0.10 17.90 ±1.30 52.37 ±0.89 MGD 3 + Ours 90.13 ±1.30 1.21 ±0.06 18.51 ±1.17 51.57 ±1.34 
+
+D4M 90.33 ±1.33 1.03 ±0.05 12.93 ±0.57 59.43 ±1.18 D4M + Ours 90.47 ±1.79 1.07 ±0.03 13.92 ±0.24 56.14 ±1.84 
+
+TABLE VI. Generation quality on ImageNette at IPC = 50. Prec., Dens., and Cov. denote Precision, Density, and Coverage, respectively. 
+
+bone frozen and only trains lightweight classifiers on VAE latents. On ImageNette, training an ensemble of (M=10) ResNet-18 classifiers takes approximately 30 minutes. Under this configuration, the average generation time at ( 256 × 256 )resolution on a single NVIDIA RTX 5090 GPU is 4.44 s/image, compared with 4.08 s/image for MinMax and 0.60 s/image for MGD 3. For ImageWoof, we use a smaller ensemble of (M=5), reducing the total runtime to approximately 22 minutes. In comparison, MGD 3 requires approximately 35 minutes on ImageWoof, including 30 minutes of DiT fine-tuning. Further runtime details are provided in Tab. 7 of the Supplementary Material. VI. A BLATION STUDY AND ANALYSIS 
+
+Component Ablation. To assess the contribution of saliency-guidance (SG) and hard-prototype (HP) refinement, we perform an ablation study, with results summarized in Tab. V. While SG consistently yields improvements, HP refinement shows a strong synergy with SG. Their combination collectively achieves the best performance, particularly as IPC increases. Our full framework reaches peak accuracies of 67.9%, 73.9%, and 80.9% at IPC = 10, 20, and 50, respectively. These results indicate that the saliency-guidance and the hard-prototype refinement both contribute as intended to producing informative and diverse distilled datasets. 
+
+Quantitative Evaluation of Synthetic Data. We further assess generation quality in Tab. VI using Precision, Density, Cover-age, and FID, following [ 20 ], [ 42 ]. Our method consistently improves Density and Coverage while reducing FID for both MGD 3 and D 4M. Although Precision slightly decreases from 
+
+90 .73% to 90 .13% on MGD 3, it remains comparable to the baseline. On D 4M, Precision increases from 90 .33% to 90 .47% .Overall, the improvements in Density, Coverage, and FID indicate better diversity and distributional coverage while maintaining comparable sample fidelity. VII. C ONCLUSION 
+
+In this work, we propose a saliency-guided dataset distillation framework that constructs class-discriminative latent prototypes and incorporates confidence-aware hard-prototype refinement to improve generalization and robustness. Specifically, Grad-CAM maps are aggregated from an ensemble of lightweight classifiers to refine VAE latent features, thereby emphasiz-ing class-relevant regions. Subsequently, the hard-prototype refinement stage adjusts prototype difficulty according to classifier confidence, producing challenging yet class-consistent prototypes with improved diversity and discriminability. Exten-sive experiments demonstrate that the proposed plug-and-play module improves both D 4M and MGD 3 across a wide range of classification and transfer-learning settings without fine-tuning diffusion backbones. 
+
+Limitations and Future Work. This study primarily focuses on image classification with preliminary validation on transfer learning tasks. In the future, we plan to adapt the framework to more complex visual tasks such as object detection, segmen-tation, and video analysis. REFERENCES [1] Hojun Lee, Suyoung Kim, Junhoo Lee, Jaeyoung Yoo, and Nojun Kwak. Coreset selection for object detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 7682–7691, 2024. [2] Max Welling. Herding dynamical weights to learn. In Proceedings of the International Conference on Machine Learning (ICML) , pages 1121–1128, 2009. [3] Mariya Toneva, Alessandro Sordoni, Remi Tachet des Combes, Adam Trischler, Yoshua Bengio, and Geoffrey J Gordon. An empirical study of example forgetting during deep neural network learning. arXiv preprint arXiv:1812.05159 , 2018. [4] Tongzhou Wang, Jun-Yan Zhu, Antonio Torralba, and Alexei A. Efros. Dataset distillation. arXiv preprint arXiv:1811.10959 , 2018. [5] Noveen Sachdeva and Julian McAuley. Data distillation: A survey. 
+
+Transactions on Machine Learning Research , 2023. [6] Kai Wang, Zekai Li, Zhi-Qi Cheng, Samir Khaki, Ahmad Sajedi, Ramakr-ishna Vedantam, Konstantinos N Plataniotis, Alexander Hauptmann, and Yang You. Emphasizing discriminative features for dataset distillation in complex scenarios. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 30451–30461, 2025. [7] Ping Liu and Jiawei Du. The evolution of dataset distillation: Toward scalable and generalizable solutions. arXiv preprint arXiv:2502.05673 ,2025. [8] Shuo Yang, Zhe Cao, Sheng Guo, Ruiheng Zhang, Ping Luo, Shengping Zhang, and Liqiang Nie. Mind the boundary: Coreset selection via reconstructing the decision boundary. In Proceedings of the International Conference on Machine Learning (ICML) , pages 55948–55960, 2024. [9] Brian B Moser, Arundhati S Shanbhag, Stanislav Frolov, Federico Raue, Joachim Folz, and Andreas Dengel. A coreset selection of coreset selection literature: Introduction and recent advances. arXiv preprint arXiv:2505.17799 , 2025. [10] Kai Wang, Bo Zhao, Xiangyu Peng, Zheng Zhu, Shuo Yang, Shuo Wang, Guan Huang, Hakan Bilen, Xinchao Wang, and Yang You. CAFE: Learning to condense dataset by aligning features. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 12196–12205, 2022. [11] Shiye Lei and Dacheng Tao. A comprehensive survey to dataset distillation. IEEE Transactions on Pattern Analysis and Machine Intelligence , 46(1):17–32, 2023. [12] Ruonan Yu, Songhua Liu, Jingwen Ye, and Xinchao Wang. Teddy: Efficient large-scale dataset distillation via taylor-approximated matching. In Proceedings of the European Conference on Computer Vision (ECCV) ,pages 1–17, 2024. [13] Zeyuan Yin, Eric Xing, and Zhiqiang Shen. Squeeze, recover and relabel: Dataset condensation at imagenet scale from a new perspective. In 
+
+Proceedings of the Advances in Neural Information Processing Systems (NeurIPS) , pages 73582–73603, 2023. [14] Zeyuan Yin and Zhiqiang Shen. Dataset distillation via curriculum data synthesis in large data era. Transactions on Machine Learning Research ,2024. [15] Zhiheng Ma, Anjia Cao, Funing Yang, Yihong Gong, and Xing Wei. Curriculum dataset distillation. IEEE Transactions on Image Processing ,pages 4176–4187, 2025. [16] Bo Zhao and Hakan Bilen. Synthesizing informative training samples with gan. In Proceedings of the Advances in Neural Information Processing Systems (NeurIPS), Workshop , 2022. [17] Kai Wang, Jianyang Gu, Daquan Zhou, Zheng Zhu, Wei Jiang, and Yang You. DiM: Distilling dataset into generative model. arXiv preprint arXiv:2303.04707 , 2023. 8
+
+[18] Xinhao Zhong, Hao Fang, Bin Chen, Xulin Gu, Tao Dai, Meikang Qiu, and Shu-Tao Xia. Hierarchical Features Matter: A deep exploration of gan priors for improved dataset distillation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 30462–30471, 2025. [19] Duo Su, Junjie Hou, Weizhi Gao, Yingjie Tian, and Bowen Tang. D4M: Dataset distillation via disentangled diffusion model. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 5809–5818, 2024. [20] Jianyang Gu, Saeed Vahidian, Vyacheslav Kungurtsev, Haonan Wang, Wei Jiang, Yang You, and Yiran Chen. Efficient dataset distillation via minimax diffusion. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 15793–15803, 2024. [21] Jeffrey A Chan Santiago, Praveen Tirupattur, Gaurav Kumar Nayak, Gaowen Liu, and Mubarak Shah. Mgd 3: Mode-guided dataset distillation using diffusion models. In International Conference on Machine Learning ,pages 52861–52876. PMLR, 2025. [22] Yawen Zou, Guang Li, Duo Su, Zi Wang, Jun Yu, and Chao Zhang. Dataset distillation via vision-language category prototype. In Proceed-ings of the IEEE/CVF International Conference on Computer Vision (ICCV) , pages 2941–2950, 2025. [23] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bj ¨orn Ommer. High-resolution image synthesis with latent diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 10684–10695, 2022. [24] Aditya Chattopadhay, Anirban Sarkar, Prantik Howlader, and Vineeth N Balasubramanian. Grad-cam++: Generalized gradient-based visual explanations for deep convolutional networks. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) , pages 839–847. IEEE, 2018. [25] Tian Dong, Bo Zhao, and Lingjuan Liu. Privacy for free: How does dataset condensation help privacy? In Proceedings of the International Conference on Machine Learning (ICML) , pages 5378–5396, 2022. [26] Runkai Zheng, Vishnu Asutosh Dasu, Yinong Oliver Wang, Haohan Wang, and Fernando De la Torre. Improving noise efficiency in privacy-preserving dataset distillation. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , pages 4838–4847, 2025. [27] MingYu Chung, ShengYen Chou, ChiaMu Yu, PinYu Chen, SyYen Kuo, and TsungYi Ho. Rethinking backdoor attacks on dataset distillation: A kernel method perspective. In International Conference on Learning Representations , volume 2024, pages 7655–7666, 2024. [28] Renuga Kanagavelu, Madhav Walia, Yuan Wang, Huazhu Fu, Qingsong Wei, Yong Liu, and Rick Siow Mong Goh. Medsynth: Leveraging generative model for healthcare data sharing. In International Conference on Medical Image Computing and Computer-Assisted Intervention , pages 654–664. Springer, 2024. [29] Zhe Li and Bernhard Kainz. Image distillation for safe data sharing in histopathology. In International Conference on Medical Image Computing and Computer-Assisted Intervention , pages 459–469. Springer, 2024. [30] Jack Goetz and Ambuj Tewari. Federated learning via synthetic data. 
+
+arXiv preprint arXiv:2008.04489 , 2020. [31] Guochen Yan, Luyuan Xie, Xinyi Gao, Wentao Zhang, Qingni Shen, Yuejian Fang, and Zhonghai Wu. FedVCK: Non-iid robust and communication-efficient federated learning via valuable condensed knowledge for medical image analysis. In Proceedings of the AAAI Conference on Artificial Intelligence (AAAI) , pages 21904–21912, 2025. [32] Timothy Nguyen, Zhourong Chen, and Jaehoon Lee. Dataset meta-learning from kernel ridge-regression. In Proceedings of the International Conference on Learning Representations (ICLR) , pages 6900–6924, 2021. [33] Bo Zhao and Hakan Bilen. Dataset condensation with gradient matching. In Proceedings of the International Conference on Learning Representations (ICLR) , 2021. [34] George Cazenavette, Tongzhou Wang, Antonio Torralba, Alexei A. Efros, and Jun-Yan Zhu. Dataset distillation by matching training trajectories. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 10718–10727, 2022. [35] Wenliang Zhong, Haoyu Tang, Qinghai Zheng, Mingzhu Xu, Yupeng Hu, and Liqiang Nie. Towards stable and storage-efficient dataset distillation: Matching convexified trajectory. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 25581–25589, 2025. [36] Bo Zhao and Hakan Bilen. Dataset condensation with distribution matching. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) , pages 6514–6523, 2023. [37] Hansong Zhang, Shikun Li, Pengju Wang, and Shiming Zeng, Dan Ge. M3D: Dataset condensation by minimizing maximum mean discrepancy. In Proceedings of the AAAI Conference on Artificial Intelligence (AAAI) ,pages 9314–9322, 2024. [38] William Peebles and Saining Xie. Scalable diffusion models with transformers. In Proceedings of the IEEE/CVF international conference on computer vision (ICCV) , pages 4195–4205, 2023. [39] Qichao Wang, Yunhong Lu, Hengyuan Cao, Junyi Zhang, and Min Zhang. Dmgd: Train-free dataset distillation with semantic-distribution matching in diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 12417–12427, 2026. [40] Dong Bok Lee, Seanie Lee, Joonho Ko, Kenji Kawaguchi, Juho Lee, and Sung Ju Hwang. Self-supervised dataset distillation for transfer learning. In International Conference on Learning Representations , volume 2024, pages 57444–57460, 2024. [41] Yongchao Zhou, Ehsan Nezhadarya, and Jimmy Ba. Dataset distillation using neural feature regression. In Proceedings of the Advances in Neural Information Processing Systems (NeurIPS) , volume 35, pages 9813–9827, 2022. [42] Muhammad Ferjad Naeem, Seong Joon Oh, Youngjung Uh, Yunjey Choi, and Jaejun Yoo. Reliable fidelity and diversity metrics for generative models. In Proceedings of the International Conference on Machine Learning (ICML) , pages 7176–7185, 2020.
