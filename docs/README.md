@@ -6,52 +6,40 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-04
-- 运行时间：2026-08-04 21:13:51 UTC
+- 最新运行日期：2026-08-05
+- 运行时间：2026-08-05 21:13:05 UTC
 - 运行状态：成功
-- 本次总论文数：10
-- 精读区：7
-- 速读区：3
+- 本次总论文数：6
+- 精读区：4
+- 速读区：2
 
 ### 今日简报（AI）
-今日聚焦多模态生成内容鉴伪，精读了一个满分基准数据集和一项开放集AIGC检测新方法。
-《GPT Image2 & Nano Banana2》构建了首个大规模MLLM生成图像检测基准，揭示现有检测器在新模型上的脆弱性；而《Test-Time Curriculum》提出通过测试时课程学习，大幅提升未知AIGC的开放集检测鲁棒性。
-建议读者优先关注生成式模型不断演进下的检测盲区，并尝试将测试时自适应策略引入自己的安全评估管线。
-- 详情：[/202608/04/README](/202608/04/README)
+今日挑选6篇前沿研究，精读医学影像和视频鉴伪两项高分工作：从病理补丁到“证据球”实现小样本全切片分类，并揭秘视频伪造检测器内部编码的伪造知识。  
+最值得深挖《From Patches to Evidence Balls》的类条件证据检索思路与《V-FIND》的可解释伪造知识提取。  
+建议关注检索增强型小样本学习与检测模型内在表征分析两条技术路线。
+- 详情：[/202608/05/README](/202608/05/README)
 
 ### 精读区论文标签
-1. [A Benchmark Dataset for MLLM-Generated Image Detection: GPT Image2 & Nano Banana2](/202608/04/2608.01258v1-a-benchmark-dataset-for-mllm-generated-image-detection-gpt-image2--nano-banana2)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：用于检测多模态大模型生成图像的基准，直接应对AI生成图像检测
-2. [Test-Time Curriculum for Open-Set AIGC Detection](/202608/04/2608.00559v1-test-time-curriculum-for-open-set-aigc-detection)  
+1. [From Patches to Evidence Balls: Class-Conditioned Evidence Retrieval for Few-Shot Whole Slide Image Classification](/202608/05/2608.01104v1-from-patches-to-evidence-balls-class-conditioned-evidence-retrieval-for-few-shot-whole-slide-image-classification)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：开放世界AIGC检测，通过测试时课程学习实现跨生成器泛化
-3. [Generated Images Are Easier to Forget: A Machine Unlearning Perspective for Synthetic Image Detection](/202608/04/2608.00716v1-generated-images-are-easier-to-forget-a-machine-unlearning-perspective-for-synthetic-image-detection)  
+   evidence：少样本全切片图像分类
+2. [V-FIND: Revealing the Intrinsic Forgery Knowledge Encoded in Video Forgery Detectors](/202608/05/2608.03008v1-v-find-revealing-the-intrinsic-forgery-knowledge-encoded-in-video-forgery-detectors)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：利用机器遗忘增强生成图像与真实图像的区分，用于合成图像检测
-4. [SphereVideo: Prototype-anchored Hyperspherical Boundary for Continual AI-generated Video Detection](/202608/04/2608.01334v1-spherevideo-prototype-anchored-hyperspherical-boundary-for-continual-ai-generated-video-detection)  
+   evidence：通过揭示检测器内部稀疏取证知识进行视频伪造检测。
+3. [FakeI2V-Bench: Benchmarking the Applicability of Image-level Deepfake Detectors for Deepfake Video Detection](/202608/05/2608.03096v1-fakei2v-bench-benchmarking-the-applicability-of-image-level-deepfake-detectors-for-deepfake-video-detection)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：AI生成视频检测的持续学习实现跨生成器泛化
-5. [FairForensics: Seeing Expressions and Parsing Demographics via Vision-Language Modeling for Generalizable Fair Deepfake Detection](/202608/04/2608.01661v1-fairforensics-seeing-expressions-and-parsing-demographics-via-vision-language-modeling-for-generalizable-fair-deepfake-detection)  
+   evidence：评估图像级深度伪造检测器在视频上的基准
+4. [SpreadMark: Robust Image Watermarking via Spread-Spectrum Embedding](/202608/05/2608.03165v1-spreadmark-robust-image-watermarking-via-spread-spectrum-embedding)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：利用表情和人口统计感知实现可泛化的公平深度伪造检测
-6. [Grounding and Explaining Visual Evidence for AI-Generated Image Detection in Human-Centric Scenes](/202608/04/2608.01988v1-grounding-and-explaining-visual-evidence-for-ai-generated-image-detection-in-human-centric-scenes)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：在人本场景中提供接地视觉证据的可解释AI生成图像检测
-7. [AdaForensics: Learning A Characteristic-aware Adaptive Deepfake Detector](/202608/04/2608.02160v1-adaforensics-learning-a-characteristic-aware-adaptive-deepfake-detector)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：提出自适应深度伪造检测器，为每个个体定制检测
+   evidence：用于深度伪造检测和溯源的扩频水印
 
 ### 速读区论文标签
-1. [Visual Distribution Anchoring for Efficient Prompt Tuning](/202608/04/2607.28967v1-visual-distribution-anchoring-for-efficient-prompt-tuning)  
+1. [Prompt-Driven Simulation with Feature Perturbation for Cross-Domain Few-Shot Object Detection](/202608/05/2608.01348v1-prompt-driven-simulation-with-feature-perturbation-for-cross-domain-few-shot-object-detection)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：通过视觉原型进行无训练少样本适应，与特征对齐概念一致
-2. [Dataset Distillation Based on Saliency-Driven Prototype Alignment](/202608/04/2607.25318v2-dataset-distillation-based-on-saliency-driven-prototype-alignment)  
+   evidence：通过提示驱动仿真和特征扰动解决跨域少样本目标检测。
+2. [SRAP: SVD-Refined Adversarial Perturbations for Imperceptible Face-Swap Defense](/202608/05/2608.03395v1-srap-svd-refined-adversarial-perturbations-for-imperceptible-face-swap-defense)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：数据集蒸馏实现紧凑训练集，支持每类少量样本学习
-3. [Open-Set Visual Text Forensics via Sparse-Constraint Rectified Flow](/202608/04/2608.02258v1-open-set-visual-text-forensics-via-sparse-constraint-rectified-flow)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：通过修复代价估计检测AI操纵的视觉文本
+   evidence：通过对抗扰动防止人脸交换深度伪造，保护面部图像免遭滥用
 
 
 <div class="dpr-home-promo-card">

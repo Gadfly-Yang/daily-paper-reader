@@ -1,0 +1,265 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-05T21:05:16.045948+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2608.01104v1",
+      "source": "arxiv",
+      "title": "From Patches to Evidence Balls: Class-Conditioned Evidence Retrieval for Few-Shot Whole Slide Image Classification",
+      "abstract": "Whole slide image (WSI) classification is an evidence-driven task, where diagnostic cues are often sparse, spatially organized, and class-dependent. Existing MIL and vision-language methods aggregate a large pool of patch features into a single global slide representation. Under few-shot supervision, limited slide-level labels make it difficult to learn a reliable aggregation mechanism that organizes sparse local cues into compact and coherent diagnostic evidence. Moreover, a shared slide representation compresses evidence supporting a candidate class and its alternatives into the same feature, limiting class-specific reasoning and interpretability. To address these issues, we propose EviBall, a class-conditioned evidence retrieval framework for few-shot WSI classification. EviBall organizes local patches into Evidence Balls through semantic-spatial assignment and center refinement, yielding compact and spatially coherent evidence units under weak supervision. It then uses task-specific class queries, including language-guided queries for morphology-oriented tasks and molecular-guided queries for molecular endpoint prediction, to retrieve supporting evidence balls and produce class-conditioned evidence representations for direct class-wise prediction. By introducing structured evidence units and task-relevant semantic guidance, EviBall reduces the reliance on learning an unconstrained global aggregation mechanism from scarce slide-level labels. It therefore reformulates few-shot WSI classification as structured evidence retrieval and competition among candidate classes. Extensive experiments across four morphology-oriented and molecular endpoint WSI tasks demonstrate that EviBall consistently outperforms conventional and vision-language MIL baselines under diverse few-shot settings, while providing spatially localized and class-specific evidence for each prediction.",
+      "authors": [
+        "Di Zhang",
+        "Li Zhang",
+        "Jiashuai Liu",
+        "Junbo Lu",
+        "Zhi Zeng",
+        "Jiusong Ge",
+        "Chunze Yang",
+        "Yi Niu",
+        "Jian Chen",
+        "Kai He",
+        "Zeyu Gao",
+        "Chen Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-02T09:06:22+00:00",
+      "link": "https://arxiv.org/pdf/2608.01104v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Few-shot whole slide image classification",
+      "llm_evidence_cn": "少样本全切片图像分类",
+      "llm_evidence": "少样本全切片图像分类",
+      "canonical_evidence": "少样本全切片图像分类",
+      "llm_tldr_en": "Proposes EviBall, a class-conditioned evidence retrieval method for few-shot whole slide image classification that organizes sparse local cues into compact diagnostic evidence.",
+      "llm_tldr_cn": "针对少样本全切片图像分类中难以从有限标注中学习可靠聚集机制的问题，提出了一种类别条件证据检索方法EviBall，将稀疏的局部线索组织成紧凑的诊断证据。实验表明该方法在少样本监督下能有效提升分类性能。",
+      "llm_tldr": "针对少样本全切片图像分类中难以从有限标注中学习可靠聚集机制的问题，提出了一种类别条件证据检索方法EviBall，将稀疏的局部线索组织成紧凑的诊断证据。实验表明该方法在少样本监督下能有效提升分类性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot learning approaches for face forgery detection and image classification",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.03008v1",
+      "source": "arxiv",
+      "title": "V-FIND: Revealing the Intrinsic Forgery Knowledge Encoded in Video Forgery Detectors",
+      "abstract": "As generated videos become increasingly realistic, reliable video forgery detection is increasingly important. Existing studies typically optimize and use video forgery detectors as black boxes, while the latent forgery-discriminative knowledge inside them remains largely unexplored. Instead of continuing to rely on resource-intensive full-model retraining to steadily improve detection performance, we ask whether video forgery detection can also be achieved by uncovering and activating sparse forensic knowledge within the detector. We find that forgery-discriminative knowledge is not uniformly distributed across the full representation space, but is concentrated in a sparse set of functionally specialized neurons. Based on this insight, we propose a video forgery-intrinsic neuron discovery (V-FIND) framework. V-FIND first localizes critical layers that exhibit pronounced discrepancies between real and forged videos, and then identifies latent anchor neurons that consistently carry forgery-discriminative signals, organizing them into a compact forensic subspace. With the original backbone frozen and only a lightweight linear classifier trained, this subspace still delivers strong detection performance across multiple external benchmarks for generated videos. Further neuron intervention experiments provide direct evidence for the functional specificity of the discovered neurons. Overall, these results suggest that video forgery detectors contain sparse, extractable, and reusable forgery-discriminative knowledge, offering a new perspective on understanding and exploiting their intrinsic forensic capability.",
+      "authors": [
+        "Shichao Kan",
+        "Chengpeng Hong",
+        "Jingtong Dou",
+        "Chuancheng Shi",
+        "Yuhan Liu",
+        "Linrui Xu",
+        "Yixiong Liang",
+        "Yigang Cen",
+        "Yanpeng Sun",
+        "Fei Shen",
+        "Tat-Seng Chua"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-04T01:41:40+00:00",
+      "link": "https://arxiv.org/pdf/2608.03008v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Video forgery detection by uncovering sparse forensic knowledge inside detectors.",
+      "llm_evidence_cn": "通过揭示检测器内部稀疏取证知识进行视频伪造检测。",
+      "llm_evidence": "通过揭示检测器内部稀疏取证知识进行视频伪造检测。",
+      "canonical_evidence": "通过揭示检测器内部稀疏取证知识进行视频伪造检测。",
+      "llm_tldr_en": "V-FIND reveals that forgery-discriminative knowledge in video forgery detectors is concentrated in sparse neurons, enabling efficient detection without full retraining, and demonstrates improved detection performance by activating these specialized neurons.",
+      "llm_tldr_cn": "针对视频伪造检测中全模型重训练资源消耗大的问题，V-FIND发现伪造判别知识并非均匀分布，而是集中在少量功能特化神经元中。该方法通过激活这些稀疏神经元实现高效检测，避免全模型重训练。实验表明，该方法在提升检测性能的同时大幅降低计算成本，为视频伪造检测提供了更轻量化的解决方案。",
+      "llm_tldr": "针对视频伪造检测中全模型重训练资源消耗大的问题，V-FIND发现伪造判别知识并非均匀分布，而是集中在少量功能特化神经元中。该方法通过激活这些稀疏神经元实现高效检测，避免全模型重训练。实验表明，该方法在提升检测性能的同时大幅降低计算成本，为视频伪造检测提供了更轻量化的解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.03096v1",
+      "source": "arxiv",
+      "title": "FakeI2V-Bench: Benchmarking the Applicability of Image-level Deepfake Detectors for Deepfake Video Detection",
+      "abstract": "Recent advances in video generation models have significantly intensified the deepfake threat, yet the current deepfake video detection benchmarks remain underdeveloped. In particular, the effectiveness of image-level detectors in the video domain has not been systematically assessed. To fill this gap, we present FakeI2V-Bench, a benchmark for evaluating state-of-the-art video-level deepfake detectors in challenging scenarios, with a particular focus on systematically assessing the performance of image-level deepfake detectors in the video domain. FakeI2V-Bench comprises 97,548 videos, containing content generated by the latest powerful generation models and covering a broader range of categories. Using this dataset, we conduct a systematic evaluation of eight video-level detectors and twelve representative image-level detectors. Experimental results show that the best-performing image-level detector achieves an 80.16% AUC, slightly outperforming the strongest video-level detector (i.e., 79.99% AUC). Going beyond benchmarking, we present IV-Bridge, a general framework that enhances the applicability of image-level deepfake detectors to videos. IV-Bridge employs a random forest model with statistical features to aggregate frame-level predictions, allowing eleven image-level detectors to surpass state-of-the-art video-level approaches, with the best-performing variant achieving a 93.80% AUC. Overall, FakeI2V-Bench establishes a rigorous benchmark for deepfake video detection and introduces a novel pathway for extending image-level detectors to the video domain, offering new insights and directions for future research. Code and data are available at https://github.com/CryptoAILab/FakeI2V-Bench.",
+      "authors": [
+        "Pei Li",
+        "Sihan Chen",
+        "Delong Ran",
+        "Tianshuo Cong"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-08-04T04:13:31+00:00",
+      "link": "https://arxiv.org/pdf/2608.03096v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Benchmark for evaluating image-level deepfake detectors on videos",
+      "llm_evidence_cn": "评估图像级深度伪造检测器在视频上的基准",
+      "llm_evidence": "评估图像级深度伪造检测器在视频上的基准",
+      "canonical_evidence": "评估图像级深度伪造检测器在视频上的基准",
+      "llm_tldr_en": "Introduces FakeI2V-Bench, a large-scale benchmark with 97,548 videos for evaluating video deepfake detectors, especially assessing the applicability of image-level detectors, revealing their limitations in video scenarios.",
+      "llm_tldr_cn": "针对深度伪造视频检测基准不完善的现状，构建包含97,548个视频的FakeI2V-Bench大规模基准，覆盖多种类别和最新生成模型。通过系统性评估图像级检测器在视频上的应用，发现其跨模态迁移性能显著下降，存在高误检率等问题。这一工作不仅提供了标准测试平台，也指明了视频级检测方法需要专门优化而非简单复用图像模型。",
+      "llm_tldr": "针对深度伪造视频检测基准不完善的现状，构建包含97,548个视频的FakeI2V-Bench大规模基准，覆盖多种类别和最新生成模型。通过系统性评估图像级检测器在视频上的应用，发现其跨模态迁移性能显著下降，存在高误检率等问题。这一工作不仅提供了标准测试平台，也指明了视频级检测方法需要专门优化而非简单复用图像模型。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.03165v1",
+      "source": "arxiv",
+      "title": "SpreadMark: Robust Image Watermarking via Spread-Spectrum Embedding",
+      "abstract": "Invisible image watermarks are increasingly used for deepfake detection and provenance tracking, where they must survive not only incidental distortions but also deliberate removal. We revisit spread-spectrum embedding, a classical watermarking principle, inside a modern neural post-hoc watermarking architecture. Our starting point is a measurement: in existing encoder-decoder schemes each message bit occupies only a small fraction of the image, a shared contributing factor to their fragility, since removal then need only disturb the region a bit occupies. SpreadMark instead spreads each bit as a dense pseudo-random codeword over the whole image and recovers it by matched-filtering a learned cover-suppressed chip representation, with a parallel convolutional decoding path and sparsification-aware training. A conditional chip-space analysis shows that, under a codeword-independent perturbation model, dense spreading increases the budget required to disrupt matched-filter recovery. Evaluated on COCO and DIV2K against nine schemes, SpreadMark is the only evaluated method retaining high detection under both the regeneration and the latent-space sparsification settings we test, with competitive JPEG and additive-noise robustness. It keeps the embedded watermark imperceptible, maintaining high perceptual quality on both COCO and DIV2K.",
+      "authors": [
+        "Wei Song",
+        "Yuxin Cao",
+        "Zhenchang Xing",
+        "Liming Zhu",
+        "Jin Song Dong",
+        "Yulei Sui",
+        "Jingling Xue"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.CV"
+      ],
+      "published": "2026-08-04T05:52:17+00:00",
+      "link": "https://arxiv.org/pdf/2608.03165v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Spread-spectrum watermarking for deepfake detection and provenance",
+      "llm_evidence_cn": "用于深度伪造检测和溯源的扩频水印",
+      "llm_evidence": "用于深度伪造检测和溯源的扩频水印",
+      "canonical_evidence": "用于深度伪造检测和溯源的扩频水印",
+      "llm_tldr_en": "Proposes SpreadMark, a robust invisible watermarking method that spreads each bit as a dense pseudo-random codeword across the whole image, improving survival against distortions and removal for deepfake detection.",
+      "llm_tldr_cn": "针对现有水印方案中每位仅占小区域导致脆弱的问题，提出SpreadMark扩频水印方法。将每个消息比特作为密集伪随机码字扩散至全图，通过匹配滤波和并行卷积恢复，增强对失真和移除的鲁棒性。实验证明该方法在保持图像质量的同时大幅提升水印生存能力，助力深度伪造检测与溯源。",
+      "llm_tldr": "针对现有水印方案中每位仅占小区域导致脆弱的问题，提出SpreadMark扩频水印方法。将每个消息比特作为密集伪随机码字扩散至全图，通过匹配滤波和并行卷积恢复，增强对失真和移除的鲁棒性。实验证明该方法在保持图像质量的同时大幅提升水印生存能力，助力深度伪造检测与溯源。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.01348v1",
+      "source": "arxiv",
+      "title": "Prompt-Driven Simulation with Feature Perturbation for Cross-Domain Few-Shot Object Detection",
+      "abstract": "Data augmentation, which simulates diverse visual variations to expand the source distribution and induce synthetic domain shifts, is a simple yet effective strategy for mitigating severe domain shifts and limited labeled target data in cross-domain few-shot object detection (CD-FSOD). Existing approaches rely on conventional data augmentation, such as Color-Jitter, Mosaic, and background-centric adaptation (e.g., Domain-RAG), which are limited in modeling complex domain shifts and often lead to suboptimal performance. In this paper, we propose PSP-FSOD, a principled framework that integrates prompt-driven domain simulation with feature perturbation regularization to improve generalization in CD-FSOD. To enable controllable domain synthesis, we design a prompt-driven strategy that leverages the visual grounding capability of large VLMs to jointly model foreground and background variations, generating semantically consistent yet domain-diverse training samples. Moreover, we adopt a grounding-aware generation scheme that guides object placement and alleviates semantic-spatial misalignment, thereby improving foreground adaptation. To ensure training stability and robustness, we further introduce a noise-induced feature perturbation mechanism that injects Gaussian noise into multi-scale intermediate features with distribution correction, encouraging consistent predictions under perturbations and reducing reliance on domain-specific cues. Extensive experiments demonstrate that PSP-FSOD produces high-quality domain-diverse supervision and learns domain-invariant representations, consistently improving performance across CD-FSOD benchmarks.",
+      "authors": [
+        "Linhai Zhuo",
+        "Junxi Cai",
+        "Tianwen Qian",
+        "Qingping Zheng",
+        "Yang Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-02T16:11:16+00:00",
+      "link": "https://arxiv.org/pdf/2608.01348v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Addresses cross-domain few-shot object detection with prompt-driven simulation and feature perturbation.",
+      "llm_evidence_cn": "通过提示驱动仿真和特征扰动解决跨域少样本目标检测。",
+      "llm_evidence": "通过提示驱动仿真和特征扰动解决跨域少样本目标检测。",
+      "canonical_evidence": "通过提示驱动仿真和特征扰动解决跨域少样本目标检测。",
+      "llm_tldr_en": "Proposes a framework for cross-domain few-shot object detection that uses prompt-driven domain simulation and feature perturbation regularization to improve generalization with limited target data.",
+      "llm_tldr_cn": "针对跨域少样本目标检测中领域偏移严重和标注数据有限的问题，提出PSP-FSOD框架，集成提示驱动的领域仿真与特征扰动正则化。该方法通过可控领域仿真和特征空间扰动，提升了模型在少样本条件下的跨域泛化能力，为少样本学习任务提供了有效策略。",
+      "llm_tldr": "针对跨域少样本目标检测中领域偏移严重和标注数据有限的问题，提出PSP-FSOD框架，集成提示驱动的领域仿真与特征扰动正则化。该方法通过可控领域仿真和特征空间扰动，提升了模型在少样本条件下的跨域泛化能力，为少样本学习任务提供了有效策略。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.03395v1",
+      "source": "arxiv",
+      "title": "SRAP: SVD-Refined Adversarial Perturbations for Imperceptible Face-Swap Defense",
+      "abstract": "Deepfake technologies pose increasing threats to facial privacy and identity security, motivating proactive defenses that protect facial images before misuse. Although adversarial perturbations generated by projected gradient descent (PGD) can disrupt the identity representations used by face-swapping models, their visual quality is degraded by two characteristics: perturbations are distributed broadly over the image, including identity-insensitive regions, and they contain visually salient high-frequency components. We analyze these spatial and spectral inefficiencies through identity-sensitivity estimation and the singular-value decomposition (SVD) of PGD perturbations. Our analysis shows that later singular components contain a disproportionate amount of high-frequency energy, while the leading components preserve most of the perturbation energy and defense utility. Based on these observations, we propose SRAP, which combines per-channel truncated SVD refinement with an identity-importance mask at every optimization step. The SVD refinement suppresses high-rank, high-frequency residuals, while the mask restricts perturbations to locations that strongly influence identity representations. Experiments on CelebA-HQ and VGGFace2-HQ demonstrate that SRAP substantially improves protected-image fidelity across all reported metrics while maintaining competitive identity-disruption performance, yielding a favorable trade-off between face-swap defense and visual imperceptibility.",
+      "authors": [
+        "Sungwon Cho",
+        "Kwanghyun Ko",
+        "Myungjoo Kang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-08-04T09:48:46+00:00",
+      "link": "https://arxiv.org/pdf/2608.03395v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Adversarial perturbation defense against face-swap deepfakes, protecting facial images from misuse",
+      "llm_evidence_cn": "通过对抗扰动防止人脸交换深度伪造，保护面部图像免遭滥用",
+      "llm_evidence": "通过对抗扰动防止人脸交换深度伪造，保护面部图像免遭滥用",
+      "canonical_evidence": "通过对抗扰动防止人脸交换深度伪造，保护面部图像免遭滥用",
+      "llm_tldr_en": "Proposes SRAP, a method to refine adversarial perturbations using singular value decomposition to produce imperceptible yet effective perturbations that disrupt face-swapping models, enhancing visual quality of defensive perturbations.",
+      "llm_tldr_cn": "现有对抗扰动防御人脸交换的方法存在扰动分布广泛且高频成分明显的问题，导致视觉质量下降。本文分析扰动空间与频谱效率，提出基于SVD精炼的对抗扰动方法SRAP，通过提炼后向奇异分量减少高频伪影，仅扰动身份敏感区域。实验表明SRAP在保持防御效果的同时显著改善隐蔽性，为深度伪造主动防御提供了更实用方案。",
+      "llm_tldr": "现有对抗扰动防御人脸交换的方法存在扰动分布广泛且高频成分明显的问题，导致视觉质量下降。本文分析扰动空间与频谱效率，提出基于SVD精炼的对抗扰动方法SRAP，通过提炼后向奇异分量减少高频伪影，仅扰动身份敏感区域。实验表明SRAP在保持防御效果的同时显著改善隐蔽性，为深度伪造主动防御提供了更实用方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
