@@ -1,0 +1,244 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-07T01:41:28.824912+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2608.04935v1",
+      "source": "arxiv",
+      "title": "Unleashing the Potential of Vision-Language Models for Generalizable AI-Generated Image Detection",
+      "abstract": "Recent work has shown that a simple linear probe on frozen representations from modern vision foundation models (VFMs) can achieve state-of-the-art AIGI detection performance, substantially outperforming specialized detectors in challenging in-the-wild scenarios. This finding has established DINOv3 as the dominant foundation-model baseline for subsequent improvements. However, we find that the vision-language model Perception Encoder (PE) holds greater potential for AIGI detection, because its language-aligned representation preserves high-level provenance semantics. Specifically, PE exhibits stronger local provenance organization than DINOv3 in its frozen feature space. However, semantic-agnostic linear probing fails to exploit this structure, as PE-Linear still underperforms DINOv3-Linear by 4.1% on In-the-Wild. Based on this observation, we propose Semantic Prototype Calibration (SPC), which constructs category prototypes from forensic semantic information and calibrates them with supervised data. We apply SPC to PE and refer to the resulting detector as PE-SPC. Our analysis shows that this simple design achieves stronger generalization. Across cross-generator, post-processing, and in-the-wild benchmarks, PE-SPC surpasses the previous DINOv3 baseline and achieves new state-of-the-art results.",
+      "authors": [
+        "Weihan Cai",
+        "Hao Tan",
+        "Zichang Tan",
+        "Jun Wan",
+        "Xinping Gao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-05T15:03:44+00:00",
+      "link": "https://arxiv.org/pdf/2608.04935v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "uses vision-language model for generalizable AI-generated image detection",
+      "llm_evidence_cn": "利用视觉-语言模型进行可推广的AI生成图像检测",
+      "llm_evidence": "利用视觉-语言模型进行可推广的AI生成图像检测",
+      "canonical_evidence": "利用视觉-语言模型进行可推广的AI生成图像检测",
+      "llm_tldr_en": "Shows that vision-language models (Perception Encoder) achieve superior AI-generated image detection by preserving high-level provenance semantics. Exploits local provenance organization in frozen features to outperform DINOv3, achieving state-of-the-art generalization.",
+      "llm_tldr_cn": "论文发现视觉-语言模型（感知编码器）因其语言对齐的表征保留了高级来源语义，在AI生成图像检测中潜力超过DINOv3。通过探索其局部来源组织方式，实现了在开放场景下的领先通用检测性能。",
+      "llm_tldr": "论文发现视觉-语言模型（感知编码器）因其语言对齐的表征保留了高级来源语义，在AI生成图像检测中潜力超过DINOv3。通过探索其局部来源组织方式，实现了在开放场景下的领先通用检测性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.03174v1",
+      "source": "arxiv",
+      "title": "Attribute-based Undetectable Watermarking for Generative AI Models",
+      "abstract": "Generative AI systems increasingly produce content whose provenance is difficult to verify, motivating watermarking techniques for identifying model-generated outputs. Existing cryptographic watermarking methods provide strong undetectability guarantees: without a detection key, watermarked outputs are computationally indistinguishable from unwatermarked ones. However, these approaches do not address the crucial deployment challenge of how to safely delegate detection capabilities. With an unrestricted detection key, a malicious detector may use the detection key beyond its intended scope, enabling watermark sanitization, scope abuse, and user profiling.   To mitigate this safety concern, we introduce, to the best of our knowledge, the first \\emph{attribute-based watermarking} for generative AI models, providing fine-grained, policy-controlled watermark detection. In our approach, each generated output is associated with attributes, and each detection key is \\emph{constrained by a policy} on potential attributes. A detection key can only be used to detect watermarked outputs whose attributes satisfy the corresponding policy, while watermarked outputs that fall outside the policy remain computationally indistinguishable from unwatermarked ones. We construct such an attribute-based watermarking scheme and formalize its security properties, including consistency, adaptive robustness to bounded corruptions, undetectability, and soundness, along with a security proof under standard cryptographic assumptions. Our construction integrates constrained pseudorandom functions, pseudorandom error-correcting codes, and randomness recovery procedures with generative AI models. Finally, we implement a prototype and an empirical evaluation, demonstrating that attribute-based watermarking is both effective and practical.",
+      "authors": [
+        "Miryam Mi-Ying Huang",
+        "Chung-Wei Lee",
+        "Max Raffel",
+        "Er-Cheng Tang"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI"
+      ],
+      "published": "2026-08-04T06:05:58+00:00",
+      "link": "https://arxiv.org/pdf/2608.03174v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "watermarking to identify AI-generated outputs",
+      "llm_evidence_cn": "通过水印识别AI生成输出",
+      "llm_evidence": "通过水印识别AI生成输出",
+      "canonical_evidence": "通过水印识别AI生成输出",
+      "llm_tldr_en": "Introduces attribute-based undetectable watermarking for generative AI to enable secure delegation of detection without key abuse, enhancing provenance verification.",
+      "llm_tldr_cn": "生成式AI系统输出的溯源验证是重要挑战，现有加密水印方法虽提供不可检测性，但存在检测密钥滥用风险。本文首次提出基于属性的不可检测水印方案，通过将检测能力与属性绑定，安全地委托检测功能，防止密钥被用于超出范围的操作，如净化水印或用户画像。该方案增强了生成式AI输出检测的安全性和可用性，为负责任的AI部署提供了新工具。",
+      "llm_tldr": "生成式AI系统输出的溯源验证是重要挑战，现有加密水印方法虽提供不可检测性，但存在检测密钥滥用风险。本文首次提出基于属性的不可检测水印方案，通过将检测能力与属性绑定，安全地委托检测功能，防止密钥被用于超出范围的操作，如净化水印或用户画像。该方案增强了生成式AI输出检测的安全性和可用性，为负责任的AI部署提供了新工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.04379v1",
+      "source": "arxiv",
+      "title": "Image Classification Using CNN-QNN Hybrid Model with Optimized Correlated Features",
+      "abstract": "We propose a method to optimize the correlation among convolutional neural network (CNN) features that are used as inputs to quantum neural network (QNN) to enhance image classification accuracy. Unlike prior approaches that employ orthogonal decomposition as preprocessing, we intentionally introduce correlated features that are more physically compatible with QNN. This design leverages the QNN's inherent ability to exploit quantum entanglement for representing correlated states-an advantage unavailable to classical neural networks. We hypothesize that aligning feature correlations with the entanglement structure of QNN improves binary classification performance. Based on a mathematical derivation of QNN outputs, Monte Carlo simulations indicate that an average correlation between features of 0.5 yields optimal classification accuracy. To validate this finding, we evaluate a quantum-classical hybrid model on three tasks: CIFAR-10 (automobile vs. truck), Fashion-MNIST (shirt vs. coat), and radar micro-Doppler signatures (robotic dogs vs. non-robots). To regulate feature correlations, we introduce a correlation-regularization term on the outputs of the CNN, driving the off-diagonal entries of the feature correlation matrix toward a target constant. Across all datasets, inducing intermediate correlation consistently improved accuracy compared to low, high, or unregulated correlations, while also reducing classification accuracy variance. These results demonstrate that imposing moderate feature correlations-without modifying the quantum circuit-enhances classification accuracy and stability by aligning feature statistics with the QNN's entanglement structure. This study highlights the potential of QNN to surpass the performance of classical classifiers as more qubits become available.",
+      "authors": [
+        "Minseo Seong",
+        "Youngwook Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-05T02:39:03+00:00",
+      "link": "https://arxiv.org/pdf/2608.04379v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes CNN-QNN hybrid image classification with optimized correlated features",
+      "llm_evidence_cn": "提出具有优化相关特征的CNN-QNN混合图像分类",
+      "llm_evidence": "提出具有优化相关特征的CNN-QNN混合图像分类",
+      "canonical_evidence": "提出具有优化相关特征的CNN-QNN混合图像分类",
+      "llm_tldr_en": "Improves binary image classification accuracy by aligning CNN feature correlations with QNN entanglement, addressing limitation of orthogonal preprocessing.",
+      "llm_tldr_cn": "针对正交预处理丢弃相关性限制量子神经网络性能的问题，提出优化CNN特征相关性与量子纠缠结构对齐的方法，蒙特卡洛仿真验证提升二分类精度，为量子-经典混合分类提供新方案。",
+      "llm_tldr": "针对正交预处理丢弃相关性限制量子神经网络性能的问题，提出优化CNN特征相关性与量子纠缠结构对齐的方法，蒙特卡洛仿真验证提升二分类精度，为量子-经典混合分类提供新方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.04840v1",
+      "source": "arxiv",
+      "title": "Towards a satellite image manipulation and deepfake localization benchmark dataset",
+      "abstract": "Verifying the authenticity of satellite imagery has become increasingly critical given advances in generative artificial intelligence. Highly realistic synthetic imagery produced for malicious purposes (deepfakes) can have major consequences in the remote sensing domain, where this data is a fundamental source of information for science applications, planning, logistics, and monitoring. The remote sensing community lacks high-quality, fine-grained manipulation datasets suitable for training and evaluating detection and image forensics algorithms. Existing datasets are lacking and those that do exist either provide no ground truth masks for evaluating manipulation localization, or consist of entire images generated by GANs or diffusion models, which are inadequate for measuring localization performance. To address this gap, we describe a preliminary dataset construction process and prototype benchmark dataset for satellite image manipulation detection and localization. The dataset contains 60 images total, with 30 images carefully manipulated using three manipulation types including copy-paste splicing and diffusion model inpainting, and 30 authentic images. Each image is accompanied by a ground-truth mask and acquisition metadata, enabling both pixel-level localization metrics, image metadata studies, and analyses of how manipulation detection performance relates to image collection parameters. We describe the dataset construction process and present this initial release to support further research in image forensics and geospatial deepfake detection. The prototype dataset can be downloaded at https://huggingface.co/datasets/geodf/fmow-fake-small.",
+      "authors": [
+        "Jacob Arndt",
+        "Debvrat Varshney",
+        "Philipe Dias",
+        "Nivedita Nukavarapu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-05T13:36:42+00:00",
+      "link": "https://arxiv.org/pdf/2608.04840v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark dataset for satellite image manipulation and deepfake localization",
+      "llm_evidence_cn": "用于卫星图像篡改和深度伪造定位的基准数据集",
+      "llm_evidence": "用于卫星图像篡改和深度伪造定位的基准数据集",
+      "canonical_evidence": "用于卫星图像篡改和深度伪造定位的基准数据集",
+      "llm_tldr_en": "Introduces a high-quality benchmark for satellite image manipulation and deepfake localization, with ground-truth masks. Addresses the lack of fine-grained manipulation datasets in remote sensing, enabling training and evaluation of forensics algorithms on GAN/diffusion generated forgeries.",
+      "llm_tldr_cn": "该论文构建了一个卫星图像篡改与深度伪造定位的高质量基准数据集，提供像素级真值掩码，弥补了遥感领域缺乏细粒度篡改数据集的不足，支持对GAN/扩散模型生成伪造的取证算法训练与评估。",
+      "llm_tldr": "该论文构建了一个卫星图像篡改与深度伪造定位的高质量基准数据集，提供像素级真值掩码，弥补了遥感领域缺乏细粒度篡改数据集的不足，支持对GAN/扩散模型生成伪造的取证算法训练与评估。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.05101v1",
+      "source": "arxiv",
+      "title": "HexMIL: Hierarchical Attention MIL for Ante-Hoc Explainable Detection of AI-Manipulated CT Volumes",
+      "abstract": "The emergence of medical deepfakes, i.e., medical images manipulated by deep generative models, poses a significant threat to clinical workflows. However, existing detectors suffer from two critical limitations: poor generalization to unseen generative architectures for manipulation detection and lack of interpretability. In this context, we present HexMIL (Hierarchical EXplainable Multiple Instance Learning), a mask-free medical deepfake detector that simultaneously addresses both limitations using only binary volume-level supervision. HexMIL decomposes each CT volume into a two-level hierarchy of patches and slices, aggregated via independent Gated Attention modules whose weights are directly combined into a full-resolution 3D attention volume that localizes the manipulated sub-region without any pixel-level annotation. Unlike post-hoc methods such as Grad-CAM, HexMIL's attention weights constitute the exact forward computation driving the classification decision, providing ante-hoc and structurally faithful spatial attribution. We evaluate HexMIL on M3DSynth and CT-GAN datasets under a rigorous cross-generator generalization protocol, training on a single generative architecture and testing on unseen ones. HexMIL outperforms all baselines by $+9.1$ AUC and $+9.4$ F1 in out-of-domain classification, and achieves the best average IoU and Pointing Game score in localization. Project page: opontorno.github.io/hexmil.",
+      "authors": [
+        "Orazio Pontorno",
+        "Luca Guarnera",
+        "Zahid Akhtar",
+        "Sebastiano Battiato"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.MM"
+      ],
+      "published": "2026-08-05T17:40:29+00:00",
+      "link": "https://arxiv.org/pdf/2608.05101v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Medical deepfake detection via hierarchical attention MIL with ante-hoc explainability.",
+      "llm_evidence_cn": "通过分层注意力多实例学习实现可解释的医学深度伪造检测。",
+      "llm_evidence": "通过分层注意力多实例学习实现可解释的医学深度伪造检测。",
+      "canonical_evidence": "通过分层注意力多实例学习实现可解释的医学深度伪造检测。",
+      "llm_tldr_en": "HexMIL is a mask-free medical deepfake detector for CT volumes that uses two-level patch-slice hierarchy with gated attention, providing both detection and full-resolution interpretability from binary volume-level labels.",
+      "llm_tldr_cn": "针对医学深度伪造检测中泛化性差和缺乏可解释性的问题，提出HexMIL框架。它将CT体积分解为两层补丁-切片层次，通过门控注意力聚合，仅需体积级二值标签即输出全分辨率归因图。实验表明，该方法对未见生成架构的检测鲁棒性强，并提供与临床相关的解释区域，有助于实际部署。",
+      "llm_tldr": "针对医学深度伪造检测中泛化性差和缺乏可解释性的问题，提出HexMIL框架。它将CT体积分解为两层补丁-切片层次，通过门控注意力聚合，仅需体积级二值标签即输出全分辨率归因图。实验表明，该方法对未见生成架构的检测鲁棒性强，并提供与临床相关的解释区域，有助于实际部署。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.04394v1",
+      "source": "arxiv",
+      "title": "Free-Lunch Augmentation by Revisiting Diffusion-Based Data Generation for Cross-Domain Few-Shot Object Detection",
+      "abstract": "Cross-Domain Few-Shot Object Detection (CDFSOD) aims to transfer knowledge from data-rich upstream generic domains to downstream expert domains using scarce training data, where the significant domain gap and data scarcity make it an unsolved challenge. To address this problem, we revisit a natural yet underexplored approach in CDFSOD: data augmentation, by directly synthesizing data through diffusion models to supplement limited training samples. However, due to large domain gaps, we find that current diffusion methods cannot produce good results, leading to performance even lower than using the original images. To address these limitations, we divide the domain gaps into visual gaps and semantic gaps for separate analysis. For the visual gap, we find that the diffusion model cannot distinguish noise from useful information on expert domains, which can be mitigated by adding weakened noise. For the semantic gap, we find that the background semantics shows much smaller gaps between domains than foreground semantics, and we can bridge this gap by background inpainting. Based on the above analysis, we propose a method (Selective Inpainting with Tailored Noise, SITN) to dynamically take different strategies for downstream data synthesis based on their different gaps from the general domain, including a Generation Module for adding tailored noise and a Selection Module to dynamically select the inpainting regions. Extensive experiments on 6 datasets of CDFSOD and 4 datasets of cross-domain few-shot segmentation (CDFSS) validate that we can synthesize helpful data, achieving new state-of-the-art performance. Our codes is available at https://github.com/zzzzj311-droid/Free-Lunch-SITN",
+      "authors": [
+        "Zijian Zhuang",
+        "Yixiong Zou",
+        "Yuhua Li",
+        "Ruixuan Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-05T02:56:32+00:00",
+      "link": "https://arxiv.org/pdf/2608.04394v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Diffusion-based data augmentation for cross-domain few-shot object detection",
+      "llm_evidence_cn": "基于扩散的数据增强用于跨域少样本目标检测",
+      "llm_evidence": "基于扩散的数据增强用于跨域少样本目标检测",
+      "canonical_evidence": "基于扩散的数据增强用于跨域少样本目标检测",
+      "llm_tldr_en": "Proposes using diffusion models to generate synthetic data to augment limited training samples in cross-domain few-shot object detection, separating visual and semantic domain gaps for better performance.",
+      "llm_tldr_cn": "针对跨域少样本目标检测中域差距和数据稀缺问题，利用扩散模型合成数据增强训练集，并分离视觉与语义差距分别处理，提升少样本检测性能。",
+      "llm_tldr": "针对跨域少样本目标检测中域差距和数据稀缺问题，利用扩散模型合成数据增强训练集，并分离视觉与语义差距分别处理，提升少样本检测性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

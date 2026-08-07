@@ -6,40 +6,40 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-05
-- 运行时间：2026-08-05 21:13:05 UTC
+- 最新运行日期：2026-08-07
+- 运行时间：2026-08-07 01:46:48 UTC
 - 运行状态：成功
 - 本次总论文数：6
-- 精读区：4
-- 速读区：2
+- 精读区：5
+- 速读区：1
 
 ### 今日简报（AI）
-今日挑选6篇前沿研究，精读医学影像和视频鉴伪两项高分工作：从病理补丁到“证据球”实现小样本全切片分类，并揭秘视频伪造检测器内部编码的伪造知识。  
-最值得深挖《From Patches to Evidence Balls》的类条件证据检索思路与《V-FIND》的可解释伪造知识提取。  
-建议关注检索增强型小样本学习与检测模型内在表征分析两条技术路线。
-- 详情：[/202608/05/README](/202608/05/README)
+今日精读5篇前沿论文，聚焦视觉语言模型在AIGC检测、生成模型水印等可靠可信主题。  
+最值得关注：VLMs能实现高度泛化的AI生成图像鉴别，而基于属性的水印为不可见保护提供了新路径。  
+建议读者从扩散模型的数据增强思路切入，探索跨域小样本检测的实用提升方案。
+- 详情：[/202608/07/README](/202608/07/README)
 
 ### 精读区论文标签
-1. [From Patches to Evidence Balls: Class-Conditioned Evidence Retrieval for Few-Shot Whole Slide Image Classification](/202608/05/2608.01104v1-from-patches-to-evidence-balls-class-conditioned-evidence-retrieval-for-few-shot-whole-slide-image-classification)  
+1. [Unleashing the Potential of Vision-Language Models for Generalizable AI-Generated Image Detection](/202608/07/2608.04935v1-unleashing-the-potential-of-vision-language-models-for-generalizable-ai-generated-image-detection)  
+   标签：评分：10.0/10、query:deepfake-fsl
+   evidence：利用视觉-语言模型进行可推广的AI生成图像检测
+2. [Attribute-based Undetectable Watermarking for Generative AI Models](/202608/07/2608.03174v1-attribute-based-undetectable-watermarking-for-generative-ai-models)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：少样本全切片图像分类
-2. [V-FIND: Revealing the Intrinsic Forgery Knowledge Encoded in Video Forgery Detectors](/202608/05/2608.03008v1-v-find-revealing-the-intrinsic-forgery-knowledge-encoded-in-video-forgery-detectors)  
+   evidence：通过水印识别AI生成输出
+3. [Image Classification Using CNN-QNN Hybrid Model with Optimized Correlated Features](/202608/07/2608.04379v1-image-classification-using-cnn-qnn-hybrid-model-with-optimized-correlated-features)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：通过揭示检测器内部稀疏取证知识进行视频伪造检测。
-3. [FakeI2V-Bench: Benchmarking the Applicability of Image-level Deepfake Detectors for Deepfake Video Detection](/202608/05/2608.03096v1-fakei2v-bench-benchmarking-the-applicability-of-image-level-deepfake-detectors-for-deepfake-video-detection)  
+   evidence：提出具有优化相关特征的CNN-QNN混合图像分类
+4. [Towards a satellite image manipulation and deepfake localization benchmark dataset](/202608/07/2608.04840v1-towards-a-satellite-image-manipulation-and-deepfake-localization-benchmark-dataset)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：评估图像级深度伪造检测器在视频上的基准
-4. [SpreadMark: Robust Image Watermarking via Spread-Spectrum Embedding](/202608/05/2608.03165v1-spreadmark-robust-image-watermarking-via-spread-spectrum-embedding)  
+   evidence：用于卫星图像篡改和深度伪造定位的基准数据集
+5. [HexMIL: Hierarchical Attention MIL for Ante-Hoc Explainable Detection of AI-Manipulated CT Volumes](/202608/07/2608.05101v1-hexmil-hierarchical-attention-mil-for-ante-hoc-explainable-detection-of-ai-manipulated-ct-volumes)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：用于深度伪造检测和溯源的扩频水印
+   evidence：通过分层注意力多实例学习实现可解释的医学深度伪造检测。
 
 ### 速读区论文标签
-1. [Prompt-Driven Simulation with Feature Perturbation for Cross-Domain Few-Shot Object Detection](/202608/05/2608.01348v1-prompt-driven-simulation-with-feature-perturbation-for-cross-domain-few-shot-object-detection)  
+1. [Free-Lunch Augmentation by Revisiting Diffusion-Based Data Generation for Cross-Domain Few-Shot Object Detection](/202608/07/2608.04394v1-free-lunch-augmentation-by-revisiting-diffusion-based-data-generation-for-cross-domain-few-shot-object-detection)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：通过提示驱动仿真和特征扰动解决跨域少样本目标检测。
-2. [SRAP: SVD-Refined Adversarial Perturbations for Imperceptible Face-Swap Defense](/202608/05/2608.03395v1-srap-svd-refined-adversarial-perturbations-for-imperceptible-face-swap-defense)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：通过对抗扰动防止人脸交换深度伪造，保护面部图像免遭滥用
+   evidence：基于扩散的数据增强用于跨域少样本目标检测
 
 
 <div class="dpr-home-promo-card">
