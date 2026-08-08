@@ -6,31 +6,31 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-07
-- 运行时间：2026-08-07 20:53:38 UTC
+- 最新运行日期：2026-08-08
+- 运行时间：2026-08-08 20:52:36 UTC
 - 运行状态：成功
 - 本次总论文数：3
 - 精读区：2
 - 速读区：1
 
 ### 今日简报（AI）
-今日聚焦视觉语言模型在图像真伪鉴别与工业缺陷检测中的前沿突破，两篇精读均获满分评价。  
-最值得关注的是用 VLM 实现通用 AI 生成图像鉴别，以及概念引导的自适应特征重构解决小样本工业异常难题。  
-建议读者结合多模态大模型与领域自适应思路，探索更多低资源场景下的高泛化检测方案。
-- 详情：[/202608/07/README](/202608/07/README)
+聚焦AI安全检测，精读了CT影像篡改识别与扩散图像防伪水印两项高分工作。  
+HexMIL用可解释注意力机制揪出AI“动过手脚”的医学影像，IRIS则为图像嵌入语义水印抵御伪造，两条路都直指AIGC鉴伪核心。  
+普通读者可先关注IRIS的语义绑定思路，它不只防伪，更让检测结果容易被理解和信任。
+- 详情：[/202608/08/README](/202608/08/README)
 
 ### 精读区论文标签
-1. [Unleashing the Potential of Vision-Language Models for Generalizable AI-Generated Image Detection](/202608/07/2608.04935v1-unleashing-the-potential-of-vision-language-models-for-generalizable-ai-generated-image-detection)  
+1. [HexMIL: Hierarchical Attention MIL for Ante-Hoc Explainable Detection of AI-Manipulated CT Volumes](/202608/08/2608.05101v1-hexmil-hierarchical-attention-mil-for-ante-hoc-explainable-detection-of-ai-manipulated-ct-volumes)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：提出利用视觉语言模型进行跨域泛化的AI生成图像检测
-2. [ConceptADapt: Concept-guided Adaptive Feature Reconstruction with Dynamic Attention for Few-Shot Industrial Anomaly Detection](/202608/07/2608.05743v1-conceptadapt-concept-guided-adaptive-feature-reconstruction-with-dynamic-attention-for-few-shot-industrial-anomaly-detection)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：概念引导的自适应特征重建用于少样本工业异常检测
+   evidence：使用分层注意力多实例学习检测AI篡改的CT体积（医学深度伪造）
+2. [IRIS: Visual-Semantic Binding for Forgery-Resistant Watermarking of Diffusion Images](/202608/08/2608.03539v1-iris-visual-semantic-binding-for-forgery-resistant-watermarking-of-diffusion-images)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：将水印绑定到图像语义的防伪方案，用于检测扩散生成图像
 
 ### 速读区论文标签
-1. [Prompt-Driven Simulation with Feature Perturbation for Cross-Domain Few-Shot Object Detection](/202608/07/2608.01348v2-prompt-driven-simulation-with-feature-perturbation-for-cross-domain-few-shot-object-detection)  
+1. [Free-Lunch Augmentation by Revisiting Diffusion-Based Data Generation for Cross-Domain Few-Shot Object Detection](/202608/08/2608.04394v1-free-lunch-augmentation-by-revisiting-diffusion-based-data-generation-for-cross-domain-few-shot-object-detection)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：用提示驱动的域模拟处理跨域小样本目标检测
+   evidence：在有限训练数据下的少样本目标检测
 
 
 <div class="dpr-home-promo-card">

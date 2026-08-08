@@ -1,0 +1,134 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-08T20:49:29.623745+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2608.05101v1",
+      "source": "arxiv",
+      "title": "HexMIL: Hierarchical Attention MIL for Ante-Hoc Explainable Detection of AI-Manipulated CT Volumes",
+      "abstract": "The emergence of medical deepfakes, i.e., medical images manipulated by deep generative models, poses a significant threat to clinical workflows. However, existing detectors suffer from two critical limitations: poor generalization to unseen generative architectures for manipulation detection and lack of interpretability. In this context, we present HexMIL (Hierarchical EXplainable Multiple Instance Learning), a mask-free medical deepfake detector that simultaneously addresses both limitations using only binary volume-level supervision. HexMIL decomposes each CT volume into a two-level hierarchy of patches and slices, aggregated via independent Gated Attention modules whose weights are directly combined into a full-resolution 3D attention volume that localizes the manipulated sub-region without any pixel-level annotation. Unlike post-hoc methods such as Grad-CAM, HexMIL's attention weights constitute the exact forward computation driving the classification decision, providing ante-hoc and structurally faithful spatial attribution. We evaluate HexMIL on M3DSynth and CT-GAN datasets under a rigorous cross-generator generalization protocol, training on a single generative architecture and testing on unseen ones. HexMIL outperforms all baselines by $+9.1$ AUC and $+9.4$ F1 in out-of-domain classification, and achieves the best average IoU and Pointing Game score in localization. Project page: opontorno.github.io/hexmil.",
+      "authors": [
+        "Orazio Pontorno",
+        "Luca Guarnera",
+        "Zahid Akhtar",
+        "Sebastiano Battiato"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.MM"
+      ],
+      "published": "2026-08-05T17:40:29+00:00",
+      "link": "https://arxiv.org/pdf/2608.05101v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Detection of AI-manipulated CT volumes (medical deepfakes) using hierarchical attention MIL",
+      "llm_evidence_cn": "使用分层注意力多实例学习检测AI篡改的CT体积（医学深度伪造）",
+      "llm_evidence": "使用分层注意力多实例学习检测AI篡改的CT体积（医学深度伪造）",
+      "canonical_evidence": "使用分层注意力多实例学习检测AI篡改的CT体积（医学深度伪造）",
+      "llm_tldr_en": "HexMIL detects AI-manipulated CT volumes (medical deepfakes) using hierarchical attention MIL with only binary volume-level supervision, achieving generalization and interpretability.",
+      "llm_tldr_cn": "医学深度伪造威胁临床安全，现有检测器泛化性差且缺乏可解释性。HexMIL提出无掩码的分层注意力多实例学习框架，仅需体积级二值监督，通过两级分解和门控注意力实现可解释的伪造检测。实验证明其在不同生成架构上泛化良好，并提供了直观的注意力热图，助力医学影像取证。",
+      "llm_tldr": "医学深度伪造威胁临床安全，现有检测器泛化性差且缺乏可解释性。HexMIL提出无掩码的分层注意力多实例学习框架，仅需体积级二值监督，通过两级分解和门控注意力实现可解释的伪造检测。实验证明其在不同生成架构上泛化良好，并提供了直观的注意力热图，助力医学影像取证。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.03539v1",
+      "source": "arxiv",
+      "title": "IRIS: Visual-Semantic Binding for Forgery-Resistant Watermarking of Diffusion Images",
+      "abstract": "Most in-generation diffusion watermarks embed patterns independent of the image that carries them, and attackers transplant the marks onto images the generator did not produce, resulting in forgery. Binding the mark to visual semantics prevents such transplantation, yet existing bindings anchor to a proxy image rather than the image they mark. Realizing visual-semantic binding inside generation faces two challenges. The mark derives from the image itself yet enters the sampling trajectory before that image exists, and may itself shift the semantics it binds. The binding also meets opposite sensitivity demands, breaking under semantic change while holding through common processing. We present IRIS, a training-free watermarking scheme that embeds an Intrinsic Ring Identifier from Semantics. IRIS reads a content code from the non-watermarked generated image, derives a one-time ring from the code and a secret key, returns to the final low-noise steps of the same trajectory and blends the ring in, after the semantics it binds are settled. To meet the opposite sensitivity demands, the code is read through a canonicalization shared between embedding and detection, holding through common distortions and mild regeneration while flipping under semantic change. Detection recomputes the ring from the query image and the key alone, and the mark therefore fails on a foreign or spliced image, with acceptance tracking semantic displacement. On three prompt datasets IRIS detects reliably and stays close to its same-seed non-watermarked counterpart, a fidelity prior in-generation marks do not reach. While forgeries transfer fixed-pattern marks and regeneration strips post-hoc marks, IRIS alone among the compared marks withstands both.",
+      "authors": [
+        "Xiaoyan Feng",
+        "Zheng Gao",
+        "Tong Guan",
+        "Rui Bao",
+        "Bokang Zeng",
+        "Xiaoyu Li",
+        "Jiaojiao Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-04T12:16:06+00:00",
+      "link": "https://arxiv.org/pdf/2608.03539v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "watermarking scheme that binds marks to image semantics for forgery-resistant detection of diffusion-generated images",
+      "llm_evidence_cn": "将水印绑定到图像语义的防伪方案，用于检测扩散生成图像",
+      "llm_evidence": "将水印绑定到图像语义的防伪方案，用于检测扩散生成图像",
+      "canonical_evidence": "将水印绑定到图像语义的防伪方案，用于检测扩散生成图像",
+      "llm_tldr_en": "Proposes IRIS, a training-free watermarking scheme that binds watermarks to image visual semantics to prevent forgery in diffusion-generated images, enabling robust detection.",
+      "llm_tldr_cn": "大多数扩散水印嵌入图案与图像无关，易被移植伪造。本文提出IRIS，一种免训练的水印方案，通过将水印绑定到图像的视觉语义上，实现在生成过程中嵌入防伪标记，并能抵抗常见处理，从而可靠检测扩散模型生成的图像。",
+      "llm_tldr": "大多数扩散水印嵌入图案与图像无关，易被移植伪造。本文提出IRIS，一种免训练的水印方案，通过将水印绑定到图像的视觉语义上，实现在生成过程中嵌入防伪标记，并能抵抗常见处理，从而可靠检测扩散模型生成的图像。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.04394v1",
+      "source": "arxiv",
+      "title": "Free-Lunch Augmentation by Revisiting Diffusion-Based Data Generation for Cross-Domain Few-Shot Object Detection",
+      "abstract": "Cross-Domain Few-Shot Object Detection (CDFSOD) aims to transfer knowledge from data-rich upstream generic domains to downstream expert domains using scarce training data, where the significant domain gap and data scarcity make it an unsolved challenge. To address this problem, we revisit a natural yet underexplored approach in CDFSOD: data augmentation, by directly synthesizing data through diffusion models to supplement limited training samples. However, due to large domain gaps, we find that current diffusion methods cannot produce good results, leading to performance even lower than using the original images. To address these limitations, we divide the domain gaps into visual gaps and semantic gaps for separate analysis. For the visual gap, we find that the diffusion model cannot distinguish noise from useful information on expert domains, which can be mitigated by adding weakened noise. For the semantic gap, we find that the background semantics shows much smaller gaps between domains than foreground semantics, and we can bridge this gap by background inpainting. Based on the above analysis, we propose a method (Selective Inpainting with Tailored Noise, SITN) to dynamically take different strategies for downstream data synthesis based on their different gaps from the general domain, including a Generation Module for adding tailored noise and a Selection Module to dynamically select the inpainting regions. Extensive experiments on 6 datasets of CDFSOD and 4 datasets of cross-domain few-shot segmentation (CDFSS) validate that we can synthesize helpful data, achieving new state-of-the-art performance. Our codes is available at https://github.com/zzzzj311-droid/Free-Lunch-SITN",
+      "authors": [
+        "Zijian Zhuang",
+        "Yixiong Zou",
+        "Yuhua Li",
+        "Ruixuan Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-05T02:56:32+00:00",
+      "link": "https://arxiv.org/pdf/2608.04394v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "few-shot object detection with limited training data",
+      "llm_evidence_cn": "在有限训练数据下的少样本目标检测",
+      "llm_evidence": "在有限训练数据下的少样本目标检测",
+      "canonical_evidence": "在有限训练数据下的少样本目标检测",
+      "llm_tldr_en": "The paper proposes to use diffusion models for data augmentation to improve cross-domain few-shot object detection, addressing domain gaps by separating visual and semantic gaps.",
+      "llm_tldr_cn": "跨域小样本目标检测面临数据稀缺和领域偏移双重挑战。本文重新审视扩散模型生成数据用于增强的方法，针对视觉和语义鸿沟分别设计缓解策略，有效扩充了下游小样本训练集，在多个跨域场景中显著提升了检测性能，为解决类似数据稀缺问题提供了新的数据增强思路。",
+      "llm_tldr": "跨域小样本目标检测面临数据稀缺和领域偏移双重挑战。本文重新审视扩散模型生成数据用于增强的方法，针对视觉和语义鸿沟分别设计缓解策略，有效扩充了下游小样本训练集，在多个跨域场景中显著提升了检测性能，为解决类似数据稀缺问题提供了新的数据增强思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
