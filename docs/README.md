@@ -6,31 +6,29 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-08
-- 运行时间：2026-08-08 20:52:36 UTC
+- 最新运行日期：2026-08-09
+- 运行时间：2026-08-09 20:26:25 UTC
 - 运行状态：成功
-- 本次总论文数：3
-- 精读区：2
-- 速读区：1
+- 本次总论文数：2
+- 精读区：0
+- 速读区：2
 
 ### 今日简报（AI）
-聚焦AI安全检测，精读了CT影像篡改识别与扩散图像防伪水印两项高分工作。  
-HexMIL用可解释注意力机制揪出AI“动过手脚”的医学影像，IRIS则为图像嵌入语义水印抵御伪造，两条路都直指AIGC鉴伪核心。  
-普通读者可先关注IRIS的语义绑定思路，它不只防伪，更让检测结果容易被理解和信任。
-- 详情：[/202608/08/README](/202608/08/README)
+今日速读两篇聚焦生成式AI水印安全的前沿论文，一攻一防直击数字水印的隐秘战场。  
+值得关注：基于属性的水印可兼顾不可检测性，而隐蔽后门能巧妙绕过鲁棒语义水印，攻防博弈再度升级。  
+下一步若想深入，可从水印的不可见性验证与模型供应链安全两端持续跟踪。
+- 详情：[/202608/09/README](/202608/09/README)
 
 ### 精读区论文标签
-1. [HexMIL: Hierarchical Attention MIL for Ante-Hoc Explainable Detection of AI-Manipulated CT Volumes](/202608/08/2608.05101v1-hexmil-hierarchical-attention-mil-for-ante-hoc-explainable-detection-of-ai-manipulated-ct-volumes)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：使用分层注意力多实例学习检测AI篡改的CT体积（医学深度伪造）
-2. [IRIS: Visual-Semantic Binding for Forgery-Resistant Watermarking of Diffusion Images](/202608/08/2608.03539v1-iris-visual-semantic-binding-for-forgery-resistant-watermarking-of-diffusion-images)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：将水印绑定到图像语义的防伪方案，用于检测扩散生成图像
+- 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Free-Lunch Augmentation by Revisiting Diffusion-Based Data Generation for Cross-Domain Few-Shot Object Detection](/202608/08/2608.04394v1-free-lunch-augmentation-by-revisiting-diffusion-based-data-generation-for-cross-domain-few-shot-object-detection)  
+1. [Attribute-based Undetectable Watermarking for Generative AI Models](/202608/09/2608.03174v1-attribute-based-undetectable-watermarking-for-generative-ai-models)  
    标签：评分：7.0/10、query:deepfake-fsl
-   evidence：在有限训练数据下的少样本目标检测
+   evidence：用于识别生成式AI输出的水印技术，实现对合成图像的检测
+2. [Robust Watermarks Meet Backdoored Models: Evading Diffusion Semantic Watermarks via Stealthy Backdoor](/202608/09/2608.00543v1-robust-watermarks-meet-backdoored-models-evading-diffusion-semantic-watermarks-via-stealthy-backdoor)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：GhostVAE在VAE中植入后门以逃避语义水印检测，揭示AI生成图像检测管道的脆弱性
 
 
 <div class="dpr-home-promo-card">
