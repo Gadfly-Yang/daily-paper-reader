@@ -6,29 +6,35 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-09
-- 运行时间：2026-08-09 20:26:25 UTC
+- 最新运行日期：2026-08-10
+- 运行时间：2026-08-10 21:10:17 UTC
 - 运行状态：成功
-- 本次总论文数：2
-- 精读区：0
-- 速读区：2
+- 本次总论文数：4
+- 精读区：4
+- 速读区：0
 
 ### 今日简报（AI）
-今日速读两篇聚焦生成式AI水印安全的前沿论文，一攻一防直击数字水印的隐秘战场。  
-值得关注：基于属性的水印可兼顾不可检测性，而隐蔽后门能巧妙绕过鲁棒语义水印，攻防博弈再度升级。  
-下一步若想深入，可从水印的不可见性验证与模型供应链安全两端持续跟踪。
-- 详情：[/202608/09/README](/202608/09/README)
+今日精读两篇满分论文，聚焦AI生成内容检测的泛化性突破。  
+方向是视觉语言模型潜力释放与多智能体取证推理，让AI鉴伪不再局限于特定生成器。  
+建议关注跨模型鉴伪技术进展，实际应用可留意多专家协作方案。
+- 详情：[/202608/10/README](/202608/10/README)
 
 ### 精读区论文标签
-- 本次无精读推荐。
+1. [Unleashing the Potential of Vision-Language Models for Generalizable AI-Generated Image Detection](/202608/10/2608.04935v2-unleashing-the-potential-of-vision-language-models-for-generalizable-ai-generated-image-detection)  
+   标签：评分：10.0/10、query:deepfake-fsl
+   evidence：利用视觉语言模型实现可泛化的AI生成图像检测
+2. [Multi-Agent Forensic Reasoning for Generalizable Deepfake Video Detection](/202608/10/2608.06865v1-multi-agent-forensic-reasoning-for-generalizable-deepfake-video-detection)  
+   标签：评分：10.0/10、query:deepfake-fsl
+   evidence：提出用于可泛化深度伪造视频检测的数据集和多智能体方法。
+3. [Image Classification Using CNN-QNN Hybrid Model with Optimized Correlated Features](/202608/10/2608.04379v1-image-classification-using-cnn-qnn-hybrid-model-with-optimized-correlated-features)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：提出用于图像分类的CNN-量子神经网络混合模型，直接匹配使用CNN进行图像分类的需求
+4. [Improving Low-Resolution Face Recognition under Limited Data: How Synthetic Data Generation Can Close the Domain Gap](/202608/10/2608.06580v1-improving-low-resolution-face-recognition-under-limited-data-how-synthetic-data-generation-can-close-the-domain-gap)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：研究合成数据生成以改进有限标记数据下的低分辨率人脸识别。
 
 ### 速读区论文标签
-1. [Attribute-based Undetectable Watermarking for Generative AI Models](/202608/09/2608.03174v1-attribute-based-undetectable-watermarking-for-generative-ai-models)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：用于识别生成式AI输出的水印技术，实现对合成图像的检测
-2. [Robust Watermarks Meet Backdoored Models: Evading Diffusion Semantic Watermarks via Stealthy Backdoor](/202608/09/2608.00543v1-robust-watermarks-meet-backdoored-models-evading-diffusion-semantic-watermarks-via-stealthy-backdoor)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：GhostVAE在VAE中植入后门以逃避语义水印检测，揭示AI生成图像检测管道的脆弱性
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">

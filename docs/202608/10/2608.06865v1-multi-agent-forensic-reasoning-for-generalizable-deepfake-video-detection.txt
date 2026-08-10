@@ -1,0 +1,871 @@
+Title: Multi-Agent Forensic Reasoning for Generalizable Deepfake Video Detection
+
+URL Source: https://arxiv.org/pdf/2608.06865v1
+
+Published Time: Mon, 10 Aug 2026 00:39:42 GMT
+
+Number of Pages: 22
+
+Markdown Content:
+# Multi-Agent Forensic Reasoning for Generalizable Deepfake Video Detection 
+
+Xuechao Zou 1, Shun Zhang 1, Kai Li 2, Yi Zhou 1, Xinyu Sun 1, Yuhui Chen 3, Zhe Wu 2, Congyan Lang 1, Junliang Xing 2
+
+> 1
+
+Beijing Jiaotong University 2Tsinghua University 3Ant Group 
+
+Abstract 
+
+The malicious use of generative artificial intelligence to cre-ate highly realistic deepfake videos raises serious ethical con-cerns and poses substantial challenges to AI safety. However, existing deepfake video benchmarks provide limited cover-age of recent synthesis methods and generally lack reliable fine-grained textual annotations. Meanwhile, conventional de-tectors and multimodal large language models (MLLMs), whether operating as a single model or relying on a single analytical perspective, often fail to capture subtle forgery ar-tifacts, limiting their generalization to emerging AI-generated methods. To address these limitations, we introduce FaceVid-Forensics-100K, a large-scale deepfake video dataset com-prising 100,000 videos and spanning 33 synthesis methods across face swapping, face reenactment, and entire-face syn-thesis, including recent generators such as Seedance 2.0. The dataset provides fine-grained textual annotations of visual ob-servations and verdict-consistent forensic explanations, auto-matically synthesized through a multi-model aggregation and conflict-resolution pipeline powered by advanced MLLMs. Building on this benchmark, we propose a multi-agent forensic reasoning framework that employs four specialized domain-expert agents to independently analyze forgery cues from four perspectives: texture, lighting, motion, and physics. A judge agent then reconciles their reports to produce a final prediction together with an explanation. Extensive evaluations on out-of-domain test sets show that, despite being composed entirely of small open-source MLLMs, our framework outperforms all methods including closed-source GPT and Gemini models and ranks first across all reported metrics on this benchmark. 
+
+## Introduction 
+
+The rapid advancement of generative artificial intelligence has made it increasingly easy to synthesize facial videos with high visual fidelity and temporal coherence. This progress creates unprecedented opportunities for creative industries, but also raises serious ethical and security concerns (Li et al. 2024). Therefore, reliable deepfake video detection has be-come a critical task in digital media forensics. Yet the prob-lem is no longer limited to identifying conspicuous blending boundaries or low-level generation artifacts. A new genera-tion of video generators (Team Seedance et al. 2026; OpenAI 2025b; Kuaishou 2024; Wan Team et al. 2025) can syn-thesize entire faces, maintain relatively stable identity and appearance across consecutive frames, and produce seem-
+
+Project page: https://xavierjiezou.github.io/ARGUS/ MLLM   
+
+> Real or Fake? Why?
+> Answer: real No obvious artifacts
+> Texture Lighting Motion Physics Judge
+> Answer: fake Texture and motion unusual
+
+# ... ... ... ... 
+
+> Multi-agent System
+> video Real or Fake? Why? video
+> Optional
+
+Figure 1: Framework comparison. A single MLLM often overlooks subtle forensic artifacts, which can lead to incor-rect predictions. In contrast, our multi-agent framework em-ploys specialized agents to examine the input video from four distinct forensic perspectives: texture, lighting, motion, and physics. A judge agent then aggregates their findings to produce a more reliable explanation and final prediction of whether the video under analysis is ultimately real or fake. ingly plausible motion under diverse scenes. Consequently, detectors trained on earlier forgery techniques often suffer substantial performance degradation when confronted with unseen generation methods (Cheng et al. 2026a; Shen et al. 2025). Conventional detectors (Wang et al. 2023b; Xu et al. 2024; Guo et al. 2025; Han et al. 2025; Peng et al. 2024; Yan et al. 2025) are typically small vision models that learn discrimina-tive visual representations primarily from binary real-or-fake labels. Although these methods can achieve strong in-domain performance, they often rely on shortcut features specific to particular datasets or generators and therefore struggle to adapt to new forgery methods, identities, compression conditions, and data sources (Huang et al. 2026b). Existing benchmarks (Rossler et al. 2019; Li et al. 2020c; Dolhan-sky et al. 2020; Jiang et al. 2020; Yan et al. 2024; Li et al. arXiv:2608.06865v1 [cs.CV] 7 Aug 2026 2025) further amplify this problem: widely used datasets cover only a limited portion of the rapidly expanding syn-thesis landscape, and even some recent datasets that increase the number of videos typically provide only binary labels without specifying the visual evidence supporting each deci-sion. Such coarse-grained supervision makes it difficult both to learn subtle, diverse, and previously unseen forgery cues and to determine whether a detector has acquired transferable forensic knowledge or merely fitted dataset biases. Moreover, authenticity decisions without supporting evidence limit the trustworthiness and auditability of detection systems in high-risk real-world settings (Li et al. 2026a). Multimodal large language models (MLLMs) (Park et al. 2026; Li et al. 2026b; Tan et al. 2026; Sun et al. 2025) of-fer a promising direction for addressing these limitations. With strong visual understanding and language-generation capabilities, MLLMs can analyze video content and describe suspicious facial details, inconsistencies across frames, and violations of common physical patterns. Nevertheless, di-rectly asking a single MLLM whether a video is real or fake remains unreliable (Liu et al. 2026; Ma et al. 2026b). A general-purpose model may overemphasize the most salient appearance cue, overlook weak evidence spread across dif-ferent frames, or generate a plausible explanation that is in-consistent with its final verdict. More fundamentally, treat-ing deepfake detection as a single holistic judgment ignores the distinct causes of different forgery traces: texture over-smoothing, inconsistent illumination, unstable motion, and violations of physical plausibility each require different forms of forensic knowledge and reasoning. To address these limitations, we introduce the large-scale deepfake video benchmark FaceVid-Forensics-100K. The dataset contains 100,000 videos spanning 33 synthesis meth-ods, including recent generators such as Seedance 2.0. It comprises 21,075 real and 78,925 fake videos across the ma-jor forgery categories of face swapping, face reenactment, and entire-face synthesis. Unlike existing datasets that pro-vide only binary labels, FaceVid-Forensics-100K provides fine-grained textual supervision for every video along four dimensions: texture, lighting, motion, and physics. Specif-ically, multiple advanced open- and closed-source MLLMs first generate observations and judgments independently. An aggregation model then consolidates the evidence, resolves conflicts among the models, and produces a forensic expla-nation consistent with the final verdict. FaceVid-Forensics-100K therefore records not only authenticity labels but also the interpretable evidence supporting each decision, estab-lishing a foundation for evidence-driven deepfake detection. Building on this benchmark, we further propose a multi-agent forensic reasoning framework that decomposes deep-fake detection into independent yet coordinated specialized analyses. Four domain-expert agents examine texture statis-tics, illumination consistency, temporal motion patterns, and physical plausibility, respectively. A judge agent then ag-gregates the expert reports, weighs mutually supporting or conflicting evidence, and outputs both an authenticity predic-tion and a concise forensic explanation. This decomposition encourages each agent to search systematically for a specific class of forgery traces, while the judge agent retains a global view of the video. When one type of forgery trace is weak or absent, the final decision can still rely on evidence corrob-orated across multiple perspectives, reducing the risk that a single salient cue dominates an erroneous prediction. Extensive out-of-domain evaluations validate the effec-tiveness of the proposed approach. On the reported bench-mark, the full system achieves 69.87% accuracy, 81.82% recall, and 53.28% F1, outperforming small vision mod-els, general-purpose open- and closed-source MLLMs, and forensics-tuned MLLMs. Compared with the strongest single-model baseline, our approach improves F1 from 47.45% to 53.28%, an absolute gain of 5.83 percentage points. Allowing the judge agent to access the video directly further increases F1 from 51.01% to 53.28%, indicating that the original visual information can effectively supplement the expert reports. These results show that explicit multi-perspective collaborative reasoning provides a more reliable basis for generalizable deepfake video detection than holistic judgment by a single MLLM. 
+
+## Related Work 
+
+Deepfake Video Detection 
+
+Early deepfake benchmarks primarily focused on a small number of face-swapping (Li et al. 2020a) and reenact-ment methods (Thies et al. 2016; Thies, Zollhöfer, and Nießner 2019). FaceForensics++ (Rossler et al. 2019) es-tablished a standardized benchmark across several manip-ulation pipelines, Celeb-DF (Li et al. 2020c) introduced higher-quality face swaps, and DFDC (Dolhansky et al. 2020) substantially increased the number of subjects and videos. DeeperForensics-1.0 (Jiang et al. 2020) further incorporated real-world perturbations to evaluate robustness. As synthe-sis techniques (Zou et al. 2026; Cao et al. 2026) diversified, DF40 (Yan et al. 2024) and Celeb-DF++ (Li et al. 2025) broadened coverage across multiple face-forgery paradigms. These face-centric datasets have driven progress in scale, realism, and manipulation diversity, but their supervision re-mains predominantly binary. They therefore provide limited guidance about which visual evidence supports an authentic-ity decision. In contrast, FaceVid-Forensics-100K contains 100,000 face-centric videos spanning 33 synthesis methods, including recent systems such as Seedance 2.0, and augments binary authenticity labels with dimension-specific forensic observations and verdict-consistent explanations. Most conventional detectors learn discriminative repre-sentations from binary labels. Some methods target manip-ulation traces such as blending boundaries (Li et al. 2020b), gaze behavior (Peng et al. 2024), or lip motion (Haliassos et al. 2021); others model temporal coherence and spatiotem-poral inconsistency (Zheng et al. 2021; Wang et al. 2023b; Xu et al. 2024; Guo et al. 2025). Recent approaches improve transfer by adapting foundation-model features or suppress-ing generator-specific directions (Han et al. 2025; Yan et al. 2025; Cheng et al. 2026b). Despite these advances, such small vision models rely on binary supervision and can over-fit specific artifacts, limiting generalization. MLLMs make it possible to formulate deepfake detection as evidence-grounded visual reasoning rather than opaque bi-Forgery Coverage Video Scale Textual Labels Dataset #Synth. Methods Latest Fake Real Fake Total Obs. Exp. 
+
+DeepfakeDetection (Dufour et al. 2019) 5 – 363 3,068 3,431 × ×
+
+Celeb-DF v2 (Li et al. 2020c) 1 VAE (2014) 590 5,639 6,229 × ×
+
+DeeperForensics-1.0 (Jiang et al. 2020) 1 DF-VAE (2020) 50,000 10,000 60,000 × ×
+
+DF40 (Yan et al. 2024) † 23 HeyGen (2024) 716 28,837 29,553 × ×
+
+Celeb-DF++ (Li et al. 2025) 22 FLOAT (2025) 590 53,196 53,786 × ×
+
+FaceVid-Forensics-100K 33 Seedance 2.0 (2026) 21,075 78,925 100,000 ✓ ✓
+
+Table 1: Comparison of representative deepfake video datasets. † Only the video-based subsets of DF40 are counted. Obs. and Exp. stand for Observation and Explanation, respectively. nary classification. EDVD-LLaMA (Sun et al. 2025) adapts an MLLM to explain manipulated facial videos, VidGuard-R1 (Park et al. 2026) jointly improves detection and ex-planation through reinforcement learning, Skyra (Li et al. 2026b) grounds reasoning in annotated visual artifacts, and VideoVeritas (Tan et al. 2026) combines question–answer su-pervision with preference and perception-oriented reinforce-ment learning. However, single-model inference may over-look weak cues or let one artifact bias the verdict. Our frame-work instead enables explicit multi-perspective collabora-tive reasoning: four specialized agents produce dimension-specific evidence, which a judge reconciles into the final explanation and verdict. 
+
+Multi-Agent Systems 
+
+Multi-agent systems coordinate specialized decision makers through communication and information exchange. Recent LLM-based systems use debate, critique, and iterative col-laboration to improve factuality and reasoning (Du et al. 2024; Wu et al. 2024; Gao et al. 2025; He et al. 2025), while learning-based approaches optimize the interaction policies of collaborating agents (Wu et al. 2026; Feng et al. 2026; Zhao et al. 2026; Qiao et al. 2026). Multi-agent designs have also been extended to multimodal tasks: LongVideoA-gent (Liu et al. 2026) coordinates grounding and visual agents for long-video understanding, and UniShield (Huang et al. 2026a) routes specialized forensic tools for image manipulation detection and localization. Inspired by role-specialized multi-agent collaboration, we decompose deep-fake video detection into four independently forensic per-spectives, with each agent generating observation evidence. A judge then reconciles the evidence, establishing an explicit multi-perspective collaboration mechanism. 
+
+## FaceVid-Forensics-100K 
+
+Dataset Overview 
+
+FaceVid-Forensics-100K is a large-scale deepfake video dataset comprising 100,000 face-centric videos. It covers 33 synthesis methods across major forgery categories, includ-ing face swapping, face reenactment, and entire-face syn-thesis. Beyond binary authenticity labels, the dataset pro-vides fine-grained textual annotations of visual observations across four forensic dimensions—texture, lighting, motion, and physics—as well as verdict-consistent explanations. As shown in Figure 2, it serves as a foundation for training and evaluating evidence-driven deepfake detection systems. 
+
+Collection and Processing. Our dataset originates from two types of sources: existing general video forgery datasets and videos directly collected from the internet or synthesized via recent generative models. Specifically, we collect videos from AIGVDBench (Ma et al. 2026a), GenVidBench (Ni et al. 2026), ViF-Bench (Li et al. 2026b), and FaceForen-sics++ (FF++) (Rossler et al. 2019), yielding approximately 
+
+442 ,000 , 6,780 ,000 , 3,000 , and 5,000 videos, respectively. In addition, we crawl 2,901 videos generated by Seedance 2.0 (Team Seedance et al. 2026) and other recent models from the internet, retaining 577 videos after manual screening. Following data collection, we apply a face detection pipeline to filter the videos frame-by-frame, retaining only frames containing faces and discarding videos without valid facial regions. After this preprocessing step, we obtain 1,158 ,585 
+
+valid face-centric videos, comprising 30 ,240 real videos and 
+
+1,128 ,345 fake videos, with a total duration of 436 .56 hours. To ensure a balanced distribution, we first deduplicate the real videos based on their YouTube IDs, which re-duces the real samples from 30 ,240 to 21 ,075 . For the fake videos, four synthesis models (ModelScope (Wang et al. 2023a), Pika (Pika 2024), Text2Video-Zero (Khachatryan et al. 2023), and VideoCrafter2 (Chen et al. 2024a)) dominate the collection. We evaluate these fake videos using the Alt-Freezing (Wang et al. 2023b) detector and prioritize retaining samples with lower scores (i.e., those harder to distinguish). Through this strategy, the number of videos from these four models is reduced from 235 ,007 , 75 ,471 , 435 ,210 , and 
+
+376 ,471 to 11 ,958 , 15 ,163 , 10 ,432 , and 32 ,690 , respectively. This decreases their total count from 1,122 ,159 to 70 ,243 .Combined with the other retained fake videos, the total num-ber of fake videos is reduced from 1,128 ,345 to 78 ,925 .The final curated dataset contains 100 ,000 videos, consist-ing of 21 ,075 real videos and 78 ,925 fake videos. These forgeries cover face swapping (FS), face reenactment (FR), and entire-face synthesis (EFS), which encompasses text-to-video (T2V), image-to-video (I2V), text-and-image-to-video (TI2V), and video-to-video (V2V) generation paradigms. Entire Face Synthesis (EFS) 
+
+> Quiet woman sitting by window A man slowly looks up
+> T2V I2V TI2V V2V
+
+(c)  Forgery Types 
+
+> Cyberpunk style
+
+(a)  Domain Distribution (b)  Evaluation  Protocol  
+
+> Runway Gen-2
+> Runway Gen-3 Alpha
+> CausVid CogVideo ModelScope Pika
+> Text2Video-Zero
+> VideoCrafter2
+> CogVideoX1.5-5B-T
+> HunyuanVideo
+> HunyuanVideo-I2V LTX-Video-13B-I LTX-Video-13B-T
+> SkyReels-V2
+> SkyReels-V2-I2V-14B-540P
+> Wan2.1-T2V-1.3B Wan2.1-VACE-1.3B-T
+> Wan2.2-I2V-14B Wan2.2-T2V-14B
+> Wan2.2-TI2V-5B-I Wan2.2-TI2V-5B-T Runway Gen-4 Turbo
+> Hailuo AI Kling v1 Pika 2.2 PixVerse v4.5 Sora 2 Seedance 2.0 AIGVDBench GenVidBench FaceForensics++ ViF-Bench Deepfakes FaceShifter FaceSwap Face2Face NeuralTextures
+
+FaceVid-Forensics  
+
+> 100K
+> Real 21,075
+> FS 1,498 FR 998
+
+EFS 76,429 
+
+Training Set— 68.9k 
+
+> Real & Fake
+> FS/FR/EFS
+> Source : seen source pool
+> Identities : training identities
+
+In Domain— 23.5k 
+
+> Real & Fake
+> FS/FR/EFS
+> Source : same as training set
+> Identities : unseen identities
+
+Out of Domain— 7.6k 
+
+> Real & Fake
+> Only EFS
+> Source : unseen sources
+> Identities : unseen identities
+
+Face Swap (FS) Face Reenactment (FR) Figure 2: Overview of FaceVid-Forensics-100K. 
+
+Training and Evaluation. We divide the dataset into train-ing, in-domain test, and out-of-distribution (OOD) test sets. The training and in-domain test sets share the same families of synthesis methods. To rigorously evaluate cross-generator generalization, we assign videos from 20 completely un-seen (held-out) EFS generators exclusively to the OOD test set, along with a portion of the real videos. As detailed in Appendix A, these held-out generators include recent sys-tems such as CogVideoX1.5, HunyuanVideo, LTX-Video, SkyReels, Wan, Hailuo, Kling, Pika 2.2, PixVerse, Sora 2, and Seedance 2.0. In total, the training, in-domain test, and OOD test splits contain approximately 68.9K, 23.5K, and 7.6K videos, respectively. 
+
+Label Generation 
+
+To construct fine-grained textual supervision without re-lying on manual annotation, we employ an ensemble of five diverse MLLMs spanning three distinct paradigm types as annotators, as shown in Figure 3: (1) powerful closed-source MLLMs (GPT-4o (OpenAI 2024) and Gemini 3.5-Flash (Google DeepMind 2026)); (2) general-purpose open-source MLLMs (Qwen2.5-VL (Bai et al. 2025)); and (3) forensics-tuned domain-specific MLLMs (Skyra (Li et al. 2026b) and VideoVeritas (Tan et al. 2026)). To synthesize their outputs into unified, high-quality textual supervision, we select DeepSeek-V4 Pro (DeepSeek-AI et al. 2026) as the central aggregator based on two key design considerations: first, label aggregation operates strictly over textual observa-tion/explanation reports and ground-truth metadata, making a pure text LLM with strong logical reasoning capabilities optimal without requiring multimodal visual inputs; second, decoupling the aggregator from the annotator pool ensures architectural independence, preventing the aggregator from inheriting potential inductive biases or error patterns present in the visual annotator MLLMs. 
+
+Observation Label. As illustrated in Figure 3(a), the five annotators independently analyze each video to generate de-tailed observations across the four forensic dimensions (Tex-ture, Lighting, Motion, and Physics). The aggregator model (DeepSeek-V4 Pro) then integrates these multi-annotator out-puts by merging the observations separately within each forensic dimension. Guided by the ground-truth video la-bel to resolve cross-model contradictions and filter noise, the aggregator outputs a structured observation label containing consensus descriptions for each dimension without revealing the final authenticity verdict. 
+
+Explanation Label. In addition to dimensional observa-tions, each annotator produces an authenticity verdict (real or fake) alongside an initial explanation rationale. As shown in Figure 3(b), the aggregator model consolidates these individual answer–explanation pairs into a single, verdict-consistent explanation label. This aggregation is strictly con-ditioned on the ground-truth video label: when correct pre-dictions exist, the aggregator prioritizes and synthesizes ex-planations from correct annotators; if all annotators make incorrect predictions, it performs reverse inference by re-evaluating the merged observations against the ground-truth label. This ensures the final textual rationale is aligned with the correct authenticity verdict while eliminating individual model biases, noise, and hallucinations. 
+
+## Multi-Agent Forensic Reasoning 
+
+Multi-Agent System 
+
+As shown in Figure 4, our framework decomposes deepfake video detection into independent forensic analyses coordi-nated by a hierarchical multi-agent system. For a given input W
+
+> Input Video
+
+Observations 
+
+Video Label DeepSeek-V4 Pro 
+
+(a) Observation Label Aggregation 
+
+Observation Label Aggregation Explanation 
+
+Label Aggregation 
+
+(b) Explanation Label Aggregation 
+
+Observation Label 
+
+Explanation Label 
+
+> {"Texture": "...", "Lighting": "...", "Motion": "...", "Physics": "..." }
+> ...Aggregate multi-agent observations with the video label...Resolve conflicts...
+
+Explanation 
+
+All Wrong? 
+
+No Judgements 
+
+DeepSeek-V4 Pro Explanation 
+
+DeepSeek-V4 Pro   
+
+> Texture Lighting Motion Physics
+
+Yes 
+
+Skyra Gemini 3.5-Flash Qwen2.5-VL 
+
+GPT-4o VideoVeritas 
+
+Closed-source Models Open-source Models Judgements Observations 
+
+Texture Motion Lighting Physics 
+
+p Explanations 
+
+p Answers 
+
+𝐀 𝐀 : explanation from model 𝐀 𝐀 𝐀 : answer from model 𝐀 𝐀 2 𝐀 2
+
+𝐀 3 𝐀 3
+
+𝐀 4 𝐀 4
+
+𝐀 5 𝐀 5
+
+𝐀 1 𝐀 1Texture Observation Physics Observation Motion Observation Lighting Observation 
+
+> {"Explanation": "..." }
+
+p prioritize correct 
+
+p weigh all evidences 
+
+p reference video label 
+
+p reverse inference Figure 3: Pipeline of observation and explanation label generation. (a) DeepSeek-V4 Pro aggregates independent observations separately within each forensic dimension. (b) It combines answer–explanation pairs into a verdict-consistent explanation label. Observation 
+
+The subject shows overly 
+
+smooth skin, missing fine details, soft edges , and 
+
+plastic-like finger textures... 
+
+Judgement Output FINAL DECISION Real Fake 
+
+Judge Agent 
+
+Input Video 
+
+Texture Agent 
+
+You are a texture expert. Check skin texture, edges, blending artifacts ... 
+
+System Prompt 
+
+You are the final judge for binary forgery classification. Given expert reports with/without 
+
+video frames, aggregate evidence ,resolve conflicts... provide an 
+
+explanation, answer... System Prompt • The skin and hands look smooth and plastic-like... 
+
+• The lighting mismatches the outdoor background... • Finger shape and color change across frames ... • The fingers are balloon-like and lack fingernails ... • These anomalies indicate the video is AI-generated .
+
+Observation 
+
+The lighting remains unchanged when background shifts from 
+
+indoor to outdoor scenes... 
+
+Observation 
+
+The hands and fingers show 
+
+unstable motion , distorted shapes, and inconsistent colors and flickering across frames... 
+
+Observation 
+
+The fingers appear balloon-like and anatomically implausible,lacking 
+
+natural joints ,nails, and 
+
+proportions... 
+
+Lighting Agent 
+
+You are a lighting expert. Check light direction, shadows... 
+
+System Prompt 
+
+Physics Agent 
+
+You are a physics expert. Check hair, clothing, perspective... 
+
+System Prompt 
+
+Motion Agent 
+
+You are a motion expert. Check continuity, movement, flicker... 
+
+System Prompt 
+
+Optional 
+
+Figure 4: Overview of the proposed multi-agent forensic reasoning framework. video v, we uniformly sample a sequence of frames X(v)
+
+and provide them to the system, which consists of four spe-cialized observation agents and a central judge agent. 
+
+Observation Agents. The four observation agents focus on distinct aspects of forgery-related artifacts: texture, lighting, motion, and physics. Each observation agent Ad indepen-dently receives the same sampled frames X(v) along with a dimension-specific prompt, and produces a textual observa-tion bOd without predicting the final authenticity. We instan-tiate all agents using MLLMs. Their system prompts instruct each agent to search systematically for its assigned cue type: the texture agent evaluates skin details and blending bound-aries, the lighting agent assesses illumination and shadow consistencies, the motion agent tracks temporal instability, and the physics agent considers anatomical and geometric plausibility. The complete prompts for these agents are de-tailed in Appendix F. 
+
+Judge Agent. The judge agent acts as the central reasoning hub. It receives the textual observations generated by the four observation agents and, optionally, the sampled video frames 
+
+X(v). Its prompt instructs it to weigh mutually supporting or conflicting evidence from the experts and output a binary real-or-fake answer alongside a concise, verdict-consistent explanation. This explicit multi-perspective collaboration en-sures that decisions rely on corroborated evidence rather than being overly influenced by a single salient artifact. The exact prompt template is provided in Appendix F. 
+
+Training Pipeline 
+
+We train the proposed multi-agent framework in two sequen-tial stages: supervised fine-tuning (SFT) for all agents, fol-lowed by group relative policy optimization (GRPO) (Shao et al. 2024) to refine the judge agent’s decisions. 
+
+Supervised Fine-Tuning. During SFT, the four observa-tion agents are trained independently using the aggregated, dimension-specific observation labels Od⋆ = ( od
+
+> 1
+
+, . . . , o dLd )
+
+collected during the dataset construction process. For each dimension d ∈ D , the corresponding agent Ad is optimized via autoregressive language modeling: 
+
+Ld
+
+> obs
+
+(θd) = − 1
+
+Nd
+
+X 
+
+> (v,O d⋆)∈T
+> Ld
+
+X
+
+> t=1
+
+log pθd
+
+ odt | X(v), I d, o d<t 
+
+ ,
+
+(1) where T is the training set, θd denotes the agent’s param-eters, Id is the instruction, and Nd is the number of re-sponse tokens. After training the observation agents, we ap-ply them to the training set to generate their intermediate outputs R(v) = Concat d∈D ( bOd). The judge agent is then trained on these concatenated observations and the visual in-put Vc(v) (where c ∈ { 0, 1} indicates the presence of video frames), taking Qc(v) = ( R(v), V c(v)) as input. The judge agent learns to produce the target explanation and verdict 
+
+Z⋆ = ( z1, . . . , z LJ ) by minimizing: 
+
+Lc
+
+> J
+
+(ϕc) = − 1
+
+NJ
+
+X
+
+> (v,Z ⋆)∈T
+> LJ
+
+X
+
+> t=1
+
+log pϕc (zt | Qc(v), z <t ) .
+
+(2) 
+
+Policy Optimization for Decision Refinement. Following SFT, we apply GRPO to further align the judge agent’s final decision policy, keeping the four observation agents frozen. For each input Qc(v), the judge agent samples a group of 
+
+G candidate responses { eZg }Gg=1 . A binary accuracy reward 
+
+rg ∈ { 0, 1} is assigned based on whether the candidate correctly predicts the ground-truth label. We compute the relative advantage Ag by normalizing the rewards within the group: 
+
+Ag = rg − rσr + ϵ . (3) GRPO then updates the judge agent’s parameters to max-imize this advantage using a clipped surrogate objective, complemented by a KL-divergence penalty against the frozen SFT policy to maintain explanation quality. This stage refines the final classification accuracy without altering the special-ized evidence extracted by the observation agents. 
+
+## Experiments 
+
+Experimental Setup 
+
+Implementation Details. To ensure a fair comparison with Skyra (Li et al. 2026b), we adopt Qwen2.5-VL-7B (Bai et al. 2025) as the base model for all agents. All training is im-plemented using ms-swift (Zhao et al. 2025). We train each component for one epoch using LoRA (Hu et al. 2022) and the AdamW optimizer (Loshchilov and Hutter 2018), with learning rates of 1 × 10 −4 for supervised fine-tuning and 
+
+5 × 10 −6 for GRPO. For GRPO, we sample eight responses per prompt. 
+
+Evaluation Protocols. We conduct the evaluation on the OOD split set, containing 5,716 real videos and 1,920 fake videos from 20 generators excluded from training. For small vision models, we retrain each method on FaceVid-Forensics-100K using its official code and data preprocessing pipeline. Off-the-shelf general MLLMs and forensics-tuned MLLMs are evaluated using their released checkpoints or official APIs. For models that support an explicit thinking mode, we disable it during inference. Following Skyra, we use ac-curacy (Acc), F1 score, and recall as the evaluation metrics. 
+
+Comparison with State-of-the-Art Methods 
+
+As shown in Table 2, we compare our framework with small vision models, general-purpose open- and closed-source MLLMs (Qwen Team 2026; Xiaomi MiMo Team 2026; OpenAI 2024; Google DeepMind 2026), and forensics-tuned MLLMs on the OOD test set. Our framework achieves the strongest overall performance when the judge agent receives both the observation reports and sampled video frames. The text-only judge agent also ranks second, showing that the ob-servation agents provide effective forensic evidence, while direct access to the video further improves generalization. In-domain results, per-generator OOD results, qualitative comparisons, and evaluation of textual explanation quality are available at Appendix B. 
+
+Ablation Studies 
+
+Contribution of Each Observation Agent. As shown in Table 3, combining all four observation agents gives the best F1 score under both judge agent configurations. The ad-vantage is clearer without direct video input, indicating that the four perspectives provide distinct evidence. When frames are also available, the gap narrows because the judge agent can recover part of the missing visual information directly. 
+
+Effect of Training with SFT and GRPO. To isolate the contribution of each trained component, Only-Observation trains the observation agents while keeping the Judge un-trained, whereas Only-Judge trains the Judge using outputs from untrained observation agents. As shown in Table 4, Method Acc Recall F1 Small Vision Models 
+
+DFGaze (TIFS’24) 56.67 17.92 27.24 DFD-FCG (CVPR’25) 61.25 29.22 39.16 Effort (ICML’25) 63.92 34.79 44.76 TALL++ (IJCV’24) 63.47 42.97 45.07 TFCU (CVPR’25) 64.28 33.44 45.20 
+
+Open-source MLLMs 
+
+Qwen2.5-VL-7B 35.94 16.51 13.24 InternVL3.5-8B 37.87 17.60 14.53 MiMo-V2.5 (310B-A15B) 49.85 15.00 18.69 Qwen3.6-35B-A3B 53.17 50.05 35.72 
+
+Closed-source MLLMs 
+
+GPT-4o (2024) 57.63 40.36 37.55 GPT-5-mini (2025) 59.31 38.70 39.00 Gemini-2.5-Pro (2025) 63.78 75.29 47.45 Gemini-3.5-Flash (2026) 63.34 58.75 46.22 
+
+Forensics-tuned MLLMs 
+
+Skyra (CVPR’26) 60.50 30.05 38.30 VideoVeritas (ICML’26) 57.87 78.96 43.22 
+
+Multi-Agent System 
+
+Ours (w/o Video) 67.41 65.00 51.01 Ours (w/ Video) 69.87 81.82 53.28 
+
+Table 2: Comparison with state-of-the-art deepfake video detectors on the OOD test set. The best and second-best available results are highlighted in bold and underlined. 
+
+Ours (w/o Video) Ours (w/ Video) Observation Acc Recall F1 Acc Recall F1 
+
+Texture 58.39 97.40 44.53 66.90 87.86 50.39 Lighting 59.60 94.22 45.13 65.87 85.16 49.49 Motion 54.70 75.31 40.54 63.15 83.39 47.20 Physics 56.43 91.82 43.02 62.85 87.45 47.11 All four 63.61 82.24 47.53 67.03 87.76 50.49 
+
+Table 3: Comparison of individual observation agent outputs and their combination on the OOD test set. The best and second-best results within each judge agent configuration are highlighted in bold and underlined, respectively. training either component improves the training-free system, jointly training the observation agents and judge is more ef-fective than training either alone, and GRPO provides a fur-ther gain. These results confirm that specialized observation learning, evidence reconciliation, and policy optimization each contribute to the final generalizable performance. Rele-vant training dynamics are provided in Appendix G. Further-more, we investigate the impact of different combinations of MLLMs for the observation and judge agents in Appendix D and the impact of model parameter scale in Appendix E. 
+
+Reasoning Strategies across MLLMs. We compare our multi-agent design with direct prediction, chain-of-thought 
+
+w/o Video w/ Video Stage Acc Recall F1 Acc Recall F1 
+
+Training-Free 45.06 65.05 33.53 42.29 54.06 30.07 +SFT (Only-Obs) 50.63 99.58 40.46 50.64 99.84 40.48 +SFT (Only-Judge) 51.42 99.95 40.87 64.29 95.78 48.39 +SFT (Joint) 63.61 82.24 47.53 67.03 87.76 50.49 +SFT+GRPO 67.41 65.00 51.01 69.87 81.82 53.28 
+
+Table 4: Effect of training with SFT and GRPO on the OOD test set. The best and second-best results are highlighted in bold and underlined, respectively. 
+
+Qwen2.5-VL-7B InternVL3.5-8B Strategy Acc Recall F1 Acc Recall F1 
+
+Single 35.94 16.51 13.24 37.87 17.60 14.53 CoT 30.93 15.31 11.29 41.90 2.81 3.53 Multi-turn 33.98 15.26 11.92 40.53 41.56 25.85 Multi-turn-Obs 33.46 11.61 9.50 38.12 40.26 24.34 Multi-turn-All 33.88 13.87 11.05 37.22 38.80 23.48 Ours (w/o Video) 45.06 65.05 33.53 45.40 46.46 29.81 Ours (w/ Video) 42.29 54.06 30.07 45.29 49.22 30.52 
+
+Table 5: Training-free comparison of reasoning strategies across MLLMs on the OOD test set. Best and second-best results within each backbone are highlighted in bold and underlined, respectively. (CoT) prompting, and three multi-turn variants using frozen MLLMs, as shown in Table 5. Specifically, all multi-turn baselines decompose the forensic reasoning into 5 sequential dialogue turns (4 observation turns, followed by a final de-cision turn), but differ in frame delivery across turns: Multi-turn inputs video frames only in the first turn, Multi-turn-Obs 
+
+provides frames across all four observation turns (turns 1– 4), and Multi-turn-All feeds frames continuously across all 5 turns. Across both backbones, our framework performs best overall. This result shows that the improvement comes from independent evidence collection and Judge-based reconcili-ation, rather than from longer prompts, additional dialogue turns, or repeated access to the video frames. Detailed imple-mentations, efficiency analyses, and qualitative comparisons of these reasoning strategies are provided in Appendix C. 
+
+## Conclusion 
+
+We presented FaceVid-Forensics-100K, a large-scale deep-fake video benchmark with broad coverage of recent synthe-sis methods and fine-grained forensic annotations. We further proposed a multi-agent forensic reasoning framework that performs collaborative analysis from four complementary forensic perspectives and produces both authenticity predic-tions and explanations. Extensive experiments demonstrate that our approach consistently outperforms existing vision-based detectors and MLLMs on out-of-domain benchmarks, highlighting the effectiveness of multi-perspective collabo-rative reasoning for generalizable deepfake video detection. A Additional Details of FaceVid-Forensics-100K 
+
+Table 6 summarizes the source- and method-level compo-sition of the three splits. The real subset contains 21,075 videos: 12,934 from AIGVDBench (Ma et al. 2026a), 7,058 from GenVidBench (Ni et al. 2026), 999 from FF++ (Rossler et al. 2019), and 84 from ViF-Bench (Li et al. 2026b). After preprocessing and deduplication, 11,626 real videos are as-signed to training, 3,733 to in-domain testing, and 5,716 to out-of-distribution (OOD) testing. For conventional face ma-nipulations, videos are drawn from five manipulation meth-ods in FF++ and grouped by manipulation type. The face-swapping (FS) subset includes Deepfakes, FaceSwap, and FaceShifter, with 1,288 videos assigned to training and 210 to in-domain testing. The face-reenactment (FR) subset in-cludes Face2Face and NeuralTextures, with 858 videos as-signed to training and 140 to in-domain testing. The entire-face synthesis (EFS) subset is split at the gen-erator level. Eight seen generators contribute 74,509 videos: Runway Gen-2 and Runway Gen-3 Alpha (Runway Re-search 2024), CausVid (Yin et al. 2025), CogVideo (Hong et al. 2023), ModelScope (Wang et al. 2023a), Pika (Pika 2024), Text2Video-Zero (Khachatryan et al. 2023), and VideoCrafter2 (Chen et al. 2024a). Of these, 55,134 are for training and 19,375 for in-domain testing, with counts rang-ing from 456 (Runway Gen-2) to 32,690 (VideoCrafter2). The OOD split contains 1,920 fake videos from 20 addi-tional generators drawn from the CogVideoX, Hunyuan-Video, LTX-Video, SkyReels, Wan, Runway, Hailuo, Kling, Pika, PixVerse, Sora, and Seedance families (Z.ai 2024; Kong et al. 2024; HaCohen et al. 2025; Chen et al. 2025; Wan Team et al. 2025; Runway Research 2025; MiniMax 2024; Kuaishou 2024; Pika 2025; PixVerse 2025; OpenAI 2025b; Team Seedance et al. 2026), ranging from 34 to 576 per generator. Spanning text-to-video, image-to-video, text-and-image-to-video, and video-to-video settings, these gen-erators are excluded from training and in-domain testing. This generator-disjoint split evaluates generalization to un-seen synthesis methods. 
+
+## B Additional Main Experimental Results 
+
+B.1 Detailed Out-of-Distribution Results 
+
+The per-generator accuracies in Table 7 indicate that the generalization benefit of the framework holds at the level of individual generators. After GRPO, our framework reaches a macro-average accuracy of 68.73% when the judge agent receives only the outputs of the four observation agents, and 69.47% when the sampled video frames are additionally provided. These two settings rank first and second on the macro average among all evaluated methods. With the sam-pled frames provided, our framework surpasses TALL++ (Xu et al. 2024), the strongest small vision model on average, by 5.25, and Skyra, the strongest forensics-tuned MLLM, by 4.24. Relative to the corresponding SFT settings, GRPO raises the macro average by 4.71 without video and 2.30 with video, whereas adding the sampled frames contributes 3.15 under SFT and 0.74 after GRPO. Both policy optimiza-tion and direct visual evidence therefore contribute to cross-generator generalization. With the sampled frames provided, our framework ranks first or second on 11 of the 20 held-out generators after GRPO, and the two GRPO settings together achieve the best result on six generators, which suggests that the improvement extends across several generator families rather than being driven by a single source. 
+
+B.2 In-Domain Results 
+
+Specialized small vision models remain the strongest detec-tors on seen distributions in Table 8, with TFCU (Guo et al. 2025) reaching 98.66% Acc and 99.46% F1. Among the MLLM-based methods, however, our framework performs best. After GRPO, it reaches 87.34% Acc and 96.35% F1 when the judge receives only the outputs of four observation agents, and 84.31% Acc and 96.19% F1 when the sampled video frames are additionally provided to the judge. Rela-tive to the corresponding SFT settings, GRPO raises Acc by 9.15 and 5.23 and F1 by 1.05 and 0.80 in the two set-tings, respectively, while recall remains above 96.8%. Staged Observation–Judge training and policy optimization yield competitive performance on known manipulations, while our framework generalizes better to unseen generators and re-mains more interpretable than small vision baselines. 
+
+B.3 Qualitative Comparison 
+
+As shown in Figure 5, the fake video contains no obvious face-swapping boundary or severe frame-level distortion. GPT-4o (OpenAI 2024) and MiMo-V2.5 (Xiaomi MiMo Team 2026) therefore rely primarily on the stable facial ap-pearance and the natural-looking outdoor illumination, inter-preting the absence of conspicuous artifacts as evidence of authenticity. Both models overlook the inconsistencies that become apparent only when the subject and the scene are compared across frames. The four observation agents recover these weak but com-plementary cues. The texture observation agent identifies over-smoothed skin, waxy hair, soft hairline boundaries, and painterly foliage. The lighting observation agent notes that the flat facial illumination and the weak shadows are not fully integrated with the bright backlit background. The mo-tion observation agent observes an almost fixed gaze and ex-pression despite continuous changes in the leaves, branches, and bright background regions. The physics observation agent further reports rigid hair dynamics and limited par-allax. Rather than relying on any single artifact, the judge agent reconciles these observations and uses the persistent foreground–background motion mismatch as the principal cue, with the texture, lighting, and physical anomalies pro-viding corroborating evidence. This example illustrates how independent evidence collection and explicit reconciliation can turn individually subtle cues into a coherent and correct forensic decision. 
+
+B.4 Evaluation of Textual Explanation Quality 
+
+Following the VidGuard-R1 (Park et al. 2026), we evalu-ate explanation quality on a fixed subset of the OOD test set, obtained by randomly sampling 100 real and 100 fake videos. For each detector output, two independent judges— the open-source DeepSeek-V4 Pro (DeepSeek-AI et al. 2026) Category Source Train In-Domain Test Out-of-Distribution Total 
+
+Real Videos – 21,075 
+
+Real AIGVDBench 9,706 3,228 0 12,934 GenVidBench 1,061 365 5,632 7,058 FF++ 859 140 0 999 ViF-Bench 0 0 84 84 
+
+Fake Videos – 78,925 
+
+FS Deepfakes 429 70 0 499 FaceSwap 430 70 0 500 FaceShifter 429 70 0 499 FR Face2Face 429 70 0 499 NeuralTextures 429 70 0 499 EFS Runway Gen-2 320 136 0 456 Runway Gen-3 Alpha 620 271 0 891 CausVid 375 162 0 537 CogVideo 1,787 595 0 2,382 ModelScope 8,858 3,100 0 11,958 Pika 11,232 3,931 0 15,163 Text2Video-Zero 7,727 2,705 0 10,432 VideoCrafter2 24,215 8,475 0 32,690 CogVideoX1.5-5B-T 0 0 52 52 HunyuanVideo 0 0 76 76 HunyuanVideo-I2V 0 0 91 91 LTX-Video-13B-I 0 0 80 80 LTX-Video-13B-T 0 0 34 34 SkyReels-V2 0 0 59 59 SkyReels-V2-I2V-14B-540P 0 0 83 83 Wan2.1-T2V-1.3B 0 0 76 76 Wan2.1-VACE-1.3B-T 0 0 86 86 Wan2.2-I2V-14B 0 0 86 86 Wan2.2-T2V-14B 0 0 86 86 Wan2.2-TI2V-5B-I 0 0 86 86 Wan2.2-TI2V-5B-T 0 0 83 83 Runway Gen-4 Turbo 0 0 49 49 Hailuo AI 0 0 59 59 Kling v1 0 0 62 62 Pika 2.2 0 0 62 62 PixVerse v4.5 0 0 64 64 Sora 2 0 0 70 70 Seedance 2.0 0 0 576 576 
+
+Total 68,906 23,458 7,636 100,000 
+
+Table 6: Composition of the proposed FaceVid-Forensics-100K dataset across the training, in-domain test, and out-of-distribution (OOD) splits, broken down by source and synthesis method. The fake subset contains face-swapping (FS), face-reenactment (FR), and entire-face synthesis (EFS) videos. and the closed-source GPT-5-mini (OpenAI 2025a)—score the generated rationale, so that the assessment does not rest on a single model family or provider. Both judges receive the same ground-truth answer, reference rationale, model an-swer, and model rationale, and both apply an identical rubric covering evidence accuracy, reference alignment, specificity and grounding, clarity and conciseness, and consistency be-tween the rationale and the verdict. Each judge returns a single holistic integer score from 1 to 10. Table 9 reports the mean scores for real videos, fake videos, and the complete 200-video subset. The shared evaluator prompt is provided in Listing 8. DeepSeek-V4 Pro assigns the highest overall score (6.37) to our SFT configuration with video input, while GPT-5-mini Method CogX HunV HunI2V LTX-I LTX-T SkyV2 SkyI2V W21T W21V W22 
+
+Small Vision Models 
+
+TALL++ 79.49 70.93 47.48 60.74 71.40 73.34 52.23 68.30 62.92 50.71 TFCU 71.60 66.64 51.41 58.81 68.15 62.81 52.38 67.30 57.44 49.89 DFD-FCG 69.72 61.77 50.49 54.14 61.35 61.05 53.87 64.40 64.08 50.71 DFGaze 65.98 60.21 51.00 57.08 65.36 60.42 54.33 61.52 58.75 50.62 Effort 75.37 67.58 50.37 57.15 65.64 69.41 54.96 71.53 62.81 50.60 
+
+Open-source MLLMs 
+
+Qwen3.5-0.8B 40.53 47.92 42.04 41.64 45.79 41.75 37.92 41.34 45.52 38.54 Qwen3.6-35B-A3B 51.22 53.80 49.57 46.89 50.20 44.24 48.02 51.17 48.49 46.16 MiMo-V2.5 51.01 48.28 50.60 47.98 45.30 45.74 47.17 46.96 46.42 47.59 
+
+Closed-source MLLMs 
+
+GPT-5.5 47.96 48.72 46.31 45.99 44.11 47.50 47.13 46.74 47.60 46.44 Gemini 3.1 Pro 65.33 62.64 61.76 64.75 61.37 67.25 63.03 64.62 64.92 66.09 
+
+GPT-4o 58.60 57.18 58.33 59.32 53.62 57.79 54.92 59.82 57.21 58.96 Gemini 3.5 Flash 67.62 56.33 69.13 60.84 51.61 51.76 43.60 70.81 63.62 57.22 
+
+Forensics-tuned MLLMs 
+
+Skyra 63.75 65.21 66.91 67.35 69.01 71.75 64.75 67.85 63.50 62.34 VideoVeritas 60.70 56.55 53.01 52.15 55.16 56.53 52.13 61.82 56.19 52.70 
+
+Multi-Agent System 
+
+Ours (w/o Video, SFT) 67.68 67.23 57.65 61.86 68.08 63.17 64.06 64.59 66.68 56.79 Ours (w/o Video, +GRPO) 79.14 73.73 61.28 65.54 74.62 72.20 67.44 70.44 70.96 61.65 Ours (w/ Video, SFT) 69.30 69.20 62.71 66.90 67.26 68.06 64.11 67.22 69.66 60.94 Ours (w/ Video, +GRPO) 74.15 73.69 61.37 66.45 71.60 73.87 65.70 69.74 72.56 62.67 
+
+Method W22T W22I5 W22T5 Gen4 Hailuo Kling Pika2 PixV4.5 Sora2 Seed2.0 
+
+Small Vision Models 
+
+TALL++ 75.13 53.03 60.06 53.21 62.33 59.73 81.50 79.49 58.42 64.04 TFCU 59.19 51.05 65.63 56.74 56.03 62.88 83.04 70.22 49.70 73.77 
+
+DFD-FCG 57.11 59.43 68.93 50.72 61.05 57.12 77.29 57.58 50.21 66.09 DFGaze 62.24 50.62 53.73 57.91 56.18 59.80 75.13 60.21 49.85 54.13 Effort 66.88 56.41 73.03 53.67 63.48 56.20 77.98 66.84 53.67 67.79 
+
+Open-source MLLMs 
+
+Qwen3.5-0.8B 40.29 36.22 45.15 42.67 36.67 41.62 44.04 37.89 38.69 39.97 Qwen3.6-35B-A3B 46.74 44.42 51.03 52.63 44.24 45.88 46.69 50.02 39.57 65.55 MiMo-V2.5 48.75 46.42 45.97 47.46 44.05 44.77 46.39 45.48 47.35 56.16 
+
+Closed-source MLLMs 
+
+GPT-5.5 45.86 46.44 47.13 45.13 47.50 45.73 44.92 44.89 45.54 49.23 Gemini 3.1 Pro 62.02 63.76 67.25 61.13 62.17 65.64 63.22 64.91 62.96 66.64 GPT-4o 51.40 56.05 56.72 61.94 51.85 56.80 51.96 54.64 55.30 60.28 Gemini 3.5 Flash 61.87 68.27 70.71 54.37 59.39 63.80 70.26 60.53 61.11 67.30 
+
+Forensics-tuned MLLMs 
+
+Skyra 66.99 60.01 61.14 69.97 68.36 72.09 59.19 66.57 69.76 48.17 VideoVeritas 56.77 48.63 57.55 50.03 50.60 54.69 57.91 62.15 52.68 64.49 
+
+Multi-Agent System 
+
+Ours (w/o Video, SFT) 59.12 59.70 65.26 62.29 64.86 68.46 69.26 65.46 64.63 63.64 Ours (w/o Video, +GRPO) 62.24 65.14 67.44 60.42 70.50 71.20 76.85 70.85 67.77 65.29 Ours (w/ Video, SFT) 64.42 66.75 69.53 67.02 67.21 69.92 70.73 68.46 66.72 67.24 Ours (w/ Video, +GRPO) 69.07 61.51 70.52 61.61 73.87 69.28 74.92 75.05 69.67 72.10 Table 7: Detection accuracy on the 20 unseen video generators of the OOD test set, presented across two sub-tables (top: generators 1–10; bottom: generators 11–20). The best and second-best results are bolded and underlined, respectively. Ground truth: Fake video 
+
+# GPT-4o 
+
+Based on the provided frames, the video appears to be of a person in a natural outdoor setting. The facial features and movements seem consistent across the frames, with no visible artifacts, distortions, or unnatural transitions that would suggest manipulation . The lighting and shadows on the face and background also appear natural and consistent. There are no signs of face swapping, reenactment, or synthetic generation of the face. Therefore, the video appears to be real.<answer> Real </answer> 
+
+The video consists of a sequence of frames showing a young woman with long dark hair, wearing a white top, set against a blurred background of yellow foliage, likely ginkgo leaves. The lighting is natural and consistent with an outdoor setting. I am examining the video for signs of manipulation: Facial Consistency: The woman's facial features (eyes, nose, mouth) remain consistent throughout the clip. There are no sudden shifts in identity or "glitches" that would suggest a face swap (FS). Motion and Expression: The movement is subtle and natural . She appears to be looking slightly off-camera with a gentle expression. The micro-movements of her eyes and slight changes in head angle are smooth and organic, lacking the stiffness or unnatural warping often seen in face reenactment (FR) or deepfake videos. 
+
+Lighting and Shadows: The lighting on her face interacts naturally with the environment. The shadows and highlights shift realistically as she moves slightly, which is difficult to synthesize perfectly in entire face synthesis (EFS). Overall Quality: The video has the characteristics of a standard video recording, ....... There are no artifacts typical of generative AI, such as unnatural skin texture or background inconsistencies . Based on these observations, the video appears to be a genuine recording of a real person..<answer> Real </answer> Facial skin appears overly smooth and airbrushed ... The hair looks waxy and lacks strand detail ... Soft hairline boundaries and painterly foliage suggest synthetic texture. 
+
+Texture Agent 
+
+Warm backlighting rims the hair and shoulders... The face remains flat and diffusely lit ... 
+
+Smooth highlights and weak shadows do not match the bright foliage .
+
+Lighting Agent 
+
+The eyes remain fixed, while the mouth and cheeks stay static ... No blinking or micro-expression is visible... Yellow leaves, branches, and bright patches continuously shift and rearrange .
+
+Motion Agent 
+
+The hair behaves like a rigid mass with little strand response ... Minor instability appears around the nose and nostrils... Exaggerated bokeh and limited parallax make the scene ambiguous .
+
+Physics Agent 
+
+... The subject’s face remains almost completely frozen, with no blinking, micro-expressions, or gaze shifts , while the hair behaves like a rigid mass lacking strand-level motion ... In contrast, yellow leaves, dark branches, and bright patches continuously shift and rearrange across frames, creating a clear foreground–background motion mismatch. This unnatural separation persists throughout the entire short video sequence ... Overly smooth skin and weak lighting integration provide additional evidence ... these temporal and material inconsistencies indicate an AI-generated video .<answer> Fake </answer> 
+
+Judge Agent Figure 5: Qualitative comparison on a challenging fake video. GPT-4o and MiMo-V2.5 incorrectly predict Real, treating the stable facial appearance and natural-looking scene as evidence of authenticity. In contrast, the four observation agents identify complementary texture, lighting, motion, and physical-plausibility cues, and the judge agent reconciles their observations, emphasizes the persistent foreground–background motion mismatch, and correctly predicts Fake. Colored text highlights the evidence emphasized by each model. assigns it 6.25. Within our framework, providing video input improves the overall score both with and without GRPO op-timization across both judges, suggesting better grounding of generated rationales in visual evidence. GRPO-optimized configurations remain competitive, although GRPO pri-marily targets classification performance rather than the explanation-quality rubric; therefore, these scores should be interpreted together with detection performance. All four configurations receive higher scores on fake than on real videos, but this pattern is specific to the sampled subset and should not be generalized more broadly. 
+
+## C Reasoning Strategies 
+
+Figure 6 summarizes the four reasoning structures evaluated in our experiments. Single directly predicts the video label from the sampled frames. CoT uses a single agent and a sin-gle interaction, but explicitly prompts the model to reason step by step over the four forensic dimensions before giv-Method Acc Recall F1 Small Vision Models 
+
+TALL++ 96.06 99.36 99.00 TFCU 98.66 99.31 99.46 
+
+DFD-FCG 97.86 99.07 99.22 DFGaze 98.52 98.51 99.11 Effort 97.75 99.50 99.37 
+
+Open-source MLLMs 
+
+Qwen3.5-0.8B 53.99 55.39 67.40 Qwen3.6-35B-A3B 74.84 83.33 87.85 MiMo-V2.5 70.52 51.32 66.97 
+
+Closed-source MLLMs 
+
+GPT-5.5 65.05 38.16 54.64 Gemini 3.1 Pro 61.57 94.58 90.90 
+
+Forensics-tuned MLLMs 
+
+Skyra 48.26 3.83 7.29 VideoVeritas 61.31 88.20 87.93 
+
+Multi-Agent System 
+
+Ours (w/o Video, SFT) 78.19 98.22 95.30 Ours (w/o Video, +GRPO) 87.34 96.87 96.35 Ours (w/ Video, SFT) 79.08 98.07 95.39 Ours (w/ Video, +GRPO) 84.31 97.78 96.19 Table 8: Overall performance on the in-domain test set. The best and second-best results are highlighted in bold and un-derlined. ing the final verdict. Multi-turn dialogue instead queries the same agent through multiple turns: dimension-specific ob-servations are collected in earlier turns and then synthesized into a final prediction in a subsequent turn. In contrast, our multi-agent system assigns the four forensic dimensions to independent observation agents and uses a separate judge agent to reconcile their evidence and issue a final verdict. 
+
+Single. The Single baseline maps the sampled frames di-rectly to an explanation and a prediction in a single model call. The general-purpose open- and closed-source MLLMs use the shared prompts in Listing 1, with the sampled frames and their timestamps appended to the user message. 
+
+Chain-of-Thought. The CoT baseline performs the four forensic analyses and produces the final decision in a single model call. Its exact system and user prompts are shown in Listing 2. 
+
+Multi-turn. The Multi-turn baselines use a shared system prompt and five user turns: the first four turns examine tex-ture, lighting, motion, and physical plausibility, respectively, while the fifth turn produces the final explanation and verdict. The three variants differ only in when video frames are pro-vided to the model, as summarized in Table 10. In Multi-turn ,frames are provided only in the first turn, and all subsequent turns rely on the retained dialogue context and text-only prompts. In Multi-turn-Obs , frames are provided during the four observation turns, allowing each aspect-specific analy-sis to directly access the visual evidence, whereas the final output texture physics   
+
+> output observation
+> output
+> （b）cot agent
+> final results check texture output
+> （c）multi-turn dialogue （d）multi-agent system
+> agent
+
+# ... 
+
+# ... 
+
+> （a）single agent
+
+Figure 6: Comparison of the reasoning strategies evaluated in our experiments: (a) single-agent direct prediction, (b) single-agent chain-of-thought reasoning, (c) multi-turn dia-logue, and (d) our multi-agent system with four independent observation agents and a separate judge agent. verdict turn is text-only and aggregates the preceding ob-servations. In Multi-turn-All , frames are provided in all five turns, including the final verdict turn, so the model can re-visit the visual evidence when generating the explanation and prediction. All three settings use the same first four prompts in Listing 3 and differ only in the final prompt, as shown in Listing 4. 
+
+Setting Turns with Frames Turn-5 Prompt 
+
+Multi-turn 1 Text-only Multi-turn-Obs 1–4 Text-only Multi-turn-All 1–5 Video-aware Table 10: Frame-delivery settings for Multi-turn inference. Turns not listed in the middle column receive text only, and the preceding textual responses remain in the dialogue his-tory in every setting. 
+
+C.1 Efficiency Analysis 
+
+We evaluate latency and throughput on 100 randomly sam-pled OOD videos (50 real and 50 fake) using a single NVIDIA RTX 5090 GPU. As shown in Table 11, Single and CoT have the lowest latency, while Multi-turn has the highest latency on both MLLMs. The latency of our two configurations lies between these baselines, and both are faster than Multi-turn. This difference is particularly clear on InternVL3.5-8B, where our latency is 4.781–5.486 sec-onds per video, compared with 14.150 seconds for Multi-turn. Our framework also achieves 151.293–181.88 tokens per second across the two MLLMs, approximately twice the throughput of Multi-turn. Thus, although our frame-work is slower than the one-pass strategies, parallel exe-cution of the observation agents keeps its additional infer-ence cost moderate. The configuration without video input further reduces latency by avoiding video processing in the judge agent. Furthermore, since our multi-agent framework Method DeepSeek-V4 Pro GPT-5-mini Fake Real Overall Fake Real Overall Open-source MLLMs                                                                   
+
+> Qwen3.6-35B-A3B 3.49 5.30 4.39 5.02 6.19 5.61 MiMo-V2.5 2.00 6.84 4.42 3.76 7.30 5.53
+> Closed-source MLLMs
+> GPT-4o 2.65 4.56 3.60 4.37 6.07 5.22 Gemini 3.1 Pro 7.15 3.65 5.40 7.45 5.02 6.24 Gemini 3.5 Flash 5.98 6.52 6.25 6.64 7.12 6.88 Forensics-tuned MLLMs
+> Skyra 3.16 6.58 4.87 4.70 7.35 6.03 VideoVeritas 8.05 4.07 6.06 7.90 5.31 6.61
+> Multi-Agent System
+> Ours (w/o Video, SFT) 7.66 4.58 6.12 6.99 5.12 6.05 Ours (w/o Video, SFT+GRPO) 6.40 4.46 5.43 6.67 4.85 5.76 Ours (w/ Video, SFT) 7.89 4.84 6.37 7.27 5.22 6.25 Ours (w/ Video, SFT+GRPO) 7.75 4.14 5.95 7.37 4.68 6.03
+
+Table 9: Mean explanation-quality scores on a subset of the OOD test set containing 100 randomly selected real and 100 randomly selected fake videos. The best and second-best results in each column are bolded and underlined. introduces more prompts compared to single-agent methods, future work could consider applying prompt compression techniques such as BEAVER (Hu et al. 2026) to further op-timize inference efficiency. 
+
+Strategy Latency ↓
+
+(s/video) Throughput ↑
+
+(tokens/s) Qwen2.5-VL-7B 
+
+Single 1.503 79.10 CoT 2.095 85.27 Multi-turn 7.123 90.47 Ours (w/ Video) 6.128 172.26 Ours (w/o Video) 5.791 181.88 
+
+InternVL3.5-8B 
+
+Single 1.583 53.892 CoT 2.864 70.869 Multi-turn 14.150 84.581 Ours (w/ Video) 5.486 151.293 Ours (w/o Video) 4.781 168.329 Table 11: Efficiency comparison of different reasoning strate-gies on an NVIDIA RTX 5090 GPU. 
+
+C.2 Qualitative Comparison 
+
+As shown in Figure 7, Single prediction, CoT, and Multi-turn dialogue all interpret the smooth facial appearance, stable ge-ometry, coherent illumination, and apparently natural motion as evidence that the video is real. Specifically, Single predic-tion relies on a coarse overview and prematurely declares the video authentic despite acknowledging limited evidence. Step-by-step reasoning via CoT or decomposing the analy-sis into successive dialogue turns fails to correct this initial assessment: the single-agent trajectory repeatedly reinforces benign interpretations across all forensic dimensions, ulti-mately repeating the incorrect Real verdict. Our MAS instead elicits complementary evidence from independent observation agents. The texture agent identifies waxy skin, missing micro-texture, and blending artifacts; the lighting agent reports unnaturally uniform facial illumina-tion; the motion agent detects morphing fingers and tempo-ral shape-shifting; and the physics agent highlights static hair and implausible hand dynamics. The judge agent reconciles these observations and further emphasizes the frozen gaze and the absence of natural biological micro-motion, which yields the correct Fake prediction. This example illustrates that the advantage of the MAS comes not merely from per-forming more reasoning steps, but from collecting diverse forensic evidence independently and reconciling it explicitly before prediction. 
+
+## D Observation and Judge Model Combinations 
+
+We further evaluate whether the observation agents and the judge agent need to come from the same MLLM family. As shown in Table 12, heterogeneous combinations remain com-petitive with homogeneous ones. When the judge agent re-ceives only the observation agent outputs, InternVL3.5 (Chen et al. 2024b) observations judged by Qwen2.5-VL (Bai et al. 2025) achieve the best F1 of 47.54%. When the sampled video frames are additionally provided, InternVL3.5 used for both components performs best, reaching 69.07% Acc and 52.43% F1, while the heterogeneous Qwen2.5-VL– InternVL3.5 combination achieves comparable results. Pro-viding the sampled frames to the judge agent improves Acc and F1 for every combination, indicating that the framework is modular with respect to the MLLM used for each compo-nent. Observation Judge Acc Recall F1 w/o Video 
+
+InternVL3.5 InternVL3.5 62.72 85.52 46.94 InternVL3.5 Qwen2.5-VL 63.50 85.15 47.54 
+
+Qwen2.5-VL InternVL3.5 60.70 86.93 45.51 Qwen2.5-VL Qwen2.5-VL 63.61 82.24 47.53 
+
+w/ Video 
+
+InternVL3.5 InternVL3.5 69.07 83.80 52.43 
+
+InternVL3.5 Qwen2.5-VL 67.95 78.33 51.43 Qwen2.5-VL InternVL3.5 68.89 82.45 52.28 Qwen2.5-VL Qwen2.5-VL 67.03 87.76 50.49 Table 12: Performance of the Observation–Judge model com-binations on the OOD test set. InternVL3.5 is InternVL3.5-8B and Qwen2.5-VL is Qwen2.5-VL-7B. All configurations use SFT only. 
+
+## E Impact of Model Parameter Scale 
+
+We evaluate the scalability of our framework across differ-ent parameter scales using the 3B, 7B, and 32B variants of Qwen2.5-VL. To isolate the effect of model capacity, all variants are trained under the SFT protocol across both Judge Agent settings, in which the Judge Agent receives either only the observation reports or these reports together with the sampled video frames. As shown in Table 13, scaling the base MLLM from 3B to 32B parameters yields consistent gains in accuracy and F1 score. When the Judge Agent receives only the observation reports, accuracy increases from 61.36% (3B) to 63.61% (7B) and reaches 66.40% (32B), while F1 score steadily improves from 45.81% to 49.92%. A similar scaling trend is observed when the sampled video frames are additionally provided, with F1 score reaching a peak of 50.81% at 32B. Notably, as model capacity grows, the text-only Judge Agent becomes increasingly adept at reconciling textual forensic reports, narrowing the gap with the video-aware setting while maintaining solid interpretability. 
+
+w/o Video w/ Video Parameter Acc Recall F1 Acc Recall F1 
+
+3B 61.36 83.33 45.81 66.65 82.55 50.16 7B 63.61 82.24 47.53 67.03 87.76 50.49 32B 66.40 80.36 49.92 67.36 81.47 50.81 
+
+Table 13: Performance comparison across different Qwen2.5-VL parameter scales on the OOD test set under SFT. The best and second-best results within each Judge Agent setting are highlighted in bold and underlined. 
+
+## F Prompt Templates            
+
+> Agent Prompt-specific fields
+> Texture expert/perspective : texture and detail;
+> focus : texture; cues : skin texture, edge sharpness, blending artifacts, material consistency, and fine-grained detail stability across frames Lighting expert/perspective : lighting; focus :lighting; cues : light source direction, highlight consistency, shadow placement, specular reflections, and overall illumination coherence Motion expert/perspective : motion; focus :motion; cues : inter-frame motion continuity, unnatural movements, temporal flickering, or physically implausible actions Physics expert/perspective : physical plausibility;
+> focus : physics; cues : hair dynamics, clothing behavior, occlusion ordering, perspective correctness, and geometric deformation
+
+Table 14: Role-specific fields used to instantiate the shared Observation Agent prompt templates of Listing 5 for each of the four forensic dimensions. 
+
+Multi-Agent System. Each observation agent receives the sampled video frames and a prompt tailored to one forensic dimension. The four prompts share the templates in List-ing 5, and Table 14 provides the exact role-specific fields. The judge agent then receives the four observations through a shared user template. Without video input, the judge agent receives only these observations; with video input, it ad-ditionally receives the sampled frames. The corresponding system prompts are shown in Listing 6. 
+
+Observation Label Generation. For textual label con-struction, the annotator MLLMs use the same dimension-specific prompts given in Listing 5 and Table 14. Their user messages additionally contain the uniformly sampled frames and the corresponding timestamps. For each dimen-sion, DeepSeek-V4 Pro then combines the available model reports using the prompts in Listing 7. The ground-truth label is provided only as guidance for resolving conflicting reports, and the output is required to contain neither a verdict nor a reference to that label. 
+
+Explanation Evaluation. DeepSeek-V4 Pro and GPT-5-mini independently evaluate the generated rationales using the same inputs, rubric, and output format. Each judge re-ceives the ground-truth answer, a reference rationale, the model answer, and the model rationale, and assigns a holis-tic integer score from 1 to 10 based on evidence accuracy, reference alignment, specificity and grounding, clarity and conciseness, and verdict consistency. The shared evaluator prompt is shown in Listing 8, and the sampling protocol and results are reported in Section B.4. 
+
+Listing 1: Prompts used by the Single baseline for the general-purpose open- and closed-source MLLMs. 
+
+System Prompt                                        
+
+> You are an expert video analyst. Please think about the question as if you were a human pondering deeply. It’s encouraged to include self-reflection or verification in the reasoning process. Put the explanation of your judgment within <explanation></ explanation> tags. Finally, give the final verdict within <answer></answer> tags.
+
+User Prompt 
+
+Is this video real or fake? The following images are uniformly sampled frames from the video. 
+
+Listing 2: Prompts used by the chain-of-thought (CoT) baseline. 
+
+System Prompt 
+
+You are an expert face video forensics analyst. You are shown frames uniformly sampled from a video, in order. Determine whether the face video is Real or Fake based ONLY on the visible evidence in these frames. Think step by step. Work through the following four analysis steps in order. In each step, report concrete, specific visual cues - mention frame ranges, facial regions, or objects where you see potential manipulation artifacts, or where everything appears consistent and natural. Do NOT give a real/fake verdict inside these four steps. 1. Texture and detail: skin texture, edge sharpness, blending artifacts around the face boundary, material consistency, and fine-grained detail stability across frames. 2. Lighting: light source direction, highlight consistency, shadow placement, specular reflections on skin and eyes, and overall illumination coherence between the face and the scene. 3. Motion: inter-frame motion continuity, unnatural movement, temporal flickering or jitter, and physically implausible actions across frames. 4. Physical plausibility: hair dynamics, clothing behavior, occlusion ordering, perspective correctness, facial geometry, and geometric deformation. After the four steps, weigh the four observations together and reach a final decision. If clear manipulation artifacts appear in one or more steps, answer fake. If the face is texturally, temporally, and physically consistent with the scene, answer real. 
+
+System Prompt (continued) 
+
+Output your response strictly in the following format, with every tag present and non-empty: <texture>your texture and detail observations</texture> <lighting>your lighting observations</lighting> <motion>your motion observations</motion> <physics>your physical plausibility observations</ physics> <explanation>a brief rationale that synthesizes the four observations above into your decision</explanation> <answer>real</answer> Output requirements: * All six tags are required and must not be empty. * Each of <texture>, <lighting>, <motion>, <physics> must contain at least one concrete visual observation and must NOT contain a real/fake judgment. 
+
+User Prompt 
+
+Analyze the provided video frames step by step. First examine: 1. Texture and detail (skin texture, edge sharpness, blending artifacts around the face boundary, material consistency, fine detail stability across frames). 2. Lighting (light source direction, highlight consistency, shadow placement, specular reflections on skin and eyes, illumination coherence). 3. Motion (inter-frame motion continuity, unnatural movements, temporal flickering or jitter, physically implausible actions across frames). 4. Physical plausibility (hair dynamics, clothing behavior, occlusion ordering, perspective correctness, facial geometry, geometric deformation). First put your complete step-by-step rationale within <explanation></explanation> tags; do not put any answer or label inside the explanation. Then output your final verdict as either <answer>real</answer> or <answer>fake </answer>. 
+
+Listing 3: System prompt and four observation-turn prompts shared by all three Multi-turn frame-delivery settings. 
+
+System Prompt 
+
+You are an expert face video forensics analyst. Your task is to determine whether the face video is real or fake based only on the visible evidence in the provided frames. 
+
+Turn 1: Texture and Detail 
+
+These are frames uniformly sampled from the video, in order. From the perspective of texture and detail, observe the video and report any anomalies related to skin texture, edge sharpness, blending artifacts around the face boundary, material consistency, and fine-grained detail stability across frames. Be concrete -mention frame ranges, facial regions, or objects. Put your report inside <observation></observation> tags. Do not make a real/fake judgment yet. 
+
+Turn 2: Lighting 
+
+Now from the perspective of lighting, report any anomalies related to light source direction, highlight consistency, shadow placement, specular reflections on skin and eyes, and overall illumination coherence between the face and the scene. Be concrete - mention frame ranges, facial regions, or objects. Put your report inside <observation></observation> tags. Do not make a real/fake judgment yet. 
+
+Turn 3: Motion 
+
+Now from the perspective of motion, report any anomalies related to inter-frame motion continuity, unnatural movements, temporal flickering or jitter, and physically implausible actions across frames. Be concrete -mention frame ranges, facial regions, or objects. Put your report inside <observation></observation> tags. Do not make a real/fake judgment yet. 
+
+Turn 4: Physical Plausibility 
+
+Now from the perspective of physical plausibility, report any anomalies related to hair dynamics, clothing behavior, occlusion ordering, perspective correctness, facial geometry, and geometric deformation. Be concrete - mention frame ranges, facial regions, or objects. Put your report inside <observation></observation> tags. Do not make a real/fake judgment yet. 
+
+Listing 4: Final-turn prompts for the three Multi-turn frame-delivery settings. 
+
+Text-only Verdict (Multi-turn, Multi-turn-Obs) 
+
+Based on your four observations above, decide whether the face video is real or fake. First put a brief explanation that synthesizes your four observations within <explanation></explanation> tags; do not put any answer or label inside the explanation. Then output exactly either <answer>real</answer> or <answer>fake</ answer>, with no other text inside the answer tag. 
+
+Image-aware Verdict (Multi-turn-All) 
+
+Based on your four observations above and the video frames, decide whether the face video is real or fake. First put a brief explanation that synthesizes your four observations within <explanation></explanation> tags; do not put any answer or label inside the explanation. Then output exactly either <answer>real</answer> or < answer>fake</answer>, with no other text inside the answer tag. 
+
+Listing 5: Prompt templates shared by the four observation agents. The fields in braces are instantiated with the role-specific values listed in Table 14. 
+
+Observation agent system prompt 
+
+You are a {expert} analysis expert in a video forensics team. Your task is to carefully observe the video and report any anomalies related to {cues}. Focus ONLY on { focus}-related observations. Do NOT make a final real/ fake judgment. Return only a concise report inside < observation></observation> tags. Observation agent user prompt 
+
+Observe the provided video from the perspective of {perspective} analysis. List the specific visual cues you noticed. Be concrete and precise - mention frame ranges , regions, or objects where you see potential issues or where everything appears normal. Put your report inside <observation></observation> tags. Do not make a final real/fake judgment and do not use <answer> tags. Keep your response concise (within 200 words). 
+
+Listing 6: Judge agent prompts with and without video input. Both settings use the same user prompt, populated with the four obser-vation agent reports; the sampled frames are additionally attached when video input is provided. 
+
+Judge System Prompt: w/o Video 
+
+You are the final judge for binary video forgery classification. You cannot access any images or video. Use only the four expert analysis reports supplied as text. Put a brief explanation of your judgment within <explanation></explanation> tags; do not put any <answer> tags or final label inside the explanation. Then output exactly one tagged lowercase label: <answer>real</ answer> or <answer>fake</answer>. 
+
+Judge System Prompt: w/ Video 
+
+You are the final judge for binary video forgery classification. You are given the video frames together with four expert analysis reports (texture, lighting, motion, physical plausibility) supplied as text. Weigh both the visual evidence and the four reports. Put abrief explanation of your judgment within <explanation ></explanation> tags; do not put any <answer> tags or final label inside the explanation. Then output exactly one tagged lowercase label: <answer>real</answer> or <answer>fake</answer>. 
+
+Shared Judge User Prompt 
+
+Texture analysis report: {texture_report} Lighting analysis report: {lighting_report} Motion analysis report: {motion_report} Physical plausibility analysis report: {physics_report} Return a brief explanation in <explanation></explanation > tags. Do not put any <answer> tags or final label inside the explanation. Then output exactly <answer>real </answer> or <answer>fake</answer>. 
+
+Listing 7: DeepSeek-V4 Pro prompts for aggregating the annotator reports of one forensic dimension into a single observation label. The aggregation is performed independently for texture, lighting, motion, and physics. 
+
+DeepSeek-V4 Pro System Prompt 
+
+You are a video forensics expert. Multiple AI models have each analyzed the same video from a specific analytical perspective and produced independent observation reports. Your task is to read all of their reports and synthesize them into a single, coherent, comprehensive observation. Aggregate multi-agent observations with the video label (real or fake) in mind: use the ground-truth label solely as internal guidance to resolve conflicts between models when their reports disagree. Rules: - Write ONE unified observation paragraph (100-200 words ). - Do NOT list models by name (e.g. "Model 1 said..."). Present the observations as a single cohesive expert analysis. - Resolve conflicts: when models disagree, prioritise observations consistent with the video label and note discrepancies as ambiguous cues. - Focus on concrete forensic signals and visual evidence mentioned by the models. 
+
+DeepSeek-V4 Pro System Prompt (continued) 
+
+- Do NOT output a real/fake verdict. Only output the observation text. - Do NOT mention or reference the ground-truth label, the video’s real/fake status, or whether the video is real or fake in your output. The observation must read as if the observer does not know the verdict. - Do NOT wrap your output in any tags. Output plain text only. 
+
+DeepSeek-V4 Pro User Prompt Template 
+
+This video is {ground_truth}. Below are {n} observation reports from forensic models that analyzed the {dimension_name} of this video. Each report focuses on {dimension_description}. --- Model 1 ({model_name_1}) ---{observation_1} ... --- Model {n} ({model_name_n}) ---{observation_n} 
+
+Listing 8: Prompt shared by DeepSeek-V4 Pro and GPT-5-mini for evaluating the generated forensic explanations, following the explanation evaluation prompt of VidGuard-R1. Each judge returns a concise analysis and a holistic integer score from 1 to 10. 
+
+Evaluator System Prompt 
+
+You are an independent expert evaluating the quality of an explanation generated by a face-video forgery detection model. The model predicts whether a video is real or fake and provides a rationale for its prediction. Evaluate the rationale with respect to forensic evidence involving texture and detail, lighting, motion and temporal consistency, and physical plausibility. Consider the following five criteria: 1. Evidence accuracy: Does the rationale identify relevant signs of manipulation or authenticity? 2. Reference alignment: Does it agree with the important visual evidence described in the reference rationale? 3. Specificity and grounding: Does it provide concrete, video-related observations rather than vague claims, unsupported assumptions, or hallucinated details? 
+
+Evaluator System Prompt (continued) 
+
+4. Clarity and conciseness: Is the rationale coherent, direct, and free from unnecessary repetition? 5. Verdict consistency: Does the rationale logically support the model’s predicted real/fake label? A rationale that contradicts the ground-truth label or its own predicted label should not receive a high score. Assign one holistic integer score from 1 to 10: - 1 indicates an incorrect, unsupported, or contradictory rationale. - 10 indicates an accurate, specific, concise rationale that fully aligns with the reference evidence and convincingly supports the correct verdict. Return exactly two lines: ANALYSIS: <a concise paragraph evaluating the rationale> SCORE: <an integer from 1 to 10> Do not output anything else. 
+
+Evaluator User Prompt Template         
+
+> Evaluate the following model-generated explanation. Ground-truth answer: {ground_truth_answer} Reference rationale: {ground_truth_rationale} Model answer: {model_answer} Model rationale: {model_rationale}
+
+## G Training Dynamics 
+
+Figure 8(a–d) shows the SFT dynamics. All four observation agents converge in the same manner: the training loss drops steeply within roughly the first 10% of training and then declines gradually, while token accuracy rises to a plateau that is essentially flat over the second half of training. The four agents remain separated by a small and stable margin, with the lighting observation agent attaining the lowest loss and the highest token accuracy and the physics observation agent the highest loss and the lowest token accuracy. The two judge agent configurations converge to nearly the same point, with training losses approaching 1.2 and token accuracies ap-proaching 0.66. They differ mainly in how quickly they get there: with video input the loss falls faster over the first 20% of training, and its curve remains slightly more oscillatory thereafter, whereas the two configurations are largely indis-tinguishable once training passes the halfway point. Figure 8(e–g) shows the GRPO dynamics of the judge agent. The mean reward rises sharply within early training and fluctuates around a high plateau, with the two configura-tions closely aligned and neither consistently ahead; because the reward is the binary accuracy of the parsed verdict, this indicates that GRPO refines an already correct decision pol-icy rather than learning it from scratch. The KL divergence against the frozen SFT policy separates the two configura-tions more clearly: with video input it stays lower through the first 60% of training, peaking near 0.010 against 0.015 without video input, after which both decay below 0.006. The judge with video input reaches comparable reward while drifting less from its SFT initialization. The reward standard deviation decreases in both configurations as the sampled candidates increasingly agree, and it falls to nearly zero with video input over the final third of training but remains higher without video. Ground truth: Fake video 
+
+# Chain of Thought (CoT) 
+
+... smooth skin texture...no artifacts or inconsistencies ... consistent light source direction ... no temporal flickering ... natural hand gestures...hair dynamics consistent...occlusion ordering is correct...facial geometry stable ... texturally and physically consistent ...<answer> Real </answer> ...an unnaturally smooth, waxy quality with a lack of fine pores and micro-textures...severe blending artifacts .. .unnatural warping ... overly bright and lacking natural shading... 
+
+Texture Agent 
+
+...the facial lighting exhibits an 
+
+unnaturally uniform quality ...The highlights...appear 
+
+overly smooth and flat ...the specular highlights on the teeth and lips are notably bright and uniform ... 
+
+Lighting Agent 
+
+...fingers appear to morph and blend together rather than maintaining distinct anatomical structure...with strands warping and re-forming between frames... minor micro-jitters 
+
+and shape-shifting ... 
+
+Motion Agent 
+
+...the hair remains largely static 
+
+and lacks natural secondary motion ... fingers appearing to merge , stretch, and lose structural integrity...proper depth separation... 
+
+Physics Agent 
+
+...the complete absence of biological motion in the subject's eyes ...they remain wide open and fixed in a glassy stare throughout the clip, lacking the involuntary saccades, blinks, or micro-movements inherent to a living person. This frozen gaze...The facial expression itself is 
+
+unnaturally static ...The skin texture is overly smooth and waxy , devoid of fine pores and imperfections ...the hand gesture... lacks the subtle, dynamic tension of a real human hand, appearing more like a digital overlay ...these are superficial cues... outweighed by the profound failures in simulating basic human physiology and anatomy ...<answer> Fake </answer> 
+
+Judge Agent 
+
+# Multi-turn dialogue 
+
+Turn 1 Turn 2 Turn 3 Turn 4 Turn 5 
+
+: ...From the perspective of texture , observe the video... : ...skin texture looks natural ... no significant blending artifacts ... 
+
+: ...From the perspective of lighting , observe the video... : ...Highlight consistency is maintained...soft shadows falling naturally ... 
+
+: ...From the perspective of motion , observe the video... : ...inter-frame motion continuity ...hand gesture remains stable ... 
+
+: ...From the perspective of physics , observe the video... : ...hair dynamics appear natural ...Facial geometry looks consistent ... 
+
+: ...Based on your four observations above... : ...all coherent and realistic ...<answer> Real </answer> ...hand gesture consistent across frames...no motion blur or inconsistencies...lighting consistent...no obvious artifacts ...frames appear real but evidence limited...<answer> Real </answer> 
+
+# Single (Qwen2.5-VL-7B) Figure 7: Qualitative comparison of Single prediction, CoT, Multi-turn dialogue, and our multi-agent system (MAS) on a fake video. Single, CoT, and Multi-turn cite plausible but superficial evidence of authenticity and incorrectly predict Real. In contrast, the independent observation agents identify complementary anomalies in texture, lighting, motion, and physical plausibility, which the judge agent reconciles to correctly predict Fake. 0 20 40 60 80 100 
+
+Training Progress (%) 
+
+1.2 1.6 2.0 2.4 
+
+> Training Loss
+
+Texture Lighting Motion Physics (a) Observation loss 0 20 40 60 80 100 
+
+Training Progress (%) 
+
+0.42 0.48 0.54 0.60 0.66 
+
+> Token Accuracy
+
+Texture Lighting Motion Physics (b) Observation accuracy 0 20 40 60 80 100 
+
+Training Progress (%) 
+
+1.2 1.5 1.8 2.1 2.4 
+
+> Training Loss
+
+w/o Video w/ Video 
+
+(c) Judge loss 0 20 40 60 80 100 
+
+Training Progress (%) 
+
+0.42 0.48 0.54 0.60 0.66 
+
+> Token Accuracy
+
+w/o Video w/ Video (d) Judge accuracy 0 20 40 60 80 100 
+
+> Training Progress (%)
+> 0.78 0.84 0.90 0.96
+> Reward
+> w/o Video w/ Video
+
+(e) Mean reward 0 20 40 60 80 100  
+
+> Training Progress (%)
+> 0.000 0.006 0.012 0.018 0.024 0.030
+> KL Divergence
+> w/o Video w/ Video
+
+(f) KL divergence 0 20 40 60 80 100  
+
+> Training Progress (%)
+> 0.000 0.025 0.050 0.075 0.100
+> Reward Std.
+> w/o Video w/ Video
+
+(g) Reward standard deviation Figure 8: Training dynamics of the framework. (a–d) SFT loss and token accuracy for the four observation agents and for the judge agent with and without video input. (e–g) GRPO mean reward, KL divergence, and reward standard deviation for the judge agent in the same two settings. References 
+
+Bai, S.; Chen, K.; Liu, X.; Wang, J.; Ge, W.; Song, S.; Dang, K.; Wang, P.; Wang, S.; Tang, J.; Zhong, H.; Zhu, Y.; Yang, M.; Li, Z.; Wan, J.; Wang, P.; Ding, W.; Fu, Z.; Xu, Y.; Ye, J.; Zhang, X.; Xie, T.; Cheng, Z.; Zhang, H.; Yang, Z.; Xu, H.; and Lin, J. 2025. Qwen2.5-VL Technical Report. arXiv:2502.13923. Cao, Y.; Shi, D.; Fu, X.; Zou, X.; Peng, H.; Li, X.; Yu, C.; and Xing, J. 2026. Multivariate diffusion transformer with decoupled attention for high-fidelity mask-text collaborative facial generation. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 40, 2670–2679. Chen, G.; Lin, D.; Yang, J.; Lin, C.; Zhu, J.; Fan, M.; Zhang, H.; et al. 2025. SkyReels-V2: Infinite-length Film Generative Model. Chen, H.; Zhang, Y.; Cun, X.; Xia, M.; Wang, X.; Weng, C.; and Shan, Y. 2024a. VideoCrafter2: Overcoming Data Limitations for High-Quality Video Diffusion Models. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition , 7310–7320. Chen, Z.; Wu, J.; Wang, W.; Su, W.; Chen, G.; Xing, S.; Zhong, M.; Zhang, Q.; Zhu, X.; Lu, L.; et al. 2024b. Intern VL: Scaling up Vision Foundation Models and Aligning for Generic Visual-Linguistic Tasks. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 24185–24198. IEEE Computer Society. Cheng, J.; Shen, H.; Zhang, X.; Wang, G.; Wang, Z.; Yan, R.; and Huang, B. 2026a. InfoDense: Density-Aware Re-gional Decisive Replay for Memory-Efficient Incremental Face Forgery Detection. Cheng, J.; Yan, R.; Yan, Z.; Gan, Y.; Zhang, X.; Wang, Z.; Peng, W.; and Liang, L. 2026b. A Sanity Check for Multi-In-Domain Face Forgery Detection in the Real World. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition (CVPR) , 21306–21315. DeepSeek-AI; Xu, A.; Lin, B.; Xue, B.; Wang, B.; Xu, B.; Wu, B.; Zhang, B.; Lin, C.; Dong, C.; Ling, C.; et al. 2026. Deepseek-v4: Towards highly efficient million-token context intelligence. Dolhansky, B.; Bitton, J.; Pflaum, B.; Lu, J.; Howes, R.; Wang, M.; and Ferrer, C. C. 2020. The deepfake detection challenge (dfdc) dataset. Du, Y.; Li, S.; Torralba, A.; Tenenbaum, J. B.; and Mordatch, I. 2024. Improving Factuality and Reasoning in Language Models through Multiagent Debate. In Forty-first Interna-tional Conference on Machine Learning .Dufour, N.; Gully, A.; Karlsson, P.; Vorbyov, A. V.; Leung, T.; Childs, J.; and Bregler, C. 2019. DeepFakes Detection Dataset by Google & Jigsaw. Accessed: 2026-05-11. Feng, L.; Zheng, L.; He, S.; Zhang, F.; and An, B. 2026. Dr. MAS: Stable Reinforcement Learning for Multi-Agent LLM Systems. In Workshop on Multi-Agent Learning and Its Opportunities in the Era of Generative AI .Gao, M.; Li, Y.; Liu, B.; Yu, Y.; Wang, P.; Lin, C.-Y.; and Lai, F. 2025. Single-agent or Multi-agent Systems? Why Not Both? arXiv:2505.18286. Google DeepMind. 2026. Gemini 3.5 Flash: Model Card. https://deepmind.google/models/model-cards/gemini-3-5-flash/. Guo, Z.; Liu, Y.; Zhang, J.; Zheng, H.; and Shan, S. 2025. Face forgery video detection via temporal forgery cue unrav-eling. In Proceedings of the Computer Vision and Pattern Recognition Conference , 7396–7405. HaCohen, Y.; Chiprut, N.; Brazowski, B.; Shalem, D.; Moshe, D.; Richardson, E.; Levin, E.; Shiran, G.; Zabari, N.; Gordon, O.; Panet, P.; Weissbuch, S.; Kulikov, V.; Bit-terman, Y.; Melumian, Z.; and Bibi, O. 2025. LTX-Video: Realtime Video Latent Diffusion. Haliassos, A.; Vougioukas, K.; Petridis, S.; and Pantic, M. 2021. Lips Don’t Lie: A Generalisable and Robust Approach to Face Forgery Detection. In 2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 5037– 5047. Han, Y.-H.; Huang, T.-M.; Hua, K.-L.; and Chen, J.-C. 2025. Towards more general video-based deepfake detec-tion through facial component guided adaptation for founda-tion model. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 22995–23005. He, C.; Zou, B.; Li, X.; Chen, J.; Xing, J.; and Ma, H. 2025. Enhancing LLM Reasoning with Multi-Path Collaborative Reactive and Reflection agents. arXiv:2501.00430. Hong, W.; Ding, M.; Zheng, W.; Liu, X.; and Tang, J. 2023. CogVideo: Large-scale Pretraining for Text-to-Video Gen-eration via Transformers. In International Conference on Learning Representations .Hu, E. J.; Shen, Y.; Wallis, P.; Allen-Zhu, Z.; Li, Y.; Wang, S.; Wang, L.; and Chen, W. 2022. LoRA: Low-Rank Adaptation of Large Language Models. In ICLR , 1–13. Hu, Z.; Li, K.; Fu, D.; Zeng, C.; Li, Y.; Tang, Y.; and Huang, J. 2026. BEAVER: A Training-Free Hierarchical Prompt Compression Method via Structure-Aware Page Selection. arXiv:2603.19635. Huang, Q.; Xu, Z.; Zhang, X.; Yu, X.; and Zhang, J. 2026a. Unishield: An adaptive multi-agent framework for unified forgery image detection and localization. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 8121–8132. Huang, Y.; Xue, J.; Jiajun, L.; Li, D.; Zhang, T.; Yi, Z.; Ren, Y.; and Li, K. 2026b. When AVSR Meets Video Conferenc-ing: Dataset, Degradation, and the Hidden Mechanism Be-hind Performance Collapse. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 4448–4457. Jiang, L.; Li, R.; Wu, W.; Qian, C.; and Loy, C. C. 2020. Deeperforensics-1.0: A large-scale dataset for real-world face forgery detection. In Proceedings of the IEEE/CVF con-ference on computer vision and pattern recognition , 2889– 2898. Khachatryan, L.; Movsisyan, A.; Tadevosyan, V.; Hen-schel, R.; Wang, Z.; Navasardyan, S.; and Shi, H. 2023. Text2Video-Zero: Text-to-Image Diffusion Models are Zero-Shot Video Generators. In Proceedings of the IEEE/CVF In-ternational Conference on Computer Vision , 15954–15964. Kong, W.; Tian, Q.; Zhang, Z.; Min, R.; Dai, Z.; Zhou, J.; Xiong, J.; Li, X.; Wu, B.; Zhang, J.; et al. 2024. Hunyuan-Video: A Systematic Framework for Large Video Generative Models. Kuaishou. 2024. Kling AI Video Generation. https://kling. ai/. Li, K.; Shen, C.; Liu, Y.; Han, J.; Zou, X.; WANG, L.; Zhang, S.; Du, X.; Luo, H.; Jin, Y.; et al. 2026a. Audiotrust: Bench-marking the multifaceted trustworthiness of audio large lan-guage models. In International Conference on Learning Representations , volume 2026, 24938–25016. Li, L.; Bao, J.; Yang, H.; Chen, D.; and Wen, F. 2020a. Ad-vancing high fidelity identity swapping for forgery detection. In Proceedings of the IEEE/CVF conference on computer vi-sion and pattern recognition , 5074–5083. Li, L.; Bao, J.; Zhang, T.; Yang, H.; Chen, D.; Wen, F.; and Guo, B. 2020b. Face X-Ray for More General Face Forgery Detection. In 2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 5000–5009. Li, X.; Li, K.; Zheng, Y.; Yan, C.; Ji, X.; and Xu, W. 2024. Safeear: Content privacy-preserving audio deepfake detec-tion. In Proceedings of the 2024 on ACM SIGSAC Conference on Computer and Communications Security , 3585–3599. Li, Y.; Yang, X.; Sun, P.; Qi, H.; and Lyu, S. 2020c. Celeb-df: A large-scale challenging dataset for deepfake forensics. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 3207–3216. Li, Y.; Zheng, W.; Zhang, Y.; Sun, R.; Zheng, Y.; Chen, L.; Zhou, J.; and Lu, J. 2026b. Skyra: AI-Generated Video De-tection via Grounded Artifact Reasoning. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition .Li, Y.; Zhu, D.; Cui, X.; and Lyu, S. 2025. Celeb-df++: A large-scale challenging video deepfake benchmark for gen-eralizable forensics. Liu, R.; Liu, Z.; Tang, J.; Ma, Y.; Pi, R.; Zhang, J.; and Chen, Q. 2026. LongVideoAgent: Multi-Agent Reasoning with Long Videos. In Liakata, M.; Moreira, V. P.; Zhang, J.; and Jurgens, D., eds., Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , 40404–40416. San Diego, California, United States: Association for Computational Linguistics. ISBN 979-8-89176-390-6. Loshchilov, I.; and Hutter, F. 2018. Decoupled Weight Decay Regularization. In ICLR .Ma, L.; Xue, Z.; Wang, Y.; Yan, Z.; Xu, J.; Jiang, X.; Yu, H.; Liao, Y.; and Bi, Z. 2026a. Your One-Stop Solution for AI-Generated Video Detection. Ma, Z.; Ma, Y.; Zhu, Y.; Yang, C.; Chao, Y.-W.; Xu, R.; Chen, W.; Chen, Y.; Chen, Z.; Cong, J.; et al. 2026b. Mmar: A challenging benchmark for deep reasoning in speech, au-dio, music, and their mix. Advances in Neural Information Processing Systems , 38. MiniMax. 2024. Hailuo Video. https://www.minimax.io/. Ni, Z.; Yan, Q.; Huang, M.; Yuan, T.; Tang, Y.; Hu, H.; Chen, X.; and Wang, Y. 2026. GenVidBench: A 6-Million Benchmark for AI-Generated Video Detection. Proceedings of the AAAI Conference on Artificial Intelligence , 40(18): 15582–15590. OpenAI. 2024. GPT-4o System Card. https://openai.com/ index/gpt-4o-system-card/. OpenAI. 2025a. GPT-5 System Card. Technical report, OpenAI. OpenAI. 2025b. Sora 2 System Card. https://openai.com/ index/sora-2-system-card/. Park, K.; Yang, Y.; Yi, J.; Muaz, M.; Zheng, S.; Shen, Y.; Han, D.; Shan, C.; and Qiu, L. 2026. VidGuard-R1: AI-Generated Video Detection and Explanation via Reasoning MLLMs and RL. In The Fourteenth International Conference on Learning Representations .Peng, C.; Miao, Z.; Liu, D.; Wang, N.; Hu, R.; and Gao, X. 2024. Where deepfakes gaze at? Spatial–temporal gaze in-consistency analysis for video face forgery detection. IEEE Transactions on Information Forensics and Security , 19: 4507–4517. Pika. 2024. Pika. https://pika.art/. Pika. 2025. Pika Model 2.2. https://pika.art/faq. PixVerse. 2025. PixVerse v4.5. https://pixverse.ai/en. Qiao, D.; Li, W.; Yang, S.; Zha, H.; and Wang, B. 2026. Offline Multi-Agent Reinforcement Learning via Sequential Score Decomposition. Qwen Team. 2026. Qwen3.6-35B-A3B: Agentic Coding Power, Now Open to All. Rossler, A.; Cozzolino, D.; Verdoliva, L.; Riess, C.; Thies, J.; and Nießner, M. 2019. Faceforensics++: Learning to detect manipulated facial images. In Proceedings of the IEEE/CVF international conference on computer vision , 1–11. Runway Research. 2024. Introducing Gen-3 Alpha: A New Frontier for Video Generation. https://runwayml.com/ research/introducing-gen-3-alpha. Runway Research. 2025. Runway Gen-4: AI Video Gen-eration with World Consistency. https://runwayml.com/ research/introducing-runway-gen-4. Shao, Z.; Wang, P.; Zhu, Q.; Xu, R.; Song, J.; Bi, X.; Zhang, H.; Zhang, M.; Li, Y.; Wu, Y.; et al. 2024. Deepseekmath: Pushing the limits of mathematical reasoning in open lan-guage models. Shen, H.; Cheng, J.; Yan, R.; Wang, Z.; Peng, W.; and Huang, B. 2025. When Generative Replay Meets Evolving Deep-fakes: Domain-Aware Relative Weighting for Incremental Face Forgery Detection. Sun, H.; Cai, C.; Zhuang, H.; Lee, K. A.; Chau, L.-P.; and Wang, Y. 2025. EDVD-LLaMA: Explainable Deep-fake Video Detection via Multimodal Large Language Model Reasoning. Tan, H.; Lan, J.; Shi, S.; Tan, Z.; Yu, Z.; Zhu, H.; Wang, W.; Wan, J.; and Lei, Z. 2026. VideoVeritas: AI-Generated Video Detection via Perception Pretext Reinforcement Learning. Team Seedance; Chen, D.; Chen, L.; Chen, X.; Chen, Y.; Chen, Z.; et al. 2026. Seedance 2.0: Advancing Video Gen-eration for World Complexity. Thies, J.; Zollhöfer, M.; and Nießner, M. 2019. Deferred neural rendering: Image synthesis using neural textures. Acm Transactions on Graphics (TOG) , 38(4): 1–12. Thies, J.; Zollhofer, M.; Stamminger, M.; Theobalt, C.; and Nießner, M. 2016. Face2face: Real-time face capture and reenactment of rgb videos. In Proceedings of the IEEE con-ference on computer vision and pattern recognition , 2387– 2395. Wan Team; Wang, A.; Ai, B.; Wen, B.; Mao, C.; Xie, C.-W.; Chen, D.; et al. 2025. Wan: Open and Advanced Large-Scale Video Generative Models. Wang, J.; Yuan, H.; Chen, D.; Zhang, Y.; Wang, X.; and Zhang, S. 2023a. ModelScope Text-to-Video Technical Re-port. Wang, Z.; Bao, J.; Zhou, W.; Wang, W.; and Li, H. 2023b. Altfreezing for more general video face forgery detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 4129–4138. Wu, C.; Gan, Y.; Xing, J.; and Fu, Y. 2026. MARPO: A Reflective Policy Optimization for Multi-Agent Reinforce-ment Learning. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 40, 29740–29748. Wu, Q.; Bansal, G.; Zhang, J.; Wu, Y.; Li, B.; Zhu, E.; Jiang, L.; Zhang, X.; Zhang, S.; Liu, J.; Awadallah, A. H.; White, R. W.; Burger, D.; and Wang, C. 2024. AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversations. In First Conference on Language Modeling .Xiaomi MiMo Team. 2026. MiMo-V2.5. https:// huggingface.co/collections/XiaomiMiMo/mimo-v25. Xu, Y.; Liang, J.; Sheng, L.; and Zhang, X.-Y. 2024. Learn-ing Spatiotemporal Inconsistency via Thumbnail Layout for Face Deepfake Detection. International Journal of Computer Vision , 132(12): 5663–5680. Yan, Z.; Wang, J.; Jin, P.; Zhang, K.-Y.; Liu, C.; Chen, S.; Yao, T.; Ding, S.; Wu, B.; and Yuan, L. 2025. Orthogonal Sub-space Decomposition for Generalizable AI-Generated Image Detection. In International Conference on Machine Learn-ing , 70268–70288. PMLR. Yan, Z.; Yao, T.; Chen, S.; Zhao, Y.; Fu, X.; Zhu, J.; Luo, D.; Wang, C.; Ding, S.; Wu, Y.; et al. 2024. Df40: Toward next-generation deepfake detection. Advances in Neural In-formation Processing Systems , 37: 29387–29434. Yin, T.; Zhang, Q.; Zhang, R.; Freeman, W. T.; Durand, F.; Shechtman, E.; and Huang, X. 2025. From Slow Bidirec-tional to Fast Autoregressive Video Diffusion Models. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition , 22963–22974. Z.ai. 2024. CogVideoX1.5-5B. https://huggingface.co/zai-org/CogVideoX1.5-5B. Zhao, Y.; Hu, L.; Wang, Y.; Hou, M.; Zhang, H.; Ding, K.; and Zhao, J. 2026. Stronger-MAS: Multi-Agent Reinforce-ment Learning for Collaborative LLMs. In The Fourteenth International Conference on Learning Representations .Zhao, Y.; Huang, J.; Hu, J.; Wang, X.; Mao, Y.; Zhang, D.; Jiang, Z.; Wu, Z.; Ai, B.; Wang, A.; et al. 2025. Swift: a scalable lightweight infrastructure for fine-tuning. In Pro-ceedings of the AAAI Conference on Artificial Intelligence ,volume 39, 29733–29735. Zheng, Y.; Bao, J.; Chen, D.; Zeng, M.; and Wen, F. 2021. Exploring Temporal Coherence for More General Video Face Forgery Detection. In 2021 IEEE/CVF International Con-ference on Computer Vision (ICCV) , 15024–15034. Zou, X.; Zhang, S.; Fu, X.; Li, Y.; Li, K.; Cao, Y.; Lang, C.; Tao, P.; and Xing, J. 2026. Mixture of Global and Local Experts with Diffusion Transformer for Controllable Face Generation. IEEE Transactions on Pattern Analysis and Ma-chine Intelligence , 1–17.

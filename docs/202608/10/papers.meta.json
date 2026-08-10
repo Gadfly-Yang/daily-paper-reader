@@ -1,0 +1,69 @@
+{
+  "label": "2026-08-10",
+  "date": "2026-08-10",
+  "generated_at": "2026-08-10T21:10:25",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202608/10/2608.04935v2-unleashing-the-potential-of-vision-language-models-for-generalizable-ai-generated-image-detection",
+      "section": "deep",
+      "title_en": "Unleashing the Potential of Vision-Language Models for Generalizable AI-Generated Image Detection",
+      "authors": "Weihan Cai, Hao Tan, Zichang Tan, Jun Wan, Xinping Gao",
+      "date": "2026-08-05",
+      "pdf": "https://arxiv.org/pdf/2608.04935v2",
+      "score": "10.0",
+      "evidence": "利用视觉语言模型实现可泛化的AI生成图像检测",
+      "tldr": "通用AI生成图像检测中，现有方法利用视觉基础模型（如DINOv3）冻结特征加线性探针已获最优性能，但视觉-语言模型PE的潜力未充分挖掘。核心方法：发现PE特征具有更强的局部来源组织，但线性探针未能利用；提出语义原型校准（SPC），从取证语义构建原型并用监督数据校准，得到PE-SPC检测器。关键结果：PE-SPC在跨生成器、后处理及自然场景基准上全面超越DINOv3基线，取得新的最优表现。贡献意义：为利用视觉-语言模型进行通用AIGI检测开辟新途径，简单设计实现强泛化。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Recent work has shown that a simple linear probe on frozen representations from modern vision foundation models (VFMs) can achieve state-of-the-art AIGI detection performance, substantially outperforming specialized detectors in challenging in-the-wild scenarios. This finding has established DINOv3 as the dominant foundation-model baseline for subsequent improvements. However, we find that the vision-language model Perception Encoder (PE) holds greater potential for AIGI detection, because its language-aligned representation preserves high-level provenance semantics. Specifically, PE exhibits stronger local provenance organization than DINOv3 in its frozen feature space. However, semantic-agnostic linear probing fails to exploit this structure, as PE-Linear still underperforms DINOv3-Linear by 4.1% on In-the-Wild. Based on this observation, we propose Semantic Prototype Calibration (SPC), which constructs category prototypes from forensic semantic information and calibrates them with supervised data. We apply SPC to PE and refer to the resulting detector as PE-SPC. Our analysis shows that this simple design achieves stronger generalization. Across cross-generator, post-processing, and in-the-wild benchmarks, PE-SPC surpasses the previous DINOv3 baseline and achieves new state-of-the-art results.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/10/2608.06865v1-multi-agent-forensic-reasoning-for-generalizable-deepfake-video-detection",
+      "section": "deep",
+      "title_en": "Multi-Agent Forensic Reasoning for Generalizable Deepfake Video Detection",
+      "authors": "Xuechao Zou, Shun Zhang, Kai Li, Yi Zhou, Xinyu Sun, Yuhui Chen, Zhe Wu, Congyan Lang, Junliang Xing",
+      "date": "2026-08-07",
+      "pdf": "https://arxiv.org/pdf/2608.06865v1",
+      "score": "10.0",
+      "evidence": "提出用于可泛化深度伪造视频检测的数据集和多智能体方法。",
+      "tldr": "现有深度伪造视频检测面临生成方法多样、标注稀缺及泛化不足的挑战。我们构建了包含10万视频、33种合成方法的大规模数据集FaceVid-Forensics-100K，并提供细粒度注释；提出多智能体取证推理框架，从纹理、光照、运动、物理四视角协同分析。在域外测试中，仅由小型开源多模态大模型组成的框架超越闭源GPT和Gemini等所有方法，排名第一。该工作为高泛化性深度伪造检测提供了新基准与有效框架。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "The malicious use of generative artificial intelligence to create highly realistic deepfake videos raises serious ethical concerns and poses substantial challenges to AI safety. However, existing deepfake video benchmarks provide limited coverage of recent synthesis methods and generally lack reliable fine-grained textual annotations. Meanwhile, conventional detectors and multimodal large language models (MLLMs), whether operating as a single model or relying on a single analytical perspective, often fail to capture subtle forgery artifacts, limiting their generalization to emerging AI-generated methods. To address these limitations, we introduce FaceVid-Forensics-100K, a large-scale deepfake video dataset comprising 100,000 videos and spanning 33 synthesis methods across face swapping, face reenactment, and entire-face synthesis, including recent generators such as Seedance 2.0. The dataset provides fine-grained textual annotations of visual observations and verdict-consistent forensic explanations, automatically synthesized through a multi-model aggregation and conflict-resolution pipeline powered by advanced MLLMs. Building on this benchmark, we propose a multi-agent forensic reasoning framework that employs four specialized domain-expert agents to independently analyze forgery cues from four perspectives: texture, lighting, motion, and physics. A judge agent then reconciles their reports to produce a final prediction together with an explanation. Extensive evaluations on out-of-domain test sets show that, despite being composed entirely of small open-source MLLMs, our framework outperforms all methods including closed-source GPT and Gemini models and ranks first across all reported metrics on this benchmark. The project page is available at https://xavierjiezou.github.io/ARGUS/.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/10/2608.04379v1-image-classification-using-cnn-qnn-hybrid-model-with-optimized-correlated-features",
+      "section": "deep",
+      "title_en": "Image Classification Using CNN-QNN Hybrid Model with Optimized Correlated Features",
+      "authors": "Minseo Seong, Youngwook Kim",
+      "date": "2026-08-05",
+      "pdf": "https://arxiv.org/pdf/2608.04379v1",
+      "score": "9.0",
+      "evidence": "提出用于图像分类的CNN-量子神经网络混合模型，直接匹配使用CNN进行图像分类的需求",
+      "tldr": "量子神经网络(QNN)能利用纠缠表示相关特征，但现有混合模型中CNN常输出不相关特征，限制了QNN优势。本文提出对CNN特征施加相关性正则化，使其近似目标相关值（如0.5），以匹配QNN的纠缠结构。在CIFAR-10、Fashion-MNIST和雷达微多普勒分类任务上，该方法一致提升准确率并降低方差。研究表明，恰当的特征相关性设计可充分释放QNN潜力，有望超越经典模型。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "We propose a method to optimize the correlation among convolutional neural network (CNN) features that are used as inputs to quantum neural network (QNN) to enhance image classification accuracy. Unlike prior approaches that employ orthogonal decomposition as preprocessing, we intentionally introduce correlated features that are more physically compatible with QNN. This design leverages the QNN's inherent ability to exploit quantum entanglement for representing correlated states-an advantage unavailable to classical neural networks. We hypothesize that aligning feature correlations with the entanglement structure of QNN improves binary classification performance. Based on a mathematical derivation of QNN outputs, Monte Carlo simulations indicate that an average correlation between features of 0.5 yields optimal classification accuracy. To validate this finding, we evaluate a quantum-classical hybrid model on three tasks: CIFAR-10 (automobile vs. truck), Fashion-MNIST (shirt vs. coat), and radar micro-Doppler signatures (robotic dogs vs. non-robots). To regulate feature correlations, we introduce a correlation-regularization term on the outputs of the CNN, driving the off-diagonal entries of the feature correlation matrix toward a target constant. Across all datasets, inducing intermediate correlation consistently improved accuracy compared to low, high, or unregulated correlations, while also reducing classification accuracy variance. These results demonstrate that imposing moderate feature correlations-without modifying the quantum circuit-enhances classification accuracy and stability by aligning feature statistics with the QNN's entanglement structure. This study highlights the potential of QNN to surpass the performance of classical classifiers as more qubits become available.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/10/2608.06580v1-improving-low-resolution-face-recognition-under-limited-data-how-synthetic-data-generation-can-close-the-domain-gap",
+      "section": "deep",
+      "title_en": "Improving Low-Resolution Face Recognition under Limited Data: How Synthetic Data Generation Can Close the Domain Gap",
+      "authors": "Luis S. Luevano, Ünsal Öztürk, Hatef Otroshi Shahreza, Anjith George, Sébastien Marcel",
+      "date": "2026-08-06",
+      "pdf": "https://arxiv.org/pdf/2608.06580v1",
+      "score": "8.0",
+      "evidence": "研究合成数据生成以改进有限标记数据下的低分辨率人脸识别。",
+      "tldr": "低分辨率(LR)人脸识别因缺标注原生数据，常由高分辨率(HR)图像合成LR训练样本。本文针对边缘设备探究插值退化、知识蒸馏、前置域变换及身份感知超分等合成策略。在合成基准与真实数据集TinyFace上评估，揭示合成与真实域间的差距；更多合成努力未必带来提升，学习超分前端未超直接输入，简单插值增强是唯一改善基线的方法。强调生成方法须在真实LR数据上验证，并开源分析管道。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Face Recognition (FR) systems in surveillance settings often encounter Low Resolution (LR) faces, those whose face region falls below the standard 112 $\\times$ 112 input size. While labelled High Resolution (HR) training data is abundant, labelled native-LR data, and above all paired native LR/HR data, is scarce. One workaround is to synthesize LR data from the available HR faces, but how much synthesis effort is repaid in recognition accuracy remains unclear. We present a study of simple synthetic generation strategies for a compact, edge device-oriented face recognition system, spanning interpolation-based degradation, knowledge distillation, a Prepended Domain Transformer (PDT), Real ESRGAN-style degradation, and a learned Super Resolution (SR) front-end with an identity-aware loss. We evaluate these strategies on synthetic cross-resolution face benchmarks (LFW, CFP-FP, AgeDB-30) and on TinyFace, a real-world native LR dataset, and expose a synthetic-real gap: the degradation setting that is optimal on synthetic benchmarks is not the one that is optimal on real LR. We find that more synthesis effort does not help monotonically: the learned SR front-end does not surpass a direct feed of the aligned LR image into a strong backbone, while simple interpolation augmentation of a compact backbone is the only synthesis that improves over its own baseline. We conclude that generative methods for LR face recognition must be validated on real LR and against a direct-feed baseline, and release our pipeline at https://idiap.ch/paper/synth-lrfr",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

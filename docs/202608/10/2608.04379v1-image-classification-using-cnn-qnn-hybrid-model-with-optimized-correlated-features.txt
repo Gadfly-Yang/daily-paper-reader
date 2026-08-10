@@ -1,0 +1,582 @@
+Title: Image Classification Using CNN-QNN Hybrid Model with Optimized Correlated Features
+
+URL Source: https://arxiv.org/pdf/2608.04379v1
+
+Published Time: Thu, 06 Aug 2026 00:29:31 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# Image Classification Using CNN-QNN Hybrid Model with Optimized Correlated Features 
+
+## Minseo Seong Youngwook Kim Sogang University 
+
+r0sa@sogang.ac.kr youngkim@sogang.ac.kr 
+
+## Abstract 
+
+We propose a method to optimize the correlation among con-volutional neural network (CNN) features that are used as inputs to quantum neural network (QNN) to enhance image classification accuracy. Unlike prior approaches that employ orthogonal decomposition as preprocessing, we intentionally introduce correlated features that are more physically com-patible with QNN. This design leverages the QNN’s inherent ability to exploit quantum entanglement for representing cor-related states—an advantage unavailable to classical neural networks. We hypothesize that aligning feature correlations with the entanglement structure of QNN improves binary classification performance. Based on a mathematical deriva-tion of QNN outputs, Monte Carlo simulations indicate that an average correlation between features of 0.5 yields op-timal classification accuracy. To validate this finding, we evaluate a quantum–classical hybrid model on three tasks: CIFAR-10 (automobile vs. truck), Fashion-MNIST (shirt vs. coat), and radar micro-Doppler signatures (robotic dogs vs. non-robots). To regulate feature correlations, we introduce a correlation-regularization term on the outputs of the CNN, driving the off-diagonal entries of the feature correlation matrix toward a target constant. Across all datasets, induc-ing intermediate correlation consistently improved accuracy compared to low, high, or unregulated correlations, while also reducing classification accuracy variance. These results demonstrate that imposing moderate feature correlations— without modifying the quantum circuit—enhances classifica-tion accuracy and stability by aligning feature statistics with the QNN’s entanglement structure. This study highlights the potential of QNN to surpass the performance of classical classifiers as more qubits become available. 
+
+## 1. Introduction 
+
+Recent progress in quantum neural network (QNN), which utilizes quantum phenomena such as superposition and en-tanglement, has led to hybrid models combining classical 
+
+Figure 1. Overview of the proposed model. An input image is processed by a classical CNN to extract 8-dimensional latent fea-tures. A correlation regularization module enforces a predefined level of inter-feature correlation before quantum encoding. The features are mapped onto a quantum feature map and a variational quantum circuit. This framework enables improved accuracy and stability by controlling classical feature statistics with the quantum entanglement structure. 
+
+feature extractors like convolutional neural network (CNN) and QNN classifiers for image recognition. This architecture leverages the expressive power of quantum representations while operating under the constraints of noisy intermediate scale quantum (NISQ) devices with limited number of qubits [23]. This model has the potential to outperform classical deep learning methods for image classification [2, 12]. When implementing QNN using quantum circuits, deep circuits with many quantum gates—analogous to layers in deep learning—are discouraged. This is because increasing circuit depth accumulates noise and reduces coherence [4], and may lead to barren plateaus, a vanishing gradient in QNN [20]. To enhance QNN performance with reduced circuit depth, utilizing quantum entanglement enhances the ability to represent quantum states [27]. Therefore, it is desirable to improve shallow, qubit-limited QNN without increasing circuit depth by better utilizing quantum entanglement. Entanglement produces nonclassical dependencies among qubits, which is the joint state that cannot be written as a arXiv:2608.04379v1 [cs.CV] 5 Aug 2026 product of single-qubit states. In quantum data encodings, each feature is encoded onto a qubit and entangling gates exposes multi-qubit interactions, distinguishing QNN from classical models. We therefore expect that classical and quantum models handle data in different ways. In classi-cal models, orthogonal feature extraction is often applied to reduce redundancy. However, the effect of correlations among classical input features on quantum models, where entanglement is the main resource, remains underexplored. This study proposes optimizing the feature correlations to improve image classification accuracy in a hybrid CNN– QNN model. Conventionally, features obtained from the orthogonal decomposition of input data have been used as inputs to QNN [11, 14, 15], ensuring zero correlation be-tween features. In contrast, we hypothesize and validate that moderate correlation among classical input features is neces-sary to harness the idiosyncrasies of using QNN. Intuitively, entanglement induces interactions between qubits to induce correlation between them. Because the states of the qubits are determined by the value of the classical feature, quantum states are affected by classical correlations among features. If inputs are aggressively decorrelated, entangled states may carry little information, whereas excessive correlation col-lapses effective dimensionality and increases redundancy. Thus, introducing a moderate correlation provides a balance between them. This mirrors the transition effect reported by Wang et al . [28]: with limited measurement shots, in-creasing entanglement—quantified by Schmidt rank—first reduces error and then increases it, yielding an intermediate optimum. We suggest a correlation-regularized hybrid CNN–QNN architecture that explicitly optimizes input feature correla-tions to maximize classification accuracy. Our model con-sists of a CNN feature extractor followed by a QNN classifier implemented as a phase-encoded variational quantum circuit (VQC). We propose a covariance-based correlation loss that forces off-diagonal elements of the feature covariance matrix toward a target value, thereby encouraging controlled feature correlation. To evaluate the hybrid model’s performance, we first mathematically analyze the relationship between fea-ture correlation and classification accuracy on random data. Then binary classification experiments are conducted on the Fashion-MNIST and CIFAR-10 image datasets, as well as on radar micro-Doppler signatures. As a result, we verify that an intermediate level of feature correlation enhances the performance of CNN–QNN. Our contributions are summarized as follows: (1) a regu-larization method that aligns input feature correlation with quantum entanglement, (2) a mathematical analysis and quantification of the influence of input feature correlations on QNN classification performance, revealing an optimal correlation regime, and (3) an empirical demonstration of improved accuracy and stability across three image datasets through inducing intermediate feature correlation. The remainder of this paper is organized as follows. Secs. 2 and 3 respectively review related works and the fun-damental concepts of quantum computing and QNN. Sec. 4 presents our hybrid CNN–QNN model and details the cor-relation control mechanism. Sec. 5 provides a numerical analysis of the relationship between input correlation and QNN performance. Sec. 6 describes the experimental setup and results across multiple datasets. Sec. 7 concludes the paper with a summary and future directions. 
+
+## 2. Related Work 
+
+Decorrelation In classical deep learning, a common strat-egy for feature extraction is to decorrelate features or weights. This strategy helps reduce redundancy and avoid overfitting, thereby improving generalization in both supervised and self-supervised settings. Falez et al . [7] applied whiten-ing methods such as principal component analysis and zero phase component analysis to decorrelate inputs for spiking neural network, and reported improved classification accu-racy for the CIFAR-10 dataset over unwhitened baselines. Pan et al . [22] showed that replacing batch/instance normal-ization with layers applying decorrelating activations yields consistent gains across classification, segmentation, and do-main adaptation. In the self-supervised learning area, Barlow Twins [29] aligns two augmented views while driving the cross-correlation matrix toward the identity, suppressing off-diagonal terms and thus decorrelating features. Cogswell et al . [6] showed that strong correlations among hidden layers in deep networks are closely tied to overfitting, and proposed a method that explicitly minimizes cross-covariance between features to encourage diversity. Similarly, Rodriguez et al .[25] demonstrated that enforcing local orthogonality among CNN weights effectively reduces overfitting and enhances the model’s generalization performance. However, these decorrelation strategies are largely confined to classical deep learning pipelines. On the quantum side, the effect of clas-sical input correlations on QNN performance has received limited attention. 
+
+Hybrid QNN Hybrid quantum–classical models have been applied to image classification [1, 2, 8, 12, 24], stock mar-ket forecasting [5], and radar signal classification [10, 19]. Across these studies, the emphasis is on architectural combi-nations (CNN [2, 10, 12] and graphical neural network [24] feature extractors with VQC), encoding methods (A Flex-ible Representation of Quantum Images [8, 18] and Adap-tive Threshold Pruning [1]), and training regimes (frozen vs. end-to-end [24]). Prior work even avoids entanglement altogether [12]. However the correlation structure of the clas-sical feature vectors fed into a VQC has not been explicitly analyzed or controlled. This gap motivates our correlation-regularized hybrid CNN–QNN: we align classical feature covariance with quantum entanglement to improve shallow, qubit-limited VQCs without increasing circuit depth. 
+
+## 3. Preliminaries 
+
+QNN is composed of quantum gates. A quantum gate that acts on qubits is a basic building block of a quantum circuit. This section outlines the fundamental concepts used in the remainder of this study [21]. 
+
+3.1. Qubits 
+
+Quantum computers use quantum bits, or qubits, as their fundamental units of computation. In quantum computing, a qubit can be in a quantum state, which can be a superposition of basis states |0⟩ and |1⟩. Here, quantum state |ψ⟩ is denoted as: |ψ⟩ = α |0⟩+β |1⟩, where α and β are complex numbers whose absolute squares represent the likelihood of the qubit being measured in each state. These single-qubit states can also be described in a 2-dimensional column vector: |0⟩ =[ 10 ], |1⟩ = [ 01 ], |ψ⟩ = [ αβ ]. By using the Bloch sphere, a single qubit can be expressed geometrically, then |ψ⟩ can be written as: |ψ⟩ = cos   θ
+
+> 2
+
+ |0⟩ + ejϕ sin   θ
+
+> 2
+
+ |1⟩, where θ
+
+is the polar angle from the |0⟩ state, and ϕ is the azimuthal angle. In a multiple-qubit system, the quantum state of each qubit can exhibit correlations with the others, a phenomenon referred to as quantum entanglement. For example, one of the Bell states that represents maximum entanglement between two qubits is 1√2 (|00 ⟩ + |11 ⟩). This state means perfectly correlated qubits. If the first qubit is 0, the second is also 0; if the first is 1, the second is 1. In other words, entangled states cannot be written as a product of single-qubit states; they are non-separable and exhibit correlations. 
+
+3.2. Quantum Gate 
+
+Similar to logic gates in classical computers, quantum com-puters operate using quantum gates. Key examples include the Hadamard gate, Pauli gates, rotation gates, and con-trolled not (CNOT) gate. (i) Hadamard gate initializes a qubit into a superposition. (ii) Pauli gates include four types of gates: identity, Pauli-X, Pauli-Y, and Pauli-Z gate, defined in Eq. (1). 
+
+I =
+
+1 00 1
+
+
+
+, X =
+
+0 11 0
+
+
+
+,Y =
+
+0 −jj 0
+
+
+
+, Z =
+
+1 00 −1
+
+ (1) The identity gate does not change the state of a qubit; The Pauli-X gate flips the state of a qubit between |0⟩ and |1⟩;The Pauli-Y gate also flips the qubit state, but introduces a phase difference, combining both bit-flip and phase-flip operations; The Pauli-Z gate applies a phase flip to the |1⟩
+
+component, leaving |0⟩ unchanged. (iii) Rotation gates im-plement unitary operations that rotate the state of a single qubit by a defined angle( θ) around the x-, y-, or z-axis on the Bloch sphere. They are defined as Rx(θ) = e−j θ  
+
+> 2X
+
+,
+
+Ry (θ) = e−j θ  
+
+> 2Y
+
+and Rz (θ) = e−j θ  
+
+> 2Z
+
+respectively. (iv) CNOT gate operates on two qubits, flipping the state of the target qubit when the control qubit is in the |1⟩ state. 
+
+3.3. Quantum Neural Network (QNN) 
+
+QNN aims to find a function fθ (x) for an input data sample 
+
+x that predicts the class of x. It is composed of a feature map and a VQC, denoted by U (x) and W (θ), respectively. Both the feature map and VQC are sequences of quantum gates. The feature map embeds classical data x into angles of rotation gates, thereby encoding it into quantum states. VQC includes rotation gates parameterized by angles θ, which serve as trainable parameters and are optimized iteratively according to a predefined objective function. A value for 
+
+fθ (x) corresponds to the expectation value of an observ-able ˆH with respect to quantum states prepared by quantum circuits, represented as: 
+
+|ψ(θ)⟩ = W (θ)U (x) |0⟩ . (2) The observable ˆH represents any measurable physical quan-tity from a qubit. It is a Hermitian operator expressed as linear combination of Pauli operators. As a result, the func-tion fθ (x) can be written as Eq. (3). 
+
+fθ (x) = ⟨ψ(θ)| ˆH|ψ(θ)⟩
+
+= ⟨0|H U †(x) W †(θ) ˆH W (θ) U (x) H|0⟩ (3) When it comes to optimizing the parameters of the VQC, backpropagation using automatic differentiation cannot be directly applied to QNN. This is due to the nature of quan-tum measurement, which irreversibly collapses the quantum state and makes reuse impossible. To estimate the gradient of expectation value with respect to a parameter of quantum gate, the parameter-shift rule [26] is commonly used. This rule allows the computation of exact gradients for specific gates by evaluating the quantum circuit at shifted parameter values: ∂g (μ) 
+
+> ∂μ
+
+= r [g(μ + s) − g(μ − s)] , where s = π 
+
+> 4r
+
+.Here g(μ) is the expectation value of a Hermitian observable measured on a quantum state prepared with parameter μ,and r is the magnitude of the eigenvalues of the Hermitian generator of the quantum gate. This method enables gradi-ent estimation without requiring access to internal quantum states or backpropagation through the quantum layer. 
+
+## 4. Proposed Methodology 
+
+In our study, a combination of CNN for feature extraction and QNN for classification is employed as shown in Fig. 2. Figure 2. Proposed framework. 
+
+Feature extractor extracts features from an input image, then the features are encoded to quantum states using a quantum feature map, followed by a VQC and an estimator to predict the label of the input image. Beyond a standard hybrid CNN–QNN, we add a correlation regularizer to the CNN output. The regularizer steers the batch correlation matrix of the latent features toward a predefined target. 
+
+4.1. Structure of Suggested Quantum Classifier 
+
+We consider a d-qubit quantum classifier composed of two stages as shown in Fig. 3: a feature map U (X) and a VQC 
+
+W (θ). Let X = [ x(i) 
+
+> j
+
+]B,d i=1 ,j =1 ∈ RB×d, x (i) ∈ Rd where B
+
+is the batch size and d is the dimensionality of the classical latent vector extracted from the classical CNN encoder. First, all qubits are initialized to |0⟩ states, followed by applying the Hadamard gate to prepare |+⟩ = 1√2 (|0⟩ + |1⟩) states. For the next step, we adopt the ZFeatureMap [13] as: 
+
+U (x(i)) = 
+
+> d
+
+Y
+
+> j=1
+
+Rz (2 xj )(j) (4) where Rz ( · )(q) is the single qubit Z-rotation acting on qubit 
+
+q, Zq denotes the Pauli-Z gate acting on qubit q. Thus, 
+
+U (X) encodes each classical feature xj into the phase of the corresponding qubit via a Z-rotation. This study proposes composing the W (θ) of VQC into two parts as depicted in Fig. 3: initial rotation layer and reverse entangling chain layer. Let θ = (α1, . . . , α d,β1, . . . , β d−1) be the set of trainable parameters of the VQC. Here αj corresponds to a single-qubit rotation angle in the initial rotation layer, and βk corresponds to the rotation ap-plied during the reverse entangling chain layer. We define the initial rotation layer as: 
+
+W1(α) = 
+
+> d
+
+Y
+
+> j=1
+
+Ry (αj )(j) (5) which rotates each qubit about y-axis by an angle α. The reverse entangling chain layer is defined by Eq. (6). 
+
+W2(β) = 
+
+> d−1
+
+Y
+
+> k=1
+
+Ry (βk)(k) CNOT (k+1) →(k) (6) 
+
+> Figure 3. Quantum circuit configuration.
+
+Here we denote the CNOT gate with control qubit c and target qubit t as CNOT c→t. This layer applies CNOT gates and Ry rotations from qubits with higher indices to those with lower indices, compressing the information into the first qubit. The variational layer W (θ) is given by: 
+
+W (θ) = W2(β)W1(α) (7) This architecture is designed to progressively accumulate correlations toward the first qubit. The CNOT gate con-trols the state of target qubit based on the state of control qubit. Therefore, the target qubit captures information of the control qubit. For our VQC, the CNOT gates are ar-ranged in reverse order, from higher-index qubits toward lower-index qubits. Thus multi-qubit correlations are gen-erated and gradually transferred to the first qubit during the reverse entangling chain layer. Under this design, measuring a single-qubit observable ˆH = Z ⊗ I⊗(d−1) := Z1 on the first qubit suffices to extract information about the entire system state, reducing shot complexity and training time. Consequently, the overall parameterized quantum state is given by: 
+
+fθ (X) = ⟨ψ(θ)| Z1 |ψ(θ)⟩ ,
+
+where |ψ(θ)⟩ = W (θ) U (X) H |0⟩ (8) We adopt the negative log-likelihood loss for binary clas-sification. Because the expectation value of any observable in quantum mechanics takes a value between -1 and 1, we rescale fθ (x(i)) into probability pi = 1+ fθ (x(i))2 . Given the label yi ∈ { 0, 1}, the classification loss is defined as: 
+
+Lclassification = − 1
+
+> B
+
+PBi=1 (yi log ( pi)+(1 −yi) log 1 − (pi)) .
+
+4.2. Control of Feature Correlation 
+
+To investigate the effect of correlation of input feature from CNN on QNN performance, we proposed introducing a cor-relation loss that enforces a predefined correlation structure (a) Cor = 0 .0 (b) Cor = 0 .5 (c) Cor = 1 .0
+
+Figure 4. Examples of feature correlation matrices targeting (a) 
+
+Cor = 0 .0, (b) Cor = 0 .5, and (c) Cor = 1 .0.
+
+among the input latent vectors. To calculate covariance-based correlation matrix, we normalize the features to have zero mean and unit variance across the batch. The empir-ical correlation matrix C ∈ Rd×d is then computed as: 
+
+C = 1 
+
+> B−1
+
+XT
+
+> norm
+
+Xnorm , where Xnorm is the normalized X.We define a target correlation T ∈ Rd×d where all diagonal elements are fixed to 1 and all off-diagonal elements are set to a constant Cor that is a correlation coefficient. The corre-lation loss is computed as the mean squared error between the empirical and target correlation matrices: 
+
+Lcorrelation = 1
+
+d2
+
+> d
+
+X
+
+> i=1
+> d
+
+X
+
+> j=1
+
+(Cij − Tij )2. (9) Examples of correlation matrices computed on the test dataset are shown in Fig. 4. Each matrix results from train-ing with a target correlation Cor = {0.0, 0.5, 1.0} and the corresponding target matrix T . During training, the CNN–QNN model is optimized end-to-end using a total loss 
+
+L = Lclassification + Lcorrelation . The empirical correlations do not exactly match the targets due to finite-batch estimation, but the deviations are minor. 
+
+## 5. Analysis of Correlation-Classification Accu-racy Relationship 
+
+We mathematically analyze how the correlation between input features affects the classification accuracy of the quan-tum classifier. To examine this effect, we first derive the expression for the QNN output by analyzing the expectation value of a single-qubit observable after passing through the circuit. This is done using a Heisenberg picture formulation, in which the observables vary with time while the states are fixed, unlike the Schr¨ odinger picture [21]. We then perform Monte Carlo simulation by calculating the QNN output on random data with different correlation levels. Each dataset is generated with a fixed correlation coefficient Cor , and the corresponding classification accuracy is computed. This combined analysis allows us to examine how Cor affects model performance and to identify the correlation range that maximizes accuracy. By using the Heisenberg picture, the output of the QNN in Eq. (8) is expressed as: 
+
+fθ (x) = ⟨+|U (x)†W1(α)†W2(β)†
+
+× Z1W2(β)W1(α)U (x)|+⟩
+
+= ⟨+|U (x)†W1(α)† ˆO1W1(α)U (x)|+⟩
+
+= ⟨+|U (x)† ˆO2U (x)|+⟩
+
+= ⟨+| ˆO3|+⟩
+
+(10) where ˆO1 = W2(β)†Z1W2(β), ˆO2 = W1(α)† ˆO1W1(α),and ˆO3 = U (x)† ˆO2U (x). The evaluation reduces to com-puting the expectation of the effective observable ˆO3 with respect to |+⟩. Prior to the main derivation, there are a few identities to use [21]: 
+
+Ry (θj )(i)†ZiRy (θj )(i) = Zi cos( θj ) + Xi sin( θj ):= Zicj − Xisj (11) 
+
+Ry (θj )(i)†XiRy (θj )(i) := Xicj + Zisj (12) 
+
+Rz (θj )(i)†XiRz (θj )(i) := Xicj − Yisj (13) CNOT †
+
+> (c→t)
+
+Zt CNOT (c→t) = ZcZt (14) CNOT †
+
+> (c→t)
+
+Xt CNOT (c→t) = Xt (15) Using these identities, steps to evaluate effect of Cor on classification accuracy are as follows: step 1 derives ˆO1, step 2 derives ˆO2, step 3 derives ˆO3, step 4 derives the closed-form expression for fθ (x); and step 5 describes the Monte Carlo simulation used to evaluate classification accuracy based on fθ (x).
+
+Step 1: ˆO1 To derive ˆO1, we examine Eq. (10) by increas-ing k and capturing the general pattern. For k = 1 , which means applying CNOT (2) →(1) followed by Ry (β1)(1) , ˆO1
+
+for k = 1 is expressed as: 
+
+ˆO(k=1) 1 = CNOT †
+
+> (2) →(1)
+
+Ry (β1)(1) †Z1 · · · 
+
+Ry (β1)(1) CNOT (2) →(1) 
+
+(16) After that it simplifies to: 
+
+ˆO(1) 1 = CNOT †
+
+> (2) →(1)
+
+(Z1c1 − X1s1)CNOT (2) →(1) 
+
+= c1Z2Z1 − s1X1
+
+(17) according to Eqs. (11), (14) and (15). For k = 2, a similar procedure is applied, with the difference that it only influences qubits 2 and 3. Consequently, we obtain: 
+
+ˆO(2) 1 = c1c2Z3Z2Z1−c1s2X2Z1−s1X1, and with the same procedure, ˆO(3) 1 = c1c2c3Z4Z3Z2Z1 − c1c2s3X3Z2Z1 −
+
+c1s2X2Z1 − s1X1. Therefore, the general form can be cap-tured as: 
+
+ˆO1 =
+
+
+
+> d−1
+
+Y
+
+> j=1
+
+cj
+
+ ZdZd−1 · · · Z1
+
+−
+
+> d−1
+
+X
+
+> r=1
+
+
+
+> r−1
+
+Y
+
+> j=1
+
+cj
+
+ sr Xr Zr−1 · · · Z1
+
+
+
+(18) 
+
+Step 2: ˆO2 For ˆO2 = W1(α)† ˆO1W1(α), we ana-lyze the first and second terms of Eq. (18) separately. For the first term of ˆO1 in Eq. (18), W1(α) applies 
+
+Ry (α1)(1) , R y (α2)(2) , · · · to each Z1, Z 2, · · · indepen-dently, to be (Qd−1 
+
+> j=1
+
+cj ) Qdj=1 (Zj cos( αj ) − Xj sin( αj )) ac-cording to Eq. (11). However, we prune Pauli strings con-taining at least one Z at the ˆO2 stage in advance as: 
+
+
+
+> d−1
+
+Y
+
+> j=1
+
+cos( βj ) ( − sin( αj )) Xj
+
+ (− sin( αd)) Xd (19) The reason is that in the next step we apply only Z-rotations 
+
+U (X) = Qdj=1 Rz (2 xj )(j), which do not change any Z
+
+(i.e. Rz (θ)†ZR z (θ) = Z). Therefore any Zj remains Zj
+
+afterward. Since the final state is |+⟩ and ⟨+| Z |+⟩ = 0 ,every Pauli string containing a Zj contributes zero and can be discarded. In the second term of ˆO1, rth summation term is transformed into: 
+
+
+
+> r−1
+
+Y
+
+> j=1
+
+cj
+
+ sr (Xr cos( αr ) + Zr sin( αr )) ×
+
+(Zr−1 cos( αr−1) − Xr−1 sin( αr−1)) · · · 
+
+(Z1 cos( α1) − X1 sin( α1)) 
+
+(20) Again, we can prune these as follows. 
+
+> d−1
+
+X
+
+> r=1
+
+" 
+
+> r−1
+
+Y
+
+> j=1
+
+cos( βj )( − sin( αj )) Xj
+
+ ×
+
+sin( βr ) cos( αr )Xr
+
+# (21) To sum up, ˆO2 is rewritten as Eq. (22). 
+
+ˆO2 = A1X1 · · · Xd +
+
+> d−1
+
+X
+
+> r=1
+
+A2X1 · · · Xr
+
+where A1 =
+
+
+
+> d−1
+
+Y
+
+> j=1
+
+cos( βj )( − sin( αj )) 
+
+ (− sin( αd)) ,A2 = −
+
+
+
+> r−1
+
+Y
+
+> j=1
+
+cos( βj )( − sin( αj )) 
+
+ sin( βr ) cos( αr ).
+
+(22) 
+
+Step 3: ˆO3 By Eq. (13) and for Pauli-Y is also 
+
+⟨+| Y |+⟩ = 0 , ˆO3 = U (x)† ˆO2U (x) is rewritten as below: 
+
+ˆO3 = A1
+
+> d
+
+Y
+
+> j=1
+
+(cos(2 xj )Xj )+
+
+> d−1
+
+X
+
+> r=1
+
+A2
+
+> r
+
+Y
+
+> j=1
+
+(cos(2 xj )Xj )
+
+(23) 
+
+Step 4: fθ (x) Since ⟨+| X |+⟩ = 1 and ⟨+| I |+⟩ = I,
+
+fθ (x) is summarized as: 
+
+fθ (x) = A1
+
+> d
+
+Y
+
+> j=1
+
+cos(2 xj ) + 
+
+> d−1
+
+X
+
+> r=1
+
+A2
+
+> r
+
+Y
+
+> j=1
+
+cos(2 xj ) (24) With the derived form of fθ (x), the output of the model can be computed in closed form for any given parameters α, β 
+
+and inputs x.
+
+Step 5: Investigation of Classification Accuracy De-pending on Classical Feature Correlation Using the fθ (x)
+
+in Eq. (24), we simulate the classification accuracy on ran-dom data samples with various correlation matrices. Under the assumption that the outputs of the feature extractors are approximately normally distributed [9], synthetic data were generated with various dimensions and two classes. Specifi-cally, samples from Class 1 were drawn from N (0 , T ), while samples from Class 2 were drawn from N (μ, T ), where μ
+
+varied within {0.6, 0.8, . . . , 1.40 }. Both classes contained an equal number of samples to ensure balanced datasets. Each experiment is repeated five times with different ran-dom seeds, and results are averaged. Dataset has 10,000 samples in total for each setting, and they are split into 8:2 for training and test. α and β are assumed to be distributed as 
+
+N (0 , 1) . We treat fθ (x) as a one-dimensional score and find a scalar threshold by exhaustive search on sorted training scores. Fig. 5 reports classification accuracy across d ∈{8, 32 , 100 , 1000 } and Cor ∈ {0, 0.2, 0.4, 0.5, 0.6, 0.8,
+
+0.99 }. The results show that the accuracy peaks at Cor =0.5 across all tested dimensions, which is consistent with our hypothesis. As Cor increases from 0.0 to 0.5, correlated fea-tures better align with the entanglement pattern of the circuit. However, beyond Cor = 0 .6, excessive correlation reduces feature diversity and compresses the effective input dimen-sion, leading to performance degradation. These trends are stable across μ, indicating that the observed optimum is not specific to a single data distribution. We therefore verify it on practical image datasets in the next section. 
+
+## 6. Verification Using Experimental Data 
+
+6.1. Experimental Data Setup 
+
+We evaluate three binary classification tasks using the pro-posed correlation-regularized hybrid CNN–QNN: Fashion-(a) d = 8 (b) d = 32         
+
+> (c) d= 100 (d) d= 1000
+> Figure 5. Accuracy vs. Cor across various dimensions d.
+> Figure 6. Examples for Fashion-MNIST and CIFAR-10.
+
+MNIST (coat vs. shirt), CIFAR-10 (automobile vs. truck), and radar micro-Doppler signatures (robot vs. non-robot). For Fashion-MNIST and CIFAR-10, we selected the most confusing class pairs as depicted in Fig. 6. Micro-Doppler signatures are measured using frequency-modulated continuous-wave radar and spectrograms are generated by applying short-time Fourier transform. The Micro-Doppler signature refers to frequency shifts caused by micro-motions such as vibration, rotation, and limb motion [3]. Such micro-Doppler analysis has been widely used for target detection and classification [16, 17, 30]. In this dataset, to classify robotic dogs and non-robots, a Unitree GO2 robotic dog and four non-robot targets—dogs, walking person, person riding a bicycle, and person riding an electric scooter—were mea-sured as shown in Fig. 7. Experiments for micro-Doppler signatures involving human subjects were approved by an Institutional Review Board (IRB) at Sogang University (IRB Number: SGUIRB-A-2501-06). Input shapes and class sizes are: CIFAR-10 3×32×32, 6,000 samples per class; Fashion-MNIST 1×28×28, 7,000 per class; micro-Doppler 1×1500×26, 8,459 per class. All datasets are class-balanced. Each dataset is split 0.64:0.16:0.20 for training, validation, and testing.      
+
+> (a) (b) (c)
+> (d) (e) (f)
+> Figure 7. Measurement setup and examples for micro-Doppler signature. (a)measurement setup, (b) a robotic dog, (c) a dog, (d) a walking person, (e) a person riding a bicycle, and (f) a person riding an electric scooter. The left signatures represent targets approaching the radar, while the right ones correspond to targets moving away from the radar. In (b)-(f), the vertical axis denotes Doppler frequency; the horizontal axis denotes time; color indicates spectrogram magnitude.
+
+As the CNN feature extractor, we investigate a shallow CNN with a single convolutional layer followed by rectified linear unit (ReLU) and adaptive average pooling layer, and ResNet-18. Both extract 8 features that are encoded onto 8 qubits. The CNN output is connected to the QNN classifier via a TorchConnector interface, and we jointly optimize all parameters with Adam to minimize L = Lclassification +
+
+Lcorrelation . All quantum experiments are executed on a Qiskit simulator. To study the effect of correlation control, we sweep the target correlation parameter Cor ∈ { 0, 0.2, . . . , 
+
+0.99 }, train the correlation regularized hybrid model, and evaluate classification performance. We also compare with a hybrid model not controlling correlations. We use 5-fold cross-validation and report the mean and standard deviation of accuracy across folds. 
+
+6.2. Classification Results 
+
+The classification results are shown in Tabs. 1 and 2 Each table reports the results using a shallow CNN and ResNet-18 as a feature extractor, respectively. The left blocks of the table correspond to training with the loss function 
+
+L = Lclassification + Lcorrelation as described in Sec. 4, and its columns sweep the target correlation Cor . The rightmost columns labeled Lclassification are the baseline without the cor-relation regularization. For each dataset, we report the mean accuracy and standard deviation over five folds. Bold entries indicate the best mean accuracy within each dataset Across backbones and datasets, it is shown that induc-ing a correlation Cor ∼= 0 .5 improves classification accu-racy and reduces standard deviation. The accuracy optimum Table 1. Results comparison for a shallow CNN.                                                           
+
+> Loss function
+> L=Lclassification +Lcorrelation
+> Lclassification
+> Cor
+> 0.0 0.2 0.4 0.5 0.6 0.8 1.0
+> Fashion-MNIST (shirt vs. coat)
+> Acc. [%] 86.26 85.39 86.02 86.18 85.93 85.80 86.04 86.36
+> Std. [pp] 1.66 0.72 0.72 1.39 0.70 1.63 0.75 0.67
+> (unstable)
+> CIFAR-10 (truck vs. automobile)
+> Acc. [%] 85.10 85.19 86.00 85.60 85.15 85.80 85.10 85.48 Std. [pp] 0.57 0.71 0.57 0.57 0.51 1.63 0.76 0.60
+> (unstable)
+> Radar micro-Doppler (robot vs. non-robot)
+> Acc. [%] 93.75 94.22 94.56 95.33 95.09 94.30 94.61 92.21 Std. [pp] 1.84 1.85 0.90 0.96 0.58 0.40 0.61 3.59
+
+concentrates near Cor = 0 .5, consistent with the results of Sec. 5, and the lowest standard deviation occurs within 
+
+Cor ∈ [0 .4, 0.6] depending on the dataset. With the shallow CNN in Tab. 1 on Fashion-MNIST, the model without correlation control achieves the highest ac-curacy which may appear to contradict our claim at first glance. However, this configuration is unstable: in 2 of 5 runs the model collapsed, producing an invariant output for all inputs. The performance shown in Tab. 1 was obtained only after re-training until a model trained successfully. On CIFAR-10, the unregularized baseline also collapsed in 1 of 5 runs. In contrast, adding the correlation loss prevented collapse and stabilized training, yielding repeatable results. Thus, the unregularized peak should be regarded as unre-liable, while correlation control improves reliability even if its peak accuracy is slightly lower. With ResNet-18 in Tab. 2, classification performance improves over the shallow backbone on all datasets and no collapse is observed. For all datasets, the best performance occurs near Cor ∼= 0 .5,which consistently yields the highest mean accuracy and the lowest standard deviation. To compare QNN performance against a classical head, we replace the QNN with a multilayer perceptron (MLP) classifier while keeping the same backbones. The MLP uses a ReLU followed by a fully connected output layer. With the shallow CNN, accuracy is 85.16% ± 1.32 pp on Fashion-MNIST, 83.31% ± 1.44 pp on CIFAR-10, and 90.40% ±
+
+2.17 pp on micro-Doppler. On the other hand, with ResNet-18, the corresponding figures are 94.24% ± 0.62 pp, 93.50% 
+
+± 0.31 pp, and 99.85% ± 0.06 pp. These results indicate that, with a shallow feature extractor, the QNN head improves both classification accuracy and its variance relative to an MLP head. With a sufficiently strong extractor such as ResNet-18 the two heads achieve comparable performance. 
+
+Table 2. Results comparison for ResNet-18.                                                           
+
+> Loss function
+> L=Lclassification +Lcorrelation
+> Lclassification
+> Cor
+> 0.0 0.2 0.4 0.5 0.6 0.8 1.0
+> Fashion-MNIST (shirt vs. coat)
+> Acc. [%] 91.97 92.11 92.16 92.96 91.51 92.56 92.11 91.24 Std. [pp] 1.25 2.51 2.19 0.99 2.47 2.61 2.80 2.40
+> CIFAR-10 (truck vs. automobile)
+> Acc. [%] 91.15 90.65 91.67 91.33 92.13 91.34 92.04 91.53 Std. [pp] 0.87 0.42 0.67 0.54 1.05 1.07 0.49 0.91
+> Radar micro-Doppler (robot vs. non-robot)
+> Acc. [%] 99.41 99.63 99.52 99.65 99.63 99.61 99.33 99.57 Std. [pp] 0.26 0.17 0.21 0.11 0.06 0.27 0.18 0.15
+
+## 7. Conclusion 
+
+We confirmed that controlling classical feature correlations to better utilize the QNN’s entangling capacity improves classification performance under shallow, qubit-limited VQC settings. We proposed a simple correlation-regularization term that steers the off-diagonal entries of the feature cor-relation matrix toward a target Cor , and incorporate it to a hybrid CNN–QNN pipeline. We presented a mathematical derivation that found the optimum correlation value to max-imize classification accuracy. Three binary tasks (Fashion-MNIST, CIFAR-10, radar micro-Doppler) were evaluated using a Qiskit simulator with 5-fold cross-validation. The experimental results were consistent with the simulation, in-dicating that a moderate level of correlation is beneficial. Ac-curacy peaks near Cor ∼= 0 .5 across backbones and datasets, and variance is minimized in the range of Cor ∈ [0 .4, 0.6] .Notably, the conventional practice of inputting orthogonal– –decorrelated––features to models was not optimal in quan-tum models; an intermediate correlation level exceeded the baseline’s accuracy while reducing variance. This result sug-gests that QNN can outperform classical classifiers as more qubits become available, as this study was limited to eight qubits. Operationally, the proposed method requires no circuit changes and only introduces one scalar hyperparameter Cor 
+
+for feature extraction. A practical design rule follows: before quantum encoding, induce intermediate feature correlation, defaulting to Cor ∼= 0 .5, and fine-tune within 0.4–0.6 to balance accuracy and stability. Limitations include binary classification, simulator-based experiments due to the resource constraints, and the use of fixed uniform correlation targets. Future directions involve extending the framework to multiclass tasks, evaluating on real hardware with noise, and exploring various forms of VQCs and target correlation matrices. Acknowledgments 
+
+This work was supported by Institute of Information & Com-munications Technology Planning & Evaluation (IITP) grant funded by the Korea government (MSIT) (No. RS-2024-00393808, Efficient design of RF components and systems based on artificial intelligence, 100%) and National Research Foundation (NRF), Republic of Korea [BK21 FOUR]. 
+
+## References 
+
+[1] Mohamed Afane, Gabrielle Ebbrecht, Ying Wang, Juntao Chen, and Junaid Farooq. Atp: Adaptive threshold pruning for efficient data encoding in quantum neural networks. In 
+
+Proceedings of the Computer Vision and Pattern Recognition Conference , pages 20427–20436, 2025. 2 [2] Avinash Chalumuri, Raghavendra Kune, S Kannan, and BS Manoj. Quantum–classical image processing for scene classi-fication. IEEE Sensors Letters , 6(6):1–4, 2022. 1, 2 [3] Victor C Chen, Fayin Li, S-S Ho, and Harry Wechsler. Micro-doppler effect in radar: phenomenon, model, and simulation study. IEEE Transactions on Aerospace and electronic sys-tems , 42(1):2–21, 2006. 7 [4] Song Cheng, Chenfeng Cao, Chao Zhang, Yongxiang Liu, Shi-Yao Hou, Pengxiang Xu, and Bei Zeng. Simulating noisy quantum circuits with matrix product density operators. 
+
+Physical review research , 3(2):023005, 2021. 1 [5] Prashant Kumar Choudhary, Nouhaila Innan, Muhammad Shafique, and Rajeev Singh. Hqnn-fsp: A hybrid classical-quantum neural network for regression-based financial stock market prediction. arXiv preprint arXiv:2503.15403 , 2025. 2 [6] Michael Cogswell, Faruk Ahmed, Ross Girshick, Larry Zitnick, and Dhruv Batra. Reducing overfitting in deep networks by decorrelating representations. arXiv preprint arXiv:1511.06068 , 2015. 2 [7] Pierre Falez, Pierre Tirilly, and Ioan Marius Bilasco. Improv-ing stdp-based visual feature learning with whitening. In 2020 International Joint Conference on Neural Networks (IJCNN) ,pages 1–8. IEEE, 2020. 2 [8] Fan Fan, Yilei Shi, Tobias Guggemos, and Xiao Xiang Zhu. Hybrid quantum-classical convolutional neural network model for image classification. IEEE transactions on neural networks and learning systems , 2023. 2 [9] Adri` a Garriga-Alonso, Carl Edward Rasmussen, and Lau-rence Aitchison. Deep convolutional networks as shallow gaussian processes. arXiv preprint arXiv:1808.05587 , 2018. 6[10] Raktim Ghosh, Amer Delilbasic, Gabriele Cavallaro, and Francesca Bovolo. A hybrid quantum-classical cnn architec-ture for semantic segmentation of radar sounder data. In 2024 IEEE Mediterranean and Middle-East Geoscience and Re-mote Sensing Symposium (M2GARSS) , pages 366–370. IEEE, 2024. 2 [11] Li-Hua Gong, Jun-Jie Pei, Tian-Feng Zhang, and Nan-Run Zhou. Quantum convolutional neural network based on varia-tional quantum circuits. Optics Communications , 550:129993, 2024. 2 [12] Muhammad Asfand Hafeez, Arslan Munir, and Hayat Ullah. H-qnn: A hybrid quantum–classical neural network for im-proved binary image classification. AI , 5(3):1462–1481, 2024. 1, 2 [13] Vojtˇ ech Havl´ ıˇ cek, Antonio D C´ orcoles, Kristan Temme, Aram W Harrow, Abhinav Kandala, Jerry M Chow, and Jay M Gambetta. Supervised learning with quantum-enhanced fea-ture spaces. Nature , 567(7747):209–212, 2019. 4 [14] Tak Hur, Leeseok Kim, and Daniel K Park. Quantum convo-lutional neural network for classical data classification. Quan-tum Machine Intelligence , 4(1):3, 2022. 2 [15] Sofiene Jerbi, Lukas J Fiderer, Hendrik Poulsen Nautrup, Jonas M K¨ ubler, Hans J Briegel, and Vedran Dunjko. Quan-tum machine learning beyond kernel methods. Nature Com-munications , 14(1):517, 2023. 2 [16] Youngwook Kim and Taesup Moon. Human detection and activity classification based on micro-doppler signatures using deep convolutional neural networks. IEEE geoscience and remote sensing letters , 13(1):8–12, 2015. 7 [17] Jihoon Kwon and Nojun Kwak. Human detection by neural networks using a low-cost short-range doppler radar sensor. In 2017 IEEE Radar Conference (RadarConf) , pages 0755– 0760. IEEE, 2017. 7 [18] Phuc Q Le, Fangyan Dong, and Kaoru Hirota. A flexible representation of quantum images for polynomial preparation, image compression, and processing operations. Quantum Information Processing , 10(1):63–84, 2011. 2 [19] Xin Liu, Daiying Zhou, and Qiuyan Huang. Radar hrrp target recognition based on hybrid quantum neural networks. IEEE Transactions on Aerospace and Electronic Systems , 2025. 2 [20] Jarrod R McClean, Sergio Boixo, Vadim N Smelyanskiy, Ryan Babbush, and Hartmut Neven. Barren plateaus in quan-tum neural network training landscapes. Nature communica-tions , 9(1):4812, 2018. 1 [21] Michael A Nielsen and Isaac L Chuang. Quantum computa-tion and quantum information . Cambridge university press, 2010. 3, 5 [22] Xingang Pan, Xiaohang Zhan, Jianping Shi, Xiaoou Tang, and Ping Luo. Switchable whitening for deep representation learning. In Proceedings of the IEEE/CVF international conference on computer vision , pages 1863–1871, 2019. 2 [23] John Preskill. Quantum computing in the nisq era and beyond. 
+
+Quantum , 2:79, 2018. 1 [24] Anupama Ray, Dhiraj Madan, Srushti Patil, Pushpak Pati, Marianna Rapsomaniki, Aviwe Kohlakala, Thembelihle Rose Dlamini, Stephanie Julia Muller, Kahn Rhrissorrakrai, Filippo Utro, et al. Hybrid quantum-classical graph neural networks for tumor classification in digital pathology. In 2024 IEEE international conference on Quantum Computing and Engi-neering (QCE) , pages 1611–1616. IEEE, 2024. 2 [25] Pau Rodr´ ıguez, Jordi Gonzalez, Guillem Cucurull, Josep M Gonfaus, and Xavier Roca. Regularizing cnns with locally constrained decorrelations. arXiv preprint arXiv:1611.01967 ,2016. 2 [26] Maria Schuld, Ville Bergholm, Christian Gogolin, Josh Izaac, and Nathan Killoran. Evaluating analytic gradients on quan-tum hardware. Physical Review A , 99(3):032331, 2019. 3 [27] Sukin Sim, Peter D Johnson, and Al´ an Aspuru-Guzik. Ex-pressibility and entangling capability of parameterized quan-tum circuits for hybrid quantum-classical algorithms. Ad-vanced Quantum Technologies , 2(12):1900070, 2019. 1 [28] Xinbiao Wang, Yuxuan Du, Zhuozhuo Tu, Yong Luo, Xiao Yuan, and Dacheng Tao. Transition role of entangled data in quantum machine learning. Nature Communications , 15(1): 3716, 2024. 2 [29] Jure Zbontar, Li Jing, Ishan Misra, Yann LeCun, and St´ ephane Deny. Barlow twins: Self-supervised learning via redundancy reduction. In International conference on machine learning ,pages 12310–12320. PMLR, 2021. 2 [30] Yichao Zhao and Yi Su. The extraction of micro-doppler sig-nal with emd algorithm for radar-based small uavs’ detection. 
+
+IEEE Transactions on Instrumentation and Measurement , 69 (3):929–940, 2019. 7
