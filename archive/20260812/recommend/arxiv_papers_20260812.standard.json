@@ -1,0 +1,321 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-12T21:04:09.351136+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2608.07863v1",
+      "source": "arxiv",
+      "title": "LHSDet: High-Resolution AI-Generated Image Detection via Visual Question Answering",
+      "abstract": "Driven by advances in diffusion models and autoregressive models, the fidelity and resolution of AI-generated images now rival those of real images. However, existing AI-generated image detection methods often downsample the images, inevitably overlooking critical low-level texture details in high-resolution AI-generated images, therefore limiting their detection performance. In addition, the ceaseless emergence of unknown generative models makes large-scale pre-training datasets inaccessible. To address these challenges, we propose a novel high-resolution AI-generated image detector, termed LHSDet. Specifically, we formulate the AI-generated image detection task as a Visual Question Answering problem, leveraging a fine-tuned vision-language framework to fully exploit the complementary information between visual and textual modalities. Recognizing that the default visual encoder of existing vision-language models is not tailored for AI-generated image detection, we redesign a visual encoder to better capture both the low-level and high-level artifacts inherent in AI-generated images. Furthermore, we incorporate a semantic-level textual branch to enable multi-modal feature fusion and detection. Consequently, LHSDet employs a triple-branch architecture to extract complementary multi-modal features: a low-level visual branch that aggregates non-overlapping patches for local texture cues, a high-level visual branch based on SigLIP2 for global perception feature extraction, and a semantic-level textual branch that generates captions using BLIP-2. Extensive experimental results demonstrate that LHSDet achieves high detection accuracy and robust performance across diverse generative models, including both diffusion and autoregressive models.",
+      "authors": [
+        "Qian Yao",
+        "Jun-Jie Huang",
+        "Yongjun Wang",
+        "Luming Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "eess.IV"
+      ],
+      "published": "2026-08-08T02:13:33+00:00",
+      "link": "https://arxiv.org/pdf/2608.07863v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "high-resolution AI-generated image detection via VQA, addresses limited training data",
+      "llm_evidence_cn": "高分辨率AI生成图像检测，通过视觉问答实现，应对训练数据有限",
+      "llm_evidence": "高分辨率AI生成图像检测，通过视觉问答实现，应对训练数据有限",
+      "canonical_evidence": "高分辨率AI生成图像检测，通过视觉问答实现，应对训练数据有限",
+      "llm_tldr_en": "Proposes LHSDet for high-resolution AI-generated image detection, formulating the task as Visual Question Answering to preserve low-level textures and handle unseen generators with limited data.",
+      "llm_tldr_cn": "针对现有AI生成图像检测方法因下采样丢失细节且未知生成模型导致大规模数据集难以获取的问题，提出高分辨率检测器LHSDet，将检测任务形式化为视觉问答，利用微调的视觉语言模型。实验表明LHSDet在高分辨率场景下性能优于现有方法，为AI生成图像检测提供了新范式。",
+      "llm_tldr": "针对现有AI生成图像检测方法因下采样丢失细节且未知生成模型导致大规模数据集难以获取的问题，提出高分辨率检测器LHSDet，将检测任务形式化为视觉问答，利用微调的视觉语言模型。实验表明LHSDet在高分辨率场景下性能优于现有方法，为AI生成图像检测提供了新范式。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.07999v1",
+      "source": "arxiv",
+      "title": "PE-Mamba: Bidirectional Selective Layer Aggregation for AI-Generated Image Detection",
+      "abstract": "AI-generated image (AIGI) detection has become increasingly challenging due to the rapid advancement of generative models and the diminishing gap between synthetic and authentic content. Existing vision transformer-based detectors commonly rely on weighted-sum strategies to aggregate intermediate representations across transformer layers, often overlooking the inherently ordered semantic progression of hierarchical features from shallow texture cues to deep semantic representations. In this work, we propose \\textbf{PE-Mamba}, a novel framework built upon a pre-trained PE-Core vision transformer with lightweight LoRA adaptation that introduces three complementary components for cross-layer feature aggregation and fusion. First, a bidirectional selective aggregator (BSA) processes layer-wise classification tokens through forward and backward selective scans, where the forward scan progressively accumulates shallow-to-deep forensic evidence, and the backward scan performs deep-to-shallow contextual refinement to reinterpret low-level cues in light of high-level semantic context. Second, a softmax-weighted aggregator (SWA) computes a learned global summary of all layer tokens as a complementary aggregation path. Third, a sigmoid-gated blend (SGA) adaptively fuses the BSA and SWA outputs via a learnable scalar gate, allowing the model to dynamically balance directional sequential evidence and global layer-wise aggregation. Extensive experiments on UniversalFakeDetect (96.6\\% mACC, 99.5\\% mAP) and AIGCDetect (95.3\\% mACC, 98.1\\% mAP) demonstrate that \\methodname{} outperforms 18 detectors with superior generalization across diverse generative models, while training only 1.3\\% of total parameters (0.13\\% for LoRA alone).",
+      "authors": [
+        "Kutub Uddin",
+        "Nusrat Tasnim",
+        "Khalid Malik"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-08T08:24:44+00:00",
+      "link": "https://arxiv.org/pdf/2608.07999v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "AI-generated image detection via PE-Mamba",
+      "llm_evidence_cn": "通过PE-Mamba进行AI生成图像检测",
+      "llm_evidence": "通过PE-Mamba进行AI生成图像检测",
+      "canonical_evidence": "通过PE-Mamba进行AI生成图像检测",
+      "llm_tldr_en": "Proposes PE-Mamba, a framework with bidirectional selective layer aggregation on a pre-trained ViT to improve AI-generated image detection by leveraging ordered hierarchical features.",
+      "llm_tldr_cn": "针对AI生成图像检测中现有ViT检测器使用加权和聚合中间表征、忽略浅层纹理到深层语义的层级特征有序进展的问题，提出PE-Mamba框架，在预训练PE-Core ViT上引入双向选择性层聚合等三个互补组件进行跨层特征聚合与融合。该方法旨在提升对合成图像的检测性能，应对生成模型不断进化带来的挑战。",
+      "llm_tldr": "针对AI生成图像检测中现有ViT检测器使用加权和聚合中间表征、忽略浅层纹理到深层语义的层级特征有序进展的问题，提出PE-Mamba框架，在预训练PE-Core ViT上引入双向选择性层聚合等三个互补组件进行跨层特征聚合与融合。该方法旨在提升对合成图像的检测性能，应对生成模型不断进化带来的挑战。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.09223v1",
+      "source": "arxiv",
+      "title": "PatchHead: Learning Spatial Patch Evidence for Generalizable AI-Generated Image Detection",
+      "abstract": "AI-generated image detectors generalize poorly when their training and test images originate from different generators or datasets. Despite the rich spatial representations produced by vision foundation models like DINO, existing detectors typically classify images using only the globally aggregated CLS token. We hypothesize that globally aggregating DINO features into a single CLS token obscures spatially distributed generation traces. To test this hypothesis, we introduce PatchHead, a lightweight spatial aggregation head that preserves the two-dimensional organization of DINO patch tokens and integrates evidence across neighboring regions. During training, we freeze the pretrained DINO backbone and optimize only the inserted LoRA adapters, PatchHead, and auxiliary projection head. Across nine cross-dataset benchmarks spanning manually curated and in-the-wild settings, PatchHead ranks first on seven datasets and second on the remaining two. It improves the strongest prior method from 91.6% to 94.6% in average balanced accuracy (+3.0 points) and raises the worst-case accuracy from 82.4% to 89.4% (+6.9 points), while introducing only 8.6% more trainable parameters and 0.08% additional FLOPs. Further qualitative analysis suggests that PatchHead (i) reduces class-conditional domain discrepancy, and (ii) redirects the representation from content-dominated saliency toward spatially distributed authenticity evidence. Together, these observations provide a representation-level account of why spatial patch aggregation transfers more reliably across generators and datasets than a single CLS-based global representation. Our code and models will be made available upon acceptance.",
+      "authors": [
+        "Shengbo Qi",
+        "Hongyi Fang",
+        "Benjia Zhou",
+        "Rui Mao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-10T07:47:22+00:00",
+      "link": "https://arxiv.org/pdf/2608.09223v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes PatchHead, a spatial aggregation head for generalizable AI-generated image detection across generators",
+      "llm_evidence_cn": "提出PatchHead用于跨生成器泛化的AI生成图像检测",
+      "llm_evidence": "提出PatchHead用于跨生成器泛化的AI生成图像检测",
+      "canonical_evidence": "提出PatchHead用于跨生成器泛化的AI生成图像检测",
+      "llm_tldr_en": "AI-generated image detectors generalize poorly across generators. PatchHead preserves DINO patch spatial structure to aggregate spatially distributed generation traces, training only LoRA. It improves cross-domain generalization for AI-generated image detection.",
+      "llm_tldr_cn": "针对AI生成图像检测器跨生成器/数据集泛化能力差的问题，本文提出PatchHead，一种轻量级空间聚合头，保留DINO图像块令牌的二维结构并整合邻域证据。训练时冻结DINO主干，仅优化插入的LoRA参数。实验表明，该方法在跨域设定下显著提升检测准确率，增强了通用AI生成图像检测的鲁棒性。",
+      "llm_tldr": "针对AI生成图像检测器跨生成器/数据集泛化能力差的问题，本文提出PatchHead，一种轻量级空间聚合头，保留DINO图像块令牌的二维结构并整合邻域证据。训练时冻结DINO主干，仅优化插入的LoRA参数。实验表明，该方法在跨域设定下显著提升检测准确率，增强了通用AI生成图像检测的鲁棒性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.09427v1",
+      "source": "arxiv",
+      "title": "Foundation Models are Implicit Deepfake Detectors",
+      "abstract": "Pretrained self-supervised representations have emerged as a core component of current deepfake detection methods, yet it remains unclear which of their properties make real and fake media distinguishable. In this work, we uncover a surprisingly consistent phenomenon: across multiple pretrained models, datasets, and both image and video domains, fake samples systematically produce lower-magnitude representations than their real counterparts. Motivated by this finding, we formulate deepfake detection as an anomaly detection problem and show that simple statistics of feature magnitude achieve competitive performance with far more sophisticated deepfake detection methods. We further investigate the origin of this effect and demonstrate that reduced feature magnitude is primarily associated with semantic shifts introduced by fake content, while low-level generative fingerprints play a comparatively smaller role. Finally, we show that this discriminative signal strengthens as the size of the underlying foundation model grows, suggesting that advances in representation learning naturally translate into stronger zero-shot deepfake detectors.",
+      "authors": [
+        "Stefan Smeu",
+        "Dragos-Alexandru Boldisor",
+        "Elisabeta Oneata",
+        "Dan Oneata"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-10T10:55:27+00:00",
+      "link": "https://arxiv.org/pdf/2608.09427v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "deepfake detection via feature magnitude anomaly detection",
+      "llm_evidence_cn": "通过特征幅度异常检测进行深度伪造检测",
+      "llm_evidence": "通过特征幅度异常检测进行深度伪造检测",
+      "canonical_evidence": "通过特征幅度异常检测进行深度伪造检测",
+      "llm_tldr_en": "This paper uncovers that fake media systematically have lower-magnitude representations in pretrained self-supervised models. It formulates deepfake detection as anomaly detection using simple statistics of feature magnitude, achieving competitive performance with sophisticated methods.",
+      "llm_tldr_cn": "针对现有深度伪造检测方法依赖复杂模型且对预训练表征特性理解不足的问题，本文发现伪造样本在多个预训练自监督模型中的特征幅度系统性地低于真实样本。基于此，作者将深度伪造检测形式化为异常检测问题，仅利用特征幅度的简单统计量即可达到与复杂方法相当的性能。该研究揭示了基础模型隐式具备的深度伪造检测能力，为轻量化检测提供了新视角。",
+      "llm_tldr": "针对现有深度伪造检测方法依赖复杂模型且对预训练表征特性理解不足的问题，本文发现伪造样本在多个预训练自监督模型中的特征幅度系统性地低于真实样本。基于此，作者将深度伪造检测形式化为异常检测问题，仅利用特征幅度的简单统计量即可达到与复杂方法相当的性能。该研究揭示了基础模型隐式具备的深度伪造检测能力，为轻量化检测提供了新视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.11201v1",
+      "source": "arxiv",
+      "title": "VidForensics-M1: Meta-Detection Reinforcement Learning with Verifiable Temporal Grounding for AI-Generated Video Forensics",
+      "abstract": "Recent advances in video generation models have significantly improved the realism of synthetic videos, blurring the boundary between generated and authentic content and raising concerns about misinformation. Existing MLLM-based detectors mainly rely on supervised fine-tuning or label-level reinforcement learning, where coarse supervision limits generalization to unseen scenarios and emerging video generators. To overcome these limitations, we are the first to introduce \\textbf{meta-detection} into AI-generated video detection, enabling reliable forgery detection by jointly optimizing predicted labels and supporting evidence within reinforcement learning. This paradigm requires reliable evidence signals and effective mechanisms to integrate them into label-level optimization. Textual rationales provide semantic descriptions of forgery artifacts, but their generation and verification depend on external models, making supervision vulnerable to hallucinations and semantic biases. In contrast, temporal grounding provides more objective and verifiable evidence, as manipulated intervals can be precisely controlled during forgery construction. Based on this insight, we propose an automated data construction pipeline that generates paired real-fake videos by replacing temporal segments with boundary-frame-conditioned video generation models. Furthermore, we introduce \\textbf{Evidence-Guided Reward Redistribution}, which performs evidence-aware credit assignment by redistributing rewards among label-correct responses according to evidence quality. This preserves reliable label supervision while encouraging detectors to acquire fine-grained and verifiable forgery localization capabilities. Extensive experiments demonstrate that \\textbf{VidForensics-M1} effectively leverages verifiable temporal evidence to achieve robust and generalizable AI-generated video detection.",
+      "authors": [
+        "Bowei Liu",
+        "Zheng Lu",
+        "Yuhan Bian",
+        "Xinchen Zhang",
+        "Xingming Shui",
+        "Yuesheng Huang",
+        "Xuhuan Li",
+        "Zihao Liu",
+        "Yifan Yang",
+        "Jun Zhou",
+        "Xiu Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-11T17:58:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.11201v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "AI-generated video detection via meta-detection RL",
+      "llm_evidence_cn": "通过元检测强化学习进行AI生成视频检测",
+      "llm_evidence": "通过元检测强化学习进行AI生成视频检测",
+      "canonical_evidence": "通过元检测强化学习进行AI生成视频检测",
+      "llm_tldr_en": "Introduces meta-detection with reinforcement learning and verifiable temporal grounding to improve generalization of AI-generated video detection beyond supervised fine-tuning.",
+      "llm_tldr_cn": "针对AI生成视频检测中现有MLLM方法依赖监督微调或标签级强化学习、粗粒度监督导致泛化差的问题，首次提出元检测范式，在强化学习中联合优化预测标签和支持证据，并利用可验证时序定位提供可靠证据信号。该方法旨在增强对未见场景和新兴视频生成器的检测能力，提升AI生成视频取证的可靠性。",
+      "llm_tldr": "针对AI生成视频检测中现有MLLM方法依赖监督微调或标签级强化学习、粗粒度监督导致泛化差的问题，首次提出元检测范式，在强化学习中联合优化预测标签和支持证据，并利用可验证时序定位提供可靠证据信号。该方法旨在增强对未见场景和新兴视频生成器的检测能力，提升AI生成视频取证的可靠性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.08521v1",
+      "source": "arxiv",
+      "title": "A Combined Feature-Based Framework for Disguise and Spoofing Detection in Face Recognition Systems",
+      "abstract": "Face recognition systems face two distinct, commonly-separated failure modes: spoofing, where an impostor presents a photograph or video of an authorized user, and disguise, where a legitimate user is rejected because their appearance differs from their enrolled template due to accessories, facial hair, illumination, or pose. This paper proposes and compares five combined feature-extraction and classification pipelines that address both problems within a single framework: PM (PCA and Minimum Euclidean Distance, MED), LPM (Local Binary Patterns with PCA and MED), HPM (Histogram of Oriented Gradients with PCA and MED), SM (Speeded-Up Robust Features with MED), and HM (Harris corner features with MED). Each pipeline follows a common two-phase process comprising pre-processing, feature extraction, feature filtering, and classification. The methods were trained on 115 subjects drawn from the FEI, Disguised Faces Database, and NUAA databases and evaluated on six test conditions covering mixed appearances, frontal faces, dark illumination, left- and right-turned poses, and photo-spoofing attempts. The HOG-based pipeline (HPM) achieved the most consistent performance across conditions, with 94.59% accuracy on mixed-appearance disguise, 81.5-93.2% across pose and illumination variants, and 91.67% on spoofing, while the LBP-based pipeline (LPM) achieved the highest spoofing-detection accuracy (93.2%) but weaker robustness to pose change. These results reveal a measurable trade-off between spoof sensitivity and disguise robustness among classical feature representations, motivating the deep-learning and cross-database extensions discussed in the concluding sections.",
+      "authors": [
+        "Sangiya Pararajasingham"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CR"
+      ],
+      "published": "2026-08-09T06:40:34+00:00",
+      "link": "https://arxiv.org/pdf/2608.08521v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "spoofing detection in face recognition systems",
+      "llm_evidence_cn": "人脸识别系统中的欺骗检测",
+      "llm_evidence": "人脸识别系统中的欺骗检测",
+      "canonical_evidence": "人脸识别系统中的欺骗检测",
+      "llm_tldr_en": "This paper addresses both spoofing and disguise failures in face recognition by proposing and comparing five feature-based pipelines that combine classical descriptors with minimum Euclidean distance classifiers for unified detection.",
+      "llm_tldr_cn": "针对人脸识别系统中欺骗攻击（照片或视频冒充）和伪装导致合法用户被拒的问题，本文提出并比较了五种组合特征提取与分类流程：PM、LPM、HPM、SM和HM，分别结合PCA、LBP、HOG、SURF、Harris等特征与最小欧氏距离分类器。这些流程旨在同时解决两种失败模式，提高系统的安全性和鲁棒性。实验比较了各流程的性能，为实际部署提供了特征级参考方案。该方法属于多媒体取证和生物特征安全领域，对检测伪造人脸呈现具有借鉴意义。",
+      "llm_tldr": "针对人脸识别系统中欺骗攻击（照片或视频冒充）和伪装导致合法用户被拒的问题，本文提出并比较了五种组合特征提取与分类流程：PM、LPM、HPM、SM和HM，分别结合PCA、LBP、HOG、SURF、Harris等特征与最小欧氏距离分类器。这些流程旨在同时解决两种失败模式，提高系统的安全性和鲁棒性。实验比较了各流程的性能，为实际部署提供了特征级参考方案。该方法属于多媒体取证和生物特征安全领域，对检测伪造人脸呈现具有借鉴意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.08521v2",
+      "source": "arxiv",
+      "title": "A Combined Feature-Based Framework for Disguise and Spoofing Detection in Face Recognition Systems",
+      "abstract": "Face recognition systems face two distinct, commonly-separated failure modes: spoofing, where an impostor presents a photograph or video of an authorized user, and disguise, where a legitimate user is rejected because their appearance differs from their enrolled template due to accessories, facial hair, illumination, or pose. This paper proposes and compares five combined feature-extraction and classification pipelines that address both problems within a single framework: PM (PCA and Minimum Euclidean Distance, MED), LPM (Local Binary Patterns with PCA and MED), HPM (Histogram of Oriented Gradients with PCA and MED), SM (Speeded-Up Robust Features with MED), and HM (Harris corner features with MED). Each pipeline follows a common two-phase process comprising pre-processing, feature extraction, feature filtering, and classification. The methods were trained on 115 subjects drawn from the FEI, Disguised Faces Database, and NUAA databases and evaluated on six test conditions covering mixed appearances, frontal faces, dark illumination, left- and right-turned poses, and photo-spoofing attempts. The HOG-based pipeline (HPM) achieved the most consistent performance across conditions, with 94.59% accuracy on mixed-appearance disguise, 81.5-93.2% across pose and illumination variants, and 91.67% on spoofing, while the LBP-based pipeline (LPM) achieved the second-highest spoofing-detection accuracy (93.2%), behind PM (96.67%), but weaker robustness to pose change. These results reveal a measurable trade-off between spoof sensitivity and disguise robustness among classical feature representations, motivating the deep-learning and cross-database extensions discussed in the concluding sections.",
+      "authors": [
+        "Sangiya Pararajasingham"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CR"
+      ],
+      "published": "2026-08-09T06:40:34+00:00",
+      "link": "https://arxiv.org/pdf/2608.08521v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "spoofing detection in face recognition systems",
+      "llm_evidence_cn": "人脸识别系统中的欺骗检测",
+      "llm_evidence": "人脸识别系统中的欺骗检测",
+      "canonical_evidence": "人脸识别系统中的欺骗检测",
+      "llm_tldr_en": "This paper addresses both spoofing and disguise failures in face recognition by proposing and comparing five feature-based pipelines that combine classical descriptors with minimum Euclidean distance classifiers for unified detection.",
+      "llm_tldr_cn": "针对人脸识别系统中欺骗攻击（照片或视频冒充）和伪装导致合法用户被拒的问题，本文提出并比较了五种组合特征提取与分类流程：PM、LPM、HPM、SM和HM，分别结合PCA、LBP、HOG、SURF、Harris等特征与最小欧氏距离分类器。这些流程旨在同时解决两种失败模式，提高系统的安全性和鲁棒性。实验比较了各流程的性能，为实际部署提供了特征级参考方案。该方法属于多媒体取证和生物特征安全领域，对检测伪造人脸呈现具有借鉴意义。",
+      "llm_tldr": "针对人脸识别系统中欺骗攻击（照片或视频冒充）和伪装导致合法用户被拒的问题，本文提出并比较了五种组合特征提取与分类流程：PM、LPM、HPM、SM和HM，分别结合PCA、LBP、HOG、SURF、Harris等特征与最小欧氏距离分类器。这些流程旨在同时解决两种失败模式，提高系统的安全性和鲁棒性。实验比较了各流程的性能，为实际部署提供了特征级参考方案。该方法属于多媒体取证和生物特征安全领域，对检测伪造人脸呈现具有借鉴意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.08624v1",
+      "source": "arxiv",
+      "title": "Domain-Aware Pruning: Sparsity and Domain Generalization via Regularized Probabilistic Masking",
+      "abstract": "Domain generalization (DG) and neural network pruning are conventionally treated as distinct objectives, targeting out-of-distribution (OOD) robustness and model efficiency, respectively. In this work, we bridge this gap by introducing Domain-Aware Pruning (DAP), a framework that leverages network sparsity as a mechanism to implicitly enhance generalization to unseen domains. Diverging from standard binary mask optimization, DAP learns a continuous parameter retention probability $p \\in [0, 1]$, framing network compression as a continuous probabilistic masking problem. By introducing a regularization objective that actively penalizes the retention of domain-sensitive weights during the mask training, DAP identifies a domain-invariant subnetwork. Empirical results across five DG benchmark datasets demonstrate that DAP achieves significant sparsity while consistently matching or exceeding the OOD performance of its dense counterparts. Crucially, DAP is an algorithm-agnostic framework that integrates seamlessly with existing DG pipelines without necessitating post-hoc fine-tuning. Beyond efficiency and generalization, we show that DAP natively provides increased robustness to adversarial perturbations and yields highly interpretable models, where the retained weights reliably encapsulate the most domain-invariant and task-critical representations.",
+      "authors": [
+        "Parham Sazdar",
+        "Mostafa Tavassolipour",
+        "Reshad Hosseini"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-09T10:18:17+00:00",
+      "link": "https://arxiv.org/pdf/2608.08624v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "domain-aware pruning improves out-of-distribution generalization, applicable to AIGI detection cross-domain settings",
+      "llm_evidence_cn": "域感知剪枝提升域泛化能力，可迁移至AI生成图像检测的跨域场景",
+      "llm_evidence": "域感知剪枝提升域泛化能力，可迁移至AI生成图像检测的跨域场景",
+      "canonical_evidence": "域感知剪枝提升域泛化能力，可迁移至AI生成图像检测的跨域场景",
+      "llm_tldr_en": "The paper introduces Domain-Aware Pruning, which uses continuous probabilistic masking and a regularization term to penalize domain-sensitive weights, achieving both network sparsity and better generalization to unseen domains.",
+      "llm_tldr_cn": "针对神经网络剪枝与域泛化通常分离处理的问题，该文提出域感知剪枝框架DAP，将剪枝视为连续概率掩码学习，并通过正则化惩罚对域敏感权重的保留。实验表明，DAP在压缩模型的同时提升了分布外鲁棒性。该方法的域不变特征提取思路可迁移用于跨域AI生成图像检测。",
+      "llm_tldr": "针对神经网络剪枝与域泛化通常分离处理的问题，该文提出域感知剪枝框架DAP，将剪枝视为连续概率掩码学习，并通过正则化惩罚对域敏感权重的保留。实验表明，DAP在压缩模型的同时提升了分布外鲁棒性。该方法的域不变特征提取思路可迁移用于跨域AI生成图像检测。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

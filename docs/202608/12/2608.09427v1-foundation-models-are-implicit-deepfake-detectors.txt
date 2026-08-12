@@ -1,0 +1,361 @@
+Title: Foundation Models are Implicit Deepfake Detectors
+
+URL Source: https://arxiv.org/pdf/2608.09427v1
+
+Published Time: Tue, 11 Aug 2026 02:10:49 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# Foundation Models are Implicit Deepfake Detectors 
+
+## Stefan Smeu 1, Dragos-Alexandru Boldisor 1,2 , Elisabeta Oneata 1, Dan Oneata 1,2 
+
+> 1
+
+Bitdefender, Romania 
+
+> 2
+
+POLITEHNICA Bucharest 
+
+Abstract 
+
+Pretrained self-supervised representations have emerged as a core component of current deepfake detection methods, yet it remains unclear which of their properties make real and fake media distinguishable. In this work, we uncover a surprisingly consistent phenomenon: across multiple pretrained models, datasets, and both image and video domains, fake samples systematically produce lower-magnitude representations than their real counterparts. Motivated by this finding, we formulate deepfake detection as an anomaly detection problem and show that simple statistics of feature magnitude achieve competitive performance with far more sophisticated deepfake detection methods. We further investigate the origin of this effect and demonstrate that reduced feature magnitude is primarily asso-ciated with semantic shifts introduced by fake content, while low-level generative fingerprints play a comparatively smaller role. Finally, we show that this discriminative signal strength-ens as the size of the underlying foundation model grows, suggesting that advances in representation learning naturally translate into stronger zero-shot deepfake detectors. 
+
+## 1 Introduction 
+
+Deepfake detection aims to automatically distinguish syn-thetic content (produced by generative models) from authentic media content (image, video, audio). A wide range of ap-proaches are continuously being proposed for this task. These range from classifiers that use low-level forensic artifacts (Marra et al. 2019; Frank et al. 2020; Chai et al. 2020; Tan et al. 2024) to methods that rely on semantic inconsistencies, such as physiological cues—blinking (Li, Chang, and Lyu 2018), pulse signals (Ciftci, Demir, and Yin 2020), breathing Layton et al. 2025)—or physical cues—lighting (Carvalho, Farid, and Kee 2015), head pose (Yang, Li, and Lyu 2019), scene geometry (Sarkar et al. 2024). However, modern detectors tend to no longer engineer specific semantic cues; instead, they rely on pretrained self-supervised representations, such as CLIP (Radford et al. 2021), AV-HuBERT (Shi et al. 2022), wav2vec 2.0 (Baevski et al. 2020), depending on the modalities involved. These super-vised representations encode rich high-level information that has proved effective for discriminating fake from real samples. The simplest approach uses frozen pretrained features with a downstream classifier (Ojha, Li, and Lee 2023; Koutlis and Papadopoulos 2024). Other methods further improve 140 160 180 200 
+
+> L1 norm
+> 00.02 0.04 0.06 0.08
+> density
+> FAVC real FAVC fake
+
+(a) Videos – visual AV-HuBERT 300 450 600 750 900  
+
+> L1 norm
+> 00.0025 0.005 0.0075 0.01
+> density
+> GenImage real GenImage SD1.5
+
+(b) Images – DINOv3-7B 
+
+Figure 1: Histograms of ℓ1 feature norm. They are shown for real (blue) and fake (orange) samples extracted from (a) visual-only AV-HuBERT on FakeAVCeleb and (b) DINOv3-7B on GenImage SD1.5. In both settings, fake samples exhibit features with lower ℓ1 norm. performance by fine-tuning or adapting the pretrained repre-sentations (Khan and Dang-Nguyen 2024; Park and Owens 2025), or by learning representations on data and pretext tasks that are more closely aligned with deepfake detection (Halias-sos et al. 2022; Feng, Chen, and Owens 2023; Oorloff et al. 2024). Regardless of the specific strategy, these approaches almost invariably rely on an additional classifier—often a complex one—to separate reals from fakes. In this paper, we ask a much simpler question: can self-supervised features be used directly for deepfake detection, without learning a classifier at all? Surprisingly, we find that the answer is yes. Concretely, we show that the ℓ1 norm of self-supervised features alone is sufficient to distinguish real from fake samples to a large degree. We find that this observation holds across two domains (image and video) and across different self-supervised models such as DINOv3 (Siméoni et al. 2025) and AV-HuBERT (Shi et al. 2022), as illustrated in Figure 1. Although this finding may initially seem surprising, it is closely related to observations from the out-of-distribution de-tection literature. Previous work has shown that classifiers tend to produce feature representations with larger norms for in-distribution samples and smaller norms for out-of-distribution inputs (Dhamija, Günther, and Boult 2018; Dietterich and Guyer 2022; Park et al. 2023). While self-supervised mod-els are not trained as classifiers, we observe an analogous phenomenon. Because they are pretrained on massive collec-arXiv:2608.09427v1 [cs.CV] 10 Aug 2026 tions of real data, they learn representations that encode real samples more confidently, resulting in larger feature norms. In contrast, fake samples lie outside the training distribution, producing weaker representations with smaller norms. This naturally enables feature norms to serve as an effective signal for deepfake detection. Furthermore, we show that this principle can be refined by using the ratio between the ℓ1 and ℓ2 norms of the feature representation. This encodes the sparsity of the features (Hoyer 2004; Lopes 2013) and represents an even more discriminative score, outperforming existing state-of-the-art methods across a wide variety of deepfake detection datasets. We also find that the best results are obtained with features extracted from the later layers of the models, and that the size of the self-supervised model correlates with downstream performance. Overall, our results show that self-supervised features possess a previously underappreciated anomaly detection capability, showing that they can be used directly for deepfake detection without requiring an explicit learned classifier. To summarize, our contributions are as follows: (i) We uncover a previously overlooked property of pretrained vi-sual representations: fake content produces lower-magnitude features than real content, across diverse self-supervised mod-els, datasets, and both image and video domains. (ii) We investigate the origin of this phenomenon and demonstrate that it is primarily driven by the semantic shift introduced by fake content rather than low-level fingerprints. (iii) We show that simple statistics based on feature magnitude enable competitive performance, making this a strong baseline for deepfake detection. 
+
+## 2 Related Work 
+
+While the de facto approach to deepfake detection frames the task as binary classification, this often suffers from poor generalization to unseen manipulations (Ricker et al. 2024) and a reliance on shortcut features (Smeu et al. 2025). As such, a promising alternative is to assume access only to real samples during training. We identify three main directions of using real samples only to build deepfake detectors. 
+
+Anomaly detection. The most direct approach models the distribution of real samples and considers as fake any sample that deviate from the learned real manifold. This idea has been particularly successful in the video domain, where in-consistencies between the audio and visual streams can reveal manipulated content. Such misalignments can be measured directly using an audio-visual foundation model by computing the cosine similarity between audio and visual features (Liang et al. 2024; Reiss, Cavia, and Hoshen 2023). Alternatively, a dedicated model can be trained on top of these features using only real data (Smeu et al. 2025). Moreover, Feng, Chen, and Owens (2023) observe that real video also exhibits audio-visual de-synchronizations, and therefore explicitly model the distribution of de-synchronizations of real video rather than treating every such misalignment as evidence of manipulation. 
+
+Reconstruction-based approaches. A different line of work is to use generative models to model the fake manifold. Even if generative models are trained on real data only, since they were used to generate fakes, they can model this distribution. The main intuition is that fake samples are typically better reconstructed than real ones. Concretely, a sample is scored by the ℓ2 distance between a sample and its reconstruction through the generative model (Ricker, Lukovnikov, and Fischer 2024). This idea has been further refined, for example, by replacing the reconstruction error with a curvature-based metric in the latent space (Brokman et al. 2025), or by evaluating reconstruction consistency across perturbed versions of the input (e.g., rotations or blurring) (Choi et al. 2026). A key limitation of these approaches is that their effectiveness depends on the overlap between the generators used to compute the reconstructions and those used to generate fake samples. 
+
+Consistency-based approaches. A more recent line of work is based on the observation that manipulation artifacts are often unstable under input perturbations. These methods apply a transformation to an image and measure the similarity between the original and perturbed samples in a learned feature space. Since real images are generally more stable, they tend to produce higher similarities than fake images (He, Chen, and Ho 2024; Tsai et al. 2024; Choi, Lee, and Lee 2025). These approaches rely on the DINOv2 feature extractor (Oquab et al. 2023) and compute the cosine similarity between an image and its perturbation. Perturbations include Gaussian noise (He, Chen, and Ho 2024), blurring and sharpening (Tsai et al. 2024), high-frequency transformations (Choi, Lee, and Lee 2025). Our method is much simpler and direct than those presented: it produces a fakeness score based on the feature norm of self-supervised representations. As such, it shares characteristics with anomaly detection methods. Closest to our approach is STALL (Ben Hayun et al. 2026), which computes the distance of features in the whitening space to the real distribution, using the ℓ2 norm. However, this method requires an additional calibration stage using a held-out real dataset. 
+
+## 3 Methodology 
+
+Magnitude differs between real and fake samples. We start with the observation that pretrained foundation models consistently produce lower-magnitude representations for fake samples than for authentic ones. To show this, we extract visual representations from the AV-HuBERT (Shi et al. 2022) audio-visual self-supervised model, and compute their ℓ1
+
+norm on all samples in the FakeAVCeleb dataset (Khalid et al. 2021). We perform the same analysis in the image domain using the DINOv3 (Siméoni et al. 2025) representations on the GenImage dataset (Zhu et al. 2023). Figure 1 shows the histograms of the norms for the two cases. We observe that real samples and fake samples are very well separated by the 
+
+ℓ1 norm, with the fake class being to the left (lower norm). 
+
+Why does magnitude differ? While simple, this observa-tion is surprising. Why should such a basic statistic discrimi-nate so well real from fake samples? A similar behavior has been previously observed in classifiers: feature norms tend to be smaller for unseen classes than for seen ones (Dhamija, 140 160 180 200 
+
+> L1 norm
+> 00.02 0.04 0.06 0.08
+> density
+> FAVC real FAVC fake MAVOS-DD arabic
+
+(a) Videos – AV-HuBERT 300 450 600 750 900  
+
+> L1 norm
+> 00.0025 0.005 0.0075 0.01
+> density
+> GenImage real Reconstructed GenImage SD1.5 fake EuroSAT
+
+(b) Images – DINOv3-7B 
+
+Figure 2: Histograms of ℓ1 feature norm. (a) AV-HuBERT features for real (blue) and fake (orange) videos from FakeAVCeleb, and real samples from MAVOS-DD Arabic (green). (b) DINOv3-7B features for real (blue), their recon-structed versions through SD1.5 (yellow) and Stable Diffusion v1.5 (SD1.5) fake (orange) images from GenImage, and Eu-roSAT satellite images (green). In both settings, real samples outside the encoder’s pretraining distribution (green) have lower ℓ1 norms than in-distribution real samples (blue), but higher norms than fake samples (orange). The ℓ1 norm distri-bution of the reconstructed images falls between the two real categories, indicating that the effect of generative fingerprints is smaller than that of semantic distribution shift. Günther, and Boult 2018; Sun, Guo, and Li 2021; Dietterich and Guyer 2022; Park et al. 2023; Yu et al. 2023). One reason is the familiarity hypothesis (Dietterich and Guyer 2022): lower-magnitude features correspond to weaker activations, which in turn indicate absence of familiar features; so, samples from unseen classes lack evidence present in seen classes. A similar intuition applies in our case. Foundation models are trained only on real data, making fake samples effectively out of distribution. If the feature norm reflects familiarity, it should therefore distinguish real from fake samples as well. But in what sense do real and fake samples differ? The differ-ences can stem from two factors: semantic discrepancies or low-level generative fingerprints. To isolate these effects, we design two experiments. To evaluate the role of semantics, we consider real samples but from a distribution that differs from that used to pretrain the self-supervised encoder. To evaluate the role of low-level artifacts, we reconstruct real samples using a generative model; this process injects generative fin-gerprints, while preserving the original semantics. For video, we use MAVOS-DD Arabic (Croitoru et al. 2025) as the out-of-domain real data; this differs in identity, language, and phonetic content from VoxCeleb2 (Chung, Nagrani, and Zis-serman 2018), the main source for training AV-HuBERT. For images, identifying truly out-of-distribution data is challeng-ing because DINOv3 was trained on very diverse data from the internet. We therefore use satellite imagery from EuroSAT (Helber et al. 2019) as a semantically distant domain. For images, we also reconstruct real samples from GenImage with the SD1.5 autoencoder (Rombach et al. 2022a), following the protocol of Ricker, Lukovnikov, and Fischer (2024). Figure 2 shows the resulting distributions of the norms. We observe that real samples from out-of-domain datasets (green histogram) have low norm, approaching those of fake samples. We also observe that the re-generated real sam-0 200 400 600 800 1000 
+
+> Feature dimension
+> 0.0 0.1 0.2 0.3 0.4 0.5
+> Mean absolute value  Real Fake
+
+(a) AV-HuBERT 0 1000 2000 3000 4000  
+
+> Feature dimension
+> 0.0 0.2 0.4 0.6
+> Mean absolute value  Real Fake
+
+(b) DINOv3-7B 
+
+Figure 3: Per-dimension mean absolute activations for (a) AV-HuBERT representations on FakeAVCeleb and (b) DINOv3-7B representations on GenImage. The feature dimensions are sorted independently for each class. Fake samples exhibit lower activation magnitudes across most dimensions, except for the highest-ranked activations, which are larger than those of real samples. This suggests that representations of fake samples are sparser than corresponding real ones. ples (yellow histogram on Figure 2b) remain much closer to the real distribution than is to the fake one. Taken together, these results suggest that the difference in norm is caused by the semantic shift rather the the low-level fingerprints. The semantic discrepancies are likely introduced by the genera-tive process, reflecting the inability of generative models to correctly reconstruct the real world. 
+
+Sparsity differs between real and fake samples. The fea-ture norm aggregates information across all dimensions. To better understand the source of the observed norm differences, we take a closer look and analyze the activation of the indi-vidual feature dimensions. Specifically, we compute the mean absolute activation of each dimension separately for real and fake samples, sort the dimensions in descending order of their mean absolute activation for each class, and plot the resulting distributions. Figure 3 shows the results. At a high level, the differences appear across a large fraction of the rep-resentation dimensions rather than being confined to a small subset. However, a closer inspection reveals an interesting pattern: the highest-ranked activations are slightly larger for fake representations than for real ones, whereas the remaining dimensions exhibit consistently lower activations. This sug-gests that fake representations concentrate their energy in a relatively small subset of features, while real representations distribute it more evenly across the representation space. In other words, fake representations are sparser, whereas real representations are more diffuse. 
+
+Detecting deepfakes using magnitude and sparsity. Mo-tivated by the observations above, we propose to detect deepfakes using scores computed from self-supervised repre-sentations. Our formulation is related to anomaly detection: fake samples should produce scores that differ systemati-cally from those of real samples. Since the self-supervised foundation models are pretrained only on real media, their rep-resentations implicitly capture the distribution of real. Let h
+
+denote the model representation of a sample. We consider two scores: magnitude and sparsity. The magnitude is measured by the ℓ1 norm of the features: magnitude (h) = ∥h∥1. (1) The sparsity of the representation is estimated using the ratio between ℓ1 and ℓ2 norms (Hoyer 2004; Lopes 2013): sparsity (h) = ∥h∥1/∥h∥2. (2) This ratio quantifies how concentrated the representation is across feature dimensions while remaining invariant to global rescaling. The quantity is numerically stable and has been shown to provide a lower bound on the true ℓ0
+
+sparsity (Lopes 2013). To obtain a fakeness score (larger values more likely to be fake), we use negative magnitude and negative norm ratio, as both are lower for fakes. We refer to this method as NormFake, with its two variants denoted NormFake (magnitude) and NormFake (sparsity). 
+
+## 4 Main results 
+
+In this section, we evaluate the two variants of NormFake on video and image datasets and compare against prior work. 
+
+Experimental Setup 
+
+Video datasets. We evaluate on six audio-visual video datasets: FakeAVCeleb (FAVC) (Khalid et al. 2021), AVLips (Liu et al. 2024b), DeepfakeEval-2024 (DFE) (Chandra et al. 2026), MAVOS-DD (Croitoru et al. 2025), MMDF (Kim et al. 2026), and DFDC (Dolhansky et al. 2020). We focus on audio-visual datasets because existing real-only video deepfake detection methods rely on audio-visual synchronization. For completeness, we also report results on visual-only video datasets FaceForensics++ (Rössler et al. 2019), DFD (Dufour and Gully 2019), DeeperForensics (Jiang et al. 2020), and Celeb-DF-v2 (Li et al. 2020) in the supplementary material. 
+
+Video representations. We extract video representations using AV-HuBERT (Shi et al. 2022), a self-supervised model that learns joint audio-visual representations. We use the self_large_vox_433h checkpoint, pretrained on LRS3 (Afouras, Chung, and Zisserman 2018) and VoxCeleb2 (Chung, Nagrani, and Zisserman 2018). We extract visual features by inputting only the frames and masking the audio. AV-HuBERT produces frame-level representations. To obtain a per-video detection score, we apply NormFake to each frame’s feature vector and then average these scores. 
+
+Image datasets. We use GenImage (Zhu et al. 2023), a million-scale benchmark that pairs real ImageNet images with fakes from eight generators (seven diffusion models plus BigGAN), each conditioned on the 1 000 ImageNet classes. The class-level alignment between real and fake images isolates detection performance from semantic content shifts. We only consider its dedicated test set. 
+
+Image representations. We extract image representations using DINOv3 (Siméoni et al. 2025), and use its largest available checkpoint, DINOv3-7B . We represent each image using the embedding of the CLS token. Unless stated other-wise, we use the final output embeddings. However, as shown in the supplementary material, embeddings from intermediate layers can outperform those from the final layer. 
+
+Evaluation metric. We report results in terms of the area under the receiver operating characteristic curve (ROC-AUC), which summarizes the trade-off between true positive rate and false positive rate across all decision thresholds. As such, the metric is threshold-independent, with higher values indicating better performance. A score of 50% corresponds to random chance, regardless of the class distribution. Datasets details, splits, preprocessing and more about the experimental setup are given in the supplementary material. 
+
+Evaluation: Video deepfake detection 
+
+To contextualize the results, we compare NormFake against prior methods. We group these in fake-aware methods (trained using fake samples) and real-only methods (trained solely on authentic media). The fake-aware methods are RealForensics (Haliassos et al. 2022), AuViRe (Koutlis and Papadopou-los 2026). The real-only methods are AVAD (Feng, Chen, and Owens 2023), AVH-Align (Smeu et al. 2025), STALL (Ben Hayun et al. 2026), FACTOR (Reiss, Cavia, and Hoshen 2023) SpeechForensics (Liang et al. 2024). For a fair compar-ison, we adapt STALL to our setting by using AV-HuBERT features and calibrating them on VoxCeleb2 (real samples). NormFake is applied only in the visual domain. We evalu-ated audio representations but did not observe a comparable separation (see supplementary material). The results are shown in Table 1. Despite not having access to fake samples, NormFake outperforms fake-aware approaches on average. Our approach also compares positively to most real-only approaches. Only SpeechForensics (Liang et al. 2024) achieves a slightly higher average ROC-AUC, with NormFake (sparsity) trailing by just one percentage point, despite relying solely on the visual modality, whereas SpeechForensics leverages both audio and visual streams. This proves that NormFake, despite its simplicity, acts as a strong baseline for deepfake detection. To better understand NormFake, we examine how its deci-sion boundary compares with that of other real-only methods. To do so, we compute the Pearson correlation between the predictions of NormFake (magnitude) and those of each baseline. Figure 4 show that on most datasets NormFake is strongly correlated with SpeechForensics and FACTOR. Both of these methods measure audio-visual synchroniza-tion using the cosine similarity between audio and visual AV-HuBERT representations. It is therefore surprising that NormFake, which operates solely on visual representations, behaves so similarly. One possible explanation is that the generative process simultaneously introduces visual artifacts and audio-visual synchronization inconsistencies, allowing the two approaches to capture complementary manifestations of the same underlying process. The sparsity variant follows similar trends; see supplementary material. 
+
+Evaluation: Image deepfake detection 
+
+For images, we compare NormFake with fake-aware methods FatFormer (Liu et al. 2024a), AIDE (Yan et al. 2025) and real-only methods, RIGID (He, Chen, and Ho 2024), MINDER (Tsai et al. 2024), AEROBLADE (Ricker, Lukovnikov, and Fischer 2024), Manifold Bias (Brokman et al. 2025), WarPAD Method Fake train data FAVC AVLips DFE MAVOS-DD MMDF DFDC Average 
+
+Fake-aware methods: 
+
+RealForensics FF++ 88.0 77.0 74.4 80.2 59.7 81.6 76.8 AuViRe AV1M 87.9 72.4 63.8 62.0 77.8 63.8 71.3 
+
+Real-only methods: 
+
+AVAD N/A 85.4 72.9 64.8 47.7 40.5 51.6 60.5 AVH-Align N/A 93.1 86.3 49.8 50.3 53.2 34.2 61.2 STALL N/A 21.8 20.3 49.0 39.0 50.4 43.0 37.3 FACTOR N/A 97.7 95.4 61.4 68.9 81.1 59.4 77.3 SpeechForensics N/A 98.5 92.7 75.8 81.3 92.6 59.6 83.4 NormFake (magnitude) N/A 97.2 94.8 69.9 79.0 76.5 65.1 80.4 
+
+NormFake (sparsity) N/A 94.6 93.8 72.8 78.8 89.5 64.7 82.4 Table 1: Comparison with state-of-the-art video-level deepfake detection methods on six benchmarks (ROC-AUC %). Our real-only approach, using only visual AV-HuBERT features, achieves competitive performance with prior multimodal methods, without relying on the audio modality. Best real-only results are shown in bold , and second-best results are underlined. FAVC AVLips DFE MAVOS-DDMMDF DFDC −0.75 −0.50 −0.25 0.00 0.25 0.50 0.75 1.00 
+
+> Pearson correlation
+> SpeechForensics FACTOR AVH-Align STALL AVAD
+
+Figure 4: Pearson correlation of predictions between Norm-Fake (magnitude) and other real-only methods. Across datasets, NormFake exhibits strong correlation with Speech-Forensics and FACTOR, while showing weak and even nega-tive correlations with the remaining methods. (Choi, Lee, and Lee 2025) and RDD (Choi et al. 2026) in Table 2. To allow for a fair comparison, for the two strongest baselines, RIGID and WarPAD, we report results with both the original backbone (DINOv2-L; Oquab et al. 2024) and the more powerful DINOv3-7B backbone. We do not directly compare to methods that require access to a generative model (RDD, AEROBLADE), as they rely on reconstruction error computed with a diffusion model. As such, they assume knowledge of the generative process of the deepfakes they detect. Moreover, these methods’ performance depends on the similarity between the diffusion model used for reconstruction and the one used to generate the test samples. For NormFake (magnitude) we use output embeddings while for the sparsity variant we chose the outputs of the penultimate block of the transformer. The latter method achieves state-of-the-art performance, particularly on contin-uous latent diffusion models such as Stable Diffusion 1.4/1.5 and Wukong, as well as the proprietary Midjourney model, 300 400 500 600 700 800 900  
+
+> L1norm
+> Real
+> Fake
+
+Figure 5: Qualitative examples of DINOv3-7B features with their associated ℓ1 norm for GenImage reals and SD1.5 fakes. but not on VQDM, which performs diffusion in a discrete quantized latent space. In contrast, prior methods achieve near-perfect performance on GAN-based and pixel-space dif-fusion models, outperforming NormFake. This suggests that the two families of methods exploit different cues in synthetic images. One possible explanation is that prior methods rely more heavily on pixel-level artifacts, whereas NormFake is more sensitive to the semantic deviations induced by con-tinuous latent diffusion models. Moreover, for the two prior works evaluated on DINOv3-7B, we observe a slight drop in performance, suggesting that, unlike NormFake, they do not scale with the size of the backbone. Details on layer choice are provided in the supplmentary material. 
+
+Qualitative examples. In Figure 5 we provide examples of real and fake images from GenImage (SD1.5) with both low and high ℓ1 norms, using DINOv3-7B representations. Images with lower norms exhibit a more pronounced synthetic style, whereas higher-norm images contain fewer generative artifacts. One interesting observation is that real images with low ℓ1 norms often resemble cluttered scenes or poorly lit photos, often harder to identify as real, while those with higher norms tend to depict cleaner, object-centric imagery. This is in line with our hypothesis that the ℓ1 norm of pretrained features distinguishes between real and fake semantics. Method ADM BigGAN GLIDE Midjourney SD1.4 SD1.5 VQDM Wukong Mean 
+
+Fake-aware methods: 
+
+FatFormer 90.3 99.5 95.1 57.9 78.0 77.6 96.7 82.4 84.7 AIDE 92.1 92.0 98.7 95.9 100.0 100.0 96.5 100.0 96.9 
+
+Real-only methods: 
+
+RIGID 87.4 97.4 95.2 77.8 68.2 68.2 91.5 69.9 82.0 MINDER 76.8 68.1 58.2 45.0 60.7 59.6 88.2 67.6 65.5 AEROBLADE 85.1 97.8 98.9 98.5 97.6 97.8 72.1 97.8 93.2 Manifold Bias 68.1 92.7 82.2 47.6 66.3 65.9 88.0 64.1 71.9 WaRPAD 98.6 99.8 99.1 81.0 94.0 93.6 98.1 92.4 94.6 RDD 92.6 99.7 99.6 98.3 100.0 99.9 94.6 99.9 98.1 RIGID † 84.5 84.2 93.4 76.9 76.5 76.8 76.0 76.0 80.5 WaRPAD † 93.3 99.6 92.6 65.7 77.6 77.1 93.0 70.1 83.6 
+
+NormFake (magnitude) 75.1 80.3 91.1 91.1 94.7 94.2 75.9 93.0 86.9 
+
+NormFake (sparsity) 86.7 96.3 96.7 94.2 98.0 97.5 93.8 97.7 95.1 
+
+Table 2: Comparison with state-of-the-art image deepfake detection methods on GenImage (ROC-AUC %). Gray: methods that require access to generative models. †: methods that use DINOv3-7B features (for a fair comparison with NormFake). For NormFake, we report the best-performing layer for each variant. The sparsity variant achieves the highest average performance. Best real-only results are shown in bold , and second-best results are underlined. 40 50 60 70 80 90 100          
+
+> AUC (%)
+> 21M 29M 86M 300M 840M 6,7B
+> ViT-S ViT-S+ ViT-B ViT-L ViT-H+ ViT-7B
+> Number of Parameters
+> ADM BigGAN GLIDE Midjourney SD1.4 SD1.5 VQDM Wukong Average
+
+Figure 6: ROC-AUC of NormFake (magnitude) using DI-NOv3 features across different model scales on GenImage. Performance increases steadily with model size. 
+
+## 5 Further analyses 
+
+We now investigate the impact of model scale, backbone, and feature extraction layers. 
+
+Model scale. To evaluate the effect of model scale, we con-sider six transformer variants from the DINOv3 family, ViT-S, ViT-S+, ViT-B, ViT-L, ViT-H+, and ViT-7B. The results are shown in Figure 6 for the eight GenImage datasets, together with their average performance (black line). We observe that average performance improves as model size increases, with gains gradually saturating at the ViT-H+ variant, whose perfor-mance is comparable to that of the substantially larger ViT-7B model. This is partially driven by a decrease in performance on BigGAN and VQDM. One possible explanation is that larger foundation models learn increasingly semantic repre-sentations, while smaller backbones remain relatively more sensitive to low-level artifacts. We hypothesize these artifacts are more pronounced in BigGAN and VQDM due to their GAN-based upsampling and discrete-latent quantization. These results suggest that larger foundation model repre-sentations yield stronger performance, with the model scale serving as a reliable proxy for representation quality. 
+
+Backbones. We consider five backbone families: BEiT (Bao et al. 2022), OpenCLIP (Cherti et al. 2023), SigLIP 2 (Tschannen et al. 2025), PE-Core (Bolya et al. 2025) and DINOv3. For each backbone we use the largest available variant. As shown in Table 3, NormFake (magnitude) presents a clear scaling trend with foundation model size, across the backbones. PE-CORE-G14 achieves the highest performance of 87.7% ROC-AUC, closely followed by DINOv3-7B. In contrast, sparsity performs near chance, except with DINOv3-7B, scoring comparable with the magnitude variant. This suggests that feature sparsity is less reliable than magnitude, as fewer models exhibit discriminative sparsity patterns. We further evaluate the impact of the backbone on the video setup in Table 3. We consider RAVEn (Haliassos et al. 2025) and BRAVEn (Haliassos et al. 2024) visual-only representations and evaluate on FakeAVCeleb. Unlike the image setting, the sparsity variant also achieves competitive performance across all evaluated video backbones. In this setting, the number of parameters is similar across backbones. 
+
+Per-layer performance. Lastly, we analyze how the ℓ1-norm separability between real and fake samples evolves across network layers. Figure 7 reports the ROC-AUC ob-tained from features at the end of each transformer block, as well as from the final output embeddings, obtained by apply-ing the final LayerNorm to the output of the last transformer block. We do so for AV-HuBERT on the video benchmarks and DINOv3-7B on GenImage. For AV-HuBERT, the average performance increases NormFake Network No. Params. Magnitude Sparsity 
+
+Image-based models · Evaluated on GenImage 
+
+BEiT-L 303M 57.3 59.0 OpenCLIP-G/14 1.01B 61.9 59.4 SigLIP2-Giant 1.16B 73.5 52.7 PE-Core-G14 1.88B 87.7 53.7 DINOv3-7B 6.72B 86.9 83.2 
+
+Video-based models · Evaluted on FakeAVCeleb 
+
+RAVEn 339M 95.7 87.2 BRAVEn 339M 95.0 87.5 AV-HuBERT 324M 97.2 94.6 
+
+Table 3: Average performance (ROC-AUC%) of NormFake across the GenImage generators for image encoders and FakeAVCeleb for video encoders using multiple foundation model backbones. The approach provides consistently strong performance across all evaluated backbones. steadily with network depth. Interestingly, the output of the final transformer block exhibits a pronounced drop in per-formance, whereas the network’s final output representation recovers to the highest ROC-AUC. This suggests that the final LayerNorm substantially enhances separability between real and fake representations. One possible explanation is that fea-ture norms naturally increase with depth, reducing the relative discrepancy between reals and fakes. The final LayerNorm rescales the representations, restoring seperability. In contrast, DINOv3 displays a noisier progression through-out the first three quarters of the network. Nevertheless, from the 32nd transformer block, performance improves consis-tently across all generators, culminating in the highest ROC-AUC for the final CLS embedding. Notably, even the earliest layers achieve around 70% ROC-AUC, indicating that early visual representations already contain cues that distinguish generated images from real ones. Both architectures achieve the strongest separation in the deepest representations, suggesting that feature-magnitude discrepancies are amplified as representations become more semantic, while remaining partially detectable in earlier layers. However, sparsity can favour late over final layers regardless of the GenImage generator; see supplementary material. 
+
+## 6 Limitations 
+
+Over-reliance on pretrained networks. NormFake relies entirely on representations extracted from pretrained founda-tion models. As a result, its performance depends on both the representation capacity of the backbone and its pretraining data diversity. For example, if a particular real domain is underrepresented, then its samples may be assigned unusually low feature norms and consequently flagged as anomalous. 
+
+Pretraining data contamination. As AI-generated content becomes increasingly prevalent online, future self-supervised foundation models may be pretrained on increasingly con-taminated data. This weakens the assumption that foundation 0 5 10 15 20 output embeddings 
+
+> Block index
+> 020 40 60 80 100
+> AUC (%)
+> FAVC AVLips DFE MAVOS-DD MMDF DFDC Average
+
+(a) AV-HuBERT 0 5 10 15 20 25 30 35 output embeddings 
+
+> Block index
+> 020 40 60 80 100
+> AUC (%)
+> ADM BigGAN GLIDE Midjourney SD1.4 SD1.5 VQDM Wukong Average
+
+(b) DINOv3-7B 
+
+Figure 7: Per transformer block and output embeddings ROC-AUC% of NormFake (magnitude) using (a) AV-HuBERT features and (b) DINOv3-7B features. Later layers provide the best performance, while the behavior of earlier layers differs between models. models learn a representation shaped predominantly by real data, potentially reducing the distinction between real and fake samples on which NormFake relies. 
+
+## 7 Conclusions and future work 
+
+We identified a consistent behavior of pretrained foundation models: fake media systematically produce lower-magnitude features than real media, across images and videos, diverse backbones, and a wide range of generators and manipulation types. Building on this observation, we show that simple feature statistics provide a strong deepfake detection base-line matching or outperforming considerably more complex methods. Our analysis further indicates that this phenomenon is driven primarily by the semantic shift introduced by the generative process, rather than low-level fingerprints, and that its discriminative strength consistently increases with model scale. Together, these findings suggest that detecting fake content can be an implicit byproduct of learning a faith-ful representation of real-world data, motivating simple and interpretable complements to specialized deepfake detectors. 
+
+Future work. We believe that our work opens several promising research directions. One is to incorporate repre-sentation statistics into trainable deepfake detectors through initialization priors or regularization terms. Another direc-tion is to explore more informative statistics and pretraining objectives to discover stronger deepfake detection signals. References 
+
+Afouras, T.; Chung, J. S.; and Zisserman, A. 2018. LRS3-TED: A Large-Scale Dataset for Visual Speech Recognition. 
+
+arXiv preprint arXiv:1809.00496 .Baevski, A.; Zhou, Y.; Mohamed, A.; and Auli, M. 2020. Wav2vec w.0: A Framework for Self-Supervised Learning of Speech Representations. In NeurIPS .Bao, H.; Dong, L.; Piao, S.; and Wei, F. 2022. BEiT: BERT Pre-Training of Image Transformers. In ICLR .Ben Hayun, O.; Betser, R.; Levi, M. Y.; Kassel, L.; and Gilboa, G. 2026. Training-free detection of generated videos via spatial-temporal likelihoods. In CVPR .Boldisor, D.-A.; Smeu, S.; Oneata, D.; and Oneata, E. 2026. In-vestigating Self-Supervised Representations for Audio-Visual Deepfake Detection. In Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR) .Bolya, D.; Huang, P.-Y.; Sun, P.; Cho, J. H.; Madotto, A.; Wei, C.; Ma, T.; Zhi, J.; Rajasegaran, J.; Rasheed, H.; Wang, J.; Monteiro, M.; Xu, H.; Dong, S.; Ravi, N.; Li, D.; Dollár, P.; and Feichtenhofer, C. 2025. Perception Encoder: The best visual embeddings are not at the output of the network. 
+
+arXiv:2504.13181 .Brock, A.; Donahue, J.; and Simonyan, K. 2019. Large Scale GAN Training for High Fidelity Natural Image Synthesis. In 
+
+ICLR .Brokman, J.; Giloni, A.; Hofman, O.; Vainshtein, R.; Kojima, H.; and Gilboa, G. 2025. Manifold Induced Biases for Zero-Shot and Few-Shot Detection of Generated Images. In ICLR .Carvalho, T.; Farid, H.; and Kee, E. R. 2015. Exposing photo manipulation from user-guided 3d lighting analysis. In Media Watermarking, Security, and Forensics , volume 9409, 940902. SPIE. Chai, L.; Bau, D.; Lim, S.-N.; and Isola, P. 2020. What makes fake images detectable? Understanding properties that generalize. In ECCV .Chandra, N. A.; Lee, H.; Murtfeldt, R.; Qiu, L.; Karmakar, A.; Tanumihardja, E.; Farhat, K.; Caffee, B.; Lee, C.; Choi, J.; Paik, S.; Kim, A.; and Etzioni, O. 2026. Deepfake-Eval-2024: A Multi-Modal In-the-Wild Benchmark of Deepfakes Circulated in 2024. In CVPRW .Chen, Y.; Liang, S.; Zhou, Z.; Huang, Z.; Ma, Y.; Tang, J.; Lin, Q.; Zhou, Y.; and Lu, Q. 2025. HunyuanVideo-Avatar: High-Fidelity Audio-Driven Human Animation for Multiple Characters. arXiv preprint arXiv:2505.20156 .Chen, Z.; Cao, J.; Chen, Z.; Li, Y.; and Ma, C. 2024. EchoMimic: Lifelike Audio-Driven Portrait Animations through Editable Landmark Conditions. In AAAI .Cherti, M.; Beaumont, R.; Wightman, R.; Wortsman, M.; Ilharco, G.; Gordon, C.; Schuhmann, C.; Schmidt, L.; and Jitsev, J. 2023. Reproducible Scaling Laws for Contrastive Language-Image Learning. In CVPR .Choi, S.; Lee, H.; Lee, J.; Kim, R.; Choi, S. J.; and Lee, M. 2026. A Debiased Reconstruction-based Framework for Training-Free Detection of AI-Generated Images. In CVPR .Choi, S.; Lee, H.; and Lee, M. 2025. Training-free Detection of AI-generated Images via Cropping Robustness. In Ad-vances in Neural Information Processing Systems , volume 38. Curran Associates, Inc. NeurIPS 2025. Chung, J. S.; Nagrani, A.; and Zisserman, A. 2018. Vox-Celeb2: Deep Speaker Recognition. In INTERSPEECH .Ciftci, U. A.; Demir, I.; and Yin, L. 2020. FakeCatcher: Detection of synthetic portrait videos using biological signals. 
+
+IEEE Trans. Pattern Anal. Mach. Intell. 
+
+Croitoru, F.-A.; Hondru, V.; Popescu, M.; Ionescu, R. T.; Khan, F. S.; and Shah, M. 2025. MAVOS-DD: Multilin-gual Audio-Video Open-Set Deepfake Detection Benchmark. 
+
+arXiv preprint arXiv:2505.11109 .Dhamija, A. R.; Günther, M.; and Boult, T. 2018. Reducing network agnostophobia. In NeurIPS .Dhariwal, P.; and Nichol, A. 2021. Diffusion Models Beat GANs on Image Synthesis. In NeurIPS .Dietterich, T. G.; and Guyer, A. 2022. The familiarity hy-pothesis: Explaining the behavior of deep open set methods. 
+
+Pattern Recognition , 132: 108931. Dolhansky, B.; Bitton, J.; Pflaum, B.; Lu, J.; Howes, R.; Wang, M.; and Ferrer, C. C. 2020. The DeepFake Detection Challenge (DFDC) Dataset. arXiv:2006.07397. Dufour, N.; and Gully, A. 2019. Contributing Data to Deepfake Detection Research. Google AI Blog. Feng, C.; Chen, Z.; and Owens, A. 2023. Self-supervised video forensics by audio-visual anomaly detection. In CVPR .Frank, J.; Eisenhofer, T.; Schönherr, L.; Fischer, A.; Kolossa, D.; and Holz, T. 2020. Leveraging frequency analysis for deep fake image recognition. In ICML .Gu, S.; Chen, D.; Bao, J.; Wen, F.; Zhang, B.; Chen, D.; Yuan, L.; and Guo, B. 2022. Vector Quantized Diffusion Model for Text-to-Image Synthesis. In CVPR .Guo, J.; Zhang, D.; Liu, X.; Zhong, Z.; Zhang, Y.; Wan, P.; and Zhang, D. 2024. LivePortrait: Efficient Portrait Anima-tion with Stitching and Retargeting Control. arXiv preprint arXiv:2407.03168 .Haliassos, A.; Ma, P.; Mira, R.; Petridis, S.; and Pantic, M. 2025. Jointly Learning Visual and Auditory Speech Representations from Raw Data. In ICLR .Haliassos, A.; Mira, R.; Petridis, S.; and Pantic, M. 2022. Leveraging real talking faces via self-supervision for robust forgery detection. In CVPR .Haliassos, A.; Zinonos, A.; Mira, R.; Petridis, S.; and Pantic, M. 2024. BRAVEn: Improving Self-Supervised Pre-training for Visual and Auditory Speech Recognition. In ICASSP .He, Z.; Chen, P.-Y.; and Ho, T.-Y. 2024. RIGID: A Training-free and Model-Agnostic Framework for Robust AI-Generated Image Detection. CoRR , abs/2405.20112. Helber, P.; Bischke, B.; Dengel, A.; and Borth, D. 2019. EuroSAT: A Novel Dataset and Deep Learning Benchmark for Land Use and Land Cover Classification. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , 12(7): 2217–2226. Hoyer, P. O. 2004. Non-negative Matrix Factorization with Sparseness Constraints. Journal of Machine Learning Re-search , 5: 1457–1469. Huang, D.; and De la Torre, F. 2012. Facial Action Transfer with Personalized Bilinear Regression. In ECCV .Huawei Noah’s Ark Lab. 2022. Wukong. https://xihe. mindspore.cn/modelzoo/wukong. Ilharco, G.; Wortsman, M.; Wightman, R.; Gordon, C.; Carlini, N.; Taori, R.; Dave, A.; Shankar, V.; Namkoong, H.; Miller, J.; Hajishirzi, H.; Farhadi, A.; and Schmidt, L. 2021. OpenCLIP. Ji, X.; Hu, X.; Xu, Z.; Zhu, J.; Lin, C.; He, Q.; Zhang, J.; Luo, D.; Chen, Y.; Lin, Q.; Lu, Q.; and Wang, C. 2025. SONIC: Shifting Focus to Global Audio Perception in Portrait Animation. In CVPR .Jia, Y.; Zhang, Y.; Weiss, R. J.; Wang, Q.; Shen, J.; Ren, F.; Chen, Z.; Nguyen, P.; Pang, R.; Moreno, I. L.; and Wu, Y. 2018. Transfer Learning from Speaker Verification to Multispeaker Text-To-Speech Synthesis. In NeurIPS .Jiang, L.; Wu, W.; Li, R.-C.; Qian, C.; and Loy, C. C. 2020. DeeperForensics-1.0: A Large-Scale Dataset for Real-World Face Forgery Detection. CVPR .Karras, T.; Laine, S.; and Aila, T. 2019. A Style-Based Generator Architecture for Generative Adversarial Networks. In CVPR .Khalid, H.; Tariq, S.; Kim, M.; and Woo, S. S. 2021. FakeAVCeleb: A Novel Audio-Video Multimodal Deepfake Dataset. In NeurIPS Datasets and Benchmarks Track .Khan, S. A.; and Dang-Nguyen, D.-T. 2024. CLIPping the deception: Adapting vision-language models for universal deepfake detection. In ICMR .Kim, T.; Choi, J.; Jeong, Y.; Noh, H.; Yoo, J.; Baek, S.; and Choi, J. 2025. Beyond Spatial Frequency: Pixel-wise Temporal Frequency-based Deepfake Video Detection. In 
+
+ICCV .Kim, Y.; Yun, K.; Hong, S.; Cha, S.; Koo, C. S.; and Noh, J. 2026. X-AVDT: Audio-Visual Cross-Attention for Robust Deepfake Detection. In CVPR .Korshunova, I.; Shi, W.; Dambre, J.; and Theis, L. 2017. Fast Face-Swap Using Convolutional Neural Networks. In ICCV .Koutlis, C.; and Papadopoulos, S. 2024. Leveraging represen-tations from intermediate encoder-blocks for synthetic image detection. In ECCV .Koutlis, C.; and Papadopoulos, S. 2026. AuViRe: Audio-visual Speech Representation Reconstruction for Deepfake Temporal Localization. In WACV .Layton, S.; De Andrade, T.; Olszewski, D.; Warren, K.; Gates, C.; Butler, K.; and Traynor, P. 2025. Every breath you don’t take: Deepfake speech detection using breath. Digital Threats: Research and Practice , 6(3): 1–18. Li, Y.; Chang, M.-C.; and Lyu, S. 2018. In ictu oculi: Exposing AI created fake videos by detecting eye blinking. In WIFS .Li, Y.; Sun, P.; Qi, H.; and Lyu, S. 2020. Celeb-DF: A Large-scale Challenging Dataset for DeepFake Forensics. In 
+
+CVPR .Liang, Y.; Yu, M.; Li, G.; Jiang, J.; Li, B.; Yu, F.; Zhang, N.; Meng, X.; and Huang, W. 2024. SpeechForensics: Audio-Visual Speech Representation Learning for Face Forgery Detection. In NeurIPS .Liu, H.; Tan, Z.; Tan, C.; Wei, Y.; Wang, J.; and Zhao, Y. 2024a. Forgery-aware Adaptive Transformer for Generaliz-able Synthetic Image Detection. In CVPR .Liu, W.; She, T.; Liu, J.; Li, B.; Yao, D.; Liang, Z.; and Wang, R. 2024b. Lips Are Lying: Spotting the Temporal Inconsistency between Audio and Visual in Lip-Syncing DeepFakes. In NeurIPS .Lopes, M. 2013. Estimating unknown sparsity in compressed sensing. In ICML .Marra, F.; Gragnaniello, D.; Verdoliva, L.; and Poggi, G. 2019. Do GANs leave artificial fingerprints? In Multimedia Information Processing and Retrieval .Midjourney, Inc. 2022. Midjourney. https://www.midjourney. com/. Nichol, A.; Dhariwal, P.; Ramesh, A.; Shyam, P.; Mishkin, P.; McGrew, B.; Sutskever, I.; and Chen, M. 2021. GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models. In ICML .Nirkin, Y.; Keller, Y.; and Hassner, T. 2019. FSGAN: Subject Agnostic Face Swapping and Reenactment. In ICCV .Ojha, U.; Li, Y.; and Lee, Y. J. 2023. Towards Universal Fake Image Detectors that Generalize Across Generative Models. In CVPR .Oorloff, T.; Koppisetti, S.; Bonettini, N.; Solanki, D.; Colman, B.; Yacoob, Y.; Shahriyari, A.; and Bharaj, G. 2024. AVFF: Audio-Visual Feature Fusion for Video Deepfake Detection. In CVPR .Oquab, M.; Darcet, T.; Moutakanni, T.; Vo, H.; Szafraniec, M.; Khalidov, V.; Fernandez, P.; Haziza, D.; Massa, F.; El-Nouby, A.; Assran, M.; Ballas, N.; Galuba, W.; Howes, R.; Huang, P.-Y.; Li, S.-W.; Misra, I.; Rabbat, M.; Sharma, V.; Synnaeve, G.; Xu, H.; Jegou, H.; Mairal, J.; Labatut, P.; Joulin, A.; and Bojanowski, P. 2024. DINOv2: Learning Robust Visual Features without Supervision. arXiv:2304.07193. Oquab, M.; Darcet, T.; Moutakanni, T.; Vo, H.; Szafraniec, M.; Khalidov, V.; Fernandez, P.; Haziza, D.; Massa, F.; El-Nouby, A.; et al. 2023. DINOv2: Learning robust visual features without supervision. arXiv preprint arXiv:2304.07193 .Park, J.; Chai, J. C. L.; Yoon, J.; and Teoh, A. B. J. 2023. Understanding the Feature Norm for Out-of-Distribution Detection. In ICCV .Park, J.; and Owens, A. 2025. Community forensics: Using thousands of generators to train fake image detectors. In 
+
+CVPR .Perov, I.; Gao, D.; Chervoniy, N.; Liu, K.; Marangonda, S.; Umé, C.; Dpfks, M.; Facenheim, C. S.; RP, L.; Jiang, J.; et al. 2020. DeepFaceLab: Integrated, Flexible and Extensible Face-Swapping Framework. arXiv preprint arXiv:2005.05535 .Prajwal, K. R.; Mukhopadhyay, R.; Namboodiri, V. P.; and Jawahar, C. 2020. A Lip Sync Expert Is All You Need for Speech to Lip Generation In the Wild. In ACM International Conference on Multimedia .Radford, A.; Kim, J. W.; Hallacy, C.; Ramesh, A.; Goh, G.; Agarwal, S.; Sastry, G.; Askell, A.; Mishkin, P.; Clark, J.; et al. 2021. Learning transferable visual models from natural language supervision. In ICML .Reiss, T.; Cavia, B.; and Hoshen, Y. 2023. Detecting Deep-fakes Without Seeing Any. CoRR , abs/2311.01458. Ricker, J.; Damm, S.; Holz, T.; and Fischer, A. 2024. Towards the detection of diffusion model deepfakes. In VISAPP .Ricker, J.; Lukovnikov, D.; and Fischer, A. 2024. AEROB-LADE: Training-Free Detection of Latent Diffusion Images Using Autoencoder Reconstruction Error. In CVPR .Rombach, R.; Blattmann, A.; Lorenz, D.; Esser, P.; and Ommer, B. 2022a. High-Resolution Image Synthesis with Latent Diffusion Models. In CVPR .Rombach, R.; Blattmann, A.; Lorenz, D.; Esser, P.; and Ommer, B. 2022b. High-Resolution Image Synthesis with Latent Diffusion Models. In CVPR .Rössler, A.; Cozzolino, D.; Verdoliva, L.; Riess, C.; Thies, J.; and Nießner, M. 2019. FaceForensics++: Learning to Detect Manipulated Facial Images. ICCV .Sarkar, A.; Mai, H.; Mahapatra, A.; Lazebnik, S.; Forsyth, D. A.; and Bhattad, A. 2024. Shadows don’t lie and lines can’t bend! Generative models don’t know projective geometry... for now. In CVPR .Shi, B.; Hsu, W.; Lakhotia, K.; and Mohamed, A. 2022. Learning Audio-Visual Speech Representation by Masked Multimodal Cluster Prediction. In ICLR .Siméoni, O.; Vo, H. V.; Seitzer, M.; Baldassarre, F.; Oquab, M.; Jose, C.; Khalidov, V.; Szafraniec, M.; Yi, S.; Ra-mamonjisoa, M.; et al. 2025. DINOv3. arXiv preprint arXiv:2508.10104 .Smeu, S.; Boldisor, D.-A.; Oneata, D.; and Oneata, E. 2025. Circumventing shortcuts in audio-visual deepfake detection datasets with unsupervised learning localization. In CVPR .Sun, Y.; Guo, C.; and Li, Y. 2021. ReAct: Out-of-distribution Detection With Rectified Activations. In NeurIPS .Tan, C.; Zhao, Y.; Wei, S.; Gu, G.; Liu, P.; and Wei, Y. 2024. Frequency-aware deepfake detection: Improving gen-eralizability through frequency space domain learning. In 
+
+AAAI .Tsai, C.-T.; Ko, C.-Y.; Chung, I.-H.; Wang, Y.-C. F.; and Chen, P.-Y. 2024. Understanding and Improving Training-Free AI-Generated Image Detections with Vision Foundation Models. 
+
+CoRR , abs/2411.19117. Tschannen, M.; Gritsenko, A.; Wang, X.; Naeem, M. F.; Alabdulmohsin, I.; Parthasarathy, N.; Evans, T.; Beyer, L.; Xia, Y.; Mustafa, B.; Hénaff, O.; Harmsen, J.; Steiner, A.; and Zhai, X. 2025. SigLIP 2: Multilingual Vision-Language Encoders with Improved Semantic Understanding, Localization, and Dense Features. arXiv:2502.14786. Wang, J.; Qian, X.; Zhang, M.; Tan, R. T.; and Li, H. 2023. Seeing What You Said: Talking Face Generation Guided by a Lip Reading Expert. In CVPR .Wang, Y.; Chen, X.; Zhu, J.; Chu, W.; Tai, Y.; Wang, C.; Li, J.; Wu, Y.; Huang, F.; and Ji, R. 2021. HifiFace: 3D Shape and Semantic Prior Guided High Fidelity Face Swapping. In 
+
+IJCAI .Wei, H.; Yang, Z.; and Wang, Z. 2024. AniPortrait: Audio-Driven Synthesis of Photorealistic Portrait Animation. arXiv preprint arXiv:2403.17694 .Yan, S.; Li, O.; Cai, J.; Hao, Y.; Jiang, X.; Hu, Y.; and Xie, W. 2025. A Sanity Check for AI-generated Image Detection. In ICLR .Yang, S.; Li, H.; Wu, J.; Jing, M.; Li, L.; Ji, R.; Liang, J.; Fan, H.; and Wang, J. 2025. MegaActor-Sigma: Unlocking Flexible Mixed-Modal Control in Portrait Animation with Diffusion Transformer. In AAAI .Yang, X.; Li, Y.; and Lyu, S. 2019. Exposing deep fakes using inconsistent head poses. In ICASSP .Yu, Y.; Shin, S.; Lee, S.; Jun, C.; and Lee, K. 2023. Block Se-lection Method for Using Feature Norm in Out-of-Distribution Detection. In CVPR .Zakharov, E.; Shysheya, A.; Burkov, E.; and Lempitsky, V. 2019. Few-Shot Adversarial Learning of Realistic Neural Talking Head Models. In ICCV .Zhang, W.; Cun, X.; Wang, X.; Zhang, Y.; Shen, X.; Guo, Y.; Shan, Y.; and Wang, F. 2023. SadTalker: Learning Realistic 3D Motion Coefficients for Stylized Audio-Driven Single Image Talking Face Animation. In CVPR .Zheng, L.; Zhang, Y.; Guo, H.; Pan, J.; Tan, Z.; Lu, J.; Tang, C.; An, B.; and Yan, S. 2026. MEMO: Memory-Guided Diffusion for Expressive Talking Video Generation. TMLR .Zhou, Y.; Han, X.; Shechtman, E.; Echevarria, J.; Kalogerakis, E.; and Li, D. 2020. MakeItTalk: Speaker-Aware Talking-Head Animation. ACM Transactions on Graphics .Zhu, M.; Chen, H.; Yan, Q.; Huang, X.; Lin, G.; Li, W.; Tu, Z.; Hu, H.; Hu, J.; and Wang, Y. 2023. GenImage: A Million-Scale Benchmark for Detecting AI-Generated Image. In NeurIPS .Supplementary Material 8 Datasets 
+
+In this section, we briefly describe the datasets used for evaluation, along with the implementation details. 
+
+Video datasets 
+
+FakeAVCeleb (FAVC) (Khalid et al. 2021) FakeAVCeleb is an audio-visual deepfake benchmark containing subjects from diverse ethnic backgrounds. It combines multiple visual ma-nipulations, including face swapping (FaceSwap (Korshunova et al. 2017), FSGAN (Nirkin, Keller, and Hassner 2019)) and facial reenactment (Wav2Lip (Prajwal et al. 2020)), with syn-thetic audio generated through voice cloning (SV2TTS (Jia et al. 2018)) and lip synchronization. 
+
+AVLips (Liu et al. 2024b). AVLips focuses on lip synchro-nization manipulations while preserving the remainder of the face and identity, using four generators: MakeItTalk (Zhou et al. 2020), Wav2Lip (Prajwal et al. 2020), TalkLip (Wang et al. 2023), SadTalker (Zhang et al. 2023). 
+
+DeepfakeEval-2024 (DFE) (Chandra et al. 2026). 
+
+DeepfakeEval-2024 is a large-scale multimodal benchmark of in-the-wild deepfakes collected from social media in 2024. Samples are manually labeled and the underlying generators are typically unknown. 
+
+MAVOS-DD (Croitoru et al. 2025). MAVOS-DD is a multilingual open-set benchmark using seven generators: talking-head (EchoMimic (Chen et al. 2024), Memo (Zheng et al. 2026), Sonic (Ji et al. 2025)), expression transfer (Live-Portrait (Guo et al. 2024)), face swap (Inswapper 1, Hifi-Face (Wang et al. 2021), Roop 2). 
+
+MMDF (Kim et al. 2026). MMDF evaluates generalization to recent portrait animation models. Its test set contains manipulations generated by HunyuanAvatar (Chen et al. 2025), MegActor-Σ (Yang et al. 2025), and AniPortrait (Wei, Yang, and Wang 2024), which synthesize realistic talking-head videos from source images and driving signals. 
+
+DFDC (Dolhansky et al. 2020). DFDC is a widely used benchmark for deepfake detection. It contains videos generated using several manipulation pipelines, including DFAE (Perov et al. 2020), an autoencoder-based face-swapping method; MM/NN (Huang and De la Torre 2012), a classical landmark-based face-swapping approach that warps and blends faces without using deep generative models; and three neural generation methods: Neural Talking Heads (Za-kharov et al. 2019), FSGAN (Nirkin, Keller, and Hassner 2019), and StyleGAN (Karras, Laine, and Aila 2019). 
+
+Implementation. For FAVC and AVLips we consider the whole dataset. For MAVOS-DD, DFE and MMDF, we use their designated test sets. For DFDC, due to its large size, we evaluate only on its last two partitions (48 and 49). Following the protocol of Boldisor et al. (2026), we pre-process DFE to retain only samples that satisfy: (i) each 
+
+> 1https://github.com/deepinsight/insightface
+> 2https://github.com/s0md3v/roop
+
+video segment that has an associated audio stream; (ii) a video segment should contain a single speaking face that was tracked in every frame; (iii) the identified face is larger than 100px ×100px (iv) the duration of audio-video segment is between 3 and 60 seconds. If a video exceeds 60 seconds, we split it into chunks of at most 60 seconds. Samples with an 
+
+unknown class label are also discarded. Due to the nature of MAVOS-DD, which includes TED Talks and news segments that do not always show the person speaking, we apply the same preprocessing to this dataset. Furthermore, we evaluate only on English videos from the MAVOS-DD test set to avoid introducing semantic distribu-tion shifts within the real domain. As AV-HuBERT relies on cropped faces, we retain only videos for which its preprocessing pipeline successfully de-tects a face. We report the number of resulting videos after preprocessing for each dataset in Table 4. Dataset Original Final FakeAVCeleb 21566 21555 AVLips 7557 7557 Deepfake-Eval-2024 815 577 MAVOS-DD 7951 7011 MMDF 4884 4477 DFDC 5597 5453 Table 4: Number of evaluation samples before and after preprocessing for each dataset. 
+
+Image datasets 
+
+GenImage (Zhu et al. 2023). GenImage is a million-scale benchmark for AI-generated image detection. Real images are drawn from ImageNet, and fake images are gen-erated by eight generators spanning GANs and diffusion models: BigGAN (Brock, Donahue, and Simonyan 2019), ADM (Dhariwal and Nichol 2021), GLIDE (Nichol et al. 2021), VQDM (Gu et al. 2022), Wukong (Huawei Noah’s Ark Lab 2022), Midjourney (Midjourney, Inc. 2022), and Stable Diffusion v1.4/v1.5 (Rombach et al. 2022b). Each generator subset has its own dedicated, non-overlapping real images, rather than a shared real pool, so real and fake images stay balanced within each generator subset. The evaluation is performed on each real–generator subset. 
+
+Implementation. We evaluate on the test sets that contains 6 000 real images and 6 000 fake images per generator. One exception to this is SD1.5, which has 8 000 samples for each class. 
+
+## 9 Backbones 
+
+Video backbones 
+
+AV-HuBERT (Shi et al. 2022). This network is trained via masked multimodal cluster prediction: masked audio and visual streams predict discrete cluster targets obtained from 
+
+k-means on prior-iteration features, with modality dropout preventing reliance on a single stream. RAVEn (Haliassos et al. 2025). Replaces AV-HuBERT’s offline clustering with cross-modal self-distillation: each modality’s encoder predicts targets from a momentum copy of the other modality’s encoder. 
+
+BRAVEn (Haliassos et al. 2024). Extends RAVEn with asymmetric augmentations, more prediction targets, and a revised momentum schedule for stronger visual-only (lip-reading) representations. 
+
+Image backbones 
+
+DINOv3 (Siméoni et al. 2025). DINOv3 is a self-supervised vision transformer trained without labels or text, using a self-distillation objective where a student network matches the output of a teacher on different augmented views of the same image. It is trained on diverse web-scale data. 
+
+BEiT (Bao et al. 2022). BEiT pretrains a vision transformer with a BERT-style masked-image-modeling objective: images are tokenized into discrete visual tokens, and the model learns to predict masked patches from context. Unlike contrastive methods, its pretraining signal is purely reconstructive and does not involve text supervision. 
+
+OpenCLIP (Ilharco et al. 2021). This model is an open-source reproduction of CLIP (Radford et al. 2021), trained with a contrastive image-text objective on large-scale web data so that matching image-text pairs are pulled together in a shared embedding space. 
+
+SigLIP 2 (Tschannen et al. 2025). SigLIP builds on CLIP-style contrastive pretraining but replaces the softmax contrastive loss with a sigmoid loss, improving training efficiency, and incorporates multilingual data and auxiliary objectives to strengthen semantic understanding and dense feature quality. 
+
+PE-Core (Bolya et al. 2025). Perception Encoder is a contrastively-trained general-purpose visual encoder designed to transfer well across a broad range of downstream vision tasks, motivated by the observation that the strongest em-beddings are often found in intermediate rather than final layers. It introduces language alignment, which fine-tunes intermediate features for multimodal language modeling, and spatial alignment, which distills intermediate features into dense, spatially-consistent representations. 
+
+## 10 Additional experiments 
+
+Results on visual-only video 
+
+Table 5 reports results of NormFake on visual-only video benchmarks, which do not include audio: FaceForensics++ (FF++) (Rössler et al. 2019), DFD (Dufour and Gully 2019), DeeperForensics (DFo) (Jiang et al. 2020), and Celeb-DF-v2 (CDFv2) (Li et al. 2020). We compare with the closest real-only prior work, namely STALL, which we calibrate using visual AV-HuBERT features, as described in the main paper. Additionally, we also report results for a fake-aware method, RealForensics, that is trained on FaceForensics++. We observe that NormFake’s results are quite moderate, lagging behind RealForensics, but above the sub-random chance performance of STALL. This strengthens our claim that NormFake acts as a strong non fake-aware baseline for 0 5 10 15 20 output embeddings 
+
+> Block index
+> 020 40 60 80 100
+> AUC (%)
+> FAVC AVLips DFE MAVOS-DD MMDF DFDC Average
+
+(a) AV-HuBERT 0 5 10 15 20 25 30 35 output embeddings 
+
+> Block index
+> 020 40 60 80 100
+> AUC (%)
+> ADM BigGAN GLIDE Midjourney SD1.4 SD1.5 VQDM Wukong Average
+
+(b) DINOv3-7B 
+
+Figure 8: Per transformer block and output embeddings ROC-AUC % of NormFake (sparsity) using (a) AV-HuBERT fea-tures on videos and (b) DINOv3-7B features on images. Later layers provide the best performance, while the behavior of earlier layers differs between models. Specifically, for the video setting, AV-HuBERT achieves its best performance at the last layer, while in the image setting, DINOv3-7B achieves its best performance at the end of the penultimate transformer block. The latter is valid for all generators. deepfake detection. The results for RealForensics are taken from Kim et al. (2025). Method FF++ DFD DFo. CDFv2 
+
+Fake-aware methods: 
+
+RealForensics Train 82.2 99.3 86.9 
+
+Real-only methods: 
+
+STALL 32.7 41.4 47.1 42.2 
+
+NormFake (magnitude) 85.9 62.2 79.0 64.6 
+
+NormFake (sparsity) 78.1 64.2 82.4 62.6 Table 5: Performance (ROC-AUC, %) on visual-only video datasets, without access to the audio stream. Train indicates that FF++ is the training dataset used by RealForensics and is therefore not evaluated. NormFake achieves competitive performance, trailing the FF++-trained RealForensics, while substantially outperforming STALL. Per-layer analysis of NormFake (sparsity) 
+
+Figure 8 shows the performance of NormFake (sparsity) when using features from the end of each transformer block or final embeddings. We observe that the final layer is not always best. On DINOv3-7B, in Figure 8b, the best layer is actu-ally the penultimate transformer block. Notably, this trend is consistent across all generators in GenImage, suggesting that this layer captures a representation that is broadly fa-vorable for image-level deepfake detection rather than being generator-specific. This observation indicates that, for some backbones, intermediate representations may be more infor-mative than the final embedding A similar phenomenon has been reported in the out-of-domain detection setups, where penultimate-layer representations of classifiers have been shown to provide stronger separation between in-distribution and out-of-distribution samples than the final layer (Yu et al. 2023). 
+
+Model correlation for NormFake (sparsity) 
+
+We compare the NormFake (sparsity) predictions with those produced by other real-only deepfake detectors by computing the Pearson correlation coefficient between those. The results are shown in Figure 9. We observe a similar trend to the results in the paper, which used the NormFake (magnitude) vari-ant: SpeechForensics and FACTOR exhibit consistently high positive correlations with NormFake, whereas the remaining real-only methods show weak or even negative correlations. These findings further support our hypothesis that Speech-Forensics, FACTOR, and NormFake capture complementary manifestations of the same underlying process. FAVC AVLips DFE MAVOS-DDMMDF DFDC −0.75 −0.50 −0.25 0.00 0.25 0.50 0.75 1.00 
+
+> Pearson correlation
+> SpeechForensics FACTOR AVH-Align STALL AVAD
+
+Figure 9: Pearson correlation between the sample-level pre-dictions of real-only deepfake detectors and NormFake (spar-sity). Across datasets, SpeechForensics and FACTOR are consistently highly correlated with NormFake, whereas the remaining methods exhibit weak or even negative correla-tions. 
+
+NormFake on other modalities 
+
+Audio. We evaluate how discriminative is NormFake for audio-based deepfake detection. We do so by using audio-only features extracted from AV-HuBERT, RAVEn, and BRAVEn on the FakeVideo-FakeAudio (FVFA) and RealVideo-FakeAudio (RVFA) subsets of FakeAVCeleb. For AV-HuBERT, we mask the visual branch and use only the audio waveform as input. Real samples are taken from the RealVideo-RealAudio split. The results are reported in Ta-ble 6. Unlike the visual setting, we do not observe a consistent separation between real and fake samples across backbones. AV-HuBERT achieves good performance only on samples containing both visual and audio manipulations, and only with the magnitude variant. In contrast, the same variant performs reasonably well with RAVEn and BRAVEn on both splits, whereas the sparsity variant consistently performs be-low chance across all three backbones. Overall, while these results suggest that NormFake may capture useful cues from audio representations, they indicate that the phenomenon is substantially weaker than in the visual domain and warrants further investigation, particularly on dedicated audio-only deepfake benchmarks. Backbone Variant FVFA RVFA AV-HuBERT magnitude 78.2 38.7 sparsity 42.4 34.1 BRAVEn magnitude 60.5 74.2 sparsity 17.2 32.7 RAVEn magnitude 62.3 80.6 sparsity 15.8 43.2 Table 6: Performance of NormFake using audio-only fea-tures from AV-HuBERT, RAVEn, and BRAVEn on the FakeAVCeleb splits containing manipulated audio. Overall, the magnitude variant yields moderate performance on most backbones and splits, whereas the sparsity variant remains close to chance. 
+
+Multimodal. We also evaluate NormFake using joint audio-visual representations extracted from AV-HuBERT, where both the audio waveform and visual frames are provided as input. Table 7 reports the results for each FakeAVCeleb split, together with those obtained using visual-only and audio-only representations for comparison. NormFake (mag-nitude), i.e. the ℓ1 norm, achieves strong performance on the FakeVideo-FakeAudio (FVFA) and RealVideo-FakeAudio (RVFA) splits, but drops to near chance on the FakeVideo-RealAudio (FVRA) split, where only the visual stream is manipulated. In contrast, the ℓ1/ℓ 2 variant remains close to chance across all splits. Compared with the unimodal set-tings, visual-only representations perform best whenever the video is manipulated, whereas only the multimodal repre-sentation performs well when only the audio is manipulated, unlike audio features which perform above chance only on FakeVideo-FakeAudio (FVFA). These inconsistencies make it unclear what information is encoded by each representation, with only the visual-only features behaving as expected. 
+
+Qualitative examples 
+
+To better understand which image properties influence the magnitude and the sparsity of the representations, we provide Features Variant FVFA RVFA FVRA All Multimodal ℓ1 84.0 88.5 53.0 69.8 
+
+ℓ1/ℓ 2 49.6 47.4 54.2 51.7 Visual ℓ1 99.6 54.6 96.8 97.2 Audio ℓ1 78.2 38.7 49.2 63.9 Table 7: Performance of NormFake using AV-HuBERT mul-timodal, visual-only, and audio-only representations on the FakeAVCeleb splits. Visual-only representations achieve the highest performance, while multimodal and audio-only repre-sentations are effective primarily on splits containing audio manipulations. qualitative examples in Figure 10 for AV-HuBERT features on FakeAVCeleb and in Figure 11 for DINOv3-7B features on GenImage. The samples are ordered by the magnitude ( ℓ1
+
+norm) of their representations along the x-axis and by the sparsity (the ratio between ℓ1 and ℓ2 norms) ratio along the y-axis. For AV-HuBERT, we observe a tendency for blurred frames and those containing visible visual artifacts to receive lower scores for both metrics, whereas sharper, more natural-looking frames often receive higher scores. For DINOv3, images with high-magnitude norms are pre-dominantly semantically coherent photographs containing a single well-defined object or scene, whereas low-magnitude images more frequently correspond to cluttered scenes and unusual viewpoints and framing. In contrast, the ℓ1/ℓ 2 ra-tio exhibits a much weaker visual trend. Nevertheless, there appears to be a slight tendency for higher norm ratios to correspond to object-centric images, while lower ratios are indicate more complex scenes. Figure 10: Qualitative examples from FakeAVCeleb, ordered by the NormFake scores. The x-axis corresponds to the magnitude score ( ℓ1 norm), while the y-axis corresponds to the sparsity score ( ℓ1/ℓ 2 ratio). The scores are computed from AV-HuBERT features. Frames with blue borders denote real samples, while those with orange borders denote fake samples. Figure 11: Qualitative examples from GenImage, ordered by the NormFake scores. The x-axis corresponds to the magnitude score ( ℓ1 norm), while the y-axis corresponds to the sparsity score ( ℓ1/ℓ 2 ratio). The scores are computed from DINOv3-7B features. Images with blue borders denote real samples, while those with orange borders denote fake samples.

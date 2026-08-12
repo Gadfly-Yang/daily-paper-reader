@@ -6,35 +6,47 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-10
-- 运行时间：2026-08-10 21:10:17 UTC
+- 最新运行日期：2026-08-12
+- 运行时间：2026-08-12 21:12:59 UTC
 - 运行状态：成功
-- 本次总论文数：4
-- 精读区：4
-- 速读区：0
+- 本次总论文数：8
+- 精读区：5
+- 速读区：3
 
 ### 今日简报（AI）
-今日精读两篇满分论文，聚焦AI生成内容检测的泛化性突破。  
-方向是视觉语言模型潜力释放与多智能体取证推理，让AI鉴伪不再局限于特定生成器。  
-建议关注跨模型鉴伪技术进展，实际应用可留意多专家协作方案。
-- 详情：[/202608/10/README](/202608/10/README)
+- 今日共生成 8 篇推荐（精读 5 篇，速读 3 篇）
+- 精读：《LHSDet: High-Resolution AI-Generated Image Detection via Visual Question Answering》（9.0/10）, 《PE-Mamba: Bidirectional Selective Layer Aggregation for AI-Generated Image Detection》（9.0/10）
+- 速读：《A Combined Feature-Based Framework for Disguise and Spoofing Detection in Face Recognition Systems》（6.0/10）, 《A Combined Feature-Based Framework for Disguise and Spoofing Detection in Face Recognition Systems》（6.0/10）, 《Domain-Aware Pruning: Sparsity and Domain Generalization via Regularized Probabilistic Masking》（6.0/10）
+- 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
+- 详情：[/202608/12/README](/202608/12/README)
 
 ### 精读区论文标签
-1. [Unleashing the Potential of Vision-Language Models for Generalizable AI-Generated Image Detection](/202608/10/2608.04935v2-unleashing-the-potential-of-vision-language-models-for-generalizable-ai-generated-image-detection)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：利用视觉语言模型实现可泛化的AI生成图像检测
-2. [Multi-Agent Forensic Reasoning for Generalizable Deepfake Video Detection](/202608/10/2608.06865v1-multi-agent-forensic-reasoning-for-generalizable-deepfake-video-detection)  
-   标签：评分：10.0/10、query:deepfake-fsl
-   evidence：提出用于可泛化深度伪造视频检测的数据集和多智能体方法。
-3. [Image Classification Using CNN-QNN Hybrid Model with Optimized Correlated Features](/202608/10/2608.04379v1-image-classification-using-cnn-qnn-hybrid-model-with-optimized-correlated-features)  
+1. [LHSDet: High-Resolution AI-Generated Image Detection via Visual Question Answering](/202608/12/2608.07863v1-lhsdet-high-resolution-ai-generated-image-detection-via-visual-question-answering)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：提出用于图像分类的CNN-量子神经网络混合模型，直接匹配使用CNN进行图像分类的需求
-4. [Improving Low-Resolution Face Recognition under Limited Data: How Synthetic Data Generation Can Close the Domain Gap](/202608/10/2608.06580v1-improving-low-resolution-face-recognition-under-limited-data-how-synthetic-data-generation-can-close-the-domain-gap)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：研究合成数据生成以改进有限标记数据下的低分辨率人脸识别。
+   evidence：高分辨率AI生成图像检测，通过视觉问答实现，应对训练数据有限
+2. [PE-Mamba: Bidirectional Selective Layer Aggregation for AI-Generated Image Detection](/202608/12/2608.07999v1-pe-mamba-bidirectional-selective-layer-aggregation-for-ai-generated-image-detection)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：通过PE-Mamba进行AI生成图像检测
+3. [PatchHead: Learning Spatial Patch Evidence for Generalizable AI-Generated Image Detection](/202608/12/2608.09223v1-patchhead-learning-spatial-patch-evidence-for-generalizable-ai-generated-image-detection)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：提出PatchHead用于跨生成器泛化的AI生成图像检测
+4. [Foundation Models are Implicit Deepfake Detectors](/202608/12/2608.09427v1-foundation-models-are-implicit-deepfake-detectors)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：通过特征幅度异常检测进行深度伪造检测
+5. [VidForensics-M1: Meta-Detection Reinforcement Learning with Verifiable Temporal Grounding for AI-Generated Video Forensics](/202608/12/2608.11201v1-vidforensics-m1-meta-detection-reinforcement-learning-with-verifiable-temporal-grounding-for-ai-generated-video-forensics)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：通过元检测强化学习进行AI生成视频检测
 
 ### 速读区论文标签
-- 本次无速读推荐。
+1. [A Combined Feature-Based Framework for Disguise and Spoofing Detection in Face Recognition Systems](/202608/12/2608.08521v1-a-combined-feature-based-framework-for-disguise-and-spoofing-detection-in-face-recognition-systems)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：人脸识别系统中的欺骗检测
+2. [A Combined Feature-Based Framework for Disguise and Spoofing Detection in Face Recognition Systems](/202608/12/2608.08521v2-a-combined-feature-based-framework-for-disguise-and-spoofing-detection-in-face-recognition-systems)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：人脸识别系统中的欺骗检测
+3. [Domain-Aware Pruning: Sparsity and Domain Generalization via Regularized Probabilistic Masking](/202608/12/2608.08624v1-domain-aware-pruning-sparsity-and-domain-generalization-via-regularized-probabilistic-masking)  
+   标签：评分：6.0/10、query:deepfake-fsl
+   evidence：域感知剪枝提升域泛化能力，可迁移至AI生成图像检测的跨域场景
 
 
 <div class="dpr-home-promo-card">
