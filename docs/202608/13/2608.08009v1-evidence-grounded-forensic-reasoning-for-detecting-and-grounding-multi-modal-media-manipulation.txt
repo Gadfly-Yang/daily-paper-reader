@@ -1,0 +1,507 @@
+Title: Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation
+
+URL Source: https://arxiv.org/pdf/2608.08009v1
+
+Published Time: Tue, 11 Aug 2026 00:32:34 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation 
+
+## Yichun Yeh ∗
+
+yeyijun2024@ia.ac.cn MAIS, CASIA; SAI, UCAS Beijing, China 
+
+## Yiheng Li ∗
+
+liyiheng2024@ia.ac.cn SAI, UCAS; MAIS, CASIA Beijing, China 
+
+## Xiaobo Hu 
+
+huxiaobo2024@ia.ac.cn MAIS, CASIA; SAI, UCAS Beijing, China 
+
+## Zhen Lei †
+
+zhen.lei@ia.ac.cn MAIS, CASIA; SAI, UCAS Beijing, China 
+
+## Yang Yang †
+
+yang.yang@nlpr.ia.ac.cn MAIS, CASIA; SAI, UCAS Beijing, China 
+
+Abstract 
+
+Fake news increasingly relies on cross-modal image-text forgeries, making transparent and verifiable reasoning chains an urgent need for Detecting and Grounding Multi-Modal Media Manipulation (DGM4). Existing methods produce black-box detection results without any decision rationale, limiting their reliability in foren-sic practice. Multi-modal Large Language Models (MLLMs) offer a natural path toward explainability, but applying them to DGM4 raises two difficulties. First, models tend to generate explanations disconnected from predicted evidence locations, producing unveri-fied attribution. Second, enforcing evidence-conclusion consistency requires active optimization, yet uniform training signals fail to distinguish localization tokens from classification tokens, making multi-head joint training unreliable. We propose a multi-modal manipulation detector based on an Evidence-Grounded Forensic Reasoning (EFR) framework. EFR introduces an Anchor-and-Verify reasoning chain that enforces modality-isolated perception before cross-modal comparison, with conclusion coordinates as explicit anchors to which downstream evidence must spatially correspond. A verifiable reward system then enforces evidence-conclusion con-sistency during training, while a Modality-Decoupled Advantage (MDA) routing mechanism mitigats credit misassignment across prediction tasks. Experiments show that EFR achieves state-of-the-art performance while producing structured forensic reasoning records that explicitly bind explanations to evidence. 
+
+CCS Concepts 
+
+• Computing methodologies → Biometrics ; Natural language generation .
+
+Keywords 
+
+Media Manipulation Detection, Multi-Modal Large Language Model, Reasoning, Reinforcement Learning, Multi-Modal 
+
+> ∗Both authors contributed equally to the paper.
+> †Corresponding authors.
+> This work is licensed under a Creative Commons Attribution 4.0 International License.
+> MM ’26, Rio de Janeiro, Brazil
+> © 2026 Copyright held by the owner/author(s). ACM ISBN 979-8-4007-2213-4/2026/11 https://doi.org/10.1145/3767308.3835015
+
+ACM Reference Format: 
+
+Yichun Yeh, Yiheng Li, Xiaobo Hu, Zhen Lei, and Yang Yang. 2026. Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation. In Proceedings of the 34th ACM International Conference on Multimedia (MM ’26), November 10–14, 2026, Rio de Janeiro, Brazil. ACM, New York, NY, USA, 10 pages. https://doi.org/10.1145/3767308.3835015 
+
+1 Introduction 
+
+The rapid spread of deepfake technology and large language mod-els [2, 32] has made multi-modal misinformation increasingly easy to produce and hard to detect [29]. Isolated face manipulation [52] and textual fabrication [27] have expanded into coordinated cross-modal forgeries where images and their associated texts are manip-ulated simultaneously, posing escalating threats to the credibility of public media. To address these threats, the DGM4 task [34] requires models to jointly perform authenticity classification, manipulation type identification, and fine-grained localization of manipulated faces and text tokens, a combination that far exceeds the com-plexity of single-modal detection. Existing DGM4 methods follow two main directions: cross-modal feature alignment and semantic interaction [18, 51], and fine-grained localization through richer supervision such as frequency-domain features and multi-scale ob-jectives [23, 25, 47]. Despite steady progress, they treat detection as a closed prediction problem, outputting labels and bounding boxes without any decision rationale. Yet real-world forensic workflows such as editorial fact-checking and legal content authentication demand decisions that can be audited and challenged. These lim-itations call for a detection paradigm that produces structured, verifiable reasoning alongside its predictions. Beyond these task-specific methods, MLLMs [21, 22, 42] have re-cently been applied to single-modality manipulation detection with localization and explanation [9, 14, 24, 44]. Leveraging cross-modal understanding and language generation, these approaches [11, 20, 45] offer a natural path toward explainable detection, with recent ef-forts adding pattern-aware reasoning, self-reflection, and two-stage training [5, 13, 38, 40]. Rather than pursuing generic reasoning, we identify a critical yet overlooked flaw shared by these meth-ods: their explanations are never tied to the model’s own predicted localization, so their interpretability remains superficial. This mo-tivates a new direction, and applying MLLMs to DGM4 further exposes two problems amplified by its cross-modal complexity. First, unverified attribution : without structural constraints, MLLMs arXiv:2608.08009v1 [cs.CV] 8 Aug 2026 MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Yichun Yeh, Yiheng Li, Xiaobo Hu, Zhen Lei, and Yang Yang （A）Existing DGM4 Black-box Methods   
+
+> "Trump blames Pence after introducing him at a news conference in New York"
+> Detector [Label: Fake] [Face Box] [Text Box]
+> No reasoning!
+> （B）Standard MLLMs (With-Grounding)
+> MLLM
+> [Fake Label] [Text reasoning (disconnected)] [Face Box] [Text Box]
+> Unlinked Attribution!
+> LIMITATIONS:
+> 1. Unverified Attribution (Grounding ≠ Evidence) 2. Credit Misassignment (Gradient Interference)
+> （C）Our Approach (EFR) Anchor-and-Verify Reasoning Chain
+> FINAL OUTPUT (Detailed Forensic Record)
+> [Final Verdict: Fake] [Fine-grained Localization: Face Box, Text Box] [Verifiable Physical Evidence] [Groundable Reasoning Chain]
+> "Trump blames Pence after introducing him at a news conference in New York"
+> Forensics Hypothesis (Anchor) Modality Perception Cross-Modal Analysis Evidence Binding
+> Verifies Evidence Matches Anchor Anchor-to-Evidence Tracing
+> “Trump blames Pence after introducing him at a news conference in New York” STAGE 1 STAGE 2
+
+Figure 1: Comparison of existing approaches and our EFR framework. (A) Existing DGM4 methods produce fine-grained results but lack decision rationale. (B) MLLMs offer explanations, yet the reasoning is disconnected from pre-dicted evidence locations, leaving attribution unverified. (C) Our EFR introduces an Anchor-and-Verify reasoning chain that places conclusion coordinates as explicit anchors and requires downstream evidence to spatially match them, en-forced by a verifiable reward system during training. 
+
+produce coherent-looking reasoning yet cannot verify that cited evidence matches the predicted conclusion coordinates [55, 56]. Second, credit misassignment : DGM4 packs heterogeneous heads (classification, face localization, and text localization) into one out-put sequence, so a uniform signal over all tokens lets gradients from one head interfere with others, destabilizing joint training. To address both problems, we propose the Evidence-Grounded Forensic Reasoning (EFR) framework. Since existing benchmarks provide no forensic rationale and contain labeling noise, we first construct a high-quality reasoning dataset as the training founda-tion. EFR then operates in two coordinated stages. The first stage introduces an Anchor-and-Verify reasoning chain that organizes outputs into modality-isolated perception, cross-modal conflict analysis, and evidence binding, placing conclusion coordinates as explicit anchors that downstream evidence must match, thereby closing the attribution gap. The second stage then optimizes the model with reinforcement learning: a five-component verifiable reward system reinforces this coordinate-level consistency, while a Modality-Decoupled Advantage (MDA) routing mechanism sends task-specific advantages to their corresponding tokens, eliminating the cross-head interference. Our main contributions are as follows: 
+
+• We propose EFR, an evidence-grounded forensic reasoning framework for DGM4 that, unlike black-box detectors and unconstrained MLLM explanations, grounds every forensic conclusion in a spatially verifiable location through anchor-first verifiable binding. 
+
+• We introduce an Anchor-and-Verify reasoning chain that constrains cited evidence to match the predicted anchors, to-gether with a Modality-Decoupled Advantage routing scheme that delivers task-specific signals to their corresponding pre-diction tokens; both are trained through a two-stage pipeline over a curated 50K forensic reasoning dataset. 
+
+• Extensive experiments on DGM4 show that EFR attains state-of-the-art detection and competitive grounding, while pro-ducing structured reasoning records whose cited evidence is spatially consistent with the predicted anchors. 
+
+2 Related Works 
+
+Multi-Modal Manipulation Detection. Early efforts addressed coarse-grained binary classification for fake-news and out-of-context misinformation detection, treating an image-text pair as a sin-gle real-or-fake decision. HAMMER [34] reframes the problem as DGM4, which jointly detects manipulation, classifies its fine-grained type, and grounds the tampered image regions and text tokens. Subsequent work advances the task along two directions. One strengthens cross-modal alignment so that subtle semantic inconsistencies become separable: ASAP [51] adapts prompts to the input pair, while CSCL [18] enforces consistency-based objec-tives across modalities. The other sharpens localization through richer supervision, as in UFAFormer [23] with frequency-domain cues, IDseq [25] with decoupled grounding, and FMSN [47] with multi-scale signals. Beyond these, RamDG [37] targets coordinated semantic manipulations, and LADLE-MM [3] and CIEC [48] tackle limited-annotation settings, while DGM4+ [39] and MDSM [50] extend the benchmark with global scene inconsistencies and MLLM-crafted narratives. Despite steady progress, these methods remain prediction-oriented, producing bounding boxes and labels without any rationale behind their decisions. 
+
+MLLMs for Forgery Detection. The strong cross-modal reasoning of MLLMs has shifted forgery detection toward explainability, mov-ing beyond a binary verdict to a human-readable justification. Early work [12] probes their zero-shot capability through prompt engi-neering, and later methods [4, 11, 30, 45] tie fine-grained tampered regions to textual explanations via multi-granularity prompts. To make the reasoning process explicit, AIGI-Holmes [54] and FakeRea-soning [5] impose chain-of-thought formats aligned with forgery attributes, while VERITAS [40] and RAIDX [17] improve general-ization through pattern-aware reasoning and retrieval-augmented evidence. More recently, DF-LLaVA [38] injects external knowl-edge with conflict-driven self-reflection for single-image detection, and TriDF [13] evaluates perception and hallucination to gauge interpretability. Yet all of these generate explanations without en-forcing consistency between the cited evidence and the predicted conclusion coordinates, so a plausible-sounding rationale may still point elsewhere, leaving attribution unverified; applied to the multi-head DGM4 task, they further suffer credit misassignment under a uniform training signal. In contrast, EFR enforces anchor-first, coordinate-level verifiable binding and decouples per-task optimiza-tion, addressing both limitations. 
+
+Reinforcement Learning for LLMs. RL-based post-training has evolved from PPO-based RLHF toward scalable reasoning opti-mization [28, 31, 33]. GRPO [36] removes the explicit value model, estimating advantages from group-level reward comparisons. Later variants refine this scheme: DAPO [46] counters entropy collapse Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil DGM4 Dataset (208K) 
+
+> [Validation per Modality]
+> RetinaFace IoU Check
+> [Image]
+> Spacy POS Filter + VADER Sentiment Score
+> [Text]
+> Tier 1: Clean Tier 2: Harder Cases Tier 3: Borderline Discard: Invalid 147k 53k 7k 0.4k [Data Stratification] [Auxiliary Field Annotation]
+> GT FAKE
+> Spatial Priors (Image)
+> Semantic Priors (Text)
+> Trump,PROPN blames,VERB Pence,PROPN after,ADP
+> …
+> neu Sentiment: -0.49 neu neu neg neg face 1(left...),face 2(right...)
+> Proportional Sampling
+> Selected Dataset (80K)
+> FINAL FORENSIC DATASET ( Verified & Consistent)
+> 1. 50k High-Quality Samples 2. Structured & Verified Reasoning 3. Causally-Ordered Outpu
+
+t
+
+> [Quality Filtering]
+> Step 3: Manual review Step 2: MLLM Peer Review [Perceptual Grounding] [Evidence Type] [Conflict Accuracy]
+> [Format Check] [No Reverse Inf.] [Coord. Verify] [Hedging Filter]
+> Step 1: Rule-based Filter
+> MLLM Annotation (Instructed by GT findings) [Ground-Truth Prior Injection] [Forensic Report Generation]
+
+Figure 2: The forensic reasoning annotation data construction pipeline. Raw DGM4 samples (208K) are filtered and stratified by quality, with spatial and semantic priors extracted to guide MLLM annotation. A three-step quality filtering stage combining rule-based checks, MLLM peer review, and manual inspection yields 50K verified forensic reasoning samples. 
+
+and training instability, SRPO [49] scales via a two-stage curricu-lum, GSPO [53] stabilizes updates with sequence-level importance ratios, and GDPO [26] decouples reward normalization for multi-reward settings. All of them, however, apply the reward uniformly across output tokens, ignoring the semantic boundaries of struc-tured multi-modal outputs. Our MDA routes task-specific advan-tages along these boundaries within the reasoning chain, mitigating credit misassignment in multi-head training. 
+
+3 Methodology 3.1 Overview 
+
+Directly applying MLLMs to DGM4 exposes two fundamental prob-lems: unverified attribution , where explanations become discon-nected from predicted manipulation locations, and credit misassign-ment , where joint optimization across heterogeneous prediction heads suffers under uniform advantage estimation. As illustrated in Figure 3, EFR addresses both through two coordinated stages. Stage 1 (Sec. 3.2) tackles unverified attribution with a structured rea-soning chain that binds forensic conclusions to spatially grounded evidence, internalized via supervised fine-tuning. Stage 2 (Sec. 3.3) mitigates credit misassignment by replacing uniform advantage estimation with task-specific signals routed to their corresponding prediction tokens. 
+
+3.2 Structured Reasoning Cold-Start 
+
+To equip the model with structured forensic reasoning capability, we construct a high-quality forensic reasoning dataset from the DGM4 benchmark and use it to initialize the model via supervised fine-tuning to internalize the Anchor-and-Verify structure. 
+
+3.2.1 Anchor-and-Verify Reasoning Chain. Without structural con-straints, MLLMs produce reasoning chains that appear coherent but lack a mechanism to verify that cited evidence corresponds to predicted conclusion coordinates. We address this by designing the Anchor-and-Verify reasoning chain, a structured chain-of-thought format that organizes model outputs into four ordered stages, each serving a distinct forensic function, as illustrated in Figure 1. 
+
+Forensic Hypothesis. All predicted outputs are placed at the begin-ning of the sequence as a Forensic Hypothesis Block. The predicted coordinates serve as explicit anchors that all downstream stages must spatially correspond to, establishing a verifiable reference before any explanation is generated. 
+
+Modality-Isolated Perception. Independent analysis is enforced through two strictly separated sub-modules. The visual module describes only physically observable image features, prohibited from referencing caption content or making authenticity judgments; the text module independently analyzes caption semantics and logical structure without referencing the image. This separation reduces the influence of language priors on visual analysis. 
+
+Cross-Modal Conflict Analysis. The two perceptual outputs are explicitly compared and their disagreement is graded into two levels: strong conflicts, where the image and text assert mutually exclusive facts, and weak mismatches, where the two modalities are thematically related but neither corroborates nor contradicts the other. This graded assessment produces fine-grained, evidence-grounded conflict judgments instead of a coarse binary decision. 
+
+Physical Evidence Binding. Conflict analysis is grounded in con-crete physical locations. Let ˆ𝑏 and ˆ 𝑠 denote the predicted face bound-ing box and text token span from the Forensic Hypothesis Block. Visual evidence must cite a bounding box ˆ𝑏 ′ with verifiable ob-servations, and text evidence must cite a token span ˆ 𝑠 ′ with an explanation of the semantic discontinuity. Both must satisfy ˆ𝑏 ′ ≈ ˆ𝑏 
+
+and ˆ 𝑠 ′ ⊆ ˆ𝑠 , ensuring every forensic conclusion is traceable to a spe-cific location. This constraint is enforced by the verifiable reward system during reinforcement learning (Sec. 3.3.1). 
+
+3.2.2 Forensic Reasoning Data Construction. With the Anchor-and-Verify chain established as the target structure, we construct the training data needed to instantiate it. The DGM4 dataset provides manipulation labels and localization annotations but no forensic rationale, and its 208K samples include substantial labeling noise. MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Yichun Yeh, Yiheng Li, Xiaobo Hu, Zhen Lei, and Yang Yang MLLM Base Model  
+
+> <conclusion>...</conclusion> <perception>...</perception> <conflict_analysis>...</conflict_analysis> <evidence_binding>...</evidence_binding>
+> Curated Dataset (with reason)
+> 50K Cold-Started Model
+> Aligned Controller (Reward & Sampling)
+> Initial G Resample G’
+
+...   
+
+> MDA
+> Acls
+> Aface
+> Atext
+> Amean
+> 10K New Policy
+> STAGE 1: SFT Cold-Start STAGE 2: GRPO Training (A) Controller (Reward & Sampling)
+> Five-Reward System Task-Aware Dynamic Sampling Homogenous group? (G std)
+> Gstd = 0
+
+G Gstd != 0 Gstd=0& Rcls=1 
+
+> Resample !
+
+G‘            
+
+> Finall Pool G/G+G’ Rfomat
+> Rcls
+> Rface
+> Rtext
+> Rconsist
+> <conclusion> <label>Fake</label> <fine_grained_label>FaceSwap</fine_grained_label> <fake_face_bbox>[bbox]</fake_face_bbox> <fake_text_loc> [loc] </fake_text_loc> ... <evidence_binding> [loc]or[bbox]... </evidence_binding> 0.6<Rcls<1:resample 1 0<Rcls<1:resample 2 Rcls<0:resample 3
+> (B) MDA
+> Rcls Rface Rtext ... Rcls Rface Rtext ...
+> Norm Per-ORM Normalization Token-Level Value Routing Acls Aface Atext Amean
+> Reward System
+
+Figure 3: Overview of the two-stage EFR training framework. Stage 1 fine-tunes a base MLLM on 50K curated forensic reasoning samples to initialize structured output following the Anchor-and-Verify format. Stage 2 optimizes the cold-started model via GRPO. (A) A five-component verifiable reward system combined with task-aware dynamic resampling maintains training diversity. (B) MDA performs per-ORM normalization across modality-specific reward heads and routes task-specific advantage values to their corresponding prediction tokens, mitigating credit misassignment. 
+
+We design a systematic pipeline to clean, stratify, annotate, and filter the data, as shown in Figure 2. 
+
+Data cleaning and stratification. Samples are first validated per modality for face-localization and text-modification quality (details in the supplementary). Based on these quality dimensions and manual review of 6K critical samples, the dataset is stratified into three tiers: Tier 1 (147K clean), Tier 2 (53K harder multi-face or complex-token cases), and Tier 3 (7K borderline); invalid samples (0.4K) are discarded. Proportional sampling over Tier 1 and Tier 2 yields an 80K dataset for annotation. 
+
+Auxiliary field annotation. Before reasoning generation, each sample is enriched with structured spatial and semantic priors: per-face position and area-ranked indices with an explicit <FAKE> 
+
+tag on the ground-truth fake face for images, and a token map with polarity scores for eligible candidate tokens for text. These priors give the generation model unambiguous references that mitigate positional confusion in multi-face scenes and ground text localization in precise token structure. 
+
+Reasoning generation and quality filtering. To generate reason-ing chains, we condition a large-scale MLLM on the ground-truth findings, so that it reports physically consistent evidence for a known verdict rather than inferring the verdict itself. Each gener-ated chain then passes three filters: rule-based checks on format and coordinate references, an independent MLLM review of perceptual grounding and conflict accuracy, and manual inspection of flagged cases. This yields the final 50K forensic reasoning samples. 
+
+3.2.3 Structured Reasoning Cold-Start. Direct RL training on the Anchor-and-Verify format is unstable, as the complex structured output requires the model to produce parseable multi-block re-sponses before any reward signal can be meaningfully applied. We therefore first perform supervised fine-tuning (SFT) on our curated 50K forensic dataset D, establishing a reliable reference policy 𝜋 ref 
+
+that can consistently adhere to the formatting constraints. Follow-ing standard instruction-tuning paradigms [28], our optimization objective is to minimize the autoregressive cross-entropy loss: 
+
+LSFT (𝜃 ) = −E(𝑥, 𝑦 )∼D 
+
+" 𝐿 ∑︁  
+
+> 𝑡 =1
+
+log 𝜋 𝜃 (𝑦 𝑡 | 𝑥, 𝑦 <𝑡 )
+
+#
+
+, (1) where 𝑥 represents the multi-modal prompt, 𝑦 = (𝑦 1, . . . , 𝑦 𝐿 ) de-notes the target sequence of length 𝐿 comprising the complete Anchor-and-Verify reasoning chain, and 𝜋 𝜃 is the policy parameter-ized by 𝜃 . Through this phase, the model internalizes the Anchor-and-Verify reasoning structure and learns to produce physically consistent observations and cross-modal evidence, providing a ro-bust initialization for the subsequent RL stage. 
+
+3.3 Modality-Decoupled Policy Optimization 
+
+While cold-start SFT equips the model with format adherence, su-pervised imitation provides no explicit feedback on spatial consis-tency between conclusion anchors and cited evidence, nor does it resolve credit misassignment across multi-head outputs. We there-fore apply reinforcement learning on top of the cold-start model 
+
+𝜋 ref , building on Group Relative Policy Optimization (GRPO) [36], which estimates policy gradients from group-level reward compar-isons without a separate value network. For each prompt 𝑥 , a group of 𝐺 completions {𝑦 𝑖 }𝐺 𝑖 =1 is sampled from the current policy 𝜋 𝜃 , and the objective is: 
+
+LGRPO = −E
+
+"
+
+1
+
+𝐺 
+
+> 𝐺
+
+∑︁ 
+
+> 𝑖 =1
+
+1
+
+𝑇 𝑖 𝑇 𝑖 ∑︁  
+
+> 𝑡 =1
+
+min 
+
+
+
+𝜌 𝑖,𝑡 𝐴 𝑖 ,
+
+clip (𝜌 𝑖,𝑡 , 1 − 𝜀, 1 + 𝜀 )𝐴 𝑖 
+
+
+
+− 𝛽 DKL [𝜋 𝜃 ∥𝜋 ref ]
+
+#
+
+,
+
+(2) Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil 
+
+where 𝑇 𝑖 is the token length of completion 𝑖 ; 𝜀 is the clipping threshold that limits the update of the policy per-step; and 𝛽 is the KL penalty coefficient that regularizes 𝜋 𝜃 with the reference policy for cold-start 𝜋 ref . The importance sampling ratio 𝜌 𝑖,𝑡 and the group-normalized advantage 𝐴 𝑖 are: 
+
+𝜌 𝑖,𝑡 = 𝜋 𝜃 (𝑦 𝑖,𝑡 | 𝑦 𝑖, <𝑡 , 𝑥 )
+
+𝜋 ref (𝑦 𝑖,𝑡 | 𝑦 𝑖, <𝑡 , 𝑥 ) , (3) 
+
+𝐴 𝑖 = 𝑅 𝑖 − 𝜇 𝐺 
+
+𝜎 𝐺 + 𝜖 , 𝜇 𝐺 = 1
+
+𝐺 
+
+> 𝐺
+
+∑︁ 
+
+> 𝑖 =1
+
+𝑅 𝑖 , 𝜎 𝐺 =
+
+vut 1
+
+𝐺 
+
+> 𝐺
+
+∑︁ 
+
+> 𝑖 =1
+
+(𝑅 𝑖 − 𝜇 𝐺 )2, (4) where 𝑅 𝑖 is the total scalar reward for completion 𝑖 and 𝜖 is a small constant for numerical stability. Applying GRPO directly to DGM4, however, is problematic: ag-gregating heterogeneous prediction targets operating on different reward scales into a single 𝑅 𝑖 produces noisy advantage estimates, and the uniform scalar advantage 𝐴 𝑖 applied identically to all tokens conflates gradients across classification, localization, and reason-ing tokens. We address both with a fine-grained verifiable reward system and an MDA routing mechanism. 
+
+3.3.1 Verifiable Reward System. Designing effective rewards for DGM4 requires covering output format, classification accuracy, multi-modal localization, and reasoning consistency in a single framework. Inspired by verifiable reward design in mathemati-cal reasoning [7, 36], we define five independent, deterministic rule-based Outcome Reward Models (ORMs), which assess our structured outputs precisely while keeping training signals stable and reproducible. To decouple signals across tasks, samples are partitioned by manipulation type ( face , text , compound , orig ); inap-plicable ORMs are excluded from the per-sample sum, so gradients flow only through relevant heads. 
+
+Format Compliance ( 𝑅 format ) gates the reward: it enforces XML structural completeness and penalizes placeholder copying, ensur-ing outputs are parseable before other ORMs score them. 
+
+Hierarchical Classification ( 𝑅 cls ) jointly evaluates binary au-thenticity and fine-grained manipulation type with a cost-sensitive design, where missed detections are penalized more heavily than false positives. For valid predictions, fine-grained reward follows a hierarchical partial-order design: 
+
+𝑅 cls = 𝑟 base + 𝑤 fam · 𝐹 1fam + 𝑤 sub · 𝑟 sub + 𝑤 exact · 1[ ˆ𝑦 = 𝑦 ], (5) where 𝑟 base is a base score, 𝐹 1fam measures family-level overlap (e.g., face vs. text family), 𝑟 sub captures within-family subtype accuracy, and 𝑤 fam , 𝑤 sub , 𝑤 exact are fixed weights reflecting the taxonomy. 
+
+Localization ( 𝑅 face , 𝑅 text ) score spatial grounding for the relevant categories: 𝑅 face maps predicted-box IoU to a tiered reward, and 𝑅 text 
+
+measures token-span overlap via Jaccard similarity with subtype-specific curves. 
+
+Consistency ( 𝑅 consistency ) verifies internal coherence of the rea-soning chain, rewarding cases where the evidence cited in the 
+
+evidence_binding block spatially and semantically matches the conclusion anchors and where evidence types match the predicted category, thereby instantiating the physical binding constraints of Sec. 3.2.1. The full decomposition is given in the supplementary. The five components are integrated into a final scalar reward for each response: 
+
+𝑅 = 𝜆 𝑓 𝑅 format + 𝜆 𝑐 𝑅 cls + 𝜆 𝑣 𝑅 face + 𝜆 𝑡 𝑅 text + 𝜆 𝑟 𝑅 consistency , (6) where 𝜆 𝑓 , 𝜆 𝑐 , 𝜆 𝑣 , 𝜆 𝑡 , 𝜆 𝑟 balance the contribution of each component. While these ORMs provide task-specific signals, translating them into precise gradient updates requires routing each signal to its corresponding prediction tokens, addressed by MDA next. 
+
+3.3.2 Modality-Decoupled Advantage Routing. The verifiable re-ward system provides fine-grained signals across five task dimen-sions; MDA routes per-task advantages to their corresponding to-kens to turn these into precise gradient updates (Figure 3). 
+
+Per-ORM Normalization. Since 𝑅 format –𝑅 consistency operate on different ranges and distributions, aggregating them into a single advantage distorts the relative contribution of each task. MDA normalizes each ORM independently within the group: ˆ𝑟 (𝑖 ) 
+
+> 𝑘
+
+= 𝑟 (𝑖 ) 
+
+> 𝑘
+
+− 𝜇 𝑘 
+
+𝜎 𝑘 + 𝜖 , (7) where 𝑟 (𝑖 ) 
+
+> 𝑘
+
+is the reward from ORM 𝑘 for completion 𝑖 , and 𝜇 𝑘 , 𝜎 𝑘 
+
+are the group mean and standard deviation of that ORM. Task-specific advantages are then derived: 𝐴 cls from ˆ 𝑟 cls ; 𝐴 face from ˆ 𝑟 face 
+
+and the face-relevant portion of ˆ 𝑟 consistency ; and 𝐴 text from ˆ 𝑟 text and the text-relevant portion of ˆ 𝑟 consistency .
+
+Token-Level Routing. This routing is made possible by the struc-tured XML boundaries established in Sec. 3.2.1: the Anchor-and-Verify format provides explicit block-level semantic boundaries that map each output token to a specific prediction task. MDA parses these boundaries at training time and assigns token-level advantages as: 
+
+𝐴 𝑡 =
+
+∑︁  
+
+> 𝑘 ∈ K
+
+𝐴 𝑘 · 1[𝑡 ∈ T 𝑘 ] if 𝑡 ∈ Ð𝑘 T𝑘 
+
+¯𝐴 otherwise 
+
+, K = {cls , face , text },
+
+(8) where T𝑘 is the set of token positions belonging to task 𝑘 , and ¯ 𝐴 is the mean advantage across all tasks, applied to shared reasoning-chain tokens that do not belong to any specific prediction block. Task-specific tokens receive the advantage of their corresponding head; reasoning-chain tokens receive ¯ 𝐴 , reflecting their shared role across all prediction tasks. As a global parseability gate, 𝑅 format 
+
+is not routed to any single block but scales the whole-sequence reward. Following DAPO [46], we exclude the KL penalty term from the objective (i.e., 𝛽𝐷 KL [𝜋 𝜃 ∥𝜋 ref ]), as the model distribution is expected to diverge substantially from the cold-start reference during foren-sic reasoning, making this constraint unnecessary and potentially harmful to exploration. The final objective replaces the uniform scalar advantage in Eq. 2 with the token-level routed advantage: 
+
+LMDA = −E
+
+"
+
+1
+
+𝐺 
+
+> 𝐺
+
+∑︁ 
+
+> 𝑖 =1
+
+1
+
+𝑇 𝑖 𝑇 𝑖 ∑︁ 
+
+> 𝑡 =1
+
+min 
+
+
+
+𝐴 (𝑖 ) 
+
+> 𝑡
+
+𝜌 𝑖,𝑡 ,𝐴 (𝑖 ) 
+
+> 𝑡
+
+clip (𝜌 𝑖,𝑡 , 1−𝜀, 1+𝜀 )
+
+#
+
+,
+
+(9) 
+
+Task-Aware Dynamic Resampling. Effective token-level routing requires stable and informative advantage estimates for each task MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Yichun Yeh, Yiheng Li, Xiaobo Hu, Zhen Lei, and Yang Yang 
+
+Table 1: Comparison of state-of-the-art methods on DGM4. ↓ means lower is better. Bold/underline: best/second best in each group. † denotes zero-shot evaluation without fine-tuning. ‡For MLLM-based methods, mAP is reported as 𝑎 /𝑏 : from token log probabilities and from the hard 0/1 prediction, respectively (Sec. 4.1). 
+
+Method Binary Cls Multi-label Cls Image Grounding Text Grounding AUC EER ↓ ACC mAP ‡ CF1 OF1 IoU 𝑚 IoU 50 IoU 75 PR. RE. F1 HAMMER [34] (CVPR’23) 93 .19 14 .10 86 .39 86 .22 79 .37 80 .37 76 .45 83 .75 76 .06 75 .01 68 .02 71 .35 HAMMER++ [35] (TPAMI’24) 93 .33 14 .06 86 .66 86 .41 79 .73 80 .71 76 .46 83 .77 76 .03 73 .05 72 .14 72 .59 ViKI [16] (IF’24) 93 .51 13 .87 86 .67 86 .58 81 .07 80 .10 76 .51 83 .95 75 .77 77 .79 66 .06 73 .44 UFAFormer [23] (IJCV’24) 93 .81 13 .60 86 .80 87 .85 80 .31 81 .48 78 .33 85 .39 79 .20 73 .35 70 .73 72 .02 MSF [41] (ICASSP’24) 95 .11 11 .36 88 .75 91 .42 83 .60 84 .38 80 .83 88 .35 80 .39 76 .51 70 .61 73 .44 IDseq [25] (AAAI’25) 94 .55 11 .40 88 .94 90 .01 83 .00 84 .90 83 .33 89 .39 86 .10 75 .96 71 .23 73 .52 ASAP [51] (CVPR’25) 94 .38 12 .73 87 .71 88 .53 81 .72 82 .89 77 .35 84 .75 76 .54 79 .38 73 .86 76 .52 
+
+Qwen3-VL-8B † [1] 64.42 40.06 54.71 30 .34 /26 .48 0.02 0.02 32.65 32.54 32.54 21.66 1.59 2.97 InternVL3.5-8B † [43] 50.00 50.00 33.28 28 .26 /20 .76 0.00 0.00 13.00 12.60 12.55 14.78 0.84 1.59 EFR (cold-start) 96 .87 9.38 90 .65 89 .60 /81 .50 86 .94 86 .68 83 .22 89 .24 85 .21 78 .68 72 .14 75 .27 EFR (ours) 96 .97 9.18 90 .82 90 .41 /81 .58 87 .19 87 .05 83 .49 89 .41 85 .43 76 .00 75 .61 75 .80 dimension. DGM4’s heterogeneous task structure makes this non-trivial: original samples activate only a subset of ORMs and tend to produce low reward variance within a group, causing advantage estimates to degenerate. To stabilize training, MDA adopts a task-aware dynamic resampling strategy. Groups meeting task-specific quality thresholds across all active ORMs are exempted; for others, additional completions are sampled with intensity proportional to per-ORM error severity, ensuring every prediction head receives informative gradient signals. By integrating per-ORM normalization, token-level routing, and task-aware resampling, MDA ensures that each prediction head receives optimization signals derived only from task-relevant re-ward dimensions. This mechanism is made possible by the explicit structural boundaries of the Anchor-and-Verify reasoning chain. Finally, the reasoning format and the optimization mechanism are tightly co-designed to be mutually reinforcing. 
+
+4 Experiments 4.1 Setup 
+
+Datasets. We evaluate EFR on the DGM4 dataset [34], a large-scale benchmark for detecting and grounding multi-modal media manipulation in the news domain. It comprises 230,000 image-text pairs (77,426 genuine and 152,574 manipulated) from four major outlets (The Guardian, BBC, USA TODAY, and The Washington Post), with manipulations spanning face swap , face attribute , text swap , and text attribute , covering both visual and textual forgery. 
+
+Evaluation Metrics. Following prior works [18, 25, 34, 35, 51], we adopt a comprehensive metric suite covering both coarse-grained detection and fine-grained grounding. Binary detection is assessed by AUC, EER ( ↓), and ACC; multi-label classification by mAP, CF1, and OF1. Image grounding is measured by IoU 𝑚 , IoU 50 , and IoU 75 ;text grounding by token-level Precision (PR), Recall (RE), and F1. As EFR generates predictions autoregressively, AUC is computed from the token-level log probabilities of the predicted authenticity label. Fine-grained labels are discrete and provide no continuous confidence score. For a fair comparison with prior work, we re-cover the per-class confidences from the token-level log probabili-ties at the fine-grained-label position and evaluate mAP under the standard protocol; we additionally report mAP on the hard 0 /1prediction, which is used in our ablations. 
+
+Implementation Details. We build EFR on Qwen3-VL-7B [1], and use Qwen3-VL-32B [1] as the annotation model for forensic reason-ing data construction, generating evidence reports conditioned on ground-truth findings via confirmed-findings injection. Training proceeds in two stages [7, 36, 46], both using LoRA [10] ( 𝑟 =128, 
+
+𝛼 =256). Stage 1 performs cold-start SFT on 50K forensic reasoning samples for 3 epochs (learning rate 5 ×10 −5, batch size 64) to ini-tialize the Anchor-and-Verify structure. Stage 2 applies GRPO [36] on 10K samples for 1 epoch (learning rate 1 ×10 −6, batch size 16, group size 𝐺 =8, temperature 1.0). Following DAPO [46], both KL coefficients 𝛽 and 𝛽 ′ are set to 0, as the policy is expected to diverge substantially from the cold-start reference during optimization. 
+
+4.2 Results 
+
+Table 1 compares EFR against dedicated DGM4 detectors and general-purpose MLLMs. EFR achieves state-of-the-art binary detection and multi-label F1, remains competitive on mAP and grounding. 
+
+Comparison with State-of-the-Art Methods. The advantage of EFR is concentrated on fine-grained attribution rather than detec-tion. Binary detection is close to saturation for all recent methods, and EFR advances it by a modest 1.86 AUC over the strongest baseline. In multi-label classification the picture changes: CF1 and OF1 improve by 3.59 and 2.15 points, roughly twice the margin. Determining whether an item has been manipulated reduces to a low-level consistency check, whereas identifying which of the four manipulations occurred requires each hypothesis to be evaluated against its own evidence, the procedure the Anchor-and-Verify chain makes explicit. The grounding results are consistent with this account. EFR obtains the highest IoU 𝑚 and IoU 50 despite emit-ting coordinates as text tokens, and falls behind IDseq only at the Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil 
+
+Table 2: Ablation on MDA routing components. Each row adds one component to the previous. Bold/underline: best/second best. mAP is the hard 0/1 variant (Sec. 4.1). Method ACC mAP IoU 𝑚 F1 
+
+SFT + GRPO 90.74 78.88 82.68 75.16 + Task-Aware Dyn. Resampling 90.86 80.26 82.50 75.69 + Per-ORM Normalization 90.41 77.37 82.78 74.17 + Token-Level Routing (Ours ) 90.82 81.58 83.49 75.80 
+
+Δ vs. SFT + GRPO +0.08 +2.70 +0.81 +0.64 
+
+Table 3: Ablation on reward components in MDPO. ✓denotes an active reward. Bold/underline: best/second best. mAP is the hard 0/1 variant (Sec. 4.1). 
+
+𝑅 fmt 𝑅 acc 𝑅 bbox 𝑅 text 𝑅 consist ACC mAP IoU 𝑚 F1 
+
+✓ ✓ 90.84 77.21 82.13 75.49 
+
+✓ ✓ ✓ 90.78 81.35 83.26 75.80 
+
+✓ ✓ ✓ 90.83 81.08 81.83 75.60 
+
+✓ ✓ ✓ ✓ 90.78 81.59 83.42 75.89 
+
+✓ ✓ ✓ ✓ ✓ 90.82 81.58 83.49 75.80 strictest threshold, where a dedicated localization head retains sub-pixel precision beyond the resolution of a language decoder. mAP is the only metric where a discriminative head stays ahead, and the cause is protocol, not capability: prior methods read mAP off continuous multi-label scores, while ours comes from token log probabilities (Sec. 4.1), a coarser signal that hurts ranking but not the decisions, as CF1 and OF1 confirm. 
+
+Effect of Stage 2 Optimization. Stage 2 does not make the model uniformly better; it moves the model to a different operating point. Detection barely changes, as expected from a metric already above 96.8 after cold-start. What changes is text grounding, which after cold-start is strongly precision-skewed: the model reports only the spans it is certain about and misses the rest. Stage 2 trades 2.68 points of precision for 3.47 points of recall, turning an asymmetric operating point into a balanced one and improving F1. This is the intended effect of the reward design. Static annotations supervise the exact span and provide no signal that separates a partially recov-ered span from a missed one, so supervised training has no reason to extend a confident partial prediction; the verifiable rewards score coverage directly, and the model responds by widening its evidence. 
+
+Zero-shot MLLMs. General-purpose MLLMs can rank but cannot decide. Qwen3-VL-8B and InternVL3.5-8B obtain mAP of 30.34 and 28.26, close to what the class priors alone would yield, yet their CF1 and OF1 collapse to near zero: the models occasionally place manipulated items above authentic ones, but almost never emit the correct label. Without task-specific training, visual-linguistic competence does not translate into forensic attribution. 
+
+4.3 Ablation Studies 
+
+All ablations report mAP under the hard 0 /1 protocol. EFR generates fine-grained labels autoregressively as text instead of scoring a fixed class set, so no continuous per-class confidence is available. Token log probabilities are only an indirect surrogate, since a single label 
+
+Table 4: Reasoning quality of SFT vs. MDPO, on the 
+
+<evidence_binding> and <perception> blocks of correctly predicted samples. ↑/↓: higher/lower better. Module Metric Dir. SFT MDPO Δ
+
+Evidence NLI Coherence [8] ↑ 38.73 41.07 +2.34 Redundancy [6] ↓ 0.35 0.22 -0.13 ROUGE-L [19] ↑ 42.99 43.56 +0.57 Perception Distinct-2 [15] ↑ 8.99 9.21 +0.22 Distinct-3 [15] ↑ 18.99 19.31 +0.32 spans several tokens whose distributions have to be recombined. We therefore use the log-probability variant only in Table 1, where comparability with prior work requires it. 
+
+Ablation on MDA. Table 2 builds MDA over an SFT + GRPO base-line. The baseline shares a single scalar advantage across all reward heads, so gradients from easily satisfied heads dominate and mAP remains at 78.88. Task-Aware Dynamic Resampling draws rollouts in proportion to per-ORM error severity and raises mAP by 1.38 points. Uniformly correct groups carry no advantage signal, and replacing them restores usable gradients. Per-ORM Normalization then lowers mAP to 77.37, 1.51 points below the baseline it ex-tends. Normalization rescales each reward into its own range, yet the resulting advantages are still broadcast over all tokens, so the rescaled signals compete on shared parameters and partially cancel. Token-Level Routing delivers each advantage only to the tokens that produced the corresponding output, recovering 4.21 points of mAP and reaching the best IoU 𝑚 and F1 in the table. Normaliza-tion and routing therefore form one mechanism rather than two independent gains. Separating reward scales helps only when the separated signals stay separate in the backward pass. 
+
+Ablation on Reward Components. Table 3 shows that detection and attribution respond to different rewards. ACC varies by 0.06 points across all five configurations, so the binary decision is settled once 𝑅 acc is active and no grounding reward alters it. Attribution behaves in the opposite way. With 𝑅 fmt and 𝑅 acc alone the model attains its highest ACC together with the weakest mAP and IoU 𝑚 in the table, having learned to name a manipulation without locating it. Supervising location repairs attribution even though it adds no label information, with 𝑅 bbox alone raising mAP by 4.14 points and 𝑅 text alone by 3.87. Being required to point at the evidence constrains which label the model can justify. The two grounding rewards are not interchangeable. Applied in isolation, 𝑅 text pushes IoU 𝑚 below the configuration without any grounding reward, so optimizing text localization alone draws capacity away from face localization, and enabling both rewards removes the interference and yields the best mAP and F1. Adding 𝑅 consist finally gives the best IoU 𝑚 while leaving mAP and F1 unchanged to within 0.1 point, tightening anchor-evidence agreement at no measurable cost, and this configuration is retained as the default. 
+
+4.4 Analysis of Generated Reasoning 
+
+Reasoning Quality Analysis. To assess the reasoning itself inde-pendently of label accuracy, we restrict the evaluation to correctly predicted manipulated samples and score the <evidence_binding> MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Yichun Yeh, Yiheng Li, Xiaobo Hu, Zhen Lei, and Yang Yang "GT": {"label": "fake", "fake_cls": " face_attribute&text_attribute ","mtcnn_boxes": [[443, 38, 533, 152], [94, 65, 172, 166]] "fake_image_box": [[443, 38, 533, 152]], "fake_text_pos": [9, 10]} 
+
+[Gound Truth] 
+
+”Text“ ：“Kelvin and Gail Morris have given the scheme a bad name” 
+
+[SFT Output] 
+
+<conclusion> <label>fake</label><fine_grained_label> face_attribute </fine_grained_label><face_bbox>[[444,39,537,156],[94,64,174,166]]</face_bbox><fake_face_bbox>[444,39,537,156]</fake_face_bbox><fake_text_loc>[]</fake_text_loc> </conclusion> <perception> <visual_scan>The image shows two adults, a man and a woman, seated side by side in what appears to be a living room. The man is on the right, wearing a red and black plaid shirt, and the woman is on the left, wearing a gray top. Behind them is a window with a radiator below, a dark curtain, and a laptop on a table to the right. The setting is domestic and casual, with neutral lighting and no overt signs of distress or celebration.</visual_scan><text_scan>Named entities: Kelvin and Gail Morris. Core claim: The couple has given a scheme a bad name. Event type: Criticism of a scheme. Sentiment/stance: Negative, implying disapproval or failure. The text is internally self-consistent.</text_scan> </perception> <conflict_analysis> <strong_conflict>NONE</strong_conflict><weak_misalignment>The image depicts two individuals in a calm, domestic setting, while the text attributes a negative, critical stance toward a scheme. There is no direct visual depiction of the scheme or its consequences, suggesting the image is a symbolic representation rather than a literal illustration of the event described. This is a common practice in news media where a portrait of individuals is used to represent a broader narrative.</weak_misalignment> </conflict_analysis> <evidence_binding> <visual_evidence><fake_face_bbox>[444,39,537,156]</fake_face_bbox>The subject's identity is preserved — the man in the red plaid shirt is recognizable as the same individual. However, the facial attributes in the region [444,39,537,156] show altered skin tone and expression. Specifically, the skin appears unnaturally smooth with reduced texture and pigmentation variation compared to the woman’s face in [94,64,174,166], which exhibits natural skin tone and fine lines. The expression in the manipulated region is neutral with minimal muscle contraction around the eyes and mouth, whereas the woman’s face shows a slight frown and more defined periorbital muscle activity. This discrepancy in skin texture and expression between the two faces indicates a localized face attribute manipulation. The manipulation signature is consistent with digital alteration of facial appearance without changing identity.</visual_evidence> </evidence_binding> 
+
+[Our Final Output] 
+
+<conclusion> <label>fake</label><fine_grained_label> face_attribute&text_attribute </fine_grained_label><face_bbox>[[442, 38, 536, 158], [95, 64, 175, 166]]</face_bbox><fake_face_bbox>[442, 38, 536, 158]</fake_face_bbox><fake_text_loc>[9]</fake_text_loc> </conclusion> 
+
+<perception> <visual_scan>The image shows two adults, a man and a woman, seated side by side in what appears to be a living room. The man is on the right, wearing a red and black plaid shirt, and the woman is on the left, wearing a gray top. They are positioned in front of a window with a radiator below and a laptop visible on a surface to the right. The overall atmosphere is calm and domestic, with no signs of distress or conflict.</visual_scan><text_scan>Named entities: Kelvin Morris, Gail Morris.Core claim: Kelvin and Gail Morris have given the scheme a bad name.Event type: Attribution of negative reputation to individuals.Sentiment/stance: Negative, critical, and judgmental.</text_scan> </perception> <conflict_analysis> <strong_conflict>The manipulated text token 'bad' (token 9) expresses a negative sentiment, while the visual scene depicts a calm, neutral, and unemotional domestic setting with no visible signs of distress, anger, or wrongdoing. The facial expressions of both individuals are neutral to slightly concerned, not aggressive or defiant, which contradicts the strong negative judgment implied by the word 'bad'. This creates a strong incongruence between the textual sentiment and the visual atmosphere.</strong_conflict><weak_misalignment>NONE</weak_misalignment> </conflict_analysis> 
+
+<evidence_binding> <visual_evidence><fake_face_bbox>[442, 38, 536, 158]</fake_face_bbox>The subject's identity is preserved — the man is recognizable as the same individual. The specific attribute deviation is in facial expression: the region [442, 38, 536, 158] shows an altered muscle contraction pattern around the eyes and mouth, resulting in a more intense, slightly furrowed brow and a tighter mouth compared to the natural expression seen in the unmanipulated face region [95, 64, 175, 166]. The skin tone and hairstyle remain consistent with the rest of the face, but the expression has been modified to appear more serious or stern. This manipulation signature is consistent with a targeted face attribute edit, where only the expression was altered while preserving identity.</visual_evidence><text_evidence>token_span: [9, 9]The token 'bad' (ADJ) was manipulated. The core subject 'Kelvin and Gail Morris' remains unchanged, confirming this is a text_attribute manipulation. The semantic polarity of the token was altered from a neutral or potentially positive context (e.g., 'given the scheme a name' without negative connotation) to a strongly negative one. The original polarity likely implied a neutral or positive attribution, while the current polarity expresses disapproval and judgment, shifting the sentiment from neutral to negative. This change in intensity and sentiment is consistent with a text_attribute manipulation.</text_evidence> </evidence_binding> <conclusion> <label>real</label><fine_grained_label>orig</fine_grained_label><face_bbox>[[10, 114, 478, 997], [478, 62, 997, 997]]</face_bbox><fake_face_bbox>[]</fake_face_bbox><fake_text_loc>[]</fake_text_loc> </conclusion> <perception> <visual_scan>Two individuals, a woman on the left and a man on the right, are seated indoors in what appears to be a living room. The background includes a window with a radiator below, curtains, and furniture, suggesting a domestic setting. The lighting is even and natural, consistent with an indoor interview or casual photo.</visual_scan><text_scan>Named entities: Kelvin and Gail Morris. Core claim: They have given the scheme a bad name. Event type: Evaluation of a scheme's reputation. Sentiment: Negative. Internal coherence: The text is grammatically correct and semantically consistent with the names provided.</text_scan> </perception> <conflict_analysis> <strong_conflict>NONE</strong_conflict><weak_misalignment>NONE</weak_misalignment> </conflict_analysis> <evidence_binding></evidence_binding> 
+
+[Zero-Shot Output] 
+
+Figure 4: Forensic reasoning output of EFR on a compound face_attribute & text_attribute sample. Zero-shot collapses to an authentic prediction; SFT recovers the face label but misses the text manipulation; EFR identifies both, localizes the altered face and token, and produces modality-specific evidence grounding for each. 
+
+sub-block of the ground-truth modality and the <perception> 
+
+block with NLI entailment [8], repeated-4-gram redundancy [6], Distinct-2/3 [15], and ROUGE-L [19]. MDPO improves every metric in Table 4. NLI entailment gains the most ( +2.34), indicating that the cited evidence follows more tightly from the anchor, and re-dundancy falls by over a third. Distinct-2/3 both rise, so the shorter chains do not collapse onto a template, a common outcome of re-ward optimization. ROUGE-L is the only reference-based metric and is biased toward SFT, whose outputs closely follow the surface form of the reference chains. MDPO improves it nonetheless. 
+
+Qualitative Analysis. Figure 4 shows a representative compound 
+
+face_attribute & text_attribute sample under three condi-tions.Orange marks the labels, localization, and reasoning evidence that the weaker baselines miss or predict incorrectly. The zero-shot model collapses to an authentic verdict with empty localization and no evidence binding, failing to engage the forensic task at all. SFT cold-start recovers the face_attribute label and localizes the manipulated face, but overlooks the co-occurring text manipulation entirely, leaving the fine-grained label and text span incomplete, a typical failure mode on cross-modal compound forgeries. In con-trast, EFR identifies both manipulation types, localizes the altered face region and the tampered token (“bad”, token 9) simultane-ously, and grounds each conclusion in modality-specific evidence: a visual-evidence block that ties the face anchor to a concrete attribute deviation, and a text-evidence block that ties the token anchor to the sentiment shift it induces. Crucially, every cited box and span matches the coordinates declared in the conclusion, illustrating the coordinate-level anchor-evidence consistency that EFR enforces. 
+
+5 Conclusion 
+
+In this work, we presented EFR, an evidence-grounded forensic reasoning framework for multi-modal manipulation detection. Ex-isting DGM4 methods offer no rationale for their predictions, while MLLM-based approaches generate explanations that remain dis-connected from the predicted locations and suffer credit misassign-ment when a uniform signal optimizes heterogeneous heads. EFR resolves both with two coordinated components. The Anchor-and-Verify reasoning chain treats conclusion coordinates as explicit spatial anchors that downstream evidence must match, enforced by a five-component verifiable reward system during training. The Modality-Decoupled Advantage routing mechanism then delivers only task-relevant signals to each prediction head. Trained on a curated 50K forensic reasoning dataset, EFR attains state-of-the-art detection and competitive grounding on DGM4, producing rea-soning records whose cited evidence is spatially consistent with the predicted anchors. We hope this perspective can inspire future work on interpretable multi-modal forensic reasoning. Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil 
+
+Acknowledgments 
+
+This work was supported in part by the New Generation Artificial Intelligence-National Science and Technology Major Project (No. 2025ZD0123501), Chinese National Natural Science Foundation Projects U23B2054, 62276254. 
+
+References 
+
+[1] Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao Deng, Wei Ding, Chang Gao, Chunjiang Ge, et al. 2025. Qwen3-vl technical report. arXiv preprint arXiv:2511.21631 (2025). [2] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. 2020. Language models are few-shot learners. Advances in neural information processing systems 33 (2020), 1877–1901. [3] Daniele Cardullo, Simone Teglia, and Irene Amerini. 2025. LADLE-MM: Limited Annotation based Detector with Learned Ensembles for Multimodal Misinforma-tion. arXiv preprint arXiv:2512.20257 (2025). [4] Tao Chen, Jingyi Zhang, Decheng Liu, and Chunlei Peng. 2025. Mgffd-vlm: Multi-granularity prompt learning for face forgery detection with vlm. arXiv preprint arXiv:2507.12232 (2025). [5] Yueying Gao, Dongliang Chang, Bingyao Yu, Haotian Qin, Lei Chen, Kongming Liang, and Zhanyu Ma. 2025. Fakereasoning: Towards generalizable forgery detection and reasoning. arXiv e-prints (2025), arXiv–2503. [6] Olga Golovneva, Moya Peng Chen, Spencer Poff, Martin Corredor, Luke Zettle-moyer, Maryam Fazel-Zarandi, and Asli Celikyilmaz. 2023. ROSCOE: A Suite of Metrics for Scoring Step-by-Step Reasoning. In Proceedings of the International Conference on Learning Representations (ICLR) .[7] Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Peiyi Wang, Qihao Zhu, Runxin Xu, Ruoyu Zhang, Shirong Ma, Xiao Bi, et al. 2025. Deepseek-r1: Incen-tivizing reasoning capability in llms via reinforcement learning. arXiv preprint arXiv:2501.12948 (2025). [8] Pengcheng He, Xiaodong Liu, Jianfeng Gao, and Weizhu Chen. 2021. DeBERTa: Decoding-Enhanced BERT with Disentangled Attention. In Proceedings of the International Conference on Learning Representations (ICLR) .[9] Xinan He, Yue Zhou, Bing Fan, Bin Li, Guopu Zhu, and Feng Ding. 2025. Vlforgery face triad: Detection, localization and attribution via multimodal large language models. arXiv preprint arXiv:2503.06142 (2025). [10] Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Liang Wang, Weizhu Chen, et al. 2022. Lora: Low-rank adaptation of large language models. Iclr 1, 2 (2022), 3. [11] Zhenglin Huang, Jinwei Hu, Xiangtai Li, Yiwei He, Xingyu Zhao, Bei Peng, Baoyuan Wu, Xiaowei Huang, and Guangliang Cheng. 2025. Sida: Social media image deepfake detection, localization and explanation with large multimodal model. In Proceedings of the Computer Vision and Pattern Recognition Conference .28831–28841. [12] Shan Jia, Reilin Lyu, Kangran Zhao, Yize Chen, Zhiyuan Yan, Yan Ju, Chuanbo Hu, Xin Li, Baoyuan Wu, and Siwei Lyu. 2024. Can chatgpt detect deepfakes? a study of using multimodal large language models for media forensics. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition . 4324–4333. [13] Jian-Yu Jiang-Lin, Kang-Yang Huang, et al. 2026. TriDF: Evaluating Perception, Detection, and Hallucination for Interpretable DeepFake Detection. Proceedings of the IEEE/CVF conference on computer vision and pattern recognition (2026). [14] Rohit Kundu, Shan Jia, Vishal Mohanty, Athula Balachandran, and Amit K Roy-Chowdhury. 2025. TruthLens: Visual Grounding for Universal DeepFake Reason-ing. arXiv preprint arXiv:2503.15867 (2025). [15] Jiwei Li, Michel Galley, Chris Brockett, Jianfeng Gao, and Bill Dolan. 2016. A Diversity-Promoting Objective Function for Neural Conversation Models. In 
+
+Proceedings of the 2016 Conference of the North American Chapter of the Association for Computational Linguistics (NAACL) .[16] Qilei Li, Mingliang Gao, Guisheng Zhang, Wenzhe Zhai, Jinyong Chen, and Gwanggil Jeon. 2024. Towards multimodal disinformation detection by vision-language knowledge interaction. Information Fusion 102 (2024), 102037. [17] Tianxiao Li, Zhenglin Huang, Haiquan Wen, Yiwei He, Shuchang Lyu, Baoyuan Wu, and Guangliang Cheng. 2025. RAIDX: A Retrieval-Augmented Generation and GRPO Reinforcement Learning Framework for Explainable Deepfake De-tection. In Proceedings of the 33rd ACM International Conference on Multimedia .11746–11755. [18] Yiheng Li, Yang Yang, Zichang Tan, Huan Liu, Weihua Chen, Xu Zhou, and Zhen Lei. 2025. Unleashing the Potential of Consistency Learning for Detecting and Grounding Multi-Modal Media Manipulation. In Proceedings of the Computer Vision and Pattern Recognition Conference . 9242–9252. [19] Chin-Yew Lin. 2004. ROUGE: A Package for Automatic Evaluation of Summaries. In Text Summarization Branches Out: Proceedings of the ACL Workshop .[20] Kaiqing Lin, Zhiyuan Yan, Ruoxin Chen, Junyan Ye, Ke-Yue Zhang, Yue Zhou, Peng Jin, Bin Li, Taiping Yao, and Shouhong Ding. 2025. Seeing before reasoning: A unified framework for generalizable and explainable fake image detection. 
+
+arXiv preprint arXiv:2509.25502 (2025). [21] Haotian Liu, Chunyuan Li, Yuheng Li, and Yong Jae Lee. 2024. Improved baselines with visual instruction tuning. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 26296–26306. [22] Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. 2023. Visual in-struction tuning. Advances in neural information processing systems 36 (2023), 34892–34916. [23] Huan Liu, Zichang Tan, Qiang Chen, Yunchao Wei, Yao Zhao, and Jingdong Wang. 2025. Unified frequency-assisted transformer framework for detecting and grounding multi-modal manipulation. International Journal of Computer Vision 133, 3 (2025), 1392–1409. [24] Jiawei Liu, Fanrui Zhang, Jiaying Zhu, Esther Sun, Qiang Zhang, and Zheng-Jun Zha. 2024. Forgerygpt: Multimodal large language model for explainable image forgery detection and localization. arXiv preprint arXiv:2410.10238 (2024). [25] Runxin Liu, Tian Xie, Jiaming Li, Lingyun Yu, and Hongtao Xie. 2025. IDseq: Decoupled and Sequentially Detecting and Grounding Multi-Modal Media Ma-nipulation. In Proceedings of the AAAI Conference on Artificial Intelligence , Vol. 39. 496–504. [26] Shih-Yang Liu, Xin Dong, Ximing Lu, Shizhe Diao, Peter Belcak, Mingjie Liu, Min-Hung Chen, Hongxu Yin, Yu-Chiang Frank Wang, Kwang-Ting Cheng, et al. 2026. Gdpo: Group reward-decoupled normalization policy optimization for multi-reward rl optimization. arXiv preprint arXiv:2601.05242 (2026). [27] Qiong Nan, Juan Cao, Yongchun Zhu, Yanyan Wang, and Jintao Li. 2021. MD-FEND: Multi-domain fake news detection. In Proceedings of the 30th ACM inter-national conference on information & knowledge management . 3343–3347. [28] Long Ouyang, Jeffrey Wu, Xu Jiang, Diogo Almeida, Carroll Wainwright, Pamela Mishkin, Chong Zhang, Sandhini Agarwal, Katarina Slama, Alex Ray, et al. 2022. Training language models to follow instructions with human feedback. Advances in neural information processing systems 35 (2022), 27730–27744. [29] Gan Pei, Jiangning Zhang, Menghan Hu, Zhenyu Zhang, Chengjie Wang, Yun-sheng Wu, Guangtao Zhai, Jian Yang, and Dacheng Tao. 2024. Deepfake genera-tion and detection: A benchmark and survey. Comput. Surveys (2024). [30] Lixiong Qin, Yang Zhang, Mei Wang, Jiani Hu, Weihong Deng, and Weiran Xu. 2025. Fake-in-Facext: Towards Fine-Grained Explainable DeepFake Analysis. 
+
+arXiv preprint arXiv:2510.20531 (2025). [31] Rafael Rafailov, Archit Sharma, Eric Mitchell, Christopher D Manning, Stefano Ermon, and Chelsea Finn. 2023. Direct preference optimization: Your language model is secretly a reward model. Advances in neural information processing systems 36 (2023), 53728–53741. [32] Andreas Rössler, Davide Cozzolino, Luisa Verdoliva, Christian Riess, Justus Thies, and Matthias Nießner. 2018. Faceforensics: A large-scale video dataset for forgery detection in human faces. arXiv preprint arXiv:1803.09179 (2018). [33] John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. 2017. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347 
+
+(2017). [34] Rui Shao, Tianxing Wu, and Ziwei Liu. 2023. Detecting and grounding multi-modal media manipulation. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition . 6904–6913. [35] Rui Shao, Tianxing Wu, Jianlong Wu, Liqiang Nie, and Ziwei Liu. 2024. Detecting and grounding multi-modal media manipulation and beyond. IEEE Transactions on Pattern Analysis and Machine Intelligence 46, 8 (2024), 5556–5574. [36] Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan Zhang, YK Li, Yang Wu, et al. 2024. Deepseekmath: Pushing the limits of mathematical reasoning in open language models. arXiv preprint arXiv:2402.03300 (2024). [37] Jinjie Shen, Yaxiong Wang, Lechao Cheng, Nan Pu, and Zhun Zhong. 2025. Be-yond Artificial Misalignment: Detecting and Grounding Semantic-Coordinated Multimodal Manipulations. In Proceedings of the 33rd ACM International Confer-ence on Multimedia . 11308–11317. [38] Zhuokang Shen, Kaisen Zhang, Bohan Jia, Heming Jia, Yuan Fang, Zhou Yu, and Shaohui Lin. 2025. DF-LLaVA: Unlocking MLLMs for Synthetic Image Detection via Knowledge Injection and Conflict-Driven Self-Reflection. arXiv preprint arXiv:2509.14957 (2025). [39] Gagandeep Singh, Samudi Amarsinghe, Priyanka Singh, and Xue Li. 2025. DGM4+: Dataset Extension for Global Scene Inconsistency. arXiv preprint arXiv:2509.26047 (2025). [40] Hao Tan, Jun Lan, Zichang Tan, Ajian Liu, Chuanbiao Song, Senyuan Shi, Huijia Zhu, Weiqiang Wang, Jun Wan, and Zhen Lei. 2025. Veritas: Generalizable deepfake detection via pattern-aware reasoning. arXiv preprint arXiv:2508.21048 
+
+(2025). [41] Jiazhen Wang, Bin Liu, Changtao Miao, Zhiwei Zhao, Wanyi Zhuang, Qi Chu, and Nenghai Yu. 2024. Exploiting modality-specific features for multi-modal manipulation detection and grounding. In ICASSP 2024-2024 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) . IEEE, 4935–4939. [42] Peng Wang, Shuai Bai, Sinan Tan, Shijie Wang, Zhihao Fan, Jinze Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, et al. 2024. Qwen2-vl: Enhancing vision-language model’s perception of the world at any resolution. arXiv preprint MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Yichun Yeh, Yiheng Li, Xiaobo Hu, Zhen Lei, and Yang Yang 
+
+arXiv:2409.12191 (2024). [43] Weiyun Wang, Zhangwei Gao, Lixin Gu, Hengjun Pu, Long Cui, Xingguang Wei, Zhaoyang Liu, Linglin Jing, Shenglong Ye, Jie Shao, et al. 2025. Internvl3. 5: Ad-vancing open-source multimodal models in versatility, reasoning, and efficiency. 
+
+arXiv preprint arXiv:2508.18265 (2025). [44] Wenbo Xu, Wei Lu, Xiangyang Luo, and Jiantao Zhou. 2026. MARE: Multimodal Alignment and Reinforcement for Explainable Deepfake Detection via Vision-Language Models. arXiv preprint arXiv:2601.20433 (2026). [45] Zhipei Xu, Xuanyu Zhang, Runyi Li, Zecheng Tang, Qing Huang, and Jian Zhang. 2024. Fakeshield: Explainable image forgery detection and localization via multi-modal large language models. arXiv preprint arXiv:2410.02761 (2024). [46] Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan, Xiaochen Zuo, Yu Yue, Weinan Dai, Tiantian Fan, Gaohong Liu, Lingjun Liu, et al. 2025. Dapo: An open-source llm reinforcement learning system at scale. arXiv preprint arXiv:2503.14476 
+
+(2025). [47] Xinquan Yu, Wei Lu, and Xiangyang Luo. 2025. Fine-grained Multiple Supervisory Network for Multi-modal Manipulation Detecting and Grounding. arXiv preprint arXiv:2508.02479 (2025). [48] Xinquan Yu, Wei Lu, Xiangyang Luo, and Rui Yang. 2026. CIEC: Coupling Implicit and Explicit Cues for Multimodal Weakly Supervised Manipulation Localization. 
+
+arXiv preprint arXiv:2602.02175 (2026). [49] Xiaojiang Zhang, Jinghui Wang, Zifei Cheng, Wenhao Zhuang, Zheng Lin, Min-glei Zhang, Shaojie Wang, Yinghan Cui, Chao Wang, Junyi Peng, et al. 2025. Srpo: A cross-domain implementation of large-scale reinforcement learning on llm. 
+
+arXiv preprint arXiv:2504.14286 (2025). [50] Yuchen Zhang, Yaxiong Wang, Yujiao Wu, Lianwei Wu, Li Zhu, and Zhedong Zheng. 2025. The Coherence Trap: When MLLM-Crafted Narratives Exploit Manipulated Visual Contexts. arXiv preprint arXiv:2505.17476 (2025). [51] Zhenxing Zhang, Yaxiong Wang, Lechao Cheng, Zhun Zhong, Dan Guo, and Meng Wang. 2025. Asap: Advancing semantic alignment promotes multi-modal manipulation detecting and grounding. In Proceedings of the Computer Vision and Pattern Recognition Conference . 4005–4014. [52] Hanqing Zhao, Wenbo Zhou, Dongdong Chen, Tianyi Wei, Weiming Zhang, and Nenghai Yu. 2021. Multi-attentional deepfake detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 2185–2194. [53] Chujie Zheng, Shixuan Liu, Mingze Li, Xiong-Hui Chen, Bowen Yu, Chang Gao, Kai Dang, Yuqiong Liu, Rui Men, An Yang, et al. 2025. Group sequence policy optimization. arXiv preprint arXiv:2507.18071 (2025). [54] Ziyin Zhou, Yunpeng Luo, Yuanchen Wu, Ke Sun, Jiayi Ji, Ke Yan, Shouhong Ding, Xiaoshuai Sun, Yunsheng Wu, and Rongrong Ji. 2025. Aigi-holmes: Towards explainable and generalizable ai-generated image detection via multimodal large language models. In Proceedings of the IEEE/CVF International Conference on Computer Vision . 18746–18758. [55] Tinghui Zhu, Qin Liu, Fei Wang, Zhengzhong Tu, and Muhao Chen. 2024. Unrav-eling cross-modality knowledge conflicts in large vision-language models. arXiv preprint arXiv:2410.03659 (2024). [56] Zhihao Zhu, Jiafeng Liang, Shixin Jiang, Jinlan Fu, Ming Liu, Guanglu Sun, See-Kiong Ng, and Bing Qin. 2026. Analyzing Reasoning Consistency in Large Multimodal Models under Cross-Modal Conflicts. arXiv preprint arXiv:2601.04073 
+
+(2026).
