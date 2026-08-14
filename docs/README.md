@@ -6,41 +6,38 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-13
-- 运行时间：2026-08-13 21:11:15 UTC
+- 最新运行日期：2026-08-14
+- 运行时间：2026-08-14 20:53:37 UTC
 - 运行状态：成功
-- 本次总论文数：6
-- 精读区：5
-- 速读区：1
+- 本次总论文数：5
+- 精读区：3
+- 速读区：2
 
 ### 今日简报（AI）
-- 今日共生成 6 篇推荐（精读 5 篇，速读 1 篇）
-- 精读：《Understanding Why Foundation Models Work for Diffusion-Generated Image Detection》（10.0/10）, 《Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation》（9.0/10）
-- 速读：《Few-Shot Ordinal Learning for Day-Wise Freshness Estimation with Hyperspectral Fish Images》（6.0/10）
+- 今日共生成 5 篇推荐（精读 3 篇，速读 2 篇）
+- 精读：《SPARED: Reasoning-Based AI-Generated Image Detection via Adversarially Edited Data》（10.0/10）, 《Structured Local Differential Modeling for AI-Generated Image Detection》（9.0/10）
+- 速读：《MLLM-Routed Heterogeneous Ensembles for Robust Cross-Dataset Image Classification》（7.0/10）, 《Class Geometry as Supervision for Sample-Efficient Open-World Detection》（6.0/10）
 - 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
-- 详情：[/202608/13/README](/202608/13/README)
+- 详情：[/202608/14/README](/202608/14/README)
 
 ### 精读区论文标签
-1. [Understanding Why Foundation Models Work for Diffusion-Generated Image Detection](/202608/13/2608.12155v1-understanding-why-foundation-models-work-for-diffusion-generated-image-detection)  
+1. [SPARED: Reasoning-Based AI-Generated Image Detection via Adversarially Edited Data](/202608/14/2608.12876v1-spared-reasoning-based-ai-generated-image-detection-via-adversarially-edited-data)  
    标签：评分：10.0/10、query:deepfake-fsl
-   evidence：基于基础模型的扩散生成图像检测
-2. [Evidence-Grounded Forensic Reasoning for Detecting and Grounding Multi-Modal Media Manipulation](/202608/13/2608.08009v1-evidence-grounded-forensic-reasoning-for-detecting-and-grounding-multi-modal-media-manipulation)  
+   evidence：通过对抗编辑数据与推理进行AI生成图像检测
+2. [Structured Local Differential Modeling for AI-Generated Image Detection](/202608/14/2608.12811v1-structured-local-differential-modeling-for-ai-generated-image-detection)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：检测并定位多模态媒体操纵的取证任务
-3. [Robustness of AI-Art Detectors under Generator Shift](/202608/13/2608.11643v1-robustness-of-ai-art-detectors-under-generator-shift)  
+   evidence：AI生成图像检测，聚焦低层统计差异
+3. [Learning Unified Video and Image Representation for Video Face Forgery Detection](/202608/14/2608.13064v1-learning-unified-video-and-image-representation-for-video-face-forgery-detection)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：分析AI艺术检测器在生成器偏移下的鲁棒性，训练于U-Net扩散并零样本测试新架构
-4. [CAM-Guided Saliency Cutout and Image-Based Malware Classification](/202608/13/2608.11634v1-cam-guided-saliency-cutout-and-image-based-malware-classification)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：基于CNN的恶意软件图像分类，使用CAM引导的裁剪
-5. [A Comparison of Malware Image Transformations Using Grad-CAM and Hybrid Learning Models](/202608/13/2608.12077v1-a-comparison-of-malware-image-transformations-using-grad-cam-and-hybrid-learning-models)  
-   标签：评分：8.0/10、query:deepfake-fsl
-   evidence：使用Grad-CAM和混合模型比较恶意软件图像变换用于分类
+   evidence：通过统一视频-图像表示和多任务学习进行视频人脸伪造检测
 
 ### 速读区论文标签
-1. [Few-Shot Ordinal Learning for Day-Wise Freshness Estimation with Hyperspectral Fish Images](/202608/13/2608.12230v1-few-shot-ordinal-learning-for-day-wise-freshness-estimation-with-hyperspectral-fish-images)  
+1. [MLLM-Routed Heterogeneous Ensembles for Robust Cross-Dataset Image Classification](/202608/14/2608.13463v1-mllm-routed-heterogeneous-ensembles-for-robust-cross-dataset-image-classification)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：使用CNN的异构集成进行图像分类
+2. [Class Geometry as Supervision for Sample-Efficient Open-World Detection](/202608/14/2608.12698v1-class-geometry-as-supervision-for-sample-efficient-open-world-detection)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：首次提出高光谱食品质量估计的少样本学习框架，采用情景任务和有序预测
+   evidence：稀缺数据设置与少量标注；类几何监督
 
 
 <div class="dpr-home-promo-card">

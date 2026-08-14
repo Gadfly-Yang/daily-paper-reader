@@ -1,0 +1,214 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-14T20:45:58.162079+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2608.12876v1",
+      "source": "arxiv",
+      "title": "SPARED: Reasoning-Based AI-Generated Image Detection via Adversarially Edited Data",
+      "abstract": "Detecting AI-generated images is only half the task: a deployed detector must also justify its verdict, yet existing detectors inherit three failure modes from their training data: real and fake images collected from different sources invite provenance shortcuts, supervised explanation corpora teach templated rationales, and a static forgery corpus leaves the decision boundary standing still while generators keep moving. We introduce \\methodname{}, an adversarial reinforcement learning framework that pits two heterogeneous models against each other. A diffusion image editor learns to edit real photographs into fake counterparts of those same photographs that fool the current detector, while a reasoning MLLM learns to expose them with a verdict grounded in free-form reasoning. Both rewards are shortcut-proof by design: the attacker is credited only when its edit is faithfully executed, and the defender only when its verdict is correct. As the two models alternate, each round's attacker regenerates a harder training pool aimed at the current detector's blind spots, so the detector must generalize rather than memorize any fixed artifact distribution. Although the explanation is never rewarded, its quality rises round over round as a side effect of accuracy-only training. A detector trained within this loop improves monotonically across rounds on each of three external benchmarks.",
+      "authors": [
+        "Yicheng Bao",
+        "Xiahui Guo",
+        "Xuhong Wang",
+        "Xin Tan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-13T06:40:20+00:00",
+      "link": "https://arxiv.org/pdf/2608.12876v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "AI-generated image detection via adversarially edited data and reasoning",
+      "llm_evidence_cn": "通过对抗编辑数据与推理进行AI生成图像检测",
+      "llm_evidence": "通过对抗编辑数据与推理进行AI生成图像检测",
+      "canonical_evidence": "通过对抗编辑数据与推理进行AI生成图像检测",
+      "llm_tldr_en": "Proposes SPARED, an adversarial reinforcement learning framework where a diffusion editor creates challenging fakes and a reasoning MLLM detects them, addressing provenance shortcuts and static corpora.",
+      "llm_tldr_cn": "针对AI生成图像检测器存在的来源捷径、模板化解释和静态伪造语料问题，本文提出SPARED框架，通过对抗强化学习让扩散编辑器生成逼真伪造图像，同时训练推理多模态大语言模型揭露伪造并提供解释。该方法提升了检测器的泛化性和可解释性，对AI图像取证具有重要意义。",
+      "llm_tldr": "针对AI生成图像检测器存在的来源捷径、模板化解释和静态伪造语料问题，本文提出SPARED框架，通过对抗强化学习让扩散编辑器生成逼真伪造图像，同时训练推理多模态大语言模型揭露伪造并提供解释。该方法提升了检测器的泛化性和可解释性，对AI图像取证具有重要意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.12811v1",
+      "source": "arxiv",
+      "title": "Structured Local Differential Modeling for AI-Generated Image Detection",
+      "abstract": "The rapid advancement of AI-generated content has made the reliable detection of generated images an increasingly critical challenge. Existing detection methods are often dominated during training by semantically salient components with high signal-to-noise ratios (SNRs), thereby suppressing subtler forensic cues associated with the underlying generation mechanisms and embedded in low-level statistical structures. From an information-theoretic perspective, we present a key insight: effective detection in the low-level statistical space requires mitigating the dominance of semantic components while emphasizing and amplifying responses to low-SNR forgery traces. Building on this insight, we propose RippleNet, an AI-generated image detection framework based on local differential signals. RippleNet adaptively identifies forgery-sensitive regions and constructs multi-directional, multi-scale differential representations within local neighborhoods, explicitly characterizing anomalous patterns in neighborhood statistics. More importantly, we refine the attention mechanism to operate within the local differential representation space, enabling the model to establish explicit dependencies at a finer statistical granularity. This design facilitates the capture of pixel-level forgery traces that are difficult to model using conventional convolutions or image-wide patch-level attention. Extensive experiments on multiple public benchmarks and under cross-generator evaluation settings demonstrate that RippleNet achieves consistently competitive performance.",
+      "authors": [
+        "Jiazhen Yang",
+        "Ruijin Jin",
+        "Junjun Zheng",
+        "Xiangheng Kong",
+        "Zunlei Feng",
+        "Jie Lei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-13T04:35:29+00:00",
+      "link": "https://arxiv.org/pdf/2608.12811v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "AI-generated image detection focusing on low-level statistical differentiation",
+      "llm_evidence_cn": "AI生成图像检测，聚焦低层统计差异",
+      "llm_evidence": "AI生成图像检测，聚焦低层统计差异",
+      "canonical_evidence": "AI生成图像检测，聚焦低层统计差异",
+      "llm_tldr_en": "Proposes RippleNet, an AI-generated image detection framework based on structured local differential modeling, which mitigates semantic dominance and amplifies low-SNR forgery traces to improve detection of GAN and diffusion-generated images.",
+      "llm_tldr_cn": "针对AI生成图像检测中语义成分主导而掩盖低信噪比伪造线索的问题，本文从信息论视角提出RippleNet框架，采用结构化局部差分建模来强调并放大低层统计结构中的伪造痕迹。该框架通过缓解语义主导并增强低SNR伪造响应，在多个生成模型（如GAN和扩散模型）上进行了实验验证，结果表明其有效提升了AI生成图像检测的性能，为多媒体取证提供了新思路。",
+      "llm_tldr": "针对AI生成图像检测中语义成分主导而掩盖低信噪比伪造线索的问题，本文从信息论视角提出RippleNet框架，采用结构化局部差分建模来强调并放大低层统计结构中的伪造痕迹。该框架通过缓解语义主导并增强低SNR伪造响应，在多个生成模型（如GAN和扩散模型）上进行了实验验证，结果表明其有效提升了AI生成图像检测的性能，为多媒体取证提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.13064v1",
+      "source": "arxiv",
+      "title": "Learning Unified Video and Image Representation for Video Face Forgery Detection",
+      "abstract": "Face forgery detection is crucial for preserving the security and integrity of facial data given the rapid developments in face manipulation techniques and deep generative models. Existing methods for video face forgery detection typically assume that all frames in a forged video are manipulated, while detecting partially forged videos that contain only a subset of altered frames remains challenging. To address this issue, we propose a novel framework, UVIF, that utilizes additional annotated images to provide fine-grained supervision for detecting partial forgeries in videos. UVIF employs a unified encoder and a multi-task learning paradigm to jointly model facial videos and images for boosted video face forgery detection. A 2D backbone with temporal fusion modules is employed as the unified encoder. A pseudo labeling process is designed for video frames to bridge their representations with those of static images. A video-oriented feature alignment strategy is further introduced to reduce the distribution gap between videos and images. Extensive experiments on benchmark datasets demonstrate the effectiveness of our framework, which outperforms state-of-theart methods in detecting partially forged videos while introducing no additional computational overhead. Our code is available at https://github.com/haotianll/UVIF.",
+      "authors": [
+        "Haotian Liu",
+        "Yang Liu",
+        "Guoying Zhao",
+        "Xiaobai Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-13T10:25:59+00:00",
+      "link": "https://arxiv.org/pdf/2608.13064v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Video face forgery detection via unified video-image representation and multi-task learning",
+      "llm_evidence_cn": "通过统一视频-图像表示和多任务学习进行视频人脸伪造检测",
+      "llm_evidence": "通过统一视频-图像表示和多任务学习进行视频人脸伪造检测",
+      "canonical_evidence": "通过统一视频-图像表示和多任务学习进行视频人脸伪造检测",
+      "llm_tldr_en": "Proposes UVIF, a unified framework using additional annotated images and multi-task learning to detect partial forgeries in videos.",
+      "llm_tldr_cn": "针对现有视频人脸伪造检测假设所有帧均被篡改、难以检测部分伪造的问题，本文提出UVIF框架，利用额外标注图像提供细粒度监督，并通过统一编码器和多任务学习联合建模视频与图像。实验表明该方法有效提升了视频中部分伪造帧的检测能力。",
+      "llm_tldr": "针对现有视频人脸伪造检测假设所有帧均被篡改、难以检测部分伪造的问题，本文提出UVIF框架，利用额外标注图像提供细粒度监督，并通过统一编码器和多任务学习联合建模视频与图像。实验表明该方法有效提升了视频中部分伪造帧的检测能力。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.13463v1",
+      "source": "arxiv",
+      "title": "MLLM-Routed Heterogeneous Ensembles for Robust Cross-Dataset Image Classification",
+      "abstract": "Modern image classification models excel when trained on single task-specific datasets but often struggle to generalize across domains and difficulty levels. We propose ARMDIL, an Adaptive Router for Multi-Domain Image classification with LLMs. ARMDIL is an ensemble that uses a multimodal large language model (MLLM) agent to dynamically route each image to the most suitable vision backbone. Our diverse ensemble employs convolutional neural networks (ResNets), self-supervised representation learners (SSL), and vision-language models (VLMs), each trained on a unified label space constructed from multiple image datasets with differing distributions and characteristics. Empirical evaluations illuminate the distinct capabilities and vulnerabilities of each architecture across disparate visual domains. Crucially, we show that ARMDIL effectively navigates these trade-offs, performing competitively with specialized training-based routers. Furthermore, it drastically improves adaptability by allowing new information to be integrated via simple prompt modifications, while enhancing interpretability through natural language reasoning traces. These advances in cross-dataset image classification pave the way for more reliable general-purpose vision systems such as AI assistants and autonomous robots.",
+      "authors": [
+        "Daniel Perkins",
+        "John Squires",
+        "Janou Milligan",
+        "Chandra Raskoti",
+        "Linda Ungerboeck"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-08-13T16:45:24+00:00",
+      "link": "https://arxiv.org/pdf/2608.13463v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "heterogeneous ensemble with CNNs for image classification",
+      "llm_evidence_cn": "使用CNN的异构集成进行图像分类",
+      "llm_evidence": "使用CNN的异构集成进行图像分类",
+      "canonical_evidence": "使用CNN的异构集成进行图像分类",
+      "llm_tldr_en": "Proposes ARMDIL, an adaptive router using a multimodal LLM to dynamically route each image to the most suitable vision backbone (CNN, SSL, VLM) within a heterogeneous ensemble, achieving robust cross-dataset image classification.",
+      "llm_tldr_cn": "针对单一数据集上训练的图像分类模型跨域泛化能力弱的问题，本文提出ARMDIL框架，利用多模态大语言模型作为自适应路由器，动态为每张图像选择最合适的视觉骨干网络，包括CNN、自监督学习和视觉语言模型。该异构集成在统一标签空间下训练，实验表明ARMDIL在多个跨域数据集上显著提升了分类的鲁棒性和准确性，为跨域图像分类提供了新方案。",
+      "llm_tldr": "针对单一数据集上训练的图像分类模型跨域泛化能力弱的问题，本文提出ARMDIL框架，利用多模态大语言模型作为自适应路由器，动态为每张图像选择最合适的视觉骨干网络，包括CNN、自监督学习和视觉语言模型。该异构集成在统一标签空间下训练，实验表明ARMDIL在多个跨域数据集上显著提升了分类的鲁棒性和准确性，为跨域图像分类提供了新方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.12698v1",
+      "source": "arxiv",
+      "title": "Class Geometry as Supervision for Sample-Efficient Open-World Detection",
+      "abstract": "Open-world object detection requires models to recognize known categories, reject unfamiliar objects, and incorporate new classes over time. This is especially challenging in scarce-data settings such as biomedical and scientific imaging, where rare categories may have only a few annotated examples and fine-grained classes differ by subtle morphology. Prototype-based detectors are natural for this regime, but they typically learn class prototypes as independent anchors, ignoring relational structure among classes. We propose class-geometry supervision (CGS), a general framework that constrains learned prototype or class-representation spaces to preserve visual or semantic class dissimilarities estimated from training data. CGS introduces a dissimilarity-preserving objective that aligns pairwise distances among learned class representations with a target class-geometry matrix while retaining the standard task loss. We instantiate the same objective across prototype recognition, few-shot biomedical object detection, open-set detection, novel-class insertion, and OWOD adaptation on COCO. Experiments show that CGS improves sample efficiency in recognition and ova detection, substantially strengthens novel-class insertion, and improves unknown recall on COCO while retaining much of the known-class detection performance. Ablations show that meaningful visual geometry provides the most reliable gains, while random geometry can help novel separation but is less consistent for few-shot detection. These results suggest that relational class geometry is an effective supervisory signal for building calibrated and extensible open-world detectors under limited supervision.",
+      "authors": [
+        "Akash Rao",
+        "Zhou Chen",
+        "Revanth Reddy Palem",
+        "Udhav Ramachandran",
+        "Ruth Scimeca",
+        "Sathyanarayanan N. Aakur"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-13T01:20:47+00:00",
+      "link": "https://arxiv.org/pdf/2608.12698v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "scarce-data settings with few annotated examples; class-geometry supervision",
+      "llm_evidence_cn": "稀缺数据设置与少量标注；类几何监督",
+      "llm_evidence": "稀缺数据设置与少量标注；类几何监督",
+      "canonical_evidence": "稀缺数据设置与少量标注；类几何监督",
+      "llm_tldr_en": "This paper addresses open-world detection with scarce annotations and fine-grained classes by proposing class-geometry supervision (CGS), which constrains learned class representations to preserve visual or semantic dissimilarities, improving sample-efficient prototype-based detection.",
+      "llm_tldr_cn": "开放世界物体检测要求模型识别已知类别、拒绝未知并持续加入新类，但在生物医学等场景中稀有类别仅有少量标注且细粒度类间差异细微。本文提出类几何监督框架（CGS），约束学习的原型或类表示空间以保持训练数据中估计的视觉/语义不相似性。实验表明，CGS 在稀缺数据下提升原型检测器的样本效率与细粒度区分能力，为少样本开放世界检测提供了通用方案。",
+      "llm_tldr": "开放世界物体检测要求模型识别已知类别、拒绝未知并持续加入新类，但在生物医学等场景中稀有类别仅有少量标注且细粒度类间差异细微。本文提出类几何监督框架（CGS），约束学习的原型或类表示空间以保持训练数据中估计的视觉/语义不相似性。实验表明，CGS 在稀缺数据下提升原型检测器的样本效率与细粒度区分能力，为少样本开放世界检测提供了通用方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
