@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-08-15 <!--dpr-date:20260815-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/15/2608.12725v1-a-generative-approach-for-improving-multi-label-defect-classification-in-photovoltaic-modules" data-sidebar-item="{&quot;title&quot;: &quot;A Generative Approach for Improving Multi-Label Defect Classification in Photovoltaic Modules&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.12725v1-a-generative-approach-for-improving-multi-label-defect-classification-in-photovoltaic-modules&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;通过生成样本解决每类标注样本稀缺问题&quot;}">A Generative Approach for Improving Multi-Label Defect Classification in Photovoltaic Modules</a>
   * 2026-08-14 <!--dpr-date:20260814-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/14/2608.12876v1-spared-reasoning-based-ai-generated-image-detection-via-adversarially-edited-data" data-sidebar-item="{&quot;title&quot;: &quot;SPARED: Reasoning-Based AI-Generated Image Detection via Adversarially Edited Data&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.12876v1-spared-reasoning-based-ai-generated-image-detection-via-adversarially-edited-data&quot;, &quot;score&quot;: &quot;10.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;通过对抗编辑数据与推理进行AI生成图像检测&quot;}">SPARED: Reasoning-Based AI-Generated Image Detection via Adversarially Edited Data</a>

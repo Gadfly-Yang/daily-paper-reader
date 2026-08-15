@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-15",
+  "date": "2026-08-15",
+  "generated_at": "2026-08-15T19:55:04",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/15/2608.12725v1-a-generative-approach-for-improving-multi-label-defect-classification-in-photovoltaic-modules",
+      "section": "quick",
+      "title_en": "A Generative Approach for Improving Multi-Label Defect Classification in Photovoltaic Modules",
+      "authors": "Abdul Mueez, Yogesh S. Rawat, Shruti Vyas",
+      "date": "2026-08-13",
+      "pdf": "https://arxiv.org/pdf/2608.12725v1",
+      "score": "6.0",
+      "evidence": "通过生成样本解决每类标注样本稀缺问题",
+      "tldr": "光伏电池EL图像多标签缺陷分类面临共现缺陷造成的学习歧义和稀有类别样本稀缺问题。本文提出生成式缺陷隔离方法GDI，利用LaMa修复模型生成单一缺陷样本。实验表明GDI在ViT和EfficientNetV2上显著提升分类性能，稀有缺陷F1最高提升63.6%，并减少26%共现错误。该方法有效利用了现有分割数据集，为该领域树立新基准。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "This paper addresses the challenge of multi-label defect classification in electroluminescence (EL) images of photovoltaic (PV) cells. Training models on images where multiple defects co-occur creates learning ambiguity, making it difficult to disentangle visual features for specific defect types, a problem compounded by the scarcity of examples for individual classes. To tackle this, we introduce Generative Defect Isolation (GDI), utilizing the LaMa inpainting model with Fast Fourier Convolutions to remove selected defects and generate realistic, single-defect training samples. Extensive experiments on Vision Transformer (ViT-S, ViT-L) and EfficientNetV2-L architectures demonstrate that GDI significantly outperforms baselines. The performance gains are most pronounced in low-data scenarios; class-wise analysis shows substantial improvements, boosting the F1-Score for rare defect classes by up to 63.6%. Furthermore, GDI effectively resolves learning ambiguity from co-occurring defects, yielding a 26% reduction in such co-occurring classification errors. Our work establishes GDI as an effective method for maximizing the value of existing segmentation datasets and sets a new performance benchmark for multi-label classification in this domain.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
