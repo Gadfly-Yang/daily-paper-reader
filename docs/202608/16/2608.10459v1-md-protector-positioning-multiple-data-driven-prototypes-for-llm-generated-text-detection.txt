@@ -1,0 +1,815 @@
+Title: MD-ProTector: Positioning Multiple Data-Driven Prototypes for LLM-Generated Text Detection
+
+URL Source: https://arxiv.org/pdf/2608.10459v1
+
+Published Time: Wed, 12 Aug 2026 00:34:17 GMT
+
+Number of Pages: 19
+
+Markdown Content:
+# MD-ProTector: Positioning Multiple Data-Driven Prototypes for LLM-Generated Text Detection 
+
+Jinmo Han Jimin Hong Chanyeong Moon 
+
+Ju Yeon Kang Seonuk Kim Nam Soo Kim Department of Electrical and Computer Engineering and INMC Seoul National University, Seoul, Republic of Korea 
+
+{jinmo, jimin, chanyeong}@hi.snu.ac.kr {juyeon, seonuk}@hi.snu.ac.kr nkim@snu.ac.kr 
+
+Abstract 
+
+As LLM-generated content becomes more so-phisticated, detection systems for distinguish-ing those texts from human-written text must operate at scale while handling diverse writing styles, domains, languages, and generator mod-els. Input-only encoder detectors are suitable for practical deployment setting, but standard binary classification supplies only the class la-bel and does not explicitly organize the sub-stantial variation within either class. We pro-pose MD-ProTector , which represents each class with multiple trainable reference vectors in the encoder embedding space, referred to as prototypes. These prototypes provide sepa-rate decision boundaries for different groups of texts within the same class. However, adding multiple prototypes alone does not determine which variation each prototype should repre-sent. MD-ProTector addresses this problem with Prototype Positioning loss, which sepa-rates class-level structure from the within-class variation that differentiates individual proto-types. Evaluated across five settings from three large-scale benchmarks covering domain, generator, language, and adversarial variation, MD-ProTector achieves the highest AvgRec on MAGE CDCM and RAID and the highest AU-ROC and lowest FPR95 on RAID among the compared encoder-based methods. 
+
+1 Introduction 
+
+As large language models have become increas-ingly sophisticated and widely accessible, detecting whether text is human-written or LLM-generated has become essential for ensuring credibility in dig-ital communication (Kwon and Jang, 2025). This is particularly important for blocking automated fake news and phishing attacks, as well as main-taining academic integrity (Najjar et al., 2025). In large-scale deployment scenarios, detection sys-tems must be applied to massive volumes of con-tent that span diverse writing styles, domains, and 
+
+Figure 1: Prototype-Based Inference. Given an in-put text x, MD-ProTector encodes it into a normal-ized embedding z and compares it with the machine and human prototype banks. The detection score is 
+
+S(z) = s1(z) − s0(z), where s0(z) and s1(z) are the maximum similarities to the machine and human proto-types, respectively. 
+
+generator models (Li et al., 2024). Treating such di-versity is important for practical detection systems operating in real-world cases including various do-main, writing style, generator, and adversarial edit-ing cases (Wu et al., 2024). In these practical deployment settings, wa-termarks or model-internal scores such as log-likelihoods are not guaranteed to be available (Christ et al., 2024; Mitchell et al., 2023). Under these conditions, detectors based on lightweight text encoders provide a practical solution. They operate directly on the input text without requiring access to the generation pipeline or model inter-nals (Kuznetsov et al., 2024). This also allows one encoder pipeline to be adapted across target domains without access to the generator internals 1arXiv:2608.10459v1 [cs.CL] 11 Aug 2026 (Rodriguez et al., 2022). One of the simplest designs for encoder-based detectors is to attach a binary classification head and train it using a cross-entropy loss (Ippolito et al., 2020). Despite such intra-class diversity in writing style and domain, all texts are reduced to two categories during training under this design. The standard binary classification objective is a coarse supervision signal that does not explicitly consider such intra-class diversity (Cui et al., 2016). Several prior works have attempted to move be-yond standard binary classification formulations by adding structural constraints, but still overlook intra-class diversity within at least one of the two classes, which can limit detection performance (Guo et al., 2024b; Zeng et al., 2025). This observa-tion motivates detectors that represent both human-written and LLM-generated texts with multiple lo-cal representatives rather than a single global class representation. A natural extension is to represent each class with multiple trainable reference vectors in the em-bedding space, which we call prototypes. However, the number of prototypes alone does not determine which pattern of within-class variation each proto-type should represent. Without a prototype-specific objective, different prototypes may remain redun-dant or capture overlapping patterns. We therefore propose MD-ProTector , an input-only encoder detector that learns data-driven po-sitions for separate human and machine proto-types. MD-ProTector separates the direction shared within each class from the variation that distin-guishes groups of samples within that class. Pro-totype Positioning loss uses this variation to give different prototypes distinct roles, while comple-mentary objectives keep each prototype aligned with the corresponding human or machine class. The learned prototype banks then directly define the human–machine detection score shown in Fig-ure 1. We evaluate MD-ProTector under mixed domain and generator conditions, adversarial perturbations, multilingual generalization, held-out domains and held-out generator models. Among input-only en-coder detectors trained under the same data, back-bone, and validation protocol, MD-ProTector ranks within the top two in AvgRec across all five set-tings. It achieves the highest AvgRec on MAGE CDCM and RAID, together with the highest AU-ROC and lowest FPR95 on RAID, while DeTeCtive remains stronger on M4. Ablation studies show Prototype Positioning performs beter than other prototype multiplicity methods such as direct pro-totype repulsion and positioning before removal of the class-shared direction. Our contributions are as follows: • We develop an input-only LLM-generated text detector in which separate human and ma-chine prototype banks directly define the de-tection score. • We introduce the Prototype Positioning loss to place each prototype to capture within-class variation in data-driven manner. • We evaluate MD-ProTector across five con-trolled input-only encoder settings, where it leads AvgRec on MAGE and RAID and at-tains the highest AUROC and lowest FPR95 on RAID. 
+
+2 Related Works 
+
+2.1 LLM-Generated Text Detection 
+
+Prior work on LLM-generated text detection in-cludes watermarking, zero-shot statistical methods, and supervised classifiers, depending on model access and the types of detection signals used (Wu et al., 2025a). Watermarking injects identi-fiable patterns during generation, enabling content source verification by model providers (Kirchen-bauer et al., 2023). Zero-shot statistical detec-tors, such as GLTR, DetectGPT, Fast-DetectGPT, and Binoculars, use token probabilities, proba-bility curvature, or cross-model likelihood ratios without task-specific training (Gehrmann et al., 2019; Mitchell et al., 2023; Bao et al., 2024; Hans et al., 2024). BISCOPE, ImBD, DetectAnyLLM, and PAWN further refine model-based scoring through memorization, style-aligned discrepancy, task-oriented discrepancy learning, or learned to-ken weighting (Guo et al., 2024a; Chen et al., 2025; Fu et al., 2025; Miralles-González et al., 2026). Rewrite-based methods instead use the amount or pattern of changes produced by an auxiliary LLM (Mao et al., 2024; Hao et al., 2025). These methods can provide strong detection signals, but require access to scoring language models, auxiliary gener-ation calls, or cooperation from the generator. As a practical alternative in large-scale deploy-ment scenarios, supervised detectors can operate di-rectly on input text and are suitable for in-the-wild deployment (Bakhtin et al., 2019; Uchendu et al., 22020; Wang et al., 2023). These detectors typically rely on encoder architectures such as BERT (Devlin et al., 2019) or RoBERTa (Liu et al., 2019). Ghost-buster builds a classifier from features extracted by several weaker language models, RADAR im-proves paraphrase robustness through adversarial training, and MoSEs models stylistic references with input-dependent threshold estimation (Verma et al., 2024; Hu et al., 2023; Wu et al., 2025b). De-spite their efficiency, supervised detectors can still degrade when the domain or generator distribution changes (Bakhtin et al., 2019; Li et al., 2024; Wu et al., 2024). Recent work therefore imposes stronger struc-ture on the representation space. DeTeCtive or-ganizes text instances through author- and style-aware contrastive supervision and performs KNN inference (Guo et al., 2024b). DSVDD takes a one-class approach, compacting machine-generated em-beddings and treating human-written text as out-of-distribution (Zeng et al., 2025). SAMP repre-sents both classes with multiple prototypes using source-model supervision (Xu et al., 2026). While these methods introduce instance-level structure, one-class compactness, or source-aware prototypes, binary supervision alone does not specify how in-ternal variation should form distinct training targets for multiple human and machine prototypes. MD-ProTector addresses this gap by constructing a sep-arate positioning target for each prototype from the hub-removed residuals of its associated samples. 
+
+2.2 Prototype-Based Representation Learning 
+
+Prototype-based methods represent each class by one or more representative points in an embedding space and classify inputs based on their similarity to these prototypes. A canonical example is Proto-typical Networks, which compute class prototypes as the mean embeddings of support examples and classify queries by distance in a metric-learning framework (Snell et al., 2017). ProtoFewRoBERTa applies this episodic formulation to few-shot de-tection of AI-generated reviews, while ProtoryNet learns sentence-level reference patterns and clas-sifies documents from their prototype trajectories (Agrahari et al., 2025; Hong et al., 2023). These methods establish prototypes as data-driven class summaries or interpretable reference patterns. Prototype-based representations have also been applied beyond standard classification. Prototyp-ical Contrastive Learning estimates prototypes as latent cluster variables for representation learning (Li et al., 2021). OOD methods use class proto-types, diversified prototypes, or mixtures of proto-types to represent the known data distribution and score unfamiliar inputs (Chen et al., 2024; Jia et al., 2025; Lu et al., 2024). Multiple normal prototypes have similarly been used in anomaly detection, and multi-prototype modeling has been applied to open-set noisy-label learning (Dong et al., 2024; Zhang et al., 2025). Prior multi-prototype methods learn prototypes from full sample embeddings or through assign-ment and separation objectives, leaving the respec-tive roles of the class-shared direction and the vari-ation that differentiates individual prototypes un-derdetermined. Without this distinction, the learn-ing objective does not specify which component should preserve the class decision and which com-ponent should organize multiple representatives within the class. MD-ProTector resolves this am-biguity by preserving the shared direction through the class hub and using assignment-weighted, hub-orthogonal residuals to position each prototype. 
+
+3 Proposed Method 
+
+MD-ProTector jointly learns an encoder and sepa-rate prototype banks for human-written and LLM-generated text. Prototype Positioning organizes each prototype according to the residual variation of its associated samples, while Prototype-to-Class and Sample-to-Prototype preserve class alignment and sample association. The learned prototype banks are used directly for detection. 
+
+3.1 Problem Formulation and Encoder 
+
+Given an input text xi, each sample has a binary label yi ∈ { 0, 1}, where yi = 0 denotes LLM-generated text and yi = 1 denotes human-written text. A lightweight encoder fθ maps the input into token-level representations, which are mean-pooled and normalized as 
+
+zi = norm ( fθ(xi)) , (1) where norm( v) = v/ ∥v∥2 denotes ℓ2 normaliza-tion. For a mini-batch B in which both classes are represented, let Bc = {i ∈ B : yi = c}. The class hub is 
+
+hc = norm 1
+
+|Bc|
+
+X
+
+> i∈Bc
+
+zi
+
+!
+
+. (2) 3Figure 2: Overview of the training objectives. Circles denote class hubs, stars denote learnable prototypes, dots denote sample embeddings, and diamonds denote assignment-weighted aggregates of sample residuals. Prototype-to-Class aligns prototypes with their class hubs. Sample-to-Prototype associates samples with the prototype bank of their ground-truth class. Prototype Positioning aligns the residual vector of each prototype with the aggregate constructed for that prototype after removing the class-hub direction. In panel (c), p⊥ 
+
+> c,s
+
+denotes the residual vector of another prototype with s̸ = r.
+
+It represents the direction shared by class-c samples in the current mini-batch. For each class c ∈ { 0, 1}, we maintain R learn-able prototypes: 
+
+Pc = {pc, 1, . . . , p c,R }, ∥pc,r ∥2 = 1 . (3) The full prototype bank is P = P0 ∪ P 1. The ob-jectives below preserve class-level alignment while allowing different groups of same-class samples to orient the residual component of each prototype. 
+
+3.2 Data-Driven Prototype Initialization 
+
+Before training, we extract embeddings from the training set and apply K-Means separately within each class (MacQueen, 1967). The resulting cen-troids initialize P(0)  
+
+> c
+
+= {p(0)  
+
+> c,r
+
+}Rr=1 . The centroids are normalized and subsequently optimized as learnable parameters together with the encoder. This initialization places the prototype banks in the observed class distributions rather than at random directions. 
+
+3.3 Training Objectives 
+
+For compact notation, define 
+
+ϕ(u, v ) = exp 
+
+
+
+u⊤v/τ 
+
+
+
+, (4) where τ is a temperature parameter. 
+
+Prototype-to-Class Loss. The first objective aligns each prototype with the hub of its own class: 
+
+LP2C = − 12R
+
+> 1
+
+X
+
+> c=0
+> R
+
+X
+
+> r=1
+
+log ϕ(pc,r , h c)
+
+P1 
+
+> d=0
+
+ϕ(pc,r , h d) .
+
+(5) This objective preserves the class-level orientation of each prototype bank. 
+
+Sample-to-Prototype Loss. We compute a soft assignment over the prototypes of the ground-truth class: 
+
+qi,r = ϕ(zi, p yi,r )
+
+PRk=1 ϕ(zi, p yi,k ) . (6) The assignment is treated as a stop-gradient target in the Sample-to-Prototype loss: 
+
+LS2P = − 1
+
+|B|
+
+X
+
+> i∈BR
+
+X
+
+> r=1
+
+sg( qi,r )
+
+· log ϕ(zi, p yi,r )
+
+P 
+
+> p∈P
+
+ϕ(zi, p ) .
+
+(7) Here, sg( ·) denotes the stop-gradient operator. This objective associates each sample with its ground-truth prototype bank while separating it from the opposite-class bank. 4Prototype Positioning Loss. Sample-to-Prototype associates samples with prototypes but does not provide a prototype-specific target for within-class variation. We therefore remove the class-hub component from the samples and prototypes: 
+
+z⊥ 
+
+> i
+
+= zi − (z⊤ 
+
+> i
+
+hyi )hyi , (8) 
+
+p⊥ 
+
+> c,r
+
+= norm 
+
+
+
+pc,r − (p⊤
+
+> c,r
+
+hc)hc
+
+
+
+. (9) Here, p⊥ 
+
+> c,r
+
+is the normalized residual vector of pro-totype pc,r after removing its class-hub component. Using the assignments in Equation 6, we con-struct a residual aggregate for each prototype: 
+
+g⊥ 
+
+> c,r
+
+= X
+
+> i∈Bc
+
+qi,r z⊥ 
+
+> i
+
+, ¯z⊥ 
+
+> c,r
+
+= norm 
+
+
+
+g⊥
+
+> c,r
+
+
+
+.
+
+(10) The vector ¯z⊥ 
+
+> c,r
+
+summarizes the residual variation of class-c samples associated with prototype pc,r .Let P⊥ = {p⊥
+
+> d,k
+
+}d,k denote the set of prototype residual vectors. The Prototype Positioning loss is 
+
+LPP = − 12R
+
+> 1
+
+X
+
+> c=0
+> R
+
+X
+
+> r=1
+
+log ϕ(¯ z⊥
+
+> c,r
+
+, p ⊥
+
+> c,r
+
+)
+
+P 
+
+> p⊥∈P ⊥
+
+ϕ(¯ z⊥
+
+> c,r
+
+, p ⊥) .
+
+(11) Equation 11 is a softmax cross-entropy over the prototype residual vectors, with a separate data-derived target constructed for each prototype. Residual vectors from both classes appear in the de-nominator and therefore compete in the shared em-bedding space. Because p⊥ 
+
+> c,r
+
+is normalized, Proto-type Positioning controls the direction of the resid-ual component. Prototype-to-Class preserves class alignment, and Sample-to-Prototype connects the resulting prototype to same-class samples. 
+
+Final Training Objective. The final objective is 
+
+Ltrain = LP2C + LS2P + LPP . (12) We jointly optimize the encoder and prototype pa-rameters and renormalize the prototypes after each update. 
+
+3.4 Inference 
+
+Given an input text x, we compute z =norm( fθ(x)) and score each class by its most sim-ilar prototype: 
+
+sc(z) = max  
+
+> r∈{ 1,...,R }
+
+z⊤pc,r . (13) The detection score and prediction are 
+
+S(z) = s1(z) − s0(z), ˆy = 1{S(z) > δ }.
+
+(14) Appendix B.2 evaluates a weighted within-class al-ternative using the same frozen model parameters. 
+
+4 Experiments 
+
+4.1 Experimental Setup Evaluation Settings. We evaluate MD-ProTector on MAGE, RAID, and M4, which cover distinct deployment scenarios. MAGE is used to evalu-ate domain and generator generalization: MAGE Cross-Domain Cross-Model (MAGE CDCM) tests mixed domain/generator conditions, while MAGE Unseen Domains and MAGE Unseen Models test leave-one-out domain and leave-one-out generator-family generalization (Li et al., 2024). M4 evalu-ates multilingual and unseen-language generaliza-tion (Wang et al., 2024). RAID evaluates robust-ness to adversarial attacks and decoding-related variations (Dugan et al., 2024). Each MAGE leave-one-out scenario trains a separate detector, yield-ing 10 domain-shift and 7 generator-family-shift evaluations. Detailed dataset statistics and split construction are provided in Appendix A. 
+
+Baselines. We compare input-only encoder de-tectors under a common data and model-access protocol. Binary CE and SupCon provide stan-dard classification and supervised contrastive ref-erences, while DeTeCtive and DSVDD introduce structured representation objectives through hier-archical contrastive learning with KNN inference and machine-class compactness, respectively (Guo et al., 2024b; Zeng et al., 2025). All methods use the same data splits, encoder backbone, training budget, checkpoint selection, and validation-based threshold selection. The comparison isolates the detector formulation without access to model inter-nals or auxiliary generation. 
+
+Evaluation Metrics. Following MAGE (Li et al., 2024), we use Average Recall (AvgRec), the mean of HumanRec and MachineRec, as the primary met-ric and report the values in the main tables. AvgRec evaluates the two class recalls with equal weight at the fixed decision threshold, preventing high re-call on one class from masking failure on the other. We choose δ on the validation split to maximize AvgRec and keep it fixed on the test split. Sec-tion 4.2 discusses AUROC and FPR95, while com-5Method MAGE CDCM RAID M4 Binary CE 90.79 
+
+> (83.18/98.40)
+
+86.81 
+
+> (74.60/99.02)
+
+76.68 
+
+> (54.56/98.80)
+
+SupCon 94.77 
+
+> (92.98/96.56)
+
+77.67 
+
+> (58.94/96.39)
+
+83.84 
+
+> (72.37/95.30)
+
+DeTeCtive 94.84 
+
+> (91.87/97.81)
+
+87.68 
+
+> (80.17/95.20)
+
+92.74 
+
+> (87.92/97.57)
+
+DSVDD 94.43 
+
+> (95.18/93.67)
+
+86.17 
+
+> (76.36/95.97)
+
+81.08 
+
+> (63.13/99.03)
+
+MD-ProTector 95.14 
+
+> (95.81/94.47)
+
+88.18 
+
+> (82.52/93.84)
+
+86.03 
+
+> (76.87/95.20)
+
+Table 1: Benchmark-level evaluation results. Each cell reports AvgRec with HumanRec/MachineRec in parentheses. MAGE CDCM evaluates mixed domain and generator conditions, RAID evaluates adversarial and decoding robustness, and M4 evaluates language shift. Bold and underline indicate the best and second-best AvgRec within each setting, respectively. 
+
+Method MAGE Unseen Domains MAGE Unseen Models Binary CE 67.99 
+
+> (37.04/98.94)
+
+89.78 
+
+> (85.85/93.71)
+
+SupCon 75.11 
+
+> (56.82/93.41)
+
+90.92 
+
+> (93.49/88.34)
+
+DeTeCtive 76.72 
+
+> (55.75/97.69)
+
+91.69 
+
+> (92.08/91.30)
+
+DSVDD 79.08 
+
+> (63.46/94.71)
+
+90.71 
+
+> (95.22/86.19)
+
+MD-ProTector 
+
+78.59 
+
+> (61.46/95.72)
+
+91.34 
+
+> (95.63/87.05)
+
+Table 2: MAGE leave-one-out evaluation results. Each cell reports AvgRec with HumanRec/MachineRec in parentheses. MAGE Unseen Domains and MAGE Unseen Models report averages over 10 independently trained leave-one-out-domain scenarios and 7 independently trained leave-one-generator-family-out scenarios, respectively. Bold and underline indicate the best and second-best AvgRec within each setting. 
+
+plete F1, Accuracy, AUROC, AUPR, FPR95, and per-scenario results are provided in Appendix D. 
+
+Implementation Details. Unless otherwise spec-ified, all encoder-based methods use the same backbone encoder within each evaluation setting. Pretrained encoder checkpoints are loaded from the HuggingFace model hub and used with the HuggingFace Transformers implementation (Wolf et al., 2020). We use 125M Unsupervised SimCSE-RoBERTa as the default encoder (Gao et al., 2021). All models are trained with a batch size of 256 us-ing AdamW with a learning rate of 2 × 10 −5. Mod-els are trained for 30 epochs with 2,000 warmup steps. The checkpoint with the best AvgRec on the validation set is selected for evaluation. For MD-ProTector, the number of prototypes per class is set to R = 8 . All experiments are conducted on a single NVIDIA B200 GPU with mixed BF16 precision. 
+
+4.2 Evaluation Results 
+
+Tables 1 and 2 report AvgRec together with the recall for each class under the five evaluation set-tings. 
+
+Mixed and Adversarial Conditions. MD-ProTector obtains the highest AvgRec on both MAGE CDCM and RAID. On MAGE CDCM, it reaches 95.14 AvgRec with balanced recalls of 95.81 for human and 94.47 for machine text. Its AUROC of 98.41 and FPR95 of 4.89 are also second-best, indicating that the AvgRec gain is accompanied by strong score-level separation un-der mixed domain and generator conditions. On RAID, MD-ProTector achieves the highest AvgRec (88.18), HumanRec (82.52), and AUROC (95.41), together with the lowest FPR95 (27.78). 
+
+Held-Out Generator and Domain Shifts. Un-der unseen-generator-family evaluation, MD-ProTector obtains the second-highest AvgRec of 91.34 and the lowest FPR95 of 11.44. Its Human-6Variant AvgRec 
+
+Prototype Positioning (R = 8 , τ = 0 .15) 
+
+Full objective 95.14 
+
+w/o LPP 94.78 PP → Simple Prototype Repulsion 94.55 PP w/o residual 94.33 
+
+Prototype Initialization 
+
+K-Means 95.14 
+
+Random 94.50 
+
+Number of Prototypes (τ = 0 .15) 
+
+R = 1 94.50 
+
+R = 2 95.03 
+
+R = 4 94.88 
+
+R = 8 95.14 
+
+R = 16 94.53 
+
+R = 32 94.36 
+
+Temperature (R = 8) 
+
+τ = 0 .07 94.91 
+
+τ = 0 .10 95.07 
+
+τ = 0 .15 95.14 
+
+τ = 0 .20 95.05 
+
+τ = 0 .50 93.97 
+
+Encoder Backbone 
+
+unsup-simcse-roberta-base 95.14 
+
+roberta-base 94.66 sup-simcse-roberta-base 94.01 e5-base 93.70 bert-base-uncased 93.60 unsup-simcse-bert-base 93.24 bge-base-en-v1.5 92.86     
+
+> Table 3: Ablation studies on the MAGE CDCM dataset. All entries report AvgRec. The default configuration uses the full objective, R= 8 ,τ= 0 .15 , K-Means initialization, and the unsupervised SimCSE-RoBERTa encoder. “PP w/o residual” denotes Prototype Position-ing without removing the class hub direction.
+
+Rec of 95.63 is the highest among the evaluated methods, although MachineRec remains lower than that of DeTeCtive. Under unseen-domain evalu-ation, MD-ProTector again ranks second in Av-gRec at 78.59, narrowly below DSVDD at 79.08. DSVDD retains stronger AUROC and FPR95 in this setting, showing that the prototype organiza-tion improves class-balanced performance more consistently than score ordering under every type of domain shift. 
+
+Language Shift. M4 remains the most challeng-ing setting for MD-ProTector. It obtains the second-highest AvgRec of 86.03, improving HumanRec to 76.87 compared with 54.56 for Binary CE, 72.37 for SupCon, and 63.13 for DSVDD, while retain-ing 95.20 MachineRec. However, its AUROC and FPR95 remain below Binary CE and DSVDD. The remaining error is therefore concentrated in rep-resenting human-written text in unseen languages, rather than in detecting machine-generated text. Appendix B.2 reports that a weighted average of prototype similarities improves the frozen check-point AvgRec without retraining. Across the five settings, MD-ProTector ranks within the top two in AvgRec. 
+
+4.3 Ablation Studies 
+
+Table 3 examines Prototype Positioning together with the main configuration choices on MAGE CDCM. The objective ablation retains Prototype-to-Class and Sample-to-Prototype and uses the same initialization, prototype count, and temperature across all variants. Removing LPP lowers AvgRec from 95.14 to 94.78. Replacing Prototype Position-ing with simple prototype repulsion yields 94.55, while positioning prototypes without removing the class-hub direction yields 94.33. These compar-isons support the proposed formulation, in which each prototype is positioned using the residual vari-ation of its associated samples. K-Means initialization improves AvgRec from 94.50 to 95.14 relative to random initialization, in-dicating that the observed class distributions pro-vide a useful starting point for optimization. In-creasing the number of prototypes from R = 1 to 
+
+R = 2 raises AvgRec from 94.50 to 95.03, and reaches its maximum at R = 8 and declines with larger prototype banks. Once multiple prototypes are available, their organization remains important rather than capacity itself. AvgRec remains between 94.91 and 95.14 for 
+
+τ ∈ [0 .07 , 0.20] and decreases to 93.97 at τ =0.50 . Across encoder backbones, AvgRec ranges from 92.86 to 95.14, with unsupervised SimCSE-RoBERTa obtaining the highest value. 
+
+4.4 Prototype Analysis 
+
+Figure 3 shows the learned prototypes distributed across multiple occupied regions of the human and machine embedding spaces. All prototypes show their own test sample covers, showing that both banks retain multiple active representatives and avoid complete assignment collapse. 7(a) Colored by domain (b) Colored by generator model 
+
+> Figure 3: Prototype visualization on the MAGE CDCM dataset. Both panels show the same t-SNE projection of normalized test embeddings and learned prototypes. The left panel colors samples by domain, and the right panel colors samples by generator model. Dots denote test samples. Blue and red stars indicate human and machine prototypes, respectively.
+
+(a) Machine prototypes 
+
+Prototype ( n) Top domain Top generator Writing cues 
+
+M1 (424) SQuAD 19.8% OPT-6.7B 11.6% Quotation 77.6%, Instruction 78.1% 
+
+M5 (386) Yelp 62.7% BLOOM-7B 7.5% Review 58.8% 
+
+M7 (311) SciGen 74.6% GPT-3.5-Turbo 6.4% Academic 49.2% 
+
+(b) Human prototypes 
+
+Prototype ( n) Top domain Writing cues 
+
+H0 (147) Yelp 93.2% First person 98.6%, Review 85.7% 
+
+H6 (510) TLDR 41.4%, SciGen 40.6% Academic 33.5% 
+
+> Table 4: Selected groups of texts assigned to prototypes. Top domain and generator are the largest shares among assigned texts. Writing-cue percentages are the fractions containing each cue. Complete summaries and cue definitions are provided in Appendix C.
+
+We use M0–M7 and H0–H7 to identify the ma-chine and human prototypes. Table 4 summarizes selected groups characterized by instructional, re-view, and academic writing cues. The same cues appear in both classes and describe recurring pat-terns within each class. The largest generator share among the machine prototypes is 24.8%, indicating that each group includes texts from multiple gener-ators. These results show that the prototype banks organize distinct same-class text groups across do-main and generator boundaries. Complete cue def-initions and summaries for all prototypes are pro-vided in Appendix C. 
+
+5 Conclusion 
+
+In this work, we introduced MD-ProTector, an input-only encoder detector that represents human-written and LLM-generated text with separate banks of trainable prototypes. By separating class-level alignment from prototype-specific residual positioning, MD-ProTector organizes multiple pro-totypes using the variation observed within each class while retaining direct prototype-based infer-ence. Across five controlled settings, the method achieves the highest AvgRec on MAGE CDCM and RAID. On RAID, it also attains the highest AU-ROC and lowest FPR95 among the compared meth-ods. Ablations on MAGE CDCM further show that residual positioning yields stronger performance than the single-prototype, direct-repulsion, and raw-space positioning variants. These results sup-port data-derived positioning as an effective mech-anism for organizing multiple class prototypes for LLM-generated text detection. 8Limitations 
+
+This work assumes a fixed-label binary detection setting in which each input is classified as either human-written or LLM-generated, and does not address more complex scenarios such as partial generation, human–machine co-editing, or estimat-ing degrees of machine involvement. In addition, the number of prototypes per class is treated as an empirically fixed design choice. Adaptive mech-anisms for adjusting prototype cardinality based on data characteristics are not explored. Finally, our experiments are conducted under fixed training, validation, and test splits. In practical deployment, the distribution of generators, prompts, writing styles, and adversarial perturbations may change over time. While MD-ProTector initializes and op-timizes prototypes from training data, continual prototype adaptation under temporal distribution drift remains future work. 
+
+Ethics Statement 
+
+The datasets utilized do not include private data or non-public personally identifiable information. The development of reliable text detection systems is crucial for maintaining trust in digital informa-tion. However, we acknowledge that detection technologies can potentially be used in a dual-use manner—adversaries might use our detector as a discriminator to train more sophisticated genera-tors that evade detection. Additionally, while we strove to use diverse datasets, the "Human" class in our training data is sourced from web texts (e.g., Reddit, Wikipedia), which may contain inherent biases. Users should be cautious when deploying this model in sensitive contexts, as false positives could unfairly penalize human writers. 
+
+References 
+
+Shifali Agrahari, Sujit Kumar, and Ranbir Singh Sanasam. 2025. Can you really trust that review? ProtoFewRoBERTa and DetectAIRev: A prototyp-ical few-shot method and multi-domain benchmark for detecting AI-generated reviews. In Proceedings of the 14th International Joint Conference on Natu-ral Language Processing and the 4th Conference of the Asia-Pacific Chapter of the Association for Com-putational Linguistics , pages 2118–2140, Mumbai, India. The Asian Federation of Natural Language Processing and The Association for Computational Linguistics. Anton Bakhtin, Sam Gross, Myle Ott, Yuntian Deng, Marc’Aurelio Ranzato, and Arthur Szlam. 2019. Real or fake? learning to discriminate ma-chine from human generated text. arXiv preprint arXiv:1906.03351 .Guangsheng Bao, Yanbin Zhao, Zhiyang Teng, Linyi Yang, and Yue Zhang. 2024. Fast-detectGPT: Effi-cient zero-shot detection of machine-generated text via conditional probability curvature. In Interna-tional Conference on Learning Representations .Jiaqi Chen, Xiaoye Zhu, Tianyang Liu, Ying Chen, Xin-hui Chen, Yiwen Yuan, Chak Tou Leong, Zuchao Li, Long Tang, Lei Zhang, Chenyu Yan, Guang-hao Mei, Jie Zhang, and Lefei Zhang. 2025. Imi-tate before detect: Aligning machine stylistic prefer-ence for machine-revised text detection. Proceedings of the AAAI Conference on Artificial Intelligence ,39(22):23559–23567. Jun-Kun Chen, Jilin Mei, Liang Chen, Fangzhou Zhao, Yan Xing, and Yu Hu. 2024. Proto-OOD: Enhancing OOD object detection with prototype feature similar-ity. arXiv preprint arXiv:2409.05466 .Miranda Christ, Sam Gunn, and Or Zamir. 2024. Unde-tectable watermarks for language models. In Pro-ceedings of Thirty Seventh Conference on Learn-ing Theory , volume 247 of Proceedings of Machine Learning Research , pages 1125–1139. PMLR. Yin Cui, Feng Zhou, Yuanqing Lin, and Serge Belongie. 2016. Fine-grained categorization and dataset boot-strapping using deep metric learning with humans in the loop. In IEEE Conference on Computer Vi-sion and Pattern Recognition , pages 1153–1162, Las Vegas, NV, USA. IEEE. Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. BERT: Pre-training of deep bidirectional transformers for language under-standing. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Tech-nologies, Volume 1 (Long and Short Papers) , pages 4171–4186, Minneapolis, Minnesota. Association for Computational Linguistics. Zhijin Dong, Hongzhi Liu, Boyuan Ren, Weimin Xiong, and Zhonghai Wu. 2024. Reconstruction-based multi-normal prototypes learning for weakly supervised anomaly detection. arXiv preprint arXiv:2408.14498 .Liam Dugan, Alyssa Hwang, Filip Trhlík, Andrew Zhu, Josh Magnus Ludan, Hainiu Xu, Daphne Ip-polito, and Chris Callison-Burch. 2024. RAID: A shared benchmark for robust evaluation of machine-generated text detectors. In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 12463– 12492, Bangkok, Thailand. Association for Compu-tational Linguistics. Jiachen Fu, Chun-Le Guo, and Chongyi Li. 2025. De-tectAnyLLM: Towards generalizable and robust de-tection of machine-generated text across domains 
+
+9and models. In Proceedings of the 33rd ACM Inter-national Conference on Multimedia , pages 11229– 11238. Tianyu Gao, Xingcheng Yao, and Danqi Chen. 2021. SimCSE: Simple contrastive learning of sentence em-beddings. In Proceedings of the 2021 Conference on Empirical Methods in Natural Language Process-ing , pages 6894–6910, Online and Punta Cana, Do-minican Republic. Association for Computational Linguistics. Sebastian Gehrmann, Hendrik Strobelt, and Alexander Rush. 2019. GLTR: Statistical detection and visual-ization of generated text. In Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics: System Demonstrations , pages 111–116, Florence, Italy. Association for Computational Lin-guistics. Hanxi Guo, Siyuan Cheng, Xiaolong Jin, Zhuo Zhang, Kaiyuan Zhang, Guanhong Tao, Guangyu Shen, and Xiangyu Zhang. 2024a. BISCOPE: AI-generated text detection by checking memorization of preceding to-kens. In Advances in Neural Information Processing Systems , volume 37, pages 104065–104090. Curran Associates, Inc. Xun Guo, Shan Zhang, Yongxin He, Ting Zhang, Wanquan Feng, Haibin Huang, and Chongyang Ma. 2024b. DeTeCtive: Detecting AI-generated text via multi-level contrastive learning. In Advances in Neural Information Processing Systems , volume 37, pages 88320–88347. Curran Associates, Inc. Abhimanyu Hans, Avi Schwarzschild, Valeriia Cherepanova, Hamid Kazemi, Aniruddha Saha, Micah Goldblum, Jonas Geiping, and Tom Goldstein. 2024. Spotting LLMs with binoculars: Zero-shot detection of machine-generated text. In Proceedings of the 41st International Conference on Machine Learning , volume 235 of Proceedings of Machine Learning Research , pages 17519–17537. PMLR. Wei Hao, Ran Li, Weiliang Zhao, Junfeng Yang, and Chengzhi Mao. 2025. Learning to rewrite: General-ized LLM-generated text detection. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) ,pages 6421–6434, Vienna, Austria. Association for Computational Linguistics. Dat Hong, Tong Wang, and Stephen Baek. 2023. Proto-ryNet: Interpretable text classification via prototype trajectories. Journal of Machine Learning Research ,24(264):1–39. Xiaomeng Hu, Pin-Yu Chen, and Tsung-Yi Ho. 2023. RADAR: Robust AI-text detection via adversarial learning. In Advances in Neural Information Pro-cessing Systems , volume 36. Curran Associates, Inc. Daphne Ippolito, Daniel Duckworth, Chris Callison-Burch, and Douglas Eck. 2020. Automatic detec-tion of generated text is easiest when humans are fooled. In Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics , pages 1808–1822, Online. Association for Computational Linguistics. Yulong Jia, Jiaming Li, Ganlong Zhao, Shuangyin Liu, Weijun Sun, Liang Lin, and Guanbin Li. 2025. En-hancing out-of-distribution detection via diversified multi-prototype contrastive learning. Pattern Recog-nition , 161:111214. John Kirchenbauer, Jonas Geiping, Yuxin Wen, Jonathan Katz, Ian Miers, and Tom Goldstein. 2023. A watermark for large language models. In Proceed-ings of the 40th International Conference on Machine Learning , volume 202 of Proceedings of Machine Learning Research , pages 17061–17084. PMLR. Kristian Kuznetsov, Eduard Tulchinskii, Laida Kushnareva, German Magai, Serguei Barannikov, Sergey Nikolenko, and Irina Piontkovskaya. 2024. Robust AI-generated text detection by restricted embeddings. In Findings of the Association for Computational Linguistics: EMNLP 2024 , pages 17036–17055, Miami, Florida, USA. Association for Computational Linguistics. Soonchan Kwon and Beakcheol Jang. 2025. A com-prehensive survey of fake text detection on misin-formation and LM-generated texts. IEEE Access ,13:25301–25324. Junnan Li, Pan Zhou, Caiming Xiong, and Steven Hoi. 2021. Prototypical contrastive learning of unsuper-vised representations. In International Conference on Learning Representations .Yafu Li, Qintong Li, Leyang Cui, Wei Bi, Zhilin Wang, Longyue Wang, Linyi Yang, Shuming Shi, and Yue Zhang. 2024. MAGE: Machine-generated text de-tection in the wild. In Proceedings of the 62nd An-nual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 36–53, Bangkok, Thailand. Association for Computational Linguistics. Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Man-dar Joshi, Danqi Chen, Omer Levy, Mike Lewis, Luke Zettlemoyer, and Veselin Stoyanov. 2019. RoBERTa: A robustly optimized BERT pretraining approach. arXiv preprint arXiv:1907.11692 .Haodong Lu, Dong Gong, Shuo Wang, Jason Xue, Lina Yao, and Kristen Moore. 2024. Learning with mix-ture of prototypes for out-of-distribution detection. In International Conference on Learning Representa-tions .J. MacQueen. 1967. Some methods for classification and analysis of multivariate observations. In Pro-ceedings of the Fifth Berkeley Symposium on Mathe-matical Statistics and Probability , pages 281–297. Chengzhi Mao, Carl Vondrick, Hao Wang, and Junfeng Yang. 2024. RAIDAR: Generative AI detection via rewriting. In International Conference on Learning Representations .
+
+10 Pablo Miralles-González, Javier Huertas-Tato, Alejan-dro Martín, and David Camacho. 2026. Not all to-kens are created equal: Perplexity attention weighted networks for AI-generated text detection. Informa-tion Fusion , 125:103465. Eric Mitchell, Yoonho Lee, Alexander Khazatsky, Christopher D. Manning, and Chelsea Finn. 2023. DetectGPT: Zero-shot machine-generated text detec-tion using probability curvature. In Proceedings of the 40th International Conference on Machine Learn-ing , volume 202 of Proceedings of Machine Learning Research , pages 24950–24962. PMLR. Ayat A. Najjar, Huthaifa I. Ashqar, Omar A. Dar-wish, and Eman M. Hammad. 2025. Detecting ai-generated text in educational content: Leveraging machine learning and explainable AI for academic integrity. arXiv preprint arXiv:2501.03203 .Juan Diego Rodriguez, Todd Hay, David Gros, Zain Shamsi, and Ravi Srinivasan. 2022. Cross-domain detection of GPT-2-generated technical text. In Pro-ceedings of the 2022 Conference of the North Amer-ican Chapter of the Association for Computational Linguistics: Human Language Technologies , pages 1213–1233, Seattle, United States. Association for Computational Linguistics. Jake Snell, Kevin Swersky, and Richard Zemel. 2017. Prototypical networks for few-shot learning. In Ad-vances in Neural Information Processing Systems ,volume 30, pages 4077–4087. Curran Associates, Inc. Adaku Uchendu, Thai Le, Kai Shu, and Dongwon Lee. 2020. Authorship attribution for neural text gener-ation. In Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing ,pages 8384–8395, Online. Association for Computa-tional Linguistics. Vivek Verma, Eve Fleisig, Nicholas Tomlin, and Dan Klein. 2024. Ghostbuster: Detecting text ghostwrit-ten by large language models. In Proceedings of the 2024 Conference of the North American Chap-ter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers) , pages 1702–1717, Mexico City, Mexico. As-sociation for Computational Linguistics. Liang Wang, Nan Yang, Xiaolong Huang, Binxing Jiao, Linjun Yang, Daxin Jiang, Rangan Majumder, and Furu Wei. 2022. Text embeddings by weakly-supervised contrastive pre-training. arXiv preprint arXiv:2212.03533 .Yuxia Wang, Jonibek Mansurov, Petar Ivanov, Jinyan Su, Artem Shelmanov, Akim Tsvigun, Chenxi White-house, Osama Mohammed Afzal, Tarek Mahmoud, Toru Sasaki, Thomas Arnold, Alham Fikri Aji, Nizar Habash, Iryna Gurevych, and Preslav Nakov. 2024. M4: Multi-generator, multi-domain, and multilin-gual black-box machine-generated text detection. In 
+
+Proceedings of the 18th Conference of the European Chapter of the Association for Computational Lin-guistics (Volume 1: Long Papers) , pages 1369–1407, St. Julian’s, Malta. Association for Computational Linguistics. Zecong Wang, Jiaxi Cheng, Chen Cui, and Chenhao Yu. 2023. Implementing BERT and fine-tuned RoBERTa to detect AI-generated news by ChatGPT. arXiv preprint arXiv:2306.07401 .Thomas Wolf, Lysandre Debut, Victor Sanh, Julien Chaumond, Clement Delangue, Anthony Moi, Pier-ric Cistac, Tim Rault, Remi Louf, Morgan Funtowicz, Joe Davison, Sam Shleifer, Patrick von Platen, Clara Ma, Yacine Jernite, Julien Plu, Canwen Xu, Teven Le Scao, Sylvain Gugger, and 3 others. 2020. Trans-formers: State-of-the-art natural language processing. In Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations , pages 38–45, Online. Association for Computational Linguistics. Junchao Wu, Shu Yang, Runzhe Zhan, Yulin Yuan, Lidia Sam Chao, and Derek Fai Wong. 2025a. Asurvey on LLM-generated text detection: Necessity, methods, and future directions. Computational Lin-guistics , 51(1):275–338. Junchao Wu, Runzhe Zhan, Derek Wong, Shu Yang, Xinyi Yang, Yulin Yuan, and Lidia Chao. 2024. De-tectRL: Benchmarking LLM-generated text detec-tion in real-world scenarios. In Advances in Neural Information Processing Systems , volume 37, pages 100369–100401. Curran Associates, Inc. Junxi Wu, Jinpeng Wang, Zheng Liu, Bin Chen, Dongjian Hu, Hao Wu, and Shu-Tao Xia. 2025b. MoSEs: Uncertainty-aware AI-generated text detec-tion via mixture of stylistics experts with conditional thresholds. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Process-ing , pages 5786–5805, Suzhou, China. Association for Computational Linguistics. Shitao Xiao, Zheng Liu, Peitian Zhang, Niklas Muen-nighoff, Defu Lian, and Jian-Yun Nie. 2024. C-Pack: Packed resources for general Chinese embeddings. In Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Infor-mation Retrieval , pages 641–649, Washington, DC, USA. Association for Computing Machinery. Yan Xu, Wenzhong Yang, Yabo Yin, Hongzhen Lv, Zhenhua Wang, Jingfeng He, Xiangyi Jia, and Xi-anfeng Wang. 2026. SAMP: Source-aware multi-prototype learning for machine-generated text detec-tion. Research Square . Preprint. Cong Zeng, Shengkun Tang, Yuanzhou Chen, Zhiqiang Shen, Wenchao Yu, Xujiang Zhao, Haifeng Chen, Wei Cheng, and Zhiqiang Xu. 2025. Human texts are outliers: Detecting LLM-generated texts via out-of-distribution detection. In Advances in Neural In-formation Processing Systems , volume 38. Curran Associates, Inc. 
+
+11 Yue Zhang, Yiyi Chen, Chaowei Fang, Qian Wang, Jiayi Wu, and Jingmin Xin. 2025. Learning from open-set noisy labels based on multi-prototype modeling. 
+
+> Pattern Recognition , 157:110902.
+
+A Evaluation Set and Protocol Details 
+
+This section reports dataset statistics and protocol details for MAGE, M4, and RAID. All datasets are cast as binary human-written versus machine-generated text detection, and human-written text is treated as the positive class in our metric imple-mentation. Validation data are used only to select checkpoints, thresholds, and hyperparameters. Test labels are not used for any of these choices. 
+
+MAGE Splits. MAGE CDCM uses the cross-domain cross-model setting of MAGE (Li et al., 2024). The processed split contains 10 source domains: CMV, ELI5, HellaSwag, ROC, SciGen, SQuAD, TLDR, WP, XSum, and Yelp. Machine-generated texts are produced by 27 model vari-ants grouped into seven Generator Model Fami-lies: LLaMA, BigScience, FLAN-T5, GLM-130B, EleutherAI, OpenAI, and OPT. For MAGE Unseen Domains, each leave-one-domain-out scenario ex-cludes one source domain from training and vali-dation and evaluates on that domain. For MAGE Unseen Models, each leave-one-generator-family-out scenario excludes one Generator Model Fam-ily from training and validation and evaluates on that family. Specifically, we used LLaMA-7B, BLOOM-7B, FLAN-T5-Small, GLM-130B, GPT-J, GPT-3.5-Turbo and OPT-125M model for the unseen-model setting evaluation. The test sizes for the leave-one-out scenarios are listed in Table 6. 
+
+M4 Split. M4 is a multi-generator, multi-domain, and multilingual benchmark for black-box machine-generated text detection (Wang et al., 2024). We use the SemEval-2024 M4 Subtask A multilingual protocol with the multilingual train, development, and test splits. The development split is used to select the checkpoint and thresh-old and is not merged into training. The training split spans nine sources, while the multilingual test split contains Arabic, German, Italian, and English. The test-time generator labels include BLOOMZ, ChatGPT, Cohere, Davinci, Dolly, JAIS-30B, and LLaMA2 fine-tuned. 
+
+RAID Split. RAID is designed to evaluate detec-tor robustness across domains, generators, decod-ing strategies, and adversarial perturbations (Dugan et al., 2024). In our experiments, we use the RAID split preprocessed by Zeng et al. (2025). We apply a 90%/10% split to the processed RAID training data, stratified by binary label. The resulting train split is used for fitting, valid is used to select the checkpoint and threshold, and the processed RAID test split is used for final evaluation. RAID covers eight domains: abstracts, books, news, poetry, recipes, Reddit, reviews, and Wiki. The machine-generated side spans several gen-erator families, including GPT-series, Cohere, LLaMA, Mistral, and MPT variants, alongside human-written text. The train and validation splits contain clean examples, while the final test split contains both clean and perturbed exam-ples. The perturbations include paraphrase, ho-moglyph, whitespace, zero-width-space, synonym, and spelling or formatting perturbations. Thus, RAID evaluates test-time robustness to adversarial and decoding-related variation, while model selec-tion is performed only on clean validation data. 
+
+MAGE Leave-one-out Settings. For MAGE Un-seen Domains and MAGE Unseen Models, each leave-one-out scenario trains a separate detector. Aggregate metrics are computed as arithmetic means over scenario-level results: 
+
+mUD = 110 
+
+X
+
+> d∈D UD
+
+md, mUM = 17
+
+X
+
+> g∈G UM
+
+mg.
+
+Thus, MAGE leave-one-out results are scenario-wise macro averages. All metrics in Appendix D are reported as percentages. 
+
+B Ablation Definitions and Additional Analyses 
+
+This appendix provides the exact definitions of the nonstandard variants evaluated in Table 3 and re-ports the weighted-inference and mini-batch-hub analyses. The ablation results and their interpre-tation are presented in Section 4.3 and are not re-peated here. 
+
+B.1 Ablation Definitions Prototype Repulsion. We replace Prototype Po-sitioning with a direct same-class prototype repul-sion loss. Because the prototypes are normalized, their inner products correspond to cosine similarity: 
+
+Lrep = 12R(R − 1) 
+
+> 1
+
+X
+
+> c=0
+> R
+
+X
+
+> r=1
+
+X 
+
+> k̸=r
+
+h
+
+max 
+
+
+
+0, p ⊤
+
+> c,r
+
+pc,k 
+
+i 2
+
+.
+
+(15) 12 MAGE CDCM                                     
+
+> Split Total Human Machine Train 319,071 93,318 225,753 Valid 56,792 28,799 27,993 Test 56,819 28,741 28,078
+> M4 Multilingual
+> Split Total Human Machine Train 172,417 83,846 88,571 Valid 4,000 2,000 2,000 Test 42,378 20,238 22,140
+> RAID
+> Split Total Human Machine Train 303,247 8,571 294,676 Valid 33,694 952 32,742 Test 112,317 3,232 109,085
+
+Table 5: Split sizes after preprocessing. Each panel reports the total number of examples and the counts for each class for one evaluation setting. MAGE CDCM denotes the cross-domain cross-model setting of MAGE. For M4, Valid corresponds to the official development split and is not merged into training. For RAID, Train and Valid are obtained by a deterministic 90%/10% split of the processed RAID training data.                                                          
+
+> MAGE Unseen Domains
+> Domain Total Human Machine CMV 4,917 2,403 2,514 ELI5 6,351 3,156 3,195 HellaSwag 6,347 3,292 3,055 ROC 6,462 3,275 3,187 SciGen 4,789 2,538 2,251 SQuAD 5,004 2,508 2,496 TLDR 4,977 2,535 2,442 WP 6,236 3,099 3,137 XSum 6,537 3,283 3,254 Yelp 5,199 2,652 2,547
+> MAGE Unseen Models
+> Generator Model Family Total Human Machine GLM-130B 1,838 919 919 LLaMA 7,420 3,710 3,710 BigScience 5,386 2,693 2,693 FLAN-T5 9,320 4,660 4,660 OpenAI 13,284 6,642 6,642 EleutherAI 2,884 1,442 1,442 OPT 16,024 8,012 8,012
+
+Table 6: Test sizes for the MAGE leave-one-out evaluations. The left panel lists leave-one-domain-out scenarios, and the right panel lists leave-one-generator-family-out scenarios. Each row corresponds to an independently trained leave-one-out evaluation scenario. 
+
+This objective separates same-class prototype vec-tors without using sample-dependent positioning targets. All other objectives and training settings remain unchanged. 
+
+Raw-Space Prototype Positioning. We also evaluate Prototype Positioning without removing the class-hub direction. For each prototype, the assignment-weighted aggregate is formed directly from the normalized sample embeddings: 
+
+gc,r = X
+
+> i∈B c
+
+qi,r zi, ¯zc,r = norm ε(gc,r ). (16) The corresponding objective is 
+
+LPP -raw = − 12R
+
+> 1
+
+X
+
+> c=0
+> R
+
+X
+
+> r=1
+
+log ϕ(¯ zc,r , p c,r )
+
+P 
+
+> p∈P
+
+ϕ(¯ zc,r , p ) .
+
+(17) This variant retains prototype-specific sample ag-gregation while omitting the decomposition into class-shared and residual components. 
+
+Encoder Backbones. The encoder rows in Table 3 cover backbones from the SimCSE, RoBERTa, BERT, E5, and BGE families (Gao et al., 2021; Liu et al., 2019; Devlin et al., 2019; Wang et al., 2022; Xiao et al., 2024). All backbone vari-ants use the same prototype configuration and train-ing protocol.         
+
+> Setting Hard max Weighted MAGE CDCM 95.14 95.08 RAID 88.18 88.25 M4 86.03 88.54
+
+Table 7: AvgRec under hard-maximum and weighted prototype inference. 
+
+B.2 Weighted Prototype Inference 
+
+The main method scores each class using its maxi-mum prototype similarity. We additionally evaluate a weighted class score using the same temperature as the within-class assignments in Equation 6: 
+
+wc,r (z) = exp( z⊤pc,r /τ )
+
+PRk=1 exp( z⊤pc,k /τ ) , (18) 
+
+esc(z) = 
+
+> R
+
+X
+
+> r=1
+
+wc,r (z) z⊤pc,r , (19) 
+
+eS(z) = es1(z) − es0(z). (20) All model parameters remain frozen; only the rule used to combine prototype similarities within each class is changed. Weighted inference leaves MAGE CDCM and RAID nearly unchanged and improves M4 without retraining. Its effect is therefore most pronounced under the M4 evaluation setting. 13 Dataset M/H per batch Hub cosine M/H MAGE CDCM 181 / 75 0.9995 / 0.9963 RAID 249 / 7 1.0000 / 0.9883 M4 132 / 124 0.9996 / 0.9994 
+
+Table 8: Mean mini-batch composition and cosine sim-ilarity between mini-batch hubs and the correspond-ing full-training-data class directions. Batch counts are rounded to the nearest sample. 
+
+B.3 Mini-Batch Hub Stability 
+
+We sample frozen training embeddings using the same sampler and batch size as training and com-pare each mini-batch hub with the corresponding class direction computed from the full training set. The mini-batch hubs remain closely aligned with the corresponding full-data directions across all three datasets. This alignment is also maintained for the human class in RAID, despite its substan-tially smaller batch count. 
+
+C Details of Prototype Analysis 
+
+This appendix reports the residual-to-full prefer-ence analysis, defines the writing cues used in Sec-tion 4.4, and provides complete summaries of as-signed texts together with their split-half stability. The cue definitions are fixed before prototype-wise aggregation. 
+
+C.1 Residual-to-Full Prototype Preference 
+
+For a class-c vector, define its normalized hub-removed representation as 
+
+Rc(v) = norm 
+
+
+
+v − (v⊤hc)hc
+
+
+
+. (21) For each test sample i, we compare the same-class full-space and hub-removed preferences, 
+
+rfull  
+
+> i
+
+= arg max  
+
+> r
+
+z⊤ 
+
+> i
+
+pyi,r , (22) 
+
+r⊥ 
+
+> i
+
+= arg max  
+
+> r
+
+Ryi (zi)⊤Ryi (pyi,r ). (23) The analysis uses the same R = 8 hard-max check-point and 7,200-sample MAGE CDCM test cap-ture, containing 3,600 machine and 3,600 human samples. The two preferences agree for 98.9% of machine samples and 98.3% of human samples. Thus, the prototype preferred after removing the class hub is almost always the same prototype se-lected in the full space at inference. 
+
+C.2 Writing Cue Definitions 
+
+We compute 21 post-hoc measurements for every MAGE CDCM test sample. Table 9 defines the cue names used in the main paper, and Tables 10 and 11 report the complete prototype summaries. The anal-ysis implementation fixes the lexicons, regular ex-pressions, tokenizer, and sentence-segmentation rules before prototype-wise aggregation. 14 Writing cue Measured as Writing cue Measured as Words Number of word tokens Instruction Imperative or procedural expressions Sentences Number of detected sentences Attribution Reporting or attribution expressions Sentence length Word count divided by sentence count Headings Section-heading patterns Lexical diversity Unique word types divided by word count Lists List bullets or enumerated items Token repetition Fraction of word tokens occurring more than once Templates Bracketed template or pipeline markers Single-use vocab-ulary Fraction of word types occurring once Academic Academic-register expressions Word length Mean characters per word Review vocabu-lary Any whole-word match to star(s), service, staff, food, price, hotel, restaurant, rec-ommend, delicious, favorite, or ordered 
+
+Punctuation Punctuation characters divided by text length First person Any of I, me, my, mine, we, us, our, ours 
+
+(case-insensitive) Phrase repetition Repeated word trigrams divided by avail-able trigrams Second person Any of you, your, yours (case-insensitive) Questions Question-form markers Links/markup URLs or markup patterns Quotation Quotation or quoted-speech markers 
+
+Table 9: The 21 post-hoc measurements used in the prototype analysis. Continuous cues use word and sentence statistics. Binary cues use fixed lexicons or regular expressions. 
+
+The review-vocabulary cue uses the fixed, case-insensitive term list shown in Table 9; it is not a learned review classifier. 
+
+C.3 Stability of Prototype Descriptions 
+
+We recompute the 21-dimensional feature-association vector for every prototype over 50 label-by-domain-stratified split halves. Within each half, each feature is standardized across the 16 prototypes before comparing the two vectors for the same prototype. The mean split-half cosine is 0.837 for machine prototypes and 0.908 for human prototypes. All 16 prototypes receive at least 20 hard assignments in the 7,200-sample test capture. 
+
+C.4 Complete Prototype Summaries 
+
+Tables 10 and 11 summarize the texts assigned to all machine and human prototypes. The cue names match the inventory in Table 9. 15 Prototype (n)Top domain Top generator Distinctive characteristics M0 (525) XSum 34.7% OPT-30B 11.6% -M1 (424) SQuAD 19.8% OPT-6.7B 11.6% Quotation occurs in 77.6% and instruction expressions in 78.1% of assigned texts. M2 (541) TLDR 14.8% LLaMA-13B 17.4% -M3 (479) HellaSwag 22.8% FLAN-T5-xl 15.0% Academic expressions occur in 0.2% of assigned texts and 6.9% of the remaining machine texts. M4 (459) ELI5 29.8% text-davinci-003 22.4% Template markers occur in 0.9% of assigned texts and 6.1% of the remaining machine texts. M5 (386) Yelp 62.7% BLOOM-7B 7.5% Review vocabulary occurs in 58.8% of assigned texts. M6 (475) ROCStories 30.3% GPT-3.5-Turbo 24.8% -M7 (311) SciGen 74.6% GPT-3.5-Turbo 6.4% Academic expressions occur in 49.2% of assigned texts. 
+
+Table 10: Complete summaries of texts assigned to the machine prototypes. Top domain and top generator denote the largest metadata shares within each assigned group. Distinctive characteristics report cue frequencies or comparisons with the remaining machine texts. 
+
+Prototype ( n) Top domain Distinctive characteristics H0 (147) Yelp 93.2% First-person expressions occur in 98.6% and review vocabulary in 85.7% of assigned texts. H1 (235) ELI5 98.7% Links or markup occur in 14.0% of assigned texts. H2 (242) SQuAD 97.9% -H3 (71) Yelp 95.8% -H4 (583) WritingPrompts 44.3% First-person expressions occur in 94.0% of assigned texts. H5 (1370) ROCStories 30.3% Template markers occur in 15.0% of assigned texts. H6 (510) TLDR 41.4%, SciGen 40.6% Academic expressions occur in 33.5% of assigned texts. H7 (442) XSum 37.6% First-person expressions occur in 83.7% of assigned texts. 
+
+Table 11: Complete summaries of texts assigned to the human prototypes. Top domain denotes the largest metadata share within each assigned group. Distinctive characteristics report cue frequencies or comparisons with the remaining human texts. 
+
+D Full Results 
+
+We provide full results for all methods, including aggregate evaluation settings and detailed MAGE leave-one-out scenarios. Each table reports Av-gRec, HumanRec, MachineRec, F1, Accuracy, AU-ROC, AUPR, and FPR95. MAGE-UD and MAGE-UM denote MAGE Unseen Domains and MAGE Unseen Models, respectively. 16 Setting Scenario AvgRec HumanRec MachineRec F1 Acc AUROC AUPR FPR95 ↓
+
+Aggregate settings 
+
+MAGE CDCM Mixed 90.79 83.18 98.40 90.05 90.71 98.36 98.52 4.78 M4 Language shift 76.68 54.56 98.80 70.00 77.67 95.80 95.55 18.63 RAID Adversarial/decoding 86.81 74.60 99.02 71.80 98.31 89.48 77.32 93.90 MAGE-UD Average 67.99 37.04 98.94 51.14 67.55 89.30 90.79 56.25 MAGE-UM Average 89.78 85.85 93.71 89.41 89.78 97.03 96.93 12.37 
+
+MAGE Unseen Domains 
+
+UD ROC 53.78 7.85 99.72 14.52 53.16 88.75 88.25 46.38 UD HellaSwag 66.87 37.24 96.50 53.02 65.76 91.04 89.00 28.25 UD XSum 55.86 12.85 98.86 22.55 55.67 70.42 74.85 96.22 UD Yelp 67.70 35.78 99.61 52.56 67.05 91.23 93.50 69.61 UD TLDR 61.80 24.54 99.06 39.12 61.10 94.20 93.10 19.25 UD SciGen 69.66 40.39 98.93 57.15 67.91 93.65 94.50 24.21 UD WP 75.59 51.73 99.46 67.94 75.74 87.75 92.07 91.81 UD CMV 79.57 60.13 99.01 74.62 80.01 91.82 94.42 81.50 UD SQuAD 67.68 35.49 99.88 52.34 67.61 89.16 92.44 83.20 UD ELI5 81.43 64.45 98.40 77.62 81.53 94.94 95.79 22.10 
+
+MAGE Unseen Models 
+
+UM LLaMA 91.33 85.74 96.93 90.82 91.33 98.17 97.84 7.12 UM FLAN-T5 85.04 83.61 86.48 84.82 85.04 92.67 92.62 33.43 UM EleutherAI 92.02 84.26 99.79 91.35 92.02 99.37 99.57 0.76 UM GLM-130B 91.62 86.07 97.17 91.13 91.62 98.25 98.32 6.31 UM OPT 90.88 86.50 95.26 90.46 90.88 97.60 97.31 9.67 UM BigScience 89.77 82.14 97.40 88.92 89.77 97.84 97.88 8.76 UM OpenAI 87.78 92.65 82.91 88.35 87.78 95.28 95.00 20.52 
+
+Table 12: Full results for Binary CE. 
+
+Setting Scenario AvgRec HumanRec MachineRec F1 Acc AUROC AUPR FPR95 ↓
+
+Aggregate settings 
+
+MAGE CDCM Mixed 94.77 92.98 96.56 94.71 94.75 95.06 96.79 31.27 M4 Language shift 83.84 72.37 95.30 81.54 84.35 89.23 92.21 72.72 RAID Adversarial/decoding 77.67 58.94 96.39 42.00 95.32 78.04 45.77 88.26 MAGE-UD Average 75.11 56.82 93.41 67.01 74.84 75.15 83.68 84.16 MAGE-UM Average 90.92 93.49 88.34 91.40 90.92 91.89 93.90 32.59 
+
+MAGE Unseen Domains 
+
+UD ROC 55.72 12.06 99.37 21.41 55.12 55.71 75.80 94.35 UD HellaSwag 72.64 52.58 92.70 65.99 71.89 72.77 82.82 90.23 UD XSum 65.99 35.58 96.40 51.14 65.86 66.00 79.24 92.52 UD Yelp 50.08 37.22 62.94 43.07 49.82 49.15 51.03 95.43 UD TLDR 72.57 47.14 97.99 63.24 72.09 72.68 85.15 90.73 UD SciGen 84.35 72.66 96.05 82.49 83.65 84.52 91.29 82.44 UD WP 92.04 85.87 98.21 91.51 92.08 92.13 95.49 65.25 UD CMV 91.64 86.27 97.02 91.10 91.76 91.98 95.07 64.68 UD SQuAD 79.92 60.89 98.96 75.20 79.88 79.99 89.49 87.35 UD ELI5 86.17 77.92 94.43 84.90 86.22 86.53 91.35 78.62 
+
+MAGE Unseen Models 
+
+UM LLaMA 93.48 93.29 93.67 93.46 93.48 94.18 95.78 30.22 UM FLAN-T5 80.98 94.25 67.70 83.21 80.98 85.20 87.79 41.14 UM EleutherAI 96.05 92.30 99.79 95.89 96.05 96.08 97.99 35.18 UM GLM-130B 94.29 92.38 96.19 94.18 94.29 94.51 96.31 36.86 UM OPT 93.26 93.58 92.94 93.28 93.26 93.82 95.35 27.57 UM BigScience 93.15 92.94 93.35 93.13 93.15 93.39 95.07 33.84 UM OpenAI 85.21 95.69 74.72 86.61 85.21 86.06 88.98 23.31 
+
+Table 13: Full results for SupCon. 
+
+17 Setting Scenario AvgRec HumanRec MachineRec F1 Acc AUROC AUPR FPR95 ↓
+
+Aggregate settings 
+
+MAGE CDCM Mixed 94.84 91.87 97.81 94.71 94.80 95.81 97.36 23.07 M4 Language shift 92.74 87.92 97.57 92.27 92.96 92.74 95.38 59.62 RAID Adversarial/decoding 87.68 80.17 95.20 46.85 94.77 91.08 62.01 67.70 MAGE-UD Average 76.72 55.75 97.69 67.09 76.42 79.49 88.39 82.17 MAGE-UM Average 91.69 92.08 91.30 91.85 91.69 92.87 94.61 27.14 
+
+MAGE Unseen Domains 
+
+UD ROC 53.43 7.08 99.78 13.20 52.80 54.32 75.86 94.53 UD HellaSwag 78.62 66.01 91.23 75.81 78.15 82.84 87.35 81.69 UD XSum 61.16 24.03 98.28 38.23 60.99 64.78 78.90 92.83 UD Yelp 77.81 56.30 99.33 71.74 77.38 80.09 89.81 87.32 UD TLDR 70.70 42.17 99.22 59.01 70.16 73.52 86.22 90.49 UD SciGen 80.49 63.83 97.16 76.74 79.49 83.38 90.87 83.99 UD WP 88.55 78.28 98.82 87.23 88.61 91.12 95.10 70.38 UD CMV 90.66 82.40 98.93 89.80 90.85 92.74 95.86 63.16 UD SQuAD 78.77 58.33 99.20 73.31 78.72 82.38 90.72 85.63 UD ELI5 86.99 79.02 94.96 85.84 87.04 89.74 93.26 71.69 
+
+MAGE Unseen Models 
+
+UM LLaMA 93.77 93.58 93.96 93.76 93.77 95.41 96.27 6.73 UM FLAN-T5 86.63 90.88 82.38 87.18 86.63 87.98 90.19 41.95 UM EleutherAI 95.46 90.98 99.93 95.25 95.46 96.46 98.21 28.71 UM GLM-130B 93.58 90.32 96.84 93.36 93.58 94.63 96.43 38.17 UM OPT 93.32 93.00 93.65 93.30 93.32 94.24 95.53 16.50 UM BigScience 93.32 90.61 96.03 93.13 93.32 94.38 96.07 35.10 UM OpenAI 85.77 95.21 76.33 87.00 85.77 87.01 89.55 22.82 
+
+Table 14: Full results for DeTeCtive. 
+
+Setting Scenario AvgRec HumanRec MachineRec F1 Acc AUROC AUPR FPR95 ↓
+
+Aggregate settings 
+
+MAGE CDCM Mixed 94.43 95.18 93.67 94.54 94.44 98.47 98.56 6.15 M4 Language shift 81.08 63.13 99.03 76.90 81.89 95.20 96.32 12.53 RAID Adversarial/decoding 86.17 76.36 95.97 48.89 95.41 87.47 51.98 96.52 MAGE-UD Average 79.08 63.46 94.71 72.57 78.90 92.11 92.02 33.25 MAGE-UM Average 90.71 95.22 86.19 91.38 90.71 96.71 96.79 13.33 
+
+MAGE Unseen Domains 
+
+UD ROC 59.50 20.06 98.93 33.13 58.96 87.08 86.51 45.09 UD HellaSwag 83.92 80.01 87.82 83.65 83.77 92.36 90.10 23.54 UD XSum 62.12 28.21 96.04 42.69 61.97 83.12 82.25 63.92 UD Yelp 81.10 66.52 95.68 77.95 80.80 91.98 93.14 48.02 UD TLDR 70.76 45.05 96.48 60.70 70.28 87.36 87.99 58.11 UD SciGen 85.64 78.17 93.11 84.84 85.20 95.24 95.45 18.84 UD WP 86.65 76.93 96.37 85.19 86.71 97.27 97.19 11.57 UD CMV 89.23 84.14 94.31 88.53 89.34 96.60 96.71 16.91 UD SQuAD 83.67 70.33 97.00 81.16 83.63 95.26 95.62 25.00 UD ELI5 88.27 85.17 91.36 87.84 88.29 94.86 95.24 21.56 
+
+MAGE Unseen Models 
+
+UM LLaMA 94.30 95.66 92.94 94.38 94.30 98.35 98.34 6.44 UM FLAN-T5 79.39 94.87 63.91 82.15 79.39 91.83 91.91 36.52 UM EleutherAI 97.16 95.08 99.24 97.10 97.16 99.04 99.34 0.55 UM GLM-130B 94.72 95.10 94.34 94.74 94.72 98.40 98.52 5.66 UM OPT 91.20 94.22 88.18 91.46 91.20 96.92 97.01 13.27 UM BigScience 92.65 94.65 90.64 92.79 92.65 97.44 97.55 9.84 UM OpenAI 85.54 96.99 74.09 87.02 85.54 94.96 94.85 21.02 
+
+Table 15: Full results for DSVDD. 
+
+18 Setting Scenario AvgRec HumanRec MachineRec F1 Acc AUROC AUPR FPR95 ↓
+
+Aggregate settings 
+
+MAGE CDCM Mixed 95.14 95.81 94.47 95.23 95.15 98.41 98.37 4.89 M4 Language shift 86.03 76.87 95.20 84.42 86.45 92.35 93.08 57.00 RAID Adversarial/decoding 88.18 82.52 93.84 42.25 93.51 95.41 71.41 27.78 MAGE-UD Average 78.59 61.46 95.72 71.13 78.34 86.90 89.10 59.41 MAGE-UM Average 91.34 95.63 87.05 91.91 91.34 96.48 96.16 11.44 
+
+MAGE Unseen Domains 
+
+UD ROC 56.68 13.92 99.44 24.33 56.10 86.11 86.41 55.26 UD HellaSwag 75.84 59.51 92.18 71.37 75.23 78.73 82.41 89.89 UD XSum 61.29 25.68 96.90 39.89 61.13 68.73 72.74 92.58 UD Yelp 83.29 71.68 94.90 81.19 83.05 88.71 91.76 78.03 UD TLDR 75.06 53.89 96.23 68.42 74.66 81.49 86.25 87.85 UD SciGen 83.82 72.89 94.76 82.11 83.17 95.89 95.21 12.67 UD WP 91.29 85.25 97.32 90.71 91.32 96.67 97.32 16.67 UD CMV 90.30 85.06 95.54 89.67 90.42 95.56 96.41 22.37 UD SQuAD 80.18 62.76 97.60 76.00 80.14 85.27 89.54 80.55 UD ELI5 88.17 84.00 92.33 87.61 88.19 91.87 92.99 58.20 
+
+MAGE Unseen Models 
+
+UM LLaMA 94.20 96.01 92.40 94.31 94.20 98.36 97.77 6.45 UM FLAN-T5 83.12 96.12 70.13 85.06 83.12 93.13 91.96 26.07 UM EleutherAI 96.78 94.24 99.31 96.69 96.78 99.07 99.32 0.96 UM GLM-130B 94.23 95.32 93.14 94.29 94.23 96.47 96.52 6.42 UM OPT 93.02 94.88 91.15 93.14 93.02 96.48 96.32 9.09 UM BigScience 93.00 95.95 90.05 93.20 93.00 97.68 97.71 8.47 UM OpenAI 85.05 96.90 73.20 86.63 85.05 94.19 93.50 22.63 
+
+Table 16: Full results for MD-ProTector. 
+
+19

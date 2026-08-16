@@ -1,0 +1,39 @@
+{
+  "label": "2026-08-16",
+  "date": "2026-08-16",
+  "generated_at": "2026-08-16T20:23:24",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202608/16/2608.10459v1-md-protector-positioning-multiple-data-driven-prototypes-for-llm-generated-text-detection",
+      "section": "quick",
+      "title_en": "MD-ProTector: Positioning Multiple Data-Driven Prototypes for LLM-Generated Text Detection",
+      "authors": "Jinmo Han, Jimin Hong, Chanyeong Moon, Ju Yeon Kang, Seonuk Kim, Nam Soo Kim",
+      "date": "2026-08-11",
+      "pdf": "https://arxiv.org/pdf/2608.10459v1",
+      "score": "6.0",
+      "evidence": "利用原型分类器检测AI生成内容；方法可迁移至图像检测",
+      "tldr": "面对LLM生成文本检测需处理多样风格、领域、语言和生成模型，而标准二分类仅给标签、不组织类内变化的问题，MD-ProTector在编码器嵌入空间为每类设置多个可训练原型，并通过Prototype Positioning损失分离类级结构与类内原型差异。在三个大规模基准的五个设置中，该方法取得最高AvgRec、AUROC和最低FPR95。该工作提升了仅编码器检测器的细粒度决策能力和实际部署鲁棒性。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "As LLM-generated content becomes more sophisticated, detection systems for distinguishing those texts from human-written text must operate at scale while handling diverse writing styles, domains, languages, and generator models. Input-only encoder detectors are suitable for practical deployment setting, but standard binary classification supplies only the class label and does not explicitly organize the substantial variation within either class. We propose MD-ProTector, which represents each class with multiple trainable reference vectors in the encoder embedding space, referred to as prototypes. These prototypes provide separate decision boundaries for different groups of texts within the same class. However, adding multiple prototypes alone does not determine which variation each prototype should represent. MD-ProTector addresses this problem with Prototype Positioning loss, which separates class-level structure from the within-class variation that differentiates individual prototypes. Evaluated across five settings from three large-scale benchmarks covering domain, generator, language, and adversarial variation, MD-ProTector achieves the highest AvgRec on MAGE CDCM and RAID and the highest AUROC and lowest FPR95 on RAID among the compared encoder-based methods.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/16/2608.12766v1-patchgen-learning-soft-intra-image-predictive-subsets-for-visual-generalization",
+      "section": "quick",
+      "title_en": "PatchGen: Learning Soft Intra-Image Predictive Subsets for Visual Generalization",
+      "authors": "Zhaorui Tan, Weimiao Yu, Xi Yang",
+      "date": "2026-08-13",
+      "pdf": "https://arxiv.org/pdf/2608.12766v1",
+      "score": "6.0",
+      "evidence": "通过学习图像内预测子集提升视觉分类器泛化，适用于CNN分类",
+      "tldr": "视觉分类器需在数据偏移、目标偏移及其组合下泛化，但现有方法多关注域不变性，忽视了图像内预测充分性问题。PatchGen 基于每图存在样本自适应 oracle 预测子集的假设，学习软掩码以仅利用关键补丁预测标签。理论分析证明该策略保持贝叶斯风险不变且复杂度界随子集大小收紧。在自然与病理图像基准上，PatchGen 在多数配置下优于骨干基线，增强未知类泛化，并与视觉语言方法竞争而无文本监督。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Visual classifiers are expected to generalize under data shifts, target shifts, and their combinations, yet most existing methods focus on domain invariance while failing to address intra-image predictive sufficiency. We investigate the structural hypothesis that each image contains a sample-adaptive oracle intra-image predictive subset sufficient for label prediction, while the remaining patches form non-essential complementary context that may correlate with the label. The theoretical analysis shows that restricting prediction to this oracle subset preserves the Bayes risk achievable by the full-patch representation while admitting a complexity bound that tightens with the oracle-subset size. Based on this view, we propose PatchGen, a text-free module that learns a sample-dependent soft predictive-subset mask as a task-driven proxy for the unobserved oracle subset mask. Specifically, histopathology visualizations suggest that PatchGen assigns higher scores to tumor-consistent regions than to some frequently co-occurring inflammatory context. Extensive experiments on natural and histopathological image benchmarks spanning all three shift settings show that PatchGen improves average performance over matched-backbone baselines in most evaluated configurations, enhances generalization to unknown classes, and remains competitive with vision-language methods without text supervision.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
