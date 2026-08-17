@@ -6,29 +6,32 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-16
-- 运行时间：2026-08-16 20:23:00 UTC
+- 最新运行日期：2026-08-17
+- 运行时间：2026-08-17 20:52:35 UTC
 - 运行状态：成功
-- 本次总论文数：2
-- 精读区：0
-- 速读区：2
+- 本次总论文数：3
+- 精读区：2
+- 速读区：1
 
 ### 今日简报（AI）
-- 今日共生成 2 篇推荐（精读 0 篇，速读 2 篇）
-- 速读：《MD-ProTector: Positioning Multiple Data-Driven Prototypes for LLM-Generated Text Detection》（6.0/10）, 《PatchGen: Learning Soft Intra-Image Predictive Subsets for Visual Generalization》（6.0/10）
+- 今日共生成 3 篇推荐（精读 2 篇，速读 1 篇）
+- 精读：《XSA-MAD: Cross-modal Semantic Alignment for Morphing Attack Detection》（9.0/10）, 《Face Re-morphing: Differential Morphing Attack Detection via Feature-Space Similarity Changes》（8.0/10）
+- 速读：《CMCNet: Aligning Ultrasound Image Embeddings with Textual TI-RADS Representations for Fine-Grained Thyroid Classification》（7.0/10）
 - 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
-- 详情：[/202608/16/README](/202608/16/README)
+- 详情：[/202608/17/README](/202608/17/README)
 
 ### 精读区论文标签
-- 本次无精读推荐。
+1. [XSA-MAD: Cross-modal Semantic Alignment for Morphing Attack Detection](/202608/17/2608.13861v1-xsa-mad-cross-modal-semantic-alignment-for-morphing-attack-detection)  
+   标签：评分：9.0/10、query:deepfake-fsl
+   evidence：跨模态语义对齐用于变形攻击检测
+2. [Face Re-morphing: Differential Morphing Attack Detection via Feature-Space Similarity Changes](/202608/17/2608.13858v1-face-re-morphing-differential-morphing-attack-detection-via-feature-space-similarity-changes)  
+   标签：评分：8.0/10、query:deepfake-fsl
+   evidence：人脸变形攻击检测，多媒体取证
 
 ### 速读区论文标签
-1. [MD-ProTector: Positioning Multiple Data-Driven Prototypes for LLM-Generated Text Detection](/202608/16/2608.10459v1-md-protector-positioning-multiple-data-driven-prototypes-for-llm-generated-text-detection)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：利用原型分类器检测AI生成内容；方法可迁移至图像检测
-2. [PatchGen: Learning Soft Intra-Image Predictive Subsets for Visual Generalization](/202608/16/2608.12766v1-patchgen-learning-soft-intra-image-predictive-subsets-for-visual-generalization)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：通过学习图像内预测子集提升视觉分类器泛化，适用于CNN分类
+1. [CMCNet: Aligning Ultrasound Image Embeddings with Textual TI-RADS Representations for Fine-Grained Thyroid Classification](/202608/17/2608.13939v1-cmcnet-aligning-ultrasound-image-embeddings-with-textual-ti-rads-representations-for-fine-grained-thyroid-classification)  
+   标签：评分：7.0/10、query:deepfake-fsl
+   evidence：通过图像-文本对齐进行细粒度甲状腺分类
 
 
 <div class="dpr-home-promo-card">

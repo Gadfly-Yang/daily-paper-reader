@@ -1,0 +1,135 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-17T20:45:04.500071+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2608.13861v1",
+      "source": "arxiv",
+      "title": "XSA-MAD: Cross-modal Semantic Alignment for Morphing Attack Detection",
+      "abstract": "Morphing attacks pose a serious threat to face recognition systems. However, existing image-based morphing attack detection (MAD) methods often generalize poorly to unseen generation techniques because they rely solely on visual cues. We propose XSA-MAD, a CLIP-based multimodal framework that explicitly models semantic inconsistencies between bona-fide and morphed faces. Morphing concepts are decomposed into four interpretable attributes, including identity, facial geometry, texture, and consistency, and are encoded as structured and attribute-aware textual representations. The image encoder is progressively aligned with this discriminative textual space, resulting in a unified semantic representation that captures generation-invariant and concept-level discrepancies between bona-fide and morph images. Experiments on MAD22 and MorDIFF, following training on SMDD, demonstrate strong generalization across diverse morphing principles. In particular, XSA-MAD achieves an equal error rate of 2.92% on GAN-based morphs and consistently outperforms existing methods under high-fidelity generative attacks.",
+      "authors": [
+        "Jie Jin",
+        "Mahiro Tokumasu",
+        "Yu Makino",
+        "Masakatsu Nishigaki",
+        "Tetsushi Ohki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-14T01:16:43+00:00",
+      "link": "https://arxiv.org/pdf/2608.13861v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "cross-modal semantic alignment for morphing attack detection",
+      "llm_evidence_cn": "跨模态语义对齐用于变形攻击检测",
+      "llm_evidence": "跨模态语义对齐用于变形攻击检测",
+      "canonical_evidence": "跨模态语义对齐用于变形攻击检测",
+      "llm_tldr_en": "Proposes XSA-MAD, a CLIP-based framework aligning image features with attribute-aware textual representations to capture generation-invariant cues for morphing attack detection; generalizes to unseen generation techniques.",
+      "llm_tldr_cn": "针对现有变形攻击检测方法泛化性差的问题，本文提出XSA-MAD，利用CLIP将图像特征与属性感知的文本表示对齐，显式建模真假人脸间的语义不一致。实验表明该方法能有效提升对未见生成技术的泛化能力，为多媒体取证提供了新思路。",
+      "llm_tldr": "针对现有变形攻击检测方法泛化性差的问题，本文提出XSA-MAD，利用CLIP将图像特征与属性感知的文本表示对齐，显式建模真假人脸间的语义不一致。实验表明该方法能有效提升对未见生成技术的泛化能力，为多媒体取证提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.13858v1",
+      "source": "arxiv",
+      "title": "Face Re-morphing: Differential Morphing Attack Detection via Feature-Space Similarity Changes",
+      "abstract": "Face morphing attacks pose a serious threat to face recognition systems because a single morphed document image can be matched to multiple contributors. Differential morphing attack detection (D-MAD) addresses this threat by comparing a document image with a trusted live image, but existing methods often rely on static feature differences, constituent-face reconstruction, or multi-cue fusion. This paper proposes Face Re-morphing, a D-MAD method that uses the feature-space response to an additional morphing operation as a detection cue. Given a document image and a trusted live image, the proposed method generates a re-morphed image and uses the change between the document--live and live--re-morphed cosine similarities as the detection score. Experiments on FRLL-Morphs and FEI Morph show that the proposed cue is effective across different morphing conditions, re-morphing methods, and face recognition models. Comparisons with existing methods show favorable results on AMSL and indicate that the proposed method performs well under the Criminal condition on FEI Morph Version~1, particularly when using MorDIFF. These results indicate that re-morphing-induced similarity change provides a complementary cue for D-MAD.",
+      "authors": [
+        "Jie Jin",
+        "Masakatsu Nishigaki",
+        "Tetsushi Ohki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-14T01:10:53+00:00",
+      "link": "https://arxiv.org/pdf/2608.13858v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "face morphing attack detection, multimedia forensics",
+      "llm_evidence_cn": "人脸变形攻击检测，多媒体取证",
+      "llm_evidence": "人脸变形攻击检测，多媒体取证",
+      "canonical_evidence": "人脸变形攻击检测，多媒体取证",
+      "llm_tldr_en": "Proposes Face Re-morphing, a differential morphing attack detection method that uses feature-space response to an additional morphing operation as a cue.",
+      "llm_tldr_cn": "针对人脸变形攻击对识别系统构成威胁且现有差分检测方法依赖静态特征差异的问题，本文提出Face Re-morphing方法。该方法通过额外变形操作生成重新变形图像，利用文档-活体与活体-重变形余弦相似度的变化作为检测线索。实验表明该特征空间响应能有效检测差分变形攻击，为多媒体取证提供了新思路。",
+      "llm_tldr": "针对人脸变形攻击对识别系统构成威胁且现有差分检测方法依赖静态特征差异的问题，本文提出Face Re-morphing方法。该方法通过额外变形操作生成重新变形图像，利用文档-活体与活体-重变形余弦相似度的变化作为检测线索。实验表明该特征空间响应能有效检测差分变形攻击，为多媒体取证提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.13939v1",
+      "source": "arxiv",
+      "title": "CMCNet: Aligning Ultrasound Image Embeddings with Textual TI-RADS Representations for Fine-Grained Thyroid Classification",
+      "abstract": "Ultrasound is the primary imaging modality for assessing thyroid nodules, and the ACR TI-RADS framework standardizes diagnosis through five ultrasound feature categories that are aggregated into five risk levels (TR1-TR5). Although widely adopted in clinical practice, most deep learning approaches focus on binary malignancy classification, while multi-class prediction and explicit utilization of feature-level supervision remain underexplored, largely due to limited annotated data. In this study, we introduce the STN dataset of 600 thyroid nodules with paired transverse and longitudinal ultrasound images, bounding box annotations, and complete labels for all five TI-RADS feature categories. Following the clinical decision process, we investigate how structured feature information can guide representation learning during training while requiring only images at inference. We demonstrate that text embeddings derived from standardized feature descriptions form a stable surrogate representation for TI-RADS risk levels. Based on this observation, we propose CMCNet, which aligns image embeddings to fixed textual embeddings via a Center-Margin Contrastive Loss that simultaneously promotes intra-class compactness and inter-class separation. Experimental results show that this embedding alignment strategy is more data-efficient and robust than direct multitask learning, and consistently outperforms InfoNCE, center loss, a strong multitask baseline, and a VQA-style multimodal model, particularly in imbalanced settings. The dataset is freely available at doi: 10.5281/zenodo.19125693 and the source code is available at: https://www.healthinformaticslab.org/supp/.",
+      "authors": [
+        "Bingxin Yu",
+        "Xueli Wang",
+        "Jerry Zhou",
+        "Wenyan Wang",
+        "Li Wen",
+        "Lan Huang",
+        "Xin Feng",
+        "Fengfeng Zhou",
+        "Kewei Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-14T04:19:33+00:00",
+      "link": "https://arxiv.org/pdf/2608.13939v1",
+      "tags": [
+        "keyword:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "fine-grained thyroid classification with image-text alignment",
+      "llm_evidence_cn": "通过图像-文本对齐进行细粒度甲状腺分类",
+      "llm_evidence": "通过图像-文本对齐进行细粒度甲状腺分类",
+      "canonical_evidence": "通过图像-文本对齐进行细粒度甲状腺分类",
+      "llm_tldr_en": "Addresses limited annotated thyroid ultrasound data; proposes CMCNet aligning image embeddings with TI-RADS textual representations for fine-grained classification; improves classification performance.",
+      "llm_tldr_cn": "针对甲状腺超声标注数据有限的问题，本文提出CMCNet，将图像嵌入与TI-RADS文本表示对齐，实现细粒度分类。该方法利用特征级监督和文本先验，提升了多类预测性能。实验在STN数据集上验证了其有效性，为医学图像分类提供了新思路。",
+      "llm_tldr": "针对甲状腺超声标注数据有限的问题，本文提出CMCNet，将图像嵌入与TI-RADS文本表示对齐，实现细粒度分类。该方法利用特征级监督和文本先验，提升了多类预测性能。实验在STN数据集上验证了其有效性，为医学图像分类提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
