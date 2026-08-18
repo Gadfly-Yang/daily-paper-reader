@@ -1,0 +1,466 @@
+Title: Scalable Black-Box Model Attribution for Images
+
+URL Source: https://arxiv.org/pdf/2608.15652v1
+
+Published Time: Tue, 18 Aug 2026 01:04:56 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# Scalable Black-Box Model Attribution for Images 
+
+Asaf Livne Tel Aviv University Amir Jevnisek Tel Aviv University Shai Avidan Tel Aviv University 
+
+Abstract 
+
+The rapid proliferation of generative models raises the model attribution problem: given only an image, can we determine which model produced it? Existing methods have grown as elaborate as the generators they target, on the as-sumption that a more sophisticated model demands a more sophisticated attributor. We show it does not. RPA (Raw-Patch Attribution) attributes images in the strictest black-box setting with a lightweight CNN. Despite its simplicity, it attributes more models at higher accuracy than prior work, reaching 98.0% on 25-class DRAGON and 92.9% on 27-class OpenFake; it is data-efficient and runs at a cost inde-pendent of the number of candidate models; and it stays ro-bust to the compression, blur, and resizing images undergo in the wild. Training for closed-set attribution yields a ver-satile feature extractor: the same representation recovers model lineage without supervision, flags and groups unseen generators, and admits new models through few-shot adap-tation rather than retraining. 
+
+1. Introduction 
+
+Text-to-image diffusion models [6, 25, 27] are rapidly be-coming the infrastructure for creative work, media produc-tion, and visual communication. As their outputs spread, tracing an image back to its source model, a task known as model attribution [21, 31, 46], grows increasingly valu-able. Its current uses are mostly forensic, such as IP pro-tection and content provenance [8, 41], but they can reach further, to recommending content or collecting royalties on a model’s outputs. The ecosystem that makes attribution pressing also makes it hard: a few dozen to a few hundred base models anchor the field, and each spawns a long tail of fine-tunes, merges, and distillations, so open model-sharing platforms already host hundreds of thousands of distinct checkpoints [14], with new ones appearing daily. Despite growing interest, existing attribution methods re-main far from practical deployment. Current approaches suffer from one or more limitations: they require access to                    
+
+> Project page: https://asaf-livne.github.io/RPA/ SDXL
+> SDXL Lightning SDXL Turbo Flash SDXL LCM SDXL
+> Hyper SD JuggernautXL Mobius SSD-1B LCM SSD-1B
+> Kolors SD 3 Flash SD3 PixArt PixArt
+> Flash PixArt Flux 1 Kandinsky IF Lumina
+> SD Cascade SD 1.5 Flash SD
+> Realistic Stock SD 2.1
+
+Figure 1. The same prompt rendered by 25 generators (DRAGON [1]). The outputs are visually similar, yet a small CNN trained on raw RGB patches attributes each image to its source model at 98 .0% accuracy. 
+
+model internals such as weights, autoencoders, or prompts that are unavailable in realistic scenarios [26, 29, 34]; they achieve only coarse-grained discrimination, failing to dis-tinguish models that share an autoencoder or belong to the same architectural family [35]; they are fragile under com-mon image degradations such as JPEG compression and re-sizing [11]; or they impose substantial computational cost that limits scalability [38, 40]. Many of these methods trace their lineage to synthetic-image detection . Spectral [5, 9], reconstruction-error [26, 38], and pretrained-encoder [23] pipelines were developed first to separate real images from generated ones, and only later carried over to attribution, in several cases as a by-product of the detector itself [29, 30]. Detection, though, is arXiv:2608.15652v1 [cs.CV] 16 Aug 2026 organized around demands that weigh less on closed-set at-tribution, so its machinery is less central here. Adversarial robustness is one: detectors are hardened against perturba-tions meant to evade them [2, 28], but adversarial attacks are generally a far less pressing threat in model attribution. Generalization to unseen generators is another, engineered into detection methods [37, 50]. While closed-set attribu-tion does not strictly require it, we find generalization to be an emergent property: training a classifier to separate many generators at once induces a feature space that natu-rally generalizes beyond the training set. This suggests a simpler starting point: plain supervised classification that learns a generator’s fingerprint directly from its images [43, 46]. Operating across dozens of mod-ern generators at once, we show that a lightweight CNN on raw image patches attributes each image to its source de-spite the visual similarity in Figure 1. It reaches 98.0% 
+
+on 25-class DRAGON [1] and 92.9% on 27-class Open-Fake [19], operating strictly black-box from the output im-age alone, with no access to weights, autoencoders, or prompts. To the best of our knowledge, no prior method attributes across this many models at this level of accuracy. A corruption-augmented variant withstands the JPEG com-pression, blur, resizing, and cropping that defeat prior meth-ods. Both training and inference are inexpensive: the model is compact, trains in a short run, and attributes each image in a few milliseconds, at a cost independent of the number of candidate models. The same network also supports three further tasks with-out relearning the representation. In open-set attribution ,the network successfully attributes images from known models while reliably flagging inputs from unseen genera-tors as unknown, using only the classifier’s own confidence. For few-shot adaptation , a new generator is admitted by fitting only a linear head rather than a full retrain, with few-shot transfer to a different benchmark completing in sec-onds. And for model discovery , its penultimate-layer fea-tures inherently organize the generative ecosystem, allow-ing us to recover the lineage of trained models via hierar-chical clustering and to faithfully group images from unseen generators by their true source. Our contributions are: • Accurate black-box attribution. A lightweight CNN on raw image patches provides accurate (98 .0% on DRAGON, 92 .9% on OpenFake) and efficient black-box attribution that is robust to common image degradations, with single-pass inference that is highly scalable. • Open-set attribution and few-shot adaptation. The network reliably attributes known models while rejecting unseen ones, and admits new generators by fitting only a linear head, with few-shot transfer completing in seconds. • Model discovery. The learned features naturally encode relationships between generators, allowing us to recover the family lineage of known models and faithfully group images from unseen generators. 
+
+2. Background 
+
+Evidence and tasks. Tracing generative outputs relies on two types of evidence. Watermarks are signals actively embedded during generation [8, 41, 45], which requires provider cooperation and often degrades generation qual-ity; in practice, most images in the wild carry no water-mark. Fingerprints are intrinsic traces involuntarily left by a model’s architecture and generation pipeline [21, 31, 46], the generative analogue of sensor pattern noise in camera forensics [20]. These serve two forensic tasks: detection 
+
+(binary real-vs.-fake classification) and source attribution 
+
+(identifying which model produced a given image). Attri-bution is a distinct task and the focus of this work. 
+
+Problem settings. Attribution methods sit along two axes. The first is the candidate set: closed-set methods assume the source is one of a fixed set of known genera-tors [42, 43, 46], with abundant labels per generator or only a handful in the few-shot regime [18, 36], while open-set 
+
+methods drop this assumption and, beyond attributing im-ages from the known generators, must either flag an un-seen source as unknown [7, 17, 32, 44] or discover and group new sources without labels [10, 22]. The second is access: white-box methods need model internals such as weights [34] or a candidate autoencoder [26, 35], whereas 
+
+black-box methods use only the output image. This work operates in the strictest black-box setting, using the image alone without prompt or seed, and performs both closed-set and open-set attribution. 
+
+Existing methods. Binary detection has matured: a CNN trained on one generator generalizes to others [37], frozen CLIP features give a strong cross-generator probe [23], and recent work pushes generalization to unseen genera-tors through data diversity [12, 24] and MLLM-based ex-planation [33, 49]. Attribution draws on the same meth-ods, which fall into four families. Reconstruction-based 
+
+methods score an image by how well each candidate recon-structs it [26, 35, 38–40], inherently requiring white-box ac-cess. Pixel-frequency methods analyze spectral artifacts in the Fourier or DCT domain [5, 9, 16, 30]. Encoder-based 
+
+methods adapt pretrained encoders, such as CLIP, for at-tribution [4, 18, 29]. Discriminative classifiers learn the source directly from the image, the oldest approach and the closest to ours [43, 46], now extended to end-to-end [42] and open-set forms [32, 44]. 
+
+Model discovery. A growing body of work asks not just which model produced an image, but how to discover Flash_PixArt Flash_SD Flash_SD3 Flash_SDXL Flux_1                        
+
+> Hyper_SD IF JuggernautXL Kandinsky Kolors
+> LCM_SDXL LCM_SSD_1B Lumina Mobius PixArt_Alpha
+> PixArt_Sigma Realistic_Stock_Photo SD_1.5 SD_2.1 SD_3
+> SD_Cascade SDXL SDXL_Lightning SDXL_Turbo SSD_1B
+> 0.6 0.4 0.2 0.0 0.2 0.4 0.6
+> log 10 (model / mean) power
+
+Figure 2. Each generator leaves a distinct, stable spectral sig-nature. Per-generator 2D power spectra for the 25 DRAGON [1] generators, each plotted as a log-ratio to the across-model mean. 
+
+and map relationships between models, including unknown ones. While lineage mapping typically operates in weight space to chart known checkpoints [14, 15, 47, 48], dis-covery extends to identifying and placing unseen sources. Closer to us, ManiFPT [31] shows fingerprint clusters re-flect architectural design, and Sinitsa and Fried [30] trace relationships through shared spectral artifacts to group mod-els. We discover and place models based on genealogy re-covered from output images alone, without model weights, as an emergent property of the attribution features. 
+
+3. Method 
+
+Generative pipelines embed persistent, highly separable ar-tifacts in the frequency domain. As illustrated in Fig-ure 2, analyzing the 2D power spectra across 25 genera-tors from the DRAGON [1] dataset reveals distinct, stable spectral signatures for each source. Because these low-level traces are easily separable from the across-model mean, a lightweight CNN operating on raw pixels is sufficient to capture them, avoiding the need for complex architectures. Building on this observation, our method employs a simple three-step design: split the image into patches, classify each patch from its raw pixels with a small CNN, and aggregate the per-patch predictions into an image-level label. 
+
+3.1. Patch Division 
+
+We split the input image x ∈ RH×W ×3 into 256 × 256 
+
+patches: 
+
+pi = Π i(x) ∈ R256 ×256 ×3. (1) When H or W is not a multiple of 256 , edge patches overlap so that every pixel is covered. Patching makes the classifier resolution-invariant: the same model runs on inputs from 
+
+256 2 to 4096 2 without retraining. It yields several patches per image, which are aggregated at inference, and a smaller input simply produces fewer patches. 
+
+3.2. Per-Patch Classification 
+
+Each patch pi is classified from its raw pixels by a CNN f :
+
+ℓi = f (pi) ∈ RC , (2) where ℓi are class logits and C is the number of candidate generators. Each patch inherits its image’s label, and f is trained to minimize the cross-entropy between the softmax 
+
+σ(ℓi) and that label. We deliberately keep f small, a com-pact convolutional network of about 6M parameters, as the low-level fingerprint needs no heavy backbone; the full ar-chitecture and training recipe are in the supplementary ma-terial. Because f produces logits for all C candidate gener-ators in a single forward pass, the per-image cost is in-dependent of the number of candidates: admitting a new generator only widens the final layer and leaves inference unchanged, i.e. O(1) in C. Reconstruction-based attribu-tion instead scores a query by inverting or reconstructing it through each candidate in turn, and therefore scales as 
+
+O(C). This gap widens as model registries grow; we quan-tify it against white-box baselines in §4.2. 
+
+3.3. Multi-Patch Aggregation 
+
+The image-level prediction is a weighted average of the per-patch class probabilities: 
+
+ˆy = arg max 
+
+> k
+
+ PX
+
+> i=1
+
+wi σ f (pi)
+
+> k
+
+, (3) where σ(f (pi)) is the softmax over patch i and the weight 
+
+wi counts each patch inversely to its edge overlap, so that every pixel contributes equally; with no overlap this reduces to a plain average. 
+
+4. Experiments 
+
+4.1. Experimental Setup 
+
+Datasets. We evaluate on three benchmarks: • DRAGON [1]: A controlled benchmark of 25 recent gen-erative models, many of them closely related (fine-tunes, Flash SD Realistic Stock SD 1.5 SD 2.1 Flash SDXL Hyper-SD Juggernaut XL Kolors LCM SDXL LCM SSD-1B Mobius SDXL SDXL Lightning SDXL Turbo SSD-1B Flash SD3 SD 3 Flux.1 Flash PixArt PixArt-
+
+> PixArt-
+> SD Cascade Kandinsky DeepFloyd IF Lumina
+
+Predicted 
+
+> Flash SD Realistic Stock SD 1.5 SD 2.1 Flash SDXL Hyper-SD Juggernaut XL Kolors LCM SDXL LCM SSD-1B Mobius SDXL SDXL Lightning SDXL Turbo SSD-1B Flash SD3 SD 3 Flux.1 Flash PixArt PixArt-
+> PixArt-
+> SD Cascade Kandinsky DeepFloyd IF Lumina
+> True
+
+DRAGON (25 models) · 98.0% 
+
+> SD 1.5 SD1.5 DreamShaper SD1.5 epiCDream SD 2.1 SDXL SDXL EpicRealism SDXL Juggernaut SDXL RealVis 5 SDXL ToR SD 3.5 Chroma Flux1.1 Pro Flux.1 dev Flux.1 schnell Flux Amateur Flux MVC5000 Flux Realism HiDream Mystic DALL·E 3 GPT-image-1 Imagen 3 Imagen 4 Ideogram 3 Midjourney 6 Midjourney 7 Grok-2
+
+Predicted 
+
+> SD 1.5 SD1.5 DreamShaper SD1.5 epiCDream SD 2.1 SDXL SDXL EpicRealism SDXL Juggernaut SDXL RealVis 5 SDXL ToR SD 3.5 Chroma Flux1.1 Pro Flux.1 dev Flux.1 schnell Flux Amateur Flux MVC5000 Flux Realism HiDream Mystic DALL·E 3 GPT-image-1 Imagen 3 Imagen 4 Ideogram 3 Midjourney 6 Midjourney 7 Grok-2
+> True
+
+OpenFake (27 models) · 92.9% 
+
+> 1310 30 100
+> Row %
+> 1310 30 100
+> Row %
+
+Figure 3. Errors concentrate within model families. Row-normalized confusion matrices for DRAGON (left) and OpenFake (right), ordered by family. As can be seen, off-diagonal mass stays within a family (Flux variants, SDXL fine-tunes); cross-family errors are rare. 
+
+distillations, and roughly ten that share a single SDXL au-toencoder). All models are prompted with the same cap-tions and use default generation parameters, eliminating semantic and configuration bias. Most models produce 
+
+1024 ×1024 images. We use the “Regular” split (750 train / 250 val / 400 test per class). • OpenFake [19]: An uncontrolled, real-world benchmark whose images were collected in the wild rather than generated by the benchmark authors, covering 27 open-source and commercial generators (including closed-source models) at varied resolutions (512–2048 px), with heterogeneous prompts and generation settings. We use the same per-class split as DRAGON (750 train / 250 val / 400 test). • AEDR [35]: An eight-model benchmark of open latent-diffusion generators, used for the white-box comparison (§4.2) because neither main benchmark exposes a dis-tinct, accessible autoencoder per candidate model. We reconstruct it from AEDR’s released prompts and gener-ation pipeline, generating images for its eight open mod-els and splitting them per model into disjoint partitions (350 /50 /100 train/val/test); we evaluate on the 800 held-out test images ( 100 per model). Robustness and the ablations run on DRAGON, whose con-trolled conditions isolate the single factor under test; open-set attribution, lineage, and discovery use OpenFake for its in-the-wild model diversity; adaptation spans both bench-marks and GenImage [50]; and the white-box comparison uses AEDR. 
+
+Evaluation. The two settings differ in granularity. Black-box attribution is multi-class : we report top-1 image-level accuracy over every generator in the benchmark (25 on DRAGON, 27 on OpenFake). The white-box comparison is binary : following AEDR’s native pairwise protocol, each image is assigned to one of two candidate models, scored over the 27 pairs AEDR reports (the 28 model pairs minus the near-identical SD2-base–SD2.1 pair, which AEDR it-self excludes). Unless stated otherwise, accuracy is on the held-out test split; the open-set and clustering experiments add metrics defined in their respective subsections. 
+
+4.2. Closed-Set Attribution 
+
+Black-box comparison. Our method achieves 98.0% ac-curacy on 25-class DRAGON and 92.9% on 27-class Open-Fake (Figure 3, Table 1). No applicable method matches our accuracy, even those reported on a smaller, easier class count. DE-FAKE [29] is the sole attribution method DRAGON [1] itself evaluates: on the same 25 classes it reaches 62.0% (a ∼20 × higher error rate) while additionally requiring the generating text prompt. OCC-CLIP [18] releases its method but not its data; re-run on DRAGON it attributes just 8.6% across 25 classes (66.6% on its own six). EfficientFormer [42] releases nei-ther and is quoted on an easier setting where we still lead: 13 classes and ∼4× more data, yet 2–6 pp behind. 
+
+White-box comparison. On AEDR’s eight-model bench-mark our classifier reaches 97.7% mean pairwise accuracy Clean Q90 Q80 Q70 Q60               
+
+> 020 40 60 80 100
+> Aggregated accuracy (%)
+> 97.1 92.9 91.7 90.1 89.3
+> JPEG Compression
+> Clean =0.5 =1.0 =2.0 =3.0
+> 020 40 60 80 100 97.1 96.7 95.3 90.8 85.3
+> Gaussian Blur
+> Clean 768px 512px 384px
+> 020 40 60 80 100 97.1 92.6 89.0 83.6
+> Resize
+> Clean 768px 512px 384px
+> 020 40 60 80 100 97.1 96.1 93.7 89.7
+> Center Crop
+
+Figure 4. Attribution is robust to common image degradations. Accuracy of a single model across four degradation families (DRAGON 20-class), starting from a clean 97.1%; aggressive downscaling is the hardest condition. Table 1. Black-box setting. From the image alone, a compact CNN attains the highest accuracy at the largest class count.                         
+
+> Method #Classes Acc. (%) Params (M) Data
+> DE-FAKE [29] 25 62.0 151 DRAGON OCC-CLIP [18] 25 8.6 151 DRAGON EfficientFormer [42] 13 91.0 31 Private
+> Ours 25 98.0 5.9 DRAGON
+> Ours 27 92.9 5.9 OpenFake
+
+Table 2. White-box setting. Mean pairwise accuracy and per-image inference time on AEDR’s eight-model benchmark. Our method outperforms the alternatives while being 2 orders of mag-nitudes faster and strictly black-box.                     
+
+> Method Access Infer. (s) Acc. (%)
+> LatentTracer [40] Model weights 54.9 70.3 AEDR [35] VAE weights 0.53 95.1
+> Ours Image only 0.0085 97.7
+> Average baseline accuracies and inference times are taken from AEDR [35].
+
+(Table 2), despite operating under black-box access: it sees only the output image and never a candidate autoencoder. Our method also reaches 93.8% in the harder 8-way single-label setting; reconstruction-based pairwise scoring extends to this regime only with difficulty, as it must rank each im-age against all eight candidates at once rather than separate a single pair. Beyond accuracy, our inference-time advan-tage over these methods grows with the number of candi-date models C. Specifically, our inference time remains a constant 8.5 ms, whereas AEDR’s cost scales linearly, ris-ing from 0.53 s to 3.71 s as C grows from 2 to 8. 
+
+4.3. Robustness 
+
+Real-world images undergo lossy transformations before analysis. We test whether a single model maintains attri-bution accuracy under four common degradations: JPEG compression, Gaussian blur, resizing, and center cropping. Because the resize and crop conditions require a uniform input resolution, we restrict to the 20 DRAGON genera-tors that natively render at 1024 ×1024 and train one model on them with stochastic augmentation (JPEG Q∈[60 ,90] ,blur σ∈[0 .1,4.0] , resize ∈[384 ,768] px) alongside clean copies; no crop augmentation is used. Figure 4 reports accuracy across 15 conditions. The model holds 97.1% on clean images and degrades grace-fully on every family. This robustness comes at a man-ageable cost on clean data: within this 20 -class setup the augmented model scores 97 .1% versus 98 .6% for a clean-trained one. 
+
+4.4. Open-Set Attribution 
+
+A deployed attributor meets generators absent from its training set. We partition the 27 OpenFake generators into 17 known and 10 unseen , repeat over five random draws, and train a 17-class CNN on the known genera-tors ( 95 .7% ±1.7 closed-set accuracy). The classifier’s own confidence successfully flags out-of-set images: scoring each test image by its top-class margin, with no calibra-tion set and no auxiliary outlier data, separates unseen from known generators at an open-set classification rate of AU-OSCR 0.862 ±0.040 , averaged over the five draws. The score tracks the difficulty of the drawn split rather than the number of known anchors: the best draw reaches AU-OSCR 0.909, on par with the single 0.913 AU-OSCR re-ported by optimization-based detection [22], at ∼3× the model count (27 vs. 9) and ∼1000 × lower inference cost (∼9 ms vs. ∼9 s). Rejection is weakest for finetune vari-ants that inherit a known family’s fingerprint, which the classifier confidently assigns to a known sibling. Full per-generator recall and OSCR curves are in the supplementary. 
+
+4.5. Adapting to New Generators 
+
+A deployed attributor must keep pace with generators that appear after training. We find that the backbone learns a general fingerprint space rather than a fixed set of class boundaries, so a new generator can be admitted by freezing the backbone and fitting only a linear head, with full adapta-tion completing in roughly 7 minutes. We demonstrate this across three regimes. 
+
+Full adaptation. To establish the upper bound of accu-racy when adapting only the linear head, we extend the 17-known OpenFake model of §4.4 to all 27 generators on the full dataset. Freezing its backbone, we fit a fresh 27-way linear head on cached features in approximately 7 min-utes, at 0.4% of the parameters. The ten new generators are learned while performance on the original 17 is largely preserved (Table 3). 
+
+Cross-dataset adaptation. The same recipe carries an entire generator set across benchmarks. Freezing a back-bone trained on one benchmark and fitting a head on the full, disjoint generator set of another, an OpenFake backbone attributes DRAGON’s 25 generators at 96 .4% 
+
+(vs. 98 .0% for DRAGON’s own model). The reverse, DRAGON → OpenFake, reaches 76 .8% (vs. 92 .9% ): the broader source yields the more transferable fingerprint, and the gap concentrates on OpenFake’s Flux and SDXL fine-tune families, which a DRAGON backbone has seen only as single instances. Per-generator breakdowns are in the sup-plementary. 
+
+Table 3. Head-only adaptation preserves old classes perfor-mance while adding new ones. A frozen 17-class backbone with a freshly fit 27-way linear head ( 28 K parameters, ∼7 min). Before 
+
+is the base model’s closed-set accuracy on its 17 classes; after is post-adaptation. Mean ± std over five 17/10 draws. 
+
+Eval. subset Before After 
+
+Original 17 95 .7±1.7 93 .2±1.6
+
+New 10 — 86 .0±3.6
+
+All 27 — 90 .5±0.3
+
+Few-shot adaptation. We test the ability to adapt with very little data to entirely different generators. Freezing an OpenFake- or DRAGON-trained backbone, we fit a 9-way head on GenImage [50] from a few labels per generator, under the few-shot protocol of LIDA [36]. This lightweight process takes roughly 20 seconds. Although the source and target datasets share only one overlapping model architec-ture, the frozen fingerprint space generalizes well across the remaining architectures in GenImage, outperforming the baselines (Table 4). Crucially, backbones trained on either source dataset yield near-identical accuracy, suggesting the learned representation captures generic structural properties of generative models rather than dataset-specific artifacts. EpicDream SDXL RealVis SDXL SDXL Juggernaut SDXL Epic SDXL Touch Midjourney 7 Ideogram 3 Imagen 3 SD 3.5 Imagen 4 SD 2.1 SD 1.5 DreamShaper Flux Pro GPT Image 1 Grok 2 DALL-E 3 Midjourney 6 Mystic Flux MVC Chroma HiDream Flux Amateur Flux Realism Flux Dev Flux Schnell 0.0 0.2 0.4 0.6 0.8 1.0 1.2 
+
+> Cluster distance
+
+Unsupervised lineage of 27 OpenFake generators (average linkage, cophenetic r = 0.887 )          
+
+> Ground-truth family
+> DALL-E Flux GPT Google Ideogram Midjourney SD 1.x SD 2.x SD 3.x SDXL xAI
+
+Figure 5. Generators cluster by architectural family without supervision. Hierarchical clustering of the per-generator CNN feature vectors (27 OpenFake generators); leaf colors mark ground-truth families (shared base weights or autoencoder). The Flux family (including HiDream, Mystic, and Chroma) and the SDXL variants each form a clean clade. Table 4. Few-shot attribution on unseen generators. Top-1 accuracy across nine GenImage [50] generators with N labeled images per class, fitting only a linear head on a frozen backbone against LIDA’s baselines under their protocol [36]. Mean ± std over five draws.               
+
+> Method 1-shot 10-shot
+> ResNet [13] 17.4 21.4 DIRE [38] 14.3 17.2 ESSP [3] 17.0 22.4 LIDA [36] 40.4 54.0 Ours (OpenFake backbone) 37 .5±4.560 .3±0.4
+> Ours (DRAGON backbone) 38 .9±2.459 .5±1.1
+> Baselines as published in LIDA [36].
+
+5. Fingerprint Analysis 
+
+The penultimate layer of our trained network provides a strong fingerprint that can be utilized for various down-stream tasks beyond attribution, sharing the same represen-tation that enables the rapid adaptation shown in §4.5. 
+
+5.1. Lineage Analysis 
+
+A CNN trained purely for model attribution receives no lin-eage labels, yet its learned features organize generators by architectural similarity. The mechanism is direct: genera-tors that share components, such as base weights or an au-toencoder, imprint correlated artifacts on their images, so the classifier places those images near one another in fea-ture space; clustering the per-model centroids then recovers their shared ancestry. We extract penultimate-layer features (1024 -dim) from the trained CNN for each generator’s test images and average them per model to obtain one feature vector per generator. We reduce these vectors to their top 64 
+
+principal components, then apply unsupervised hierarchical clustering (average linkage, correlation distance) across the 27 OpenFake generators (Figure 5). The recovered hierarchy matches known lineage and faithfully preserves the feature distances (cophenetic 
+
+r=0 .887 ). Seven of the eight Flux-family generators form one clade, including HiDream (which reuses the Flux au-toencoder) but not Flux 1.1 Pro; the five SDXL variants group tightly, and the older Stable Diffusion models sep-arate; SD 3.5, a from-scratch DiT with a new autoencoder, sits apart. This structure emerges with no lineage supervi-sion. 
+
+5.2. Clustering Unseen Sources 
+
+A strong test of the learned representation is whether the fingerprint naturally organizes unseen images by their true sources. We extract penultimate features using the 17-class OpenFake model trained in §4.4. With no labels and no re-training, we cluster images from the ten held-out generators (Figure 6). Given no target count, density-based cluster-UMAP 1 UMAP 2 
+
+> DALL·E 3 FLUX.1.1-pro FLUX.1-schnell Flux-realism Imagen 3 Mystic SD 1.5 SD1.5-DreamShaper SD 2.1 SDXL-EpicRealism
+
+Figure 6. Clustering unseen generators. UMAP of penultimate CNN features for ten held-out generators, colored by ground-truth source. It can be seen that those features create well-defined clus-ters for unseen models. 
+
+ing auto-estimates eight clusters plus a noise group against the true ten sources (ARI 0.63, NMI 0.82, 92% purity). Architecturally distinct generators (DALL ·E 3, Imagen 3, SDXL-EpicRealism) separate cleanly, and collapses occur only within a shared model family (e.g., Stable-Diffusion variants merging), again confirming that closer models yield more similar features (cf. §5.1). The features thus effec-tively capture the shared structural artifacts of unseen gen-erators, recovering both how many sources are present and which images share one. Full clustering metrics are in the supplementary. 
+
+5.3. What Does the CNN See? 
+
+To understand what the classifier relies on, we evaluate its behavior across different frequency bands and input repre-sentations. The results converge on a single conclusion: the fingerprint is a structural, low-level pattern, independent of semantic content. We first probe the clean model from §4.2 by band-limiting DRAGON test images before attribution (Figure 7, left). The model maintains accuracy under high-pass fil-tering but fails under low-pass. Because semantic content resides primarily in low spatial frequencies, the ability to at-tribute using only high-frequency signals demonstrates that semantics are unnecessary for the task. 0 20 40 60 80     
+
+> Spatial-frequency range removed (%)
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> Accuracy
+> Clean model
+> Low-pass High-pass Chance 020 40 60 80
+> Spatial-frequency range removed (%)
+> Robust model (corruption-augmented)
+> Low-pass High-pass Chance
+
+Figure 7. Frequency reliance, clean vs. robust. Attribution accuracy on DRAGON under progressive low- or high-pass filtering (Butter-worth, cutoffs in cycles/pixel). Left: clean model. Right: corruption-augmented model. Representation Accuracy (%) DINOv3 ViT-H/16+ 44.9 CLIP ViT-L/14 (+MLP) 55.6 DCT log-mag 57.6 DCT log-mag (+MLP) 70.9 SDXL 80.6 Flux-dev 88.3 SD-3 Medium 89.5 Raw RGB (ours) 91.3 
+
+Table 5. Raw pixels beat every encoder and frequency baseline. 
+
+The same CNN (MLP where marked) trained on each input rep-resentation across the 25 DRAGON classes, alongside a 2D DCT log-magnitude frequency baseline. 
+
+Crucially, while the clean model relies on high fre-quencies, the signal itself is broadband. The corruption-augmented model of §4.3 exhibits the exact reverse behav-ior: surviving low-pass filtering while failing on high-pass (Figure 7, right). Because JPEG compression and blur at-tenuate high frequencies, the augmented model successfully relocates the fingerprint onto lower, more durable bands. The choice of input representation tells the same story (Table 5). Frozen foundation encoders built for seman-tics (CLIP, DINOv3) score far below the raw-pixel CNN (55 .6/44 .9% vs. 91 .3% ), confirming that semantic features are insufficient for attribution. Explicit frequency repre-sentations also trail raw pixels: a 2D DCT log-magnitude reaches only 70 .9% with a large MLP head and 57 .6% with a CNN. The CNN’s learned spatial filters operate on raw pixels to capture the textural fingerprint better than both se-mantically driven encoders and fixed frequency transforms. 
+
+5.4. Limitations 
+
+Detection is untested. RPA is trained and evaluated only as an attributor, discriminating among generators rather than real from generated. The network never sees real im-ages as a class, so whether the same fingerprint features transfer to real-vs.-fake detection is untested, and we make no such claim. We leave detection generalization to future work. 
+
+Adversarial robustness is untested. We evaluate robust-ness to common, non-adversarial corruptions (JPEG, blur, resize, crop) but not to an adversary explicitly optimizing to evade the classifier; we treat this as out of scope and flag it as a consequential open task. Because RPA is a stan-dard image classifier, the extensive literature on adversarial defenses (adversarial training, certified defenses) applies di-rectly and offers a concrete starting point. 
+
+6. Conclusion 
+
+We have demonstrated that a simple CNN operating on raw image patches provides a powerful, scalable framework for model attribution, achieving state-of-the-art accuracy in the strictest black-box settings. Beyond closed-set classifica-tion, the learned structural fingerprints enable the model to operate effectively in open-set scenarios by reliably flag-ging images from previously unseen generators. This versa-tile feature space further facilitates efficient, few-shot adap-tation to new architectures. Finally, we have shown that these features naturally encode the hierarchy of the gener-ative landscape, allowing for the unsupervised recovery of model lineage and the accurate clustering of unseen sources. Ultimately, we hope this study demonstrates the power of simple, discriminative baselines over the heavy machin-ery now common in the field, and advocates for strict black-box attribution as the standard evaluation paradigm. More-over, we aim to establish model attribution as a foundational problem in its own right—one where binary deepfake detec-tion may eventually be viewed simply as a special case of source attribution. References 
+
+[1] Giulia Bertazzini, Daniele Baracchi, Dasara Shullani, Isao Echizen, and Alessandro Piva. DRAGON: A large-scale dataset of realistic images generated by diffusion models, 2025. 1, 2, 3, 4 [2] Nicholas Carlini and Hany Farid. Evading deepfake-image detectors with white- and black-box attacks. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pat-tern Recognition Workshops (CVPRW) , pages 2804–2813, 2020. 2 [3] J. Chen, J. Yao, and L. Niu. A single simple patch is all you need for AI-generated image detection. arXiv preprint arXiv:2402.01123 , 2024. 7 [4] Dario Cioni, Christos Tzelepis, Lorenzo Seidenari, and Ioan-nis Patras. Are CLIP features all you need for universal syn-thetic image origin attribution? In Proceedings of the Euro-pean Conference on Computer Vision Workshops (ECCVW) ,2024. 2 [5] Riccardo Corvi, Davide Cozzolino, Giada Zingarini, Gio-vanni Poggi, Koki Nagano, and Luisa Verdoliva. On the detection of synthetic images generated by diffusion mod-els. In IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) , 2023. 1, 2 [6] Patrick Esser, Sumith Kulal, Andreas Blattmann, Rahim Entezari, Jonas Müller, Harry Saini, Yam Levi, Dominik Lorenz, Axel Sauer, Frederic Boesel, et al. Scaling recti-fied flow transformers for high-resolution image synthesis. In Proceedings of the International Conference on Machine Learning (ICML) , 2024. 1 [7] Shengbang Fang, Tai D. Nguyen, and Matthew C. Stamm. Open set synthetic image source attribution. In Proceedings of the British Machine Vision Conference (BMVC) , 2023. 2 [8] Pierre Fernandez, Guillaume Couairon, Hervé Jégou, Matthijs Douze, and Teddy Furon. The stable signature: Rooting watermarks in latent diffusion models. In Proceed-ings of the IEEE/CVF International Conference on Com-puter Vision (ICCV) , 2023. 1, 2 [9] Joel Frank, Thorsten Eisenhofer, Lea Schönherr, Asja Fis-cher, Dorothea Kolossa, and Thorsten Holz. Leveraging fre-quency analysis for deep fake image recognition. In Proceed-ings of the International Conference on Machine Learning (ICML) , 2020. 1, 2 [10] Sharath Girish, Saksham Suri, Sai Saketh Rambhatla, and Abhinav Shrivastava. Towards discovery and attribution of open-world GAN generated images. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 2021. 2 [11] Diego Gragnaniello, Davide Cozzolino, Francesco Marra, Giovanni Poggi, and Luisa Verdoliva. Are GAN generated images easy to detect? A critical analysis of the state-of-the-art. In IEEE International Conference on Multimedia and Expo (ICME) , 2021. 1 [12] Fabrizio Guillaro, Giada Zingarini, Ben Usman, Avneesh Sud, Davide Cozzolino, and Luisa Verdoliva. A bias-free training paradigm for more general AI-generated image de-tection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 18685–18694, 2025. 2 [13] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image recognition. In Proceed-ings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2016. 7 [14] Eliahu Horwitz, Nitzan Kurer, Jonathan Kahana, Liel Amar, and Yedid Hoshen. We should chart an atlas of all the world’s models. arXiv preprint arXiv:2503.10633 , 2025. 1, 3 [15] Eliahu Horwitz, Asaf Shul, and Yedid Hoshen. Unsuper-vised model tree heritage recovery. In Proceedings of the In-ternational Conference on Learning Representations (ICLR) ,2025. 3 [16] Dimitrios Karageorgiou, Symeon Papadopoulos, Ioannis Kompatsiaris, and Efstratios Gavves. Any-resolution AI-generated image detection by spectral learning. In Proceed-ings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 18706–18717, 2025. 2 [17] Mike Laszkiewicz, Jonas Ricker, Johannes Lederer, and Asja Fischer. Single-model attribution of generative models through final-layer inversion. In Proceedings of the Interna-tional Conference on Machine Learning (ICML) , 2024. 2 [18] Fengyuan Liu, Haochen Luo, Yiming Li, Philip Torr, and Jindong Gu. Which model generated this image? A model-agnostic approach for origin attribution. In European Con-ference on Computer Vision (ECCV) , 2024. 2, 4, 5 [19] Victor Livernoche, Akshatha Arodi, Andreea Musulan, Zachary Yang, Adam Salvail, Gaétan Marceau Caron, Jean-François Godbout, and Reihaneh Rabbany. OpenFake: An open dataset and platform toward real-world deepfake detec-tion, 2025. 2, 4 [20] Jan Lukáš, Jessica Fridrich, and Miroslav Goljan. Detect-ing digital image forgeries using sensor pattern noise. In 
+
+Security, Steganography, and Watermarking of Multimedia Contents VIII , pages 362–372. SPIE, 2006. 2 [21] Francesco Marra, Diego Gragnaniello, Luisa Verdoliva, and Giovanni Poggi. Do GANs leave artificial fingerprints? In IEEE Conference on Multimedia Information Processing and Retrieval (MIPR) , 2019. 1, 2 [22] Tai D. Nguyen, Aref Azizpour, and Matthew C. Stamm. Forensic self-descriptions are all you need for zero-shot de-tection, open-set source attribution, and clustering of AI-generated images. In Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR) ,2025. 2, 5 [23] Utkarsh Ojha, Yuheng Li, and Yong Jae Lee. Towards uni-versal fake image detectors that generalize across generative models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2023. 1, 2[24] Jeongsoo Park and Andrew Owens. Community forensics: Using thousands of generators to train fake image detectors. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2025. 2 [25] Dustin Podell, Zion English, Kyle Lacey, Andreas Blattmann, Tim Dockhorn, Jonas Müller, Joe Penna, and Robin Rombach. SDXL: Improving latent diffusion mod-els for high-resolution image synthesis. In Proceedings of the International Conference on Learning Representations (ICLR) , 2024. 1 [26] Jonas Ricker, Denis Lukovnikov, and Asja Fischer. AER-OBLADE: Training-free detection of latent diffusion images using autoencoder reconstruction error. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2024. 1, 2 [27] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. High-resolution image synthesis with latent diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2022. 1 [28] Mehrdad Saberi, Vinu Sankar Sadasivan, Keivan Rezaei, Aounon Kumar, Atoosa Chegini, Wenxiao Wang, and So-heil Feizi. Robustness of AI-image detectors: Fundamental limits and practical attacks. In International Conference on Learning Representations (ICLR) , 2024. 2 [29] Zeyang Sha, Zheng Li, Ning Yu, and Yang Zhang. DE-FAKE: Detection and attribution of fake images generated by text-to-image generation models. In Proceedings of the ACM SIGSAC Conference on Computer and Communications Se-curity (CCS) , 2023. 1, 2, 4, 5 [30] Sergey Sinitsa and Ohad Fried. Deep image fingerprint: To-wards low budget synthetic image detection and model lin-eage analysis. In Proceedings of the IEEE/CVF Winter Con-ference on Applications of Computer Vision (WACV) , 2024. 1, 2, 3 [31] Hae Jin Song, Mahyar Khayatkhoei, and Wael AbdAl-mageed. ManiFPT: Defining and analyzing fingerprints of generative models. In Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR) ,2024. 1, 2, 3 [32] Zhimin Sun, Shen Chen, Taiping Yao, Bangjie Yin, Ran Yi, Shouhong Ding, and Lizhuang Ma. Contrastive pseudo learning for open-world deepfake attribution. In Proceedings of the IEEE/CVF International Conference on Computer Vi-sion (ICCV) , 2023. 2 [33] Chuangchuang Tan, Jinglu Wang, Xiang Ming, Renshuai Tao, Yunchao Wei, Yao Zhao, and Yan Lu. ForenX: Towards explainable AI-generated image detection with multimodal large language models. arXiv preprint arXiv:2508.01402 ,2025. 2 [34] Huan Teng, Yuhui Quan, Chengyu Wang, Jun Huang, and Hui Ji. Fingerprinting denoising diffusion probabilistic mod-els. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition (CVPR) , 2025. 1, 2 [35] Chao Wang, Zijin Yang, Yaofei Wang, Weiming Zhang, and Kejiang Chen. AEDR: Training-free AI-generated image attribution via autoencoder double-reconstruction. In Pro-ceedings of the AAAI Conference on Artificial Intelligence (AAAI) , 2026. 1, 2, 4, 5 [36] Hongsong Wang, Renxi Cheng, Chaolei Han, and Jie Gui. Attribution as retrieval: Model-agnostic AI-generated image attribution. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2026. 2, 6, 7 [37] Sheng-Yu Wang, Oliver Wang, Richard Zhang, Andrew Owens, and Alexei A. Efros. CNN-generated images are surprisingly easy to spot. . . for now. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2020. 2 [38] Zhendong Wang, Jianmin Bao, Wengang Zhou, Weilun Wang, Hezhen Hu, Hong Chen, and Houqiang Li. DIRE for diffusion-generated image detection. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 2023. 1, 2, 7 [39] Zhenting Wang, Chen Chen, Yi Zeng, Lingjuan Lyu, and Shiqing Ma. Where did I come from? Origin attribution of AI-generated images. In Advances in Neural Information Processing Systems (NeurIPS) , 2023. [40] Zhenting Wang, Vikash Sehwag, Chen Chen, Lingjuan Lyu, Dimitris N. Metaxas, and Shiqing Ma. How to trace latent generative model generated images without artificial water-mark? In Proceedings of the International Conference on Machine Learning (ICML) , 2024. 1, 2, 5 [41] Yuxin Wen, John Kirchenbauer, Jonas Geiping, and Tom Goldstein. Tree-rings watermarks: Invisible fingerprints for diffusion images. In Advances in Neural Information Pro-cessing Systems (NeurIPS) , 2023. 1, 2 [42] Katherine Xu, Lingzhi Zhang, and Jianbo Shi. Detecting origin attribution for text-to-image diffusion models. In Pro-ceedings of the IEEE/CVF Winter Conference on Applica-tions of Computer Vision (WACV) , pages 8764–8774, 2025. 2, 4, 5 [43] Tianyun Yang, Ziyao Huang, Juan Cao, Lei Li, and Xirong Li. Deepfake network architecture attribution. In Proceed-ings of the AAAI Conference on Artificial Intelligence , pages 4662–4670, 2022. 2 [44] Tianyun Yang, Danding Wang, Fan Tang, Xinying Zhao, Juan Cao, and Sheng Tang. Progressive open space ex-pansion for open-set model attribution. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2023. 2 [45] Zijin Yang, Kai Zeng, Kejiang Chen, Han Fang, Weim-ing Zhang, and Nenghai Yu. Gaussian shading: Prov-able performance-lossless image watermarking for diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2024. 2 [46] Ning Yu, Larry S. Davis, and Mario Fritz. Attributing fake images to GANs: Learning and analyzing GAN fingerprints. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 2019. 1, 2 [47] Runpeng Yu and Xinchao Wang. Neural lineage. In Pro-ceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2024. 3 [48] Runpeng Yu and Xinchao Wang. Neural phylogeny: Fine-tuning relationship detection among neural networks. In Pro-ceedings of the International Conference on Learning Rep-resentations (ICLR) , 2025. 3 [49] Ziyin Zhou, Yunpeng Luo, Yuanchen Wu, Ke Sun, Jiayi Ji, Ke Yan, Shouhong Ding, Xiaoshuai Sun, Yunsheng Wu, and Rongrong Ji. AIGI-holmes: Towards explainable and gener-alizable AI-generated image detection via multimodal large language models. In Proceedings of the IEEE/CVF Interna-tional Conference on Computer Vision (ICCV) , 2025. 2 [50] Mingjian Zhu, Hanting Chen, Qiangyu Yan, Xudong Huang, Guanyu Lin, Wei Li, Zhijun Tu, Hailin Hu, Jie Hu, and Yunhe Wang. GenImage: A million-scale benchmark for detecting AI-generated image. In Advances in Neural Infor-mation Processing Systems (NeurIPS) , 2023. 2, 4, 6, 7 Supplementary Material 
+
+Black-Box Model Attribution from Raw Image Patches 
+
+This document provides supplementary material for the main paper. We first give complete architecture and train-ing details (Section S1) and a detailed analysis of infer-ence cost versus the patch budget (Section S2). We then report two ablations omitted from the main text for space, the effect of patch size (Section S3) and label efficiency un-der a shrinking training set (Section S4), followed by the patch-aggregation comparison (Section S5). Sections S6 and S7 expand the cross-dataset transfer experiments with per-direction confusion matrices and a full-label-set head-transfer breakdown. Section S8 details the open-set pro-tocol and per-generator rejection, Section S9 the few-shot adaptation, and Section S10 the unsupervised clustering and lineage analysis. We close with visual examples illustrating task difficulty (Section S11). 
+
+S1. Architecture and Training Details 
+
+Architecture. The classifier reads raw RGB patches di-rectly; there is no encoder. Each 256 ×256 ×3 patch passes through four convolutional blocks, each a 3×3 stride-2 con-volution followed by batch normalization and ReLU, with channel widths (128 , 256 , 512 , 1024) . A global average pool, dropout, and a single linear head produce the class logits, for about 6M parameters in total. The same back-bone is reused for every benchmark and access setting; only the output dimension C (number of candidate generators) changes. 
+
+Optimization. We train end-to-end on labeled patches with cross-entropy loss and AdamW (learning rate 10 −3
+
+with cosine decay to 10 −6, weight decay 10 −4), batch size 
+
+16 , and dropout 0.3. The only augmentation in the default setting is random horizontal flips; the robustness experiment of the main paper adds stochastic JPEG, blur, and resize cor-ruptions. Inputs are normalized by per-channel RGB statis-tics computed on the training set. We keep the checkpoint with the best validation accuracy. 
+
+Hardware. All latency and training-time figures in the main paper and in Section S2 were measured on a single NVIDIA GeForce RTX 5090, a consumer GPU. 
+
+S2. Patch Budget and Inference Cost 
+
+At test time an image is tiled into 256 ×256 patches (edge patches overlap so that every pixel is covered), each patch is classified independently, and the per-patch class probabili-ties are averaged into a single image-level prediction (Eq. 3 of the main paper). Because the patch size is fixed, the same                                              
+
+> Table S1. Patch budget vs. accuracy, latency, and through-put. Accuracy is on the 20 native-1024 DRAGON generators (mean over five seeds). Latency and throughput are measured on the 25 -class checkpoint ( 5.9M parameters) over 1024 ×1024
+> images on an RTX 5090: Fwd is the GPU normalize +forward,
+> Compute adds patchify/tensorize/aggregate (in-memory serving latency), and Thr. is compute throughput. Medians.
+> NAcc (%) Fwd (ms) Compute (ms) Thr. (img/s)
+> 195.20 0.53 1.38 724 297.25 0.81 1.74 574 498.14 1.44 2.62 382 698.37 2.19 3.66 274 898.50 2.97 4.70 213 12 98.58 4.35 6.52 153 16 98.64 5.75 8.52 117
+
+checkpoint runs on inputs from 256 2 to 4096 2 without re-training, and the number of patches scored per image, the 
+
+patch budget N , trades accuracy for compute at inference with no change to the model. Table S1 reports this trade-off. Accuracy climbs quickly and then saturates: a single patch already attributes at 
+
+95 .2% , four patches reach 98 .1% , within 0.5 points of the full 16 -patch 98 .6% , at a quarter of the latency. The for-ward pass is sub-millisecond per patch on GPU ( 0.53 ms at N =1 to 5.75 ms at N =16 ); in-memory serving latency stays under 10 ms across the whole range, and the full cold pipeline is dominated by PNG decode rather than the net-work. Compute throughput ranges from ∼720 images/s at 
+
+N =1 to ∼120 images/s at N =16 on a single GPU. 
+
+S3. Patch Size 
+
+The patch-size study tiles 1024 ×1024 images, so it is re-stricted to the 20 DRAGON-Small generators with native 
+
+1024 ×1024 output (the other five emit smaller images). We train one model per patch size with the architecture, data, and 75 -epoch schedule held fixed; a 1024 ×1024 image tiles into 16 , 4, or 1 patch at 256 /512 /1024 . Accuracy falls steeply as patches grow: 91 .3% (256 ) versus 73 .4% (512 )and 51 .7% (1024 , Figure S1). We attribute this mostly to optimization rather than an inherent limit of larger patches: at a fixed epoch budget, smaller patches yield far more gra-dient updates per epoch ( ≈ 1,500 vs. 375 vs. 94 ), so the 
+
+256 model converges while the 1024 one remains under-trained (its validation accuracy was still rising at the end of training). Smaller patches thus win on two compound-ing axes, more effective training signal and more tiles to aggregate, while staying resolution- and crop-invariant by 256 (16 tiles) 512 (4 tiles) 1024 (1 tile) 
+
+> Patch size (pixels) 40 50 60 70 80 90 100 Attribution accuracy (%)  91.3 73.4 51.7
+
+Figure S1. Smaller patches attribute better under a fixed training budget. Multi-patch accuracy on the 20 native-1024 DRAGON-Small generators at three patch sizes. 8 75 750  
+
+> Training images per model N
+> 020 40 60 80 100
+> Attribution accuracy [%]
+> 44.9 91.3 98.0
+> Raw-pixel CNN Chance (1/25)
+
+Figure S2. Attribution accuracy vs. training images per generator on DRAGON ( 25 classes, log scale). Accuracy degrades grace-fully and stays far above chance ( 4% ) even with a handful of im-ages per generator. 
+
+construction. 
+
+S4. Data Efficiency 
+
+We vary the number of training images per generator on DRAGON ( 25 classes) and measure test accuracy (Fig-ure S2). With 750 images per generator the classifier reaches 98 .0% ; cutting the training set tenfold to 75 costs under seven points ( 91 .3% ), and an extreme 8 images per generator still attains 44 .9% , an order of magnitude above the 4% chance baseline. The two low-data points are con-servative: they reuse the 75 -epoch cosine schedule of the full runs, so the smaller sets are undertrained (cf. Sec-tion S3) and their accuracy is a lower bound. 
+
+S5. Aggregation Strategy 
+
+At inference each image yields several patch-level predic-tions that must be combined into one image-level label (Eq. 3 of the main paper). We compare eight aggregation rules on the 20 native-1024 DRAGON-Regular generators (8,000 test images, 16 patches each); Table S2 reports accu-racy. All eight rules fall within 0.19 points ( 98 .64 –98 .83% ), 
+
+Table S2. Aggregation rule on DRAGON-Regular ( 20 native-1024 
+
+models); accuracy in %. All eight rules lie within 0.19 points, so the default probability averaging needs no specialization. Rule Acc. Rule Acc. Probability avg. (ours) 98.83 Confidence-wt. 98.75 Trimmed mean (10%) 98.81 Median prob. 98.71 Trimmed mean (20%) 98.81 Logit avg. 98.64 Majority vote 98.76 Log-prob avg. 98.64 
+
+so the choice is largely immaterial. We default to probabil-ity averaging, which ties or marginally leads. This is the one ablation we judged too minor to keep in the main text. 
+
+S6. Cross-Dataset Confusion Matrices 
+
+We test whether the fingerprint survives a change of con-tent domain. DRAGON and OpenFake share six gen-erators (SD 1.5, SD 2.1, SDXL, JuggernautXL, Flux 1, and SD 3) but differ in content, resolution, and post-processing, so transferring between them probes whether the classifier keys on a content-agnostic fingerprint rather than dataset-specific cues. Training on one benchmark and evaluating on the other’s images of these shared gen-erators, accuracy falls from 99 .7% in-domain to 81 .0% 
+
+for DRAGON →OpenFake, and from 98 .3% to 91 .9% for OpenFake →DRAGON; the more diverse OpenFake source generalizes better. Figure S3 gives the per-direction 6×6 confusion matri-ces, which localize where the cross-domain accuracy is lost. Errors concentrate on the closely related SDXL-family gen-erators: SDXL and JuggernautXL share the SDXL autoen-coder and are the hardest pair to keep apart once content also changes, whereas the architecturally distinct generators (SD 3, SD 1.5) retain their fingerprint across domains. The asymmetry between the two directions reflects distribution shift: a model trained on DRAGON’s clean, uncompressed renders has never seen the JPEG and capture artifacts that pervade OpenFake, while the reverse transfer stays in dis-tribution. 
+
+S7. Cross-Dataset Head Transfer 
+
+Section S6 transfers a classifier between benchmarks on the six shared generators. The cross-dataset adaptation re-ported in the main paper asks a stronger question: can the feature space learned on one benchmark attribute the en-tire , disjoint generator set of another, retraining only a lin-ear head? Here we give the full per-generator breakdown behind the headline numbers. We freeze a backbone trained on all generators of a source benchmark, use it as a fixed feature extractor (reusing its input normalization), and fit a fresh linear head SD 1.5 SD 2.1 SDXL JuggernautXL Flux.1 SD 3                                                               
+
+> Predicted
+> SD 1.5 SD 2.1 SDXL JuggernautXL Flux.1 SD 3
+> True
+> 99 00001085 12 200010 58 31 01024 176 0009015 70 50110098
+> DRAGON OpenFake
+> (acc 81.0\%)
+> SD 1.5 SD 2.1 SDXL JuggernautXL Flux.1 SD 3
+> Predicted
+> SD 1.5 SD 2.1 SDXL JuggernautXL Flux.1 SD 3
+> True
+> 99 10000098 210000100 0000043 57 000000100 00110098
+> OpenFake DRAGON
+> (acc 91.9\%)
+
+Figure S3. Cross-dataset confusion on the six shared generators, one panel per transfer direction, row-normalized to per-generator recall (%), multi-patch. Off-diagonal mass concentrates on the SDXL/JuggernautXL pair. Table S3. Cross-dataset head transfer. A backbone trained on the source benchmark is frozen; only a fresh linear head is fit on the target benchmark’s full training set, then evaluated on its test set (multi-patch, mean over three head-init seeds, std < 0.1). 
+
+Baseline is the target benchmark’s own end-to-end model. 
+
+Target (source backbone) Baseline Head transfer 
+
+DRAGON (OpenFake backbone) 98 .0 96 .4
+
+OpenFake (DRAGON backbone) 92 .9 76 .8
+
+on the full training set of the target benchmark; we then evaluate on the target test set with the same multi-patch logit-averaging used throughout. Table S3 places each tar-get’s own end-to-end accuracy ( baseline ) beside the head-transfer accuracy. A frozen OpenFake backbone attributes DRAGON’s 25 generators at 96 .4% , within 1.6 points of DRAGON’s own model. The reverse is harder: a DRAGON backbone reaches 76 .8% on OpenFake’s 27 generators. The direction of the asymmetry matches the controlled shared-generator transfer (Section S6): the more diverse OpenFake source learns the more transferable fingerprint space. The DRAGON →OpenFake shortfall is not spread evenly; it falls almost entirely on OpenFake’s fine-tune families. Having seen only single Flux and SDXL in-stances, a DRAGON backbone cannot resolve OpenFake’s dense cluster of Flux and SDXL fine-tunes: flux-1-dev 
+
+collapses to 13% and flux-realism , chroma , and 
+
+hidream to 41 –51% , with errors leaking between lineage siblings. Generators of distinct provenance transfer intact: 
+
+imagen-4 99% , sd-1.5-dreamshaper 98% , grok 
+
+97% , sd-3.5 94% . The same intra-family confusions bound attribution within a single benchmark (main paper); cross-dataset transfer inherits this ceiling rather than intro-ducing a new failure mode. 
+
+Table S4. Per-generator rejection on the 10 held-out generators of a representative split: the fraction (%) of each generator’s im-ages correctly flagged unknown , at the 95% known-TPR operating point. Sorted by rejection. Generator Family Reject (%) SD 3.5 SD 3.x 88 SD 1.5 SD 1.x 84 GPT Image 1 GPT 64 Flux Realism Flux 62 Chroma Flux 61 Flux.1 Dev Flux 56 SD 2.1 SD 2.x 47 SDXL RealVis SDXL 44 SDXL EpicRealism SDXL 39 Flux.1 Schnell Flux 32 
+
+S8. Open-Set Attribution Details 
+
+This section expands the open-set experiment of the main paper. We randomly partition OpenFake’s 27 generators into 17 known (used for training) and 10 unknown (held out entirely), and repeat over five independent draws; reported scores are means over the draws. A 17 -class CNN trained on the known generators reaches 95 .7% closed-set accuracy (the before column of the adaptation table in the main pa-per). At inference an image is flagged unknown when its maximum patch-averaged softmax probability falls below a threshold τ , calibrated to retain 95% of known-model im-ages (the 5th percentile of the known-score distribution). 
+
+Detection performance. Across the five draws, rejec-tion reaches AU-OSCR 0.862 ± 0.040 (best draw 0.909 ); pooling all generators into a single model raises this to 
+
+0.899 . Figure S4 plots the open-set classification (OSCR) curve, correct-classification rate on knowns against the false-positive rate of accepting unknowns, with its spread across draws. 
+
+Per-generator rejection. Table S4 breaks rejection down by held-out generator for a representative split (the pooled single-model run; closed-set accuracy 97 .5% , AU-OSCR 0.899 ). Generators of a distinct lineage are rejected far more reliably than fine-tunes of a known family: SD 3.5 and SD 1.5 are flagged 88% and 84% of the time, whereas a fine-tune inherits its family’s fingerprint and is confidently assigned to a known sibling. The clearest failures are Flux and SDXL fine-tunes, Flux 1-Schnell ( 32% ) and SDXL-EpicRealism ( 39% ), whose families are represented among the known generators. 0.0 0.2 0.4 0.6 0.8 1.0 False Positive Rate (unknown accepted) 0.0 0.2 0.4 0.6 0.8 1.0 Correct Classification Rate (known) 
+
+> mean OSCR (AU-OSCR=0.859) ±1 std over draws
+
+Figure S4. Open-set classification (OSCR) curve for the 17 -known protocol: correct-classification rate on known generators against the false-positive rate of accepting unknowns. Mean over the con-verged 17 /10 draws with the ±1 standard-deviation band; the main paper reports AU-OSCR 0.862 ± 0.040 over five draws. 
+
+S9. Few-Shot Adaptation 
+
+The few-shot experiment of the main paper freezes a back-bone and fits a 9-way linear head on GenImage from a few labels per generator. With a frozen OpenFake backbone and ten shots per class the head reaches 60 .3% accuracy, despite GenImage sharing only the Stable-Diffusion lineage with the source benchmark. Figure S5 gives the 9-class con-fusion matrix. Architecturally distinct generators transfer cleanly (MidJourney 91% , ADM 80% , Glide 77% ), while the residual error is dominated by the two Stable-Diffusion versions, SD 1.4 and SD 1.5, confusing each other; this is the one finetune pair whose fingerprints overlap, mirroring the intra-family confusions seen throughout. 
+
+S10. Clustering and Lineage Analysis 
+
+The main paper shows that the CNN’s penultimate-layer features, learned purely for attribution, organize genera-tors by architectural family. We compute a mean fea-ture vector per generator over the 27 OpenFake generators and cluster them with several unsupervised algorithms (Ta-ble S5). All recover the family structure well: agreement with the ground-truth families reaches NMI 0.82 –0.87 and ARI 0.65 –0.67 for the centroid and graph methods. 
+
+Notable placements. A few placements are worth high-lighting. (1) HiDream clusters with the Flux family rather than on its own, because it reuses the Flux autoencoder; the fingerprint follows the shared component, not the brand. (2) SD 3.5, a from-scratch DiT with a new autoencoder, sits apart from the older Stable Diffusion models despite the shared name. (3) Same-family fine-tune pairs ( e.g ., SDXL-ADM BigGAN Glide MidJourney SD1.4 SD1.5 VQDM Wukong real                                      
+
+> Predicted
+> ADM BigGAN Glide MidJourney SD1.4 SD1.5 VQDM Wukong real
+> True
+> 80 1483257 38 31376 16 291 1622 20 29 16 12 25 23 33 14 6682367 13 1110 10 12 16 50 2312 312 68
+> GenImage 10-shot (acc 60.3\%)
+
+Figure S5. GenImage 9-class few-shot confusion (ten shots, frozen OpenFake backbone, row-normalized recall %, pooled over five seeds). The SD 1.4/SD 1.5 pair accounts for most of the residual error. Table S5. Unsupervised clustering of the 27 OpenFake generators in CNN feature space. ARI, NMI, and V-measure are computed against the ground-truth family labels. Algorithm ARI NMI V-measure Clusters Agglomerative 0.67 0.83 0.83 26 K-means 0.66 0.82 0.82 26 Spectral 0.65 0.86 0.86 26 
+
+Juggernaut with SDXL-RealVis) are the hardest to separate and account for most of the residual intra-family confusion; these are the only merges that survive when clustering gen-erators held out of training entirely (main paper). 
+
+S11. Visual Examples 
+
+Figure S6 shows the same prompt rendered by all 25 DRAGON generators. Most outputs are visually indistin-guishable to a human observer, yet a compact CNN reading only raw RGB patches attributes them at 98 .0% accuracy (main paper). Models are roughly grouped by architectural family. Figure S7 shows sample images from each of the 27 OpenFake sources (26 generators and one real class). Un-like DRAGON, these images depict different subjects, and the diversity of generators, spanning open-source diffusion models, commercial APIs, and real photographs, illustrates the breadth of the attribution task. SDXL 
+
+SDXL Lightning SDXL Turbo Flash SDXL LCM SDXL 
+
+Hyper SD JuggernautXL Mobius SSD-1B LCM SSD-1B 
+
+Kolors SD 3 Flash SD3 PixArt PixArt 
+
+Flash PixArt Flux 1 Kandinsky IF Lumina 
+
+SD Cascade SD 1.5 Flash SD 
+
+Realistic Stock SD 2.1 Figure S6. Same prompt rendered by 25 different generators (DRAGON benchmark). The images are visually similar, illustrating why model attribution is a challenging task that requires analysis beyond pixel-level inspection by a human observer. Flux Dev Flux Schnell Flux 1.1 Pro Chroma Flux Amateur 
+
+Flux MVC5000 Midjourney 6 Midjourney 7 DALL-E 3 GPT-Image-1 
+
+Grok 2 Ideogram 3 Imagen 3 Imagen 4 SD 3.5 
+
+HiDream I1 Mystic SDXL Juggernaut XL EpicRealism XL 
+
+RealVis v5 XL TouchOfRealism SD 1.5 DreamShaper EpicDream 
+
+SD 2.1 Real (OpenFake) Figure S7. Sample images from all 27 OpenFake sources (26 generators + real). Models are grouped by family: Flux variants, proprietary models, and SDXL / SD 1.x–2.x. Because OpenFake is collected in the wild, each cell depicts a different subject.

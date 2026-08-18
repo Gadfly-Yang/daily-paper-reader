@@ -1,0 +1,277 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-18T20:54:45.176614+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2608.15196v1",
+      "source": "arxiv",
+      "title": "Anchor-Regularized Adaptation for Generalizable AI-Generated Image Detection with DINOv3",
+      "abstract": "Recent works in AI-generated image detection have shown that careful training data alignment can improve generalization by removing spurious correlations. However, linear probes on frozen DINOv3 representations achieve remarkably strong performance even when trained on misaligned datasets. Motivated by this result, we analyze the underlying rationale and the limits of this generalization. We find that frozen DINOv3 performs well because its decisions rely on features that faithfully represent the space of authentic images. At the same time, its final layer is less effective at capturing the subtle pixel-artifact cues that can be emphasized by aligned training data. We further observe that naively mixing aligned and misaligned data during adaptation improves sensitivity to such cues but at the cost of distorting the pre-trained representation, limiting generalization. To address this issue, we propose Anchor-Regularized Adaptation (ARA). We apply Low-Rank Adaptation to capture pixel-level artifacts while leveraging a frozen anchor classifier to avoid deviations from the original representation structure. This allows the model to exploit pixel-artifact cues without sacrificing generalization. Our method achieves state-of-the-art performance on nine diverse and challenging benchmarks, indicating that ARA enables complementary supervision from misaligned and aligned data for more effective detection.",
+      "authors": [
+        "Hyeongjun Choi",
+        "Juhun Lee",
+        "Davide Cozzolino",
+        "Luisa Verdoliva",
+        "Simon S. Woo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-15T12:26:28+00:00",
+      "link": "https://arxiv.org/pdf/2608.15196v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Directly tackles generalizable AI-generated image detection via anchor-regularized adaptation of DINOv3",
+      "llm_evidence_cn": "直接通过DINOv3锚正则化自适应解决可泛化AI生成图像检测",
+      "llm_evidence": "直接通过DINOv3锚正则化自适应解决可泛化AI生成图像检测",
+      "canonical_evidence": "直接通过DINOv3锚正则化自适应解决可泛化AI生成图像检测",
+      "llm_tldr_en": "Proposes anchor-regularized adaptation with DINOv3 to improve generalization in AI-generated image detection by combining aligned and misaligned training data.",
+      "llm_tldr_cn": "该论文针对AI生成图像检测的跨域泛化问题，分析冻结DINOv3线性探针在错位数据集上的强泛化原因。提出锚正则化自适应方法，在训练中结合对齐与错位数据，以强调细粒度像素伪影线索并保持真实图像空间表示。实验表明该方法能进一步提升AI生成图像检测的泛化性能，对跨域检测具有重要意义。",
+      "llm_tldr": "该论文针对AI生成图像检测的跨域泛化问题，分析冻结DINOv3线性探针在错位数据集上的强泛化原因。提出锚正则化自适应方法，在训练中结合对齐与错位数据，以强调细粒度像素伪影线索并保持真实图像空间表示。实验表明该方法能进一步提升AI生成图像检测的泛化性能，对跨域检测具有重要意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.15238v1",
+      "source": "arxiv",
+      "title": "UC-VLM: Consistency-Driven Learning for AI-Generated Image Detection with Vision-Language Large Models",
+      "abstract": "Vision-Language Large Models (VLLMs) are promising for AI-generated image (AIGI) detection because they can produce both a prediction and a natural-language output. However, most existing VLLM-based detectors primarily fine-tune the language side while giving limited attention to low-level visual forensic cues. They also often depend on manually crafted prompts or human-annotated rationales, which limits scalability.We present UC-VLM, a unified multi-stage framework for AIGI detection that relies solely on binary supervision. UC-VLM first identifies effective instruction variants automatically. It then reuses the same binary label within a multi-stage training framework: (i) a visual discrimination objective that strengthens sensitivity to non-semantic forensic cues, and (ii) a label-conditioned generation objective that uses the binary label to supervise textual outputs. This design turns weak binary supervision into a shared supervision signal for both the visual pathway and the language output. Our key novelty is a unified multi-stage binary-supervised framework that consistently reuses the same authenticity labels for visual adaptation and label-conditioned text generation, while leveraging automatically optimized instructions to reduce prompt sensitivity without requiring human-written rationales or hand-crafted prompts.Experiments show that UC-VLM achieves 96.1% average accuracy on GenImage, exceeding the strongest prior result by 4.6%, and obtains 69.6% / 77.9% accuracy on Chameleon under ProGAN / SDV1.4 training, surpassing the best baseline by 11.2% / 15.3%, respectively.",
+      "authors": [
+        "Lei Tan",
+        "Shuwei Li",
+        "Mohan Kankanhalli",
+        "Robby T. Tan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-15T13:53:59+00:00",
+      "link": "https://arxiv.org/pdf/2608.15238v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "AI-generated image detection using vision-language models with binary supervision",
+      "llm_evidence_cn": "AI生成图像检测采用视觉语言模型与二元监督",
+      "llm_evidence": "AI生成图像检测采用视觉语言模型与二元监督",
+      "canonical_evidence": "AI生成图像检测采用视觉语言模型与二元监督",
+      "llm_tldr_en": "Introduces UC-VLM, a unified multi-stage framework for AI-generated image detection that relies solely on binary supervision, automatically identifies instruction variants, and strengthens visual forensic cues via consistency-driven training. It shows improved scalability and detection accuracy without manual prompts or rationale annotations.",
+      "llm_tldr_cn": "针对现有基于视觉语言大模型（VLLM）的AI生成图像检测依赖手工提示和人工标注解释、且视觉取证线索关注不足的问题，提出UC-VLM统一多阶段框架，仅用二元标签监督，自动识别有效指令，并通过一致性驱动训练强化视觉判别。实验表明，该方法提升检测精度和可扩展性，无需人工提示或解释标注。",
+      "llm_tldr": "针对现有基于视觉语言大模型（VLLM）的AI生成图像检测依赖手工提示和人工标注解释、且视觉取证线索关注不足的问题，提出UC-VLM统一多阶段框架，仅用二元标签监督，自动识别有效指令，并通过一致性驱动训练强化视觉判别。实验表明，该方法提升检测精度和可扩展性，无需人工提示或解释标注。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.14729v1",
+      "source": "arxiv",
+      "title": "Do CNNs Internally Represent Real and Fake Images Differently? A Hidden-Layer Analysis",
+      "abstract": "Fake/synthetic images are increasingly prevalent, but it remains unclear whether Convolutional Neural Networks (CNNs) process real and fake images in the same internal manner. This work examines the hypothesis that CNNs represent real and fake images differently, such that fake images induce different hidden-layer activation patterns even when semantic content is preserved. The hypothesis is evaluated in scene recognition settings using trained CNN models. Dense-layer activations are extracted, and neurosymbolic methods assign semantic labels to selected neurons. For each real test image, corresponding fake images are generated with similar semantic content using object-label-guided text-to-image and image-to-image generation based on Stable Diffusion variants. Paired real-fake activation patterns are then compared statistically. Additional experiments with another dataset, CNN architecture, generative model, and JPEG/blur degradation analysis assess robustness. Results suggest that fake images evoke different hidden-neuron activations, and these differences are not explained only by simple image degradation. Overall, the findings indicate that real and fake images differ in CNN hidden-layer activation behavior at least in some settings, which opens the door for follow-up work on making use of this different behavior to improve fake image detection.",
+      "authors": [
+        "Moumita Sen Sarma",
+        "Pascal Hitzler",
+        "Eugene Y. Vasserman"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-12T22:48:29+00:00",
+      "link": "https://arxiv.org/pdf/2608.14729v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Analyzes CNN hidden-layer activations to distinguish real from fake images",
+      "llm_evidence_cn": "分析CNN隐藏层激活以区分真实与伪造图像",
+      "llm_evidence": "分析CNN隐藏层激活以区分真实与伪造图像",
+      "canonical_evidence": "分析CNN隐藏层激活以区分真实与伪造图像",
+      "llm_tldr_en": "Analyzes whether CNNs represent real and fake images differently by examining hidden-layer activations, finding distinct patterns even with similar content.",
+      "llm_tldr_cn": "针对CNN是否在内部区分真实与伪造图像的问题，本文在场景识别设置下提取CNN稠密层激活，利用神经符号方法为选定神经元赋予语义标签。对真实测试图像生成语义相似的伪造图像后，对比隐藏层激活模式。研究发现真实与伪造图像即使语义内容相似也会诱发不同激活。该结果为利用CNN内部表征进行伪造图像检测提供了新视角。",
+      "llm_tldr": "针对CNN是否在内部区分真实与伪造图像的问题，本文在场景识别设置下提取CNN稠密层激活，利用神经符号方法为选定神经元赋予语义标签。对真实测试图像生成语义相似的伪造图像后，对比隐藏层激活模式。研究发现真实与伪造图像即使语义内容相似也会诱发不同激活。该结果为利用CNN内部表征进行伪造图像检测提供了新视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.16646v1",
+      "source": "arxiv",
+      "title": "Training-Free Reconstruction-Based AI-Generated Image Detectors Are Inherently Vulnerable to Adversarial Examples",
+      "abstract": "The impressive visual quality and ubiquity of AI-generated images call for reliable and robust detection methods. Reconstruction-based detectors have emerged as a promising direction for transparent and training-free identification of synthetic images. However, due to their fundamentally different mode of operation (compared to standard, classifier-based methods), little is known about their adversarial robustness. In this work, we propose two novel attack methods targeted at detectors that leverage autoencoder reconstruction error. We find that by constructing imperceptible adversarial examples, the distance between original and reconstruction can be artificially increased, causing fake images to be wrongly classified as real. Our evaluation including images from three state-of-the-art generators and three detectors demonstrates that detection performance is significantly decreased, even if attacked images additionally undergo real-world degradations. Critically, our adversarial examples naturally transfer across detectors, as they all share the same principle, pointing towards an inherent vulnerability of reconstruction-based detectors.",
+      "authors": [
+        "Roman Demchenko",
+        "Jonas Ricker",
+        "Asja Fischer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-17T14:45:53+00:00",
+      "link": "https://arxiv.org/pdf/2608.16646v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "AI-generated image detection adversarial vulnerability",
+      "llm_evidence_cn": "AI生成图像检测的对抗脆弱性",
+      "llm_evidence": "AI生成图像检测的对抗脆弱性",
+      "canonical_evidence": "AI生成图像检测的对抗脆弱性",
+      "llm_tldr_en": "The paper demonstrates that training-free reconstruction-based AI-generated image detectors are inherently vulnerable to adversarial examples, proposes two attack methods targeting autoencoder reconstruction error, and shows fake images can be wrongly classified.",
+      "llm_tldr_cn": "该文指出无需训练的重建型AI生成图像检测器易受对抗样本攻击。针对基于自动编码器重建误差的检测方法，提出两种新型攻击手段，通过构造不可察觉的扰动人为增大重建距离，导致伪造图像被错误分类。研究揭示了此类检测器在对抗环境下的脆弱性，对提升检测鲁棒性具有重要意义。",
+      "llm_tldr": "该文指出无需训练的重建型AI生成图像检测器易受对抗样本攻击。针对基于自动编码器重建误差的检测方法，提出两种新型攻击手段，通过构造不可察觉的扰动人为增大重建距离，导致伪造图像被错误分类。研究揭示了此类检测器在对抗环境下的脆弱性，对提升检测鲁棒性具有重要意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.13866v1",
+      "source": "arxiv",
+      "title": "Geometric Filtering of LLM-Generated Samples for Few-Shot Text Classification",
+      "abstract": "Large language models (LLMs) can generate synthetic training data for text classification, but the quality of generated samples is heterogeneous: some fall in correct class regions of the embedding space while others land in peripheral or cross-class zones. We propose a geometric filtering framework that evaluates each LLM-generated sample by its Euclidean distance to real class examples in a sentence embedding space, selecting only geometrically consistent candidates. A soft weighting mechanism transforms filter scores into sample weights for classifier training. Evaluated across 13 datasets, 5 classifiers, 10 augmentation methods, and over 6,700 configurations, our method achieves +2.61 percentage points (pp) over SMOTE ($p<0.0001$, Cohen's $d=0.95$, 88.9% win rate). The approach generalizes to named entity recognition (+9.26pp, 100% win rate) without filter modification, and is robust across 5 LLMs from 4 providers. A key finding is that the simplest distance-based filter consistently outperforms complex multi-criteria alternatives.",
+      "authors": [
+        "Benjamín Schindler",
+        "Gonzalo A. Ruz"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CL"
+      ],
+      "published": "2026-08-14T01:29:03+00:00",
+      "link": "https://arxiv.org/pdf/2608.13866v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "few-shot text classification via geometric filtering of LLM-generated samples",
+      "llm_evidence_cn": "通过几何过滤LLM生成样本进行少样本文本分类",
+      "llm_evidence": "通过几何过滤LLM生成样本进行少样本文本分类",
+      "canonical_evidence": "通过几何过滤LLM生成样本进行少样本文本分类",
+      "llm_tldr_en": "The paper proposes a geometric filtering framework for LLM-generated samples to improve few-shot text classification, achieving +2.61pp over SMOTE across extensive evaluations.",
+      "llm_tldr_cn": "针对LLM生成的合成训练数据在少样本文本分类中质量参差不齐的问题，提出基于嵌入空间欧氏距离的几何过滤框架，并采用软加权机制。在13个数据集、5种分类器、10种增强方法的大规模实验表明，该方法比SMOTE平均提高2.61个百分点。该工作为少样本分类中的合成数据利用提供了有效策略。",
+      "llm_tldr": "针对LLM生成的合成训练数据在少样本文本分类中质量参差不齐的问题，提出基于嵌入空间欧氏距离的几何过滤框架，并采用软加权机制。在13个数据集、5种分类器、10种增强方法的大规模实验表明，该方法比SMOTE平均提高2.61个百分点。该工作为少样本分类中的合成数据利用提供了有效策略。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.13751v1",
+      "source": "arxiv",
+      "title": "CAST: Closed-form Analytic Semantic Transfer for Zero-Shot Classifier Extension",
+      "abstract": "Large pre-trained models have become foundational components of modern machine learning systems. Yet adapting these models to novel categories typically requires examples from the target distribution. In many domains, however, such data are unavailable. Zero-shot learning (ZSL) permits recognition under these limitations through relying on auxiliary semantic information such as textual descriptions. We introduce CAST (Closed-form Analytic Semantic Transfer), a training-free, image-free framework for extending a pre-trained classifier to previously unseen classes through weight injection. We provide a theoretical foundation for CAST and derive a finite-sample error decomposition that identifies the \\emph{semantic extrapolation residual} $ρ_u$. The residual is a computable, model-agnostic measure and provides a principled criterion for dataset curation and benchmark design. Experiments on standard zero-shot learning benchmarks demonstrate that CAST matches or exceeds existing image-free approaches and approaches the performance of few-shot adaptation methods, while requiring neither iterative optimization nor examples from the target distribution.",
+      "authors": [
+        "William Heyden",
+        "Habib Ullah",
+        "Muhammad Salman Siddiqui",
+        "Fadi Al Machot"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-13T20:20:07+00:00",
+      "link": "https://arxiv.org/pdf/2608.13751v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "zero-shot classifier extension via analytic semantic transfer, applicable to few-shot scenarios",
+      "llm_evidence_cn": "通过解析语义转移实现零样本分类器扩展，适用于少样本场景",
+      "llm_evidence": "通过解析语义转移实现零样本分类器扩展，适用于少样本场景",
+      "canonical_evidence": "通过解析语义转移实现零样本分类器扩展，适用于少样本场景",
+      "llm_tldr_en": "The paper proposes CAST, a closed-form analytic semantic transfer framework for zero-shot classifier extension, enabling training-free, image-free adaptation of pre-trained classifiers to novel classes via weight injection, and provides a finite-sample error decomposition that identifies the semantic extrapolation residual.",
+      "llm_tldr_cn": "针对预训练模型扩展到新类别时缺乏目标分布样本的问题，提出闭式解析语义转移框架CAST，通过权重注入实现训练无关、图像无关的零样本扩展。理论分析给出了有限样本误差分解，识别出语义外推残差。实验表明该方法能有效扩展分类器。该工作为零样本和少样本分类提供了高效工具。",
+      "llm_tldr": "针对预训练模型扩展到新类别时缺乏目标分布样本的问题，提出闭式解析语义转移框架CAST，通过权重注入实现训练无关、图像无关的零样本扩展。理论分析给出了有限样本误差分解，识别出语义外推残差。实验表明该方法能有效扩展分类器。该工作为零样本和少样本分类提供了高效工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.15652v1",
+      "source": "arxiv",
+      "title": "Scalable Black-Box Model Attribution for Images",
+      "abstract": "The rapid proliferation of generative models raises the model attribution problem: given only an image, can we determine which model produced it? Existing methods have grown as elaborate as the generators they target, on the as- sumption that a more sophisticated model demands a more sophisticated attributor. We show it does not. RPA (Raw- Patch Attribution) attributes images in the strictest black- box setting with a lightweight CNN. Despite its simplicity, it attributes more models at higher accuracy than prior work, reaching 98.0% on 25-class DRAGON and 92.9% on 27- class OpenFake; it is data-efficient and runs at a cost inde- pendent of the number of candidate models; and it stays ro- bust to the compression, blur, and resizing images undergo in the wild. Training for closed-set attribution yields a ver- satile feature extractor: the same representation recovers model lineage without supervision, flags and groups unseen generators, and admits new models through few-shot adap- tation rather than retraining.",
+      "authors": [
+        "Asaf Livne",
+        "Amir Jevnisek",
+        "Shai Avidan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-16T09:45:09+00:00",
+      "link": "https://arxiv.org/pdf/2608.15652v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses a lightweight CNN to attribute images to generative models, addressing image classification into model categories",
+      "llm_evidence_cn": "使用轻量级CNN将图像归因于生成模型，属于模型类别分类任务",
+      "llm_evidence": "使用轻量级CNN将图像归因于生成模型，属于模型类别分类任务",
+      "canonical_evidence": "使用轻量级CNN将图像归因于生成模型，属于模型类别分类任务",
+      "llm_tldr_en": "This paper addresses the problem of attributing images to their generative models in a black-box setting. It proposes RPA, a lightweight CNN-based method that classifies images into model categories, achieving high accuracy on 25-class DRAGON and 27-class OpenFake, with data efficiency and robustness.",
+      "llm_tldr_cn": "针对仅给定图像确定其生成模型的黑盒归属问题，本文提出RPA（原始patch归属）方法，采用轻量CNN对图像进行模型类别分类。该方法在25类DRAGON上达98.0%准确率，在27类OpenFake上达92.9%，且数据高效、对压缩模糊等扰动鲁棒。该工作表明简单CNN即可实现可扩展的模型归属，为AI生成图像分析提供了高效工具。",
+      "llm_tldr": "针对仅给定图像确定其生成模型的黑盒归属问题，本文提出RPA（原始patch归属）方法，采用轻量CNN对图像进行模型类别分类。该方法在25类DRAGON上达98.0%准确率，在27类OpenFake上达92.9%，且数据高效、对压缩模糊等扰动鲁棒。该工作表明简单CNN即可实现可扩展的模型归属，为AI生成图像分析提供了高效工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
