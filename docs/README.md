@@ -6,44 +6,32 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-18
-- 运行时间：2026-08-18 21:02:47 UTC
+- 最新运行日期：2026-08-19
+- 运行时间：2026-08-19 20:24:17 UTC
 - 运行状态：成功
-- 本次总论文数：7
-- 精读区：4
-- 速读区：3
+- 本次总论文数：3
+- 精读区：3
+- 速读区：0
 
 ### 今日简报（AI）
-- 今日共生成 7 篇推荐（精读 4 篇，速读 3 篇）
-- 精读：《Anchor-Regularized Adaptation for Generalizable AI-Generated Image Detection with DINOv3》（10.0/10）, 《UC-VLM: Consistency-Driven Learning for AI-Generated Image Detection with Vision-Language Large Models》（9.0/10）
-- 速读：《Geometric Filtering of LLM-Generated Samples for Few-Shot Text Classification》（7.0/10）, 《CAST: Closed-form Analytic Semantic Transfer for Zero-Shot Classifier Extension》（6.0/10）, 《Scalable Black-Box Model Attribution for Images》（6.0/10）
+- 今日共生成 3 篇推荐（精读 3 篇，速读 0 篇）
+- 精读：《Environment-Invariant Subspace Learning for Generalizable Deepfake Detection》（10.0/10）, 《MS-MFAD : Multimodal large language models for Face Anti-spoofing Detection》（8.0/10）
 - 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
-- 详情：[/202608/18/README](/202608/18/README)
+- 详情：[/202608/19/README](/202608/19/README)
 
 ### 精读区论文标签
-1. [Anchor-Regularized Adaptation for Generalizable AI-Generated Image Detection with DINOv3](/202608/18/2608.15196v1-anchor-regularized-adaptation-for-generalizable-ai-generated-image-detection-with-dinov3)  
+1. [Environment-Invariant Subspace Learning for Generalizable Deepfake Detection](/202608/19/2608.17700v1-environment-invariant-subspace-learning-for-generalizable-deepfake-detection)  
    标签：评分：10.0/10、query:deepfake-fsl
-   evidence：直接通过DINOv3锚正则化自适应解决可泛化AI生成图像检测
-2. [UC-VLM: Consistency-Driven Learning for AI-Generated Image Detection with Vision-Language Large Models](/202608/18/2608.15238v1-uc-vlm-consistency-driven-learning-for-ai-generated-image-detection-with-vision-language-large-models)  
-   标签：评分：9.0/10、query:deepfake-fsl
-   evidence：AI生成图像检测采用视觉语言模型与二元监督
-3. [Do CNNs Internally Represent Real and Fake Images Differently? A Hidden-Layer Analysis](/202608/18/2608.14729v1-do-cnns-internally-represent-real-and-fake-images-differently-a-hidden-layer-analysis)  
+   evidence：提出EISL框架解耦伪造相关不变因子与环境干扰，用于跨分布深度伪造检测。
+2. [MS-MFAD : Multimodal large language models for Face Anti-spoofing Detection](/202608/19/2608.17328v1-ms-mfad--multimodal-large-language-models-for-face-anti-spoofing-detection)  
    标签：评分：8.0/10、query:deepfake-fsl
-   evidence：分析CNN隐藏层激活以区分真实与伪造图像
-4. [Training-Free Reconstruction-Based AI-Generated Image Detectors Are Inherently Vulnerable to Adversarial Examples](/202608/18/2608.16646v1-training-free-reconstruction-based-ai-generated-image-detectors-are-inherently-vulnerable-to-adversarial-examples)  
+   evidence：人脸反欺骗检测应对生成式AI威胁和高保真物理欺骗
+3. [Primitive-Driven Compositional Forensic Visual Prompting for Open-World Face Anti-Spoofing](/202608/19/2608.17351v1-primitive-driven-compositional-forensic-visual-prompting-for-open-world-face-anti-spoofing)  
    标签：评分：8.0/10、query:deepfake-fsl
-   evidence：AI生成图像检测的对抗脆弱性
+   evidence：开放世界人脸反欺骗的组合取证视觉提示方法
 
 ### 速读区论文标签
-1. [Geometric Filtering of LLM-Generated Samples for Few-Shot Text Classification](/202608/18/2608.13866v1-geometric-filtering-of-llm-generated-samples-for-few-shot-text-classification)  
-   标签：评分：7.0/10、query:deepfake-fsl
-   evidence：通过几何过滤LLM生成样本进行少样本文本分类
-2. [CAST: Closed-form Analytic Semantic Transfer for Zero-Shot Classifier Extension](/202608/18/2608.13751v1-cast-closed-form-analytic-semantic-transfer-for-zero-shot-classifier-extension)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：通过解析语义转移实现零样本分类器扩展，适用于少样本场景
-3. [Scalable Black-Box Model Attribution for Images](/202608/18/2608.15652v1-scalable-black-box-model-attribution-for-images)  
-   标签：评分：6.0/10、query:deepfake-fsl
-   evidence：使用轻量级CNN将图像归因于生成模型，属于模型类别分类任务
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">

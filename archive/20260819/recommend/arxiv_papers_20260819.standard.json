@@ -1,0 +1,133 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-19T20:18:08.103616+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2608.17700v1",
+      "source": "arxiv",
+      "title": "Environment-Invariant Subspace Learning for Generalizable Deepfake Detection",
+      "abstract": "Cross-distribution generalization remains a critical bottleneck in deepfake detection. While recent efforts leverage the semantic priors of large-scale visual foundation models (VFMs), a noteworthy yet underexplored challenge remains: the susceptibility of these semantic priors to environmental interference from factors such as lighting and style. Crucially, this interference establishes spurious correlations between forgery cues and environmental patterns that severely limit generalization. To address this fundamental challenge, we propose an innovative Environment-Invariant Subspace Learning (EISL) framework. The core contribution of EISL is that it aims to disentangle features into orthogonal forgery-relevant invariant factors and environment-related residual factors via a learnable low-rank projection. To facilitate robust feature disentanglement, we also design an Environmental Intervention module that generates diverse and challenging intervention pairs, simulating out-of-distribution environmental shifts to guide the model toward discovering truly invariant forgery representations. Experiments across cross-dataset, cross-generator, whole-face synthesis, and corruption settings show consistent gains and competitive or leading performance against strong detectors, demonstrating improved robustness to unseen forgery types and environmental variations. This work provides a new perspective and a valuable exploration for understanding and tackling the generalization barriers of VFMs in deepfake detection.",
+      "authors": [
+        "Shenghao Chen",
+        "Hao Jia",
+        "Chen Li",
+        "Chunjie Ma",
+        "Zan Gao",
+        "Shengyong Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-18T12:22:21+00:00",
+      "link": "https://arxiv.org/pdf/2608.17700v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Proposes EISL to disentangle forgery-relevant invariant factors from environmental interference for cross-distribution deepfake detection.",
+      "llm_evidence_cn": "提出EISL框架解耦伪造相关不变因子与环境干扰，用于跨分布深度伪造检测。",
+      "llm_evidence": "提出EISL框架解耦伪造相关不变因子与环境干扰，用于跨分布深度伪造检测。",
+      "canonical_evidence": "提出EISL框架解耦伪造相关不变因子与环境干扰，用于跨分布深度伪造检测。",
+      "llm_tldr_en": "EISL addresses cross-distribution generalization in deepfake detection by learning environment-invariant subspace that separates forgery cues from lighting/style interference, improving robustness.",
+      "llm_tldr_cn": "深度伪造检测面临跨分布泛化瓶颈，现有方法易受光照、风格等环境因素干扰，产生伪造线索与环境模式的虚假关联。本文提出环境不变子空间学习框架EISL，将特征解耦为正交的伪造相关不变因子和环境相关因子。实验显示该框架能有效提升深度伪造检测在不同分布上的泛化能力，减少环境干扰导致的性能下降。",
+      "llm_tldr": "深度伪造检测面临跨分布泛化瓶颈，现有方法易受光照、风格等环境因素干扰，产生伪造线索与环境模式的虚假关联。本文提出环境不变子空间学习框架EISL，将特征解耦为正交的伪造相关不变因子和环境相关因子。实验显示该框架能有效提升深度伪造检测在不同分布上的泛化能力，减少环境干扰导致的性能下降。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.17328v1",
+      "source": "arxiv",
+      "title": "MS-MFAD : Multimodal large language models for Face Anti-spoofing Detection",
+      "abstract": "Facial biometric recognition systems currently face compound threats intertwining generative AI and high-fidelity physical spoofing. Existing defenses suffer from systemic bottlenecks, including poor generalization, non-auditable reasoning, and reliance on massive, low-quality datasets. To address these challenges, we propose Multimodal Large Language Models (MFAD) for face anti-spoofing detection, an explainable reasoning system for Unified Face Anti-Spoofing Detection (UFAD), accompanied by a semantic-level annotation benchmark. Unlike methods relying on external tools or coarse alignment, MFAD activates the intrinsic reasoning capabilities of Multimodal Large Language Models (MLLMs) via a fine-grained pixel-semantic anchoring mechanism. This eliminates localization hallucinations and ensures auditable reasoning paths. We introduce a cross-attack semantic-level unified annotation paradigm: by annotating only 1,000 precise masks per attack category, we generate reasoning evidence chains strictly corresponding to spoofed regions. Supervised fine-tuning on the Qwen-VL foundation model demonstrates that, using limited high-quality samples, the system achieves a 40-50% relative reduction in in-domain ACER and restricts cross-domain performance degradation to within 11.62%/5.23%, significantly outperforming existing frameworks. Furthermore, under white-box adversarial attacks, detection accuracy drops by only 3.2%, validating the robustness of semantic anchoring compared to models trained on massive short-text data. Domain practitioners rated the evidence reliability of reasoning paths at 4.57/5, with inference latency satisfying real-time deployment requirements. These results confirm that a few-shot, high-quality semantic annotation paradigm is effective for building trustworthy, explainable, and cost-efficient UFAD systems.",
+      "authors": [
+        "Xiaoyong Yu",
+        "Rongzhen Li",
+        "Shuming Shi",
+        "Xinge You"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-18T03:38:59+00:00",
+      "link": "https://arxiv.org/pdf/2608.17328v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Face anti-spoofing detection addresses generative AI threats and high-fidelity physical spoofing",
+      "llm_evidence_cn": "人脸反欺骗检测应对生成式AI威胁和高保真物理欺骗",
+      "llm_evidence": "人脸反欺骗检测应对生成式AI威胁和高保真物理欺骗",
+      "canonical_evidence": "人脸反欺骗检测应对生成式AI威胁和高保真物理欺骗",
+      "llm_tldr_en": "The paper proposes a multimodal large language model for face anti-spoofing detection, providing explainable reasoning and addressing compound threats including generative AI.",
+      "llm_tldr_cn": "人脸反欺骗检测面临泛化差、不可审计和依赖低质量数据集等问题，本文提出基于多模态大语言模型的解释性推理系统MFAD，通过细粒度像素-语义锚定机制激活模型内在推理能力，应对生成式AI与物理欺骗的复合威胁，并在语义级标注基准上验证了有效性。",
+      "llm_tldr": "人脸反欺骗检测面临泛化差、不可审计和依赖低质量数据集等问题，本文提出基于多模态大语言模型的解释性推理系统MFAD，通过细粒度像素-语义锚定机制激活模型内在推理能力，应对生成式AI与物理欺骗的复合威胁，并在语义级标注基准上验证了有效性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.17351v1",
+      "source": "arxiv",
+      "title": "Primitive-Driven Compositional Forensic Visual Prompting for Open-World Face Anti-Spoofing",
+      "abstract": "Open-world face anti-spoofing must address both covariate and semantic shifts: source and target domains differ in imaging conditions, while target domains contain diverse attack types absent from training. Existing prompt-based approaches often express spoofing through category semantics or language guidance, which is effective for modeling high-level concepts but is less suited to explicitly capturing the evolving fine-grained and spatially heterogeneous forensic evidence of unseen attacks. Motivated by the hypothesis that many unseen attacks can be characterized by new combinations of recurring visual cues, we propose a compositional forensic visual prompt learning framework that operates entirely in the visual feature space.Built on a frozen ViT-based vision foundation model, the framework employs patch-aware attention to refine a shared set of learnable micro-forensic primitives into localized forensic evidence units derived from image patches. Class-specific global contextual prompts then provide input-dependent routing weights that adaptively select and compose these primitives into compositional forensic visual prompts for real/spoof discrimination. The primitives are not assigned predefined semantic meanings; instead, their specialization and reuse emerge from shared parameterization and joint optimization across categories.Extensive experiments on nine open-world protocols demonstrate state-of-the-art performance, strong cross-domain generalization, and robust adaptation to unseen attacks.",
+      "authors": [
+        "Fangling Jiang",
+        "Qi Li",
+        "Bing Liu",
+        "Weining Wang",
+        "Quilin Huang",
+        "Zhenan Sun",
+        "Ming-Hsuan Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-18T04:18:08+00:00",
+      "link": "https://arxiv.org/pdf/2608.17351v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Open-world face anti-spoofing via compositional forensic visual prompting",
+      "llm_evidence_cn": "开放世界人脸反欺骗的组合取证视觉提示方法",
+      "llm_evidence": "开放世界人脸反欺骗的组合取证视觉提示方法",
+      "canonical_evidence": "开放世界人脸反欺骗的组合取证视觉提示方法",
+      "llm_tldr_en": "This paper proposes a compositional forensic visual prompt learning framework for open-world face anti-spoofing, operating entirely in visual feature space to capture fine-grained forensic cues of unseen attacks.",
+      "llm_tldr_cn": "针对开放世界人脸反欺骗中协变量偏移和语义偏移问题，提出在视觉特征空间内构建组合式取证视觉提示学习框架，通过组合重复出现的视觉线索来表征未知攻击。实验凸显其捕获细粒度取证证据的能力，有望提升对未知攻击的泛化性能。",
+      "llm_tldr": "针对开放世界人脸反欺骗中协变量偏移和语义偏移问题，提出在视觉特征空间内构建组合式取证视觉提示学习框架，通过组合重复出现的视觉线索来表征未知攻击。实验凸显其捕获细粒度取证证据的能力，有望提升对未知攻击的泛化性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}
