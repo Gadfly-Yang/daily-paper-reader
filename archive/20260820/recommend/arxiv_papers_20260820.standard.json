@@ -1,0 +1,175 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-20T20:55:27.127877+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2608.18523v1",
+      "source": "arxiv",
+      "title": "Prior-Conditioned Gaussian Discriminants for Generalizable AI-generated Image Detection",
+      "abstract": "Diffusion-based generators have made synthetic images ubiquitous, but detectors often fail under simultaneous shifts in generator, prompt/style, and source-domain. We study AI-generated image detection as a transfer system described by training prior, frozen encoder feature space, and decision rule, and ask when classifier head training adds value beyond what is already separable in modern features. As a controlled diagnostic, we fit a prior-conditioned Gaussian discriminant ladder: closed-form heads built from first- and second-order feature statistics under nested covariance assumptions. On Percept-Lens, a unified protocol over 39 public datasets (7.1 million images), the best rung is frequently competitive with, and sometimes exceeds, released AI-generated image detector heads when matched on both prior and encoder. We further quantify strong sensitivity to the training prior, data-efficiency of moment-based heads, and representation dependence of Gaussian shift metrics, motivating (prior, encoder, head)-level reporting and stronger analytical baselines for AIGI transfer.",
+      "authors": [
+        "Shashank Kotyan",
+        "Makoto Shing",
+        "Yuki Imajuku",
+        "Rujikorn Charakorn",
+        "Tarin Clanuwat"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-19T04:17:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.18523v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "studies generalizable AI-generated image detection under shifts",
+      "llm_evidence_cn": "研究跨域泛化的AI生成图像检测",
+      "llm_evidence": "研究跨域泛化的AI生成图像检测",
+      "canonical_evidence": "研究跨域泛化的AI生成图像检测",
+      "llm_tldr_en": "Diffusion-based generators make synthetic images ubiquitous, but detectors often fail under generator and domain shifts. This paper studies AI-generated image detection as a transfer system and fits prior-conditioned Gaussian discriminants. On a large unified protocol, closed-form heads are often competitive with learned classifiers.",
+      "llm_tldr_cn": "针对AI生成图像检测在生成器、提示和源域联合偏移下性能下降的问题，本文将检测视为迁移系统，提出先验条件高斯判别阶梯，利用特征一阶和二阶统计量构建闭式分类头。在包含39个数据集的大规模基准上，最佳阶梯经常与甚至超过训练分类头，揭示了现代特征中的可分离性。",
+      "llm_tldr": "针对AI生成图像检测在生成器、提示和源域联合偏移下性能下降的问题，本文将检测视为迁移系统，提出先验条件高斯判别阶梯，利用特征一阶和二阶统计量构建闭式分类头。在包含39个数据集的大规模基准上，最佳阶梯经常与甚至超过训练分类头，揭示了现代特征中的可分离性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.18573v1",
+      "source": "arxiv",
+      "title": "PATE-Forensics: Perception-as-Tool for Explainable Deepfake Forensics with General-Purpose MLLMs",
+      "abstract": "Existing explainable deepfake forensic methods typically rely on task-adapted MLLM to jointly address detection, localization, and explanation. Inspired by agent-style tool use, we instead introduce a Perception-as-Tool paradigm and instantiate it as PATE-Forensics, which architecturally decouples detection and localization from explanation generation while coupling detection and localization as tightly as possible within a forensic perception tool. The DINOv3-based tool couples a multi-granularity detection module that integrates global, patch-level, and segment-level evidence with a cue-guided localization module by spatializing the patch-level and segment-level evidence into forgery score maps that guide dense mask prediction. The original image and forensic perception outputs produced by the tool form structured forensic context for a general-purpose MLLM, which is guided by prompt constraints to generate explanations without task-specific fine-tuning. On DDL-X Track 3, PATE-Forensics achieves the best official score of 0.89, outperforming the second-ranked team by 0.19 points. Our code is available at https://github.com/yqli00000/PATE-Forensics.",
+      "authors": [
+        "Yaqi Li",
+        "Jielun Peng",
+        "Yabin Wang",
+        "Jincheng Liu",
+        "Xiaopeng Hong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-19T06:10:00+00:00",
+      "link": "https://arxiv.org/pdf/2608.18573v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "explainable deepfake forensics with perception-as-tool",
+      "llm_evidence_cn": "感知即工具的可解释深度伪造取证",
+      "llm_evidence": "感知即工具的可解释深度伪造取证",
+      "canonical_evidence": "感知即工具的可解释深度伪造取证",
+      "llm_tldr_en": "Decouples detection/localization from explanation using DINOv3-based forensic perception tool and general-purpose MLLM for deepfake forensics.",
+      "llm_tldr_cn": "本文针对现有深度伪造取证方法中检测与解释耦合紧密的问题，提出感知即工具范式。利用基于DINOv3的取证感知工具进行多粒度检测和定位，再由通用多模态大模型生成解释。实验表明该架构在检测、定位和解释上均表现优异。",
+      "llm_tldr": "本文针对现有深度伪造取证方法中检测与解释耦合紧密的问题，提出感知即工具范式。利用基于DINOv3的取证感知工具进行多粒度检测和定位，再由通用多模态大模型生成解释。实验表明该架构在检测、定位和解释上均表现优异。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.18907v1",
+      "source": "arxiv",
+      "title": "Learning-State-Aware Dynamic Generative Data Augmentation on Small-Scale Datasets",
+      "abstract": "Small-scale image classification is often limited by the scarcity of training data. Generative data augmentation (GDA) based on pretrained generative models has emerged as an effective solution. However, existing methods rely on task-agnostic augmentation strategies that overlook downstream model needs. Although recent dynamic GDA methods incorporate model feedback to guide augmentation, they still struggle to reliably determine sample-specific augmentation strengths and adapt augmentation strategies to different image regions while balancing image diversity and class semantics.   To address these issues, we propose learning-state-aware dynamic generative data augmentation (LSADA). Specifically, LSADA constructs a learning state for each sample based on its current loss and loss-decrease rate, which is then mapped to a sample-specific augmentation strength. Furthermore, LSADA introduces a decoupled data augmentation and diffusion fusion strategy that applies strength-controlled transformations to class-relevant regions and generates diverse class-irrelevant regions, progressively fusing them to improve image diversity while preserving class semantics. Experiments on nine public datasets show that LSADA outperforms the existing SOTA dynamic GDA method by an average of 4.5% on six natural image datasets and 2.5% on three medical image datasets.",
+      "authors": [
+        "Ting Xiang",
+        "Chenxi Deng",
+        "Jinhui Zhao",
+        "Bingting Jiang",
+        "Ke Zhang",
+        "Changjian Chen",
+        "Zhuo Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-19T13:31:21+00:00",
+      "link": "https://arxiv.org/pdf/2608.18907v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "generative data augmentation for small-scale image classification to address data scarcity",
+      "llm_evidence_cn": "小规模图像分类的生成式数据增强以解决数据稀缺",
+      "llm_evidence": "小规模图像分类的生成式数据增强以解决数据稀缺",
+      "canonical_evidence": "小规模图像分类的生成式数据增强以解决数据稀缺",
+      "llm_tldr_en": "Proposes learning-state-aware dynamic generative data augmentation (LSADA) to improve small-scale image classification by adapting augmentation to model needs, addressing data scarcity.",
+      "llm_tldr_cn": "小规模图像分类常受训练数据稀缺限制，现有生成式数据增强策略无法根据下游模型需求动态调整。本文提出学习状态感知的动态生成式数据增强方法LSADA，构建每个样本的学习状态，以样本特定强度自适应增强不同图像区域，平衡多样性与类别语义。实验表明该方法能有效提升小数据集上的分类性能，为少样本场景提供了一种灵活的增强手段。",
+      "llm_tldr": "小规模图像分类常受训练数据稀缺限制，现有生成式数据增强策略无法根据下游模型需求动态调整。本文提出学习状态感知的动态生成式数据增强方法LSADA，构建每个样本的学习状态，以样本特定强度自适应增强不同图像区域，平衡多样性与类别语义。实验表明该方法能有效提升小数据集上的分类性能，为少样本场景提供了一种灵活的增强手段。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.18755v1",
+      "source": "arxiv",
+      "title": "SED-FOD: Scattering-Aware Expert Decomposition for Few-Shot Cross-Sensor SAR Object Detection",
+      "abstract": "Synthetic aperture radar (SAR) object detection is an important part of remote sensing interpretation. However, because of variations in frequency band, resolution, background clutter, and target scattering responses, the performance of existing detectors often degrades when training and testing data are acquired from different SAR domains. Although domain adaptation methods offer a promising paradigm for solving this problem, most of them mainly pursue domain-invariant feature alignment and suppress sensor-dependent scattering characteristics that are useful for object detection. This problem becomes more challenging in few-shot scenarios, where only a few fully annotated target-domain SAR images are available. To address this issue, we propose a scattering-aware shared-specific feature decomposition framework for few-shot SAR domain adaptation object detection. We decompose detection features into a shared path and several soft-gated scattering-specific expert paths. The shared path learns transferable object structural information and is used for asymmetric domain alignment, while the scattering-specific experts adaptively compensate heterogeneous SAR responses. In addition, routing-domain auxiliary loss is introduced to encourage specific experts to capture sensor-dependent routing preferences, and an expert balancing loss is used to prevent routing collapse. Extensive experiments on four bidirectional heterogeneous SAR detection tasks between FARAD-X/FARAD-Ka and MiniSAR under different few-shot settings have been conducted and experimental results demonstrate that the proposed method achieves superior performance in both forward and reverse adaptation directions.",
+      "authors": [
+        "Shu Yang",
+        "Zhen Chen",
+        "Zhiyu Jiang",
+        "Yanlei Li",
+        "Xingdong Liang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-19T10:02:30+00:00",
+      "link": "https://arxiv.org/pdf/2608.18755v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "few-shot cross-sensor SAR object detection with domain adaptation and feature alignment",
+      "llm_evidence_cn": "少样本跨传感器SAR目标检测中的域自适应与特征对齐",
+      "llm_evidence": "少样本跨传感器SAR目标检测中的域自适应与特征对齐",
+      "canonical_evidence": "少样本跨传感器SAR目标检测中的域自适应与特征对齐",
+      "llm_tldr_en": "The paper addresses few-shot cross-sensor SAR object detection by proposing scattering-aware expert decomposition, which preserves useful domain-specific scattering features while aligning features across sensors.",
+      "llm_tldr_cn": "少样本跨传感器SAR目标检测面临域差异大、标注样本稀缺的挑战，现有域自适应方法常抑制对检测有用的散射特征。本文提出散射感知专家分解方法SED-FOD，通过分解专家网络保留传感器特有的散射响应，同时实现跨域特征对齐。在少量目标域标注数据条件下，该方法有效提升了跨传感器检测性能，为少样本检测提供了新思路。",
+      "llm_tldr": "少样本跨传感器SAR目标检测面临域差异大、标注样本稀缺的挑战，现有域自适应方法常抑制对检测有用的散射特征。本文提出散射感知专家分解方法SED-FOD，通过分解专家网络保留传感器特有的散射响应，同时实现跨域特征对齐。在少量目标域标注数据条件下，该方法有效提升了跨传感器检测性能，为少样本检测提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
