@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-08-22 <!--dpr-date:20260822-->
+    * 精读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/22/2608.16259v1-defake-o3-from-speculative-rationales-to-verifiable-evidence-for-explainable-aigi-detection" data-sidebar-item="{&quot;title&quot;: &quot;Defake-o3: From Speculative Rationales to Verifiable Evidence for Explainable AIGI Detection&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.16259v1-defake-o3-from-speculative-rationales-to-verifiable-evidence-for-explainable-aigi-detection&quot;, &quot;score&quot;: &quot;9.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;可验证证据的可解释AI生成图像检测&quot;}">Defake-o3: From Speculative Rationales to Verifiable Evidence for Explainable AIGI Detection</a>
   * 2026-08-20 <!--dpr-date:20260820-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/20/2608.18523v1-prior-conditioned-gaussian-discriminants-for-generalizable-ai-generated-image-detection" data-sidebar-item="{&quot;title&quot;: &quot;Prior-Conditioned Gaussian Discriminants for Generalizable AI-generated Image Detection&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.18523v1-prior-conditioned-gaussian-discriminants-for-generalizable-ai-generated-image-detection&quot;, &quot;score&quot;: &quot;10.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;deepfake-fsl&quot;}], &quot;evidence&quot;: &quot;研究跨域泛化的AI生成图像检测&quot;}">Prior-Conditioned Gaussian Discriminants for Generalizable AI-generated Image Detection</a>

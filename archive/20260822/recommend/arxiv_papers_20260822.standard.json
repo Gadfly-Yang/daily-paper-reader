@@ -1,0 +1,56 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-22T20:28:28.010801+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2608.16259v1",
+      "source": "arxiv",
+      "title": "Defake-o3: From Speculative Rationales to Verifiable Evidence for Explainable AIGI Detection",
+      "abstract": "The rapid progress of image generation models calls for AI-generated image (AIGI) detectors that are not only accurate but also explainable and reliable. While MLLM-based detectors can provide natural language explanations, existing methods often generate speculative rationales: they rely on vague or hallucinated artifacts, miss subtle localized flaws from the latest generators, and fail to provide evidence that can be visually verified. We present Defake-o3, an explainable AIGI detector that moves from speculative rationales to verifiable evidence. It combines interactive visual search with verifier-guided evidence alignment: the model iteratively zooms into suspicious regions to inspect fine-grained details, while an Evidence Verifier, trained from human verification annotations, provides reinforcement learning rewards that favor grounded evidence and penalize baseless claims. To support this objective, we construct GroundFake, a dataset designed for grounded explainable detection, with localized bounding-box evidence, human verification based on visual grounding and artifact specificity, corrected reasoning trajectories, and valid/invalid evidence supervision. We further introduce FakeFrontier, an out-of-distribution benchmark built from real images and outputs of 10 recent generators, together with an MLLM-based protocol for evaluating evidence quality and persuasiveness. Experiments on GroundFake, FakeFrontier, and additional out-of-distribution benchmarks show that Defake-o3 improves both detection accuracy and explanation quality, producing more localized, verifiable, and persuasive evidence.",
+      "authors": [
+        "Bowen Deng",
+        "Jiahui Zhan",
+        "Yikun Ji",
+        "Haozhen Yan",
+        "Jianfu Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-17T08:30:32+00:00",
+      "link": "https://arxiv.org/pdf/2608.16259v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "explainable AI-generated image detection with verifiable evidence",
+      "llm_evidence_cn": "可验证证据的可解释AI生成图像检测",
+      "llm_evidence": "可验证证据的可解释AI生成图像检测",
+      "canonical_evidence": "可验证证据的可解释AI生成图像检测",
+      "llm_tldr_en": "This paper addresses the lack of explainability and reliability in AI-generated image detectors by moving from speculative rationales to verifiable evidence through interactive visual search and verifier-guided evidence alignment.",
+      "llm_tldr_cn": "针对现有AI生成图像检测器可解释性不足、常产生推测性理由的问题，本文提出Defake-o3，通过交互式视觉搜索和验证器引导的证据对齐，使检测过程能够生成可视觉验证的证据。实验表明该方法能定位细微局部缺陷，提高检测准确性和可靠性。该工作为可解释AIGI检测提供了新方向。",
+      "llm_tldr": "针对现有AI生成图像检测器可解释性不足、常产生推测性理由的问题，本文提出Defake-o3，通过交互式视觉搜索和验证器引导的证据对齐，使检测过程能够生成可视觉验证的证据。实验表明该方法能定位细微局部缺陷，提高检测准确性和可靠性。该工作为可解释AIGI检测提供了新方向。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}
