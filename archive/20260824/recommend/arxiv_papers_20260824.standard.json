@@ -1,0 +1,251 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-24T20:34:42.126070+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2608.20882v1",
+      "source": "arxiv",
+      "title": "LoRC: Detecting AI-Generated Images via Low-Rank Collapse in Semantic Residuals",
+      "abstract": "Modern generators faithfully model macroscopic semantics, producing synthetic images that appear highly realistic. Consequently, decisive forensic cues reside in subtle non-semantic visual discrepancies. To reveal these cues, we revisit AIGI detection from a geometric perspective and identify an architecture-agnostic signature. Specifically, modern generators exhibit low-rank collapse (\\textit{i.e.}, rank degeneracy) in the semantic-residual orthogonal subspace while largely preserving the dominant semantic direction. This structural flattening consistently emerges during the final decoding stage, forming a shared bottleneck across diverse generator architectures. Motivated by this signature, we propose \\textbf{LoRC}, a framework that decouples semantic dominance to capture the collapsed residual geometry induced by the generative decoding bottleneck. Our method improves accuracy by an average of 7.0\\% across multiple benchmarks and achieves 97.0\\% accuracy on 39 unseen generators. These results demonstrate strong cross-model generalization and robustness, making LoRC a reliable approach for AIGI detection in complex real-world environments.",
+      "authors": [
+        "Haozhen Yan",
+        "Ruoxin Chen",
+        "Jiahui Zhan",
+        "Bo Wang",
+        "Youchang Xiao",
+        "Shouhong Ding",
+        "Liqing Zhang",
+        "Taiping Yao",
+        "Jianfu Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-21T08:58:47+00:00",
+      "link": "https://arxiv.org/pdf/2608.20882v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Detecting AI-generated images via low-rank collapse in semantic residuals",
+      "llm_evidence_cn": "基于语义残差低秩坍缩检测AI生成图像",
+      "llm_evidence": "基于语义残差低秩坍缩检测AI生成图像",
+      "canonical_evidence": "基于语义残差低秩坍缩检测AI生成图像",
+      "llm_tldr_en": "The paper reveals an architecture-agnostic signature of modern generators: low-rank collapse in the semantic-residual orthogonal subspace. It proposes LoRC framework that decouples semantic and residual features to detect AIGI. This approach effectively distinguishes computer-generated images from real photographs, addressing AI-generated image detection.",
+      "llm_tldr_cn": "该文从几何视角重新审视AI生成图像检测，发现现代生成器在语义残差正交子空间中表现出低秩坍缩现象，且该特征在多种架构中普遍存在。据此提出LoRC框架，通过解耦语义特征与残差特征来捕捉这一签名。实验表明LoRC能有效区分生成图像与真实照片，为通用AI生成图像检测提供了新思路。",
+      "llm_tldr": "该文从几何视角重新审视AI生成图像检测，发现现代生成器在语义残差正交子空间中表现出低秩坍缩现象，且该特征在多种架构中普遍存在。据此提出LoRC框架，通过解耦语义特征与残差特征来捕捉这一签名。实验表明LoRC能有效区分生成图像与真实照片，为通用AI生成图像检测提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.20770v1",
+      "source": "arxiv",
+      "title": "MotionPhys: Detecting AI-Generated Videos via Physical Consistency of Optical-Flow Trajectories",
+      "abstract": "Modern AI video generation models can produce videos with high visual fidelity and seemingly smooth temporal transitions. However, visual realism does not necessarily imply physical motion consistency. Existing generative models mainly optimize distribution matching in pixel or latent spaces, without explicitly enforcing real-world constraints such as inertia, continuous forces, and trajectory geometry. Our experiments show that AI-generated videos remain visually plausible over short sequences of consecutive frames, yet fail to preserve physical motion consistency throughout a complete object action, resulting in systematic statistical discrepancies in their motion trajectories. Based on this observation, we introduce MotionPhys, a lightweight and interpretable framework that treats sparse motion trajectories as physical evidence rather than relying on appearance artifacts or generator-specific traces. By modeling the geometric evolution of trajectories across multiple temporal scales, MotionPhys reveals subtle motion inconsistencies that are difficult to capture with conventional visual cues and transforms them into a compact representation for efficient detection. Experiments on multiple datasets show that MotionPhys can effectively detect physical inconsistencies in generated videos and generalizes well across different video generators.",
+      "authors": [
+        "Haojin He",
+        "Hao Tan",
+        "Zichang Tan",
+        "Ajian Liu",
+        "Jun Wan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-21T06:29:35+00:00",
+      "link": "https://arxiv.org/pdf/2608.20770v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Detection of AI-generated videos via physical consistency of optical-flow trajectories, targeting deepfake video detection.",
+      "llm_evidence_cn": "通过光流轨迹的物理一致性检测AI生成视频，面向深度伪造视频检测。",
+      "llm_evidence": "通过光流轨迹的物理一致性检测AI生成视频，面向深度伪造视频检测。",
+      "canonical_evidence": "通过光流轨迹的物理一致性检测AI生成视频，面向深度伪造视频检测。",
+      "llm_tldr_en": "The paper proposes detecting AI-generated videos by checking physical motion consistency of optical-flow trajectories, showing that generated videos violate inertia and trajectory geometry.",
+      "llm_tldr_cn": "该论文针对AI生成视频在物理运动一致性上的缺陷，提出利用光流轨迹的物理一致性进行检测。实验表明生成视频在完整物体动作过程中系统地违反惯性等物理约束，统计特征存在异常。该工作为深度伪造视频检测提供了新的物理解释框架。",
+      "llm_tldr": "该论文针对AI生成视频在物理运动一致性上的缺陷，提出利用光流轨迹的物理一致性进行检测。实验表明生成视频在完整物体动作过程中系统地违反惯性等物理约束，统计特征存在异常。该工作为深度伪造视频检测提供了新的物理解释框架。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.20913v1",
+      "source": "arxiv",
+      "title": "Explainable Deepfake Detection with Feature-robust Augmentation and Evidence-grounded Explanation Optimization",
+      "abstract": "Explainable deepfake detection extends binary classification by requiring models to not only predict authenticity but also provide interpretable justifications. This expanded scope is critical in practice, where users like forensic analysts need insight into the rationale behind the detection. Despite advancements, current approaches suffer from two critical deficiencies: (1)vulnerability to image quality degradation: detection accuracy plummets on low-quality samples, while naive augmentation strategies may induce feature drift and impair performance as diversity expands. (2) factually flawed explanations: explanation models may omit manipulation evidence or hallucinate irrelevant details, undermining interpretability. To address it, we propose a framework with two innovations. For robust deepfake detection, we introduce Feature-robust Augmentation, which comprises diversified degradation-aware augmentation strategies, and a supervised contrastive learning pattern paired with a mean-teacher architecture that stabilizes features against augmentations through consistency constraints. For explanation, we devise an evidence-grounded preference optimization process that guides model to prioritize genuine manipulation traces by learning from chosen-rejected explanation pairs, where rejected samples are constructed via evidence omission or irrelevant information injection. The proposed approach wins the first place in ACM Multimedia 2026 Explainable Deepfake Detection Challenge.The code is available at https://github.com/oceanflowlab/EDD.git.",
+      "authors": [
+        "Zhu Xu",
+        "Jiaqi Tang",
+        "Pokai Chen",
+        "Yuxin Peng",
+        "Yang Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-21T09:30:34+00:00",
+      "link": "https://arxiv.org/pdf/2608.20913v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Explainable deepfake detection with feature-robust augmentation and evidence-grounded explanation",
+      "llm_evidence_cn": "可解释深度伪造检测，特征鲁棒增强与证据基础解释优化",
+      "llm_evidence": "可解释深度伪造检测，特征鲁棒增强与证据基础解释优化",
+      "canonical_evidence": "可解释深度伪造检测，特征鲁棒增强与证据基础解释优化",
+      "llm_tldr_en": "This paper tackles explainable deepfake detection, needing to predict authenticity and provide interpretable justifications. It identifies deficiencies: vulnerability to image quality degradation and factually flawed explanations. It proposes feature-robust augmentation and evidence-grounded explanation optimization to improve both accuracy and explanation quality. The approach enhances practical deepfake forensic analysis.",
+      "llm_tldr_cn": "本文针对可解释深度伪造检测任务，要求模型不仅预测真伪还提供可解释的理由。指出现有方法存在图像质量退化导致准确率下降、以及解释可能遗漏伪造证据或产生幻觉等问题。提出特征鲁棒增强与基于证据的解释优化策略，以提升检测鲁棒性和解释的事实准确性。该方法有助于取证分析人员理解检测依据，更适用于实际场景。",
+      "llm_tldr": "本文针对可解释深度伪造检测任务，要求模型不仅预测真伪还提供可解释的理由。指出现有方法存在图像质量退化导致准确率下降、以及解释可能遗漏伪造证据或产生幻觉等问题。提出特征鲁棒增强与基于证据的解释优化策略，以提升检测鲁棒性和解释的事实准确性。该方法有助于取证分析人员理解检测依据，更适用于实际场景。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.20713v1",
+      "source": "arxiv",
+      "title": "AGIDefect-4K: A Richly Annotated Dataset for AI-Generated Image Defect Detection, Localization and Explanation",
+      "abstract": "Generative AI can now produce highly realistic images, yet current models still exhibit subtle but critical defects that undermine their reliability. While existing AI-generated image (AGI) evaluation benchmarks have made notable progress, comprehensive AGI defect diagnosis remains underexplored. To bridge this gap, we introduce AGIDefect-4K, a richly annotated dataset of 4,000 images from 15 state-of-the-art generative models spanning both open-source and closed-source systems. AGIDefect-4K features hierarchical defect annotations: (1) detection labels identifying whether defects exist, (2) pixel-level segmentation masks localizing defective regions, and (3) detailed textual explanations characterizing defect types and their perceptual impact. Each image is further annotated with an overall quality score. Building on this, we present AGIDA (AGI Defect Assistant), a baseline framework leveraging Multimodal Large Language Models (MLLMs) for joint defect detection, localization, explanation, and quality prediction. Comprehensive benchmarking on AGIDefect-4K reveals that AGI defect understanding remains challenging, underscoring the value of this dataset. The dataset is publicly available at https://github.com/sxfly99/AGIDefect-4K.",
+      "authors": [
+        "Xiangfei Sheng",
+        "Weidong Zou",
+        "Tianjiao Gu",
+        "Zhichao Yang",
+        "Pengfei Chen",
+        "Leida Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-21T03:40:20+00:00",
+      "link": "https://arxiv.org/pdf/2608.20713v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "dataset for AI-generated image defect detection, localization, explanation",
+      "llm_evidence_cn": "用于AI生成图像缺陷检测、定位与解释的数据集",
+      "llm_evidence": "用于AI生成图像缺陷检测、定位与解释的数据集",
+      "canonical_evidence": "用于AI生成图像缺陷检测、定位与解释的数据集",
+      "llm_tldr_en": "The paper introduces AGIDefect-4K, a dataset of 4,000 AI-generated images from 15 models with hierarchical annotations for defect detection, localization, and explanation. It addresses the lack of comprehensive defect diagnosis in existing benchmarks. The dataset enables training and evaluation of methods to identify subtle defects in generative AI images, supporting reliability assessment.",
+      "llm_tldr_cn": "针对现有AI生成图像基准缺乏全面缺陷诊断的问题，本文构建了AGIDefect-4K数据集，包含来自15个生成模型的4000张图像，提供检测标签、像素级分割掩码和文本解释等分层标注。该数据集支持对生成图像细微缺陷的检测、定位与解释，为评估生成式AI的可靠性提供了新基准。",
+      "llm_tldr": "针对现有AI生成图像基准缺乏全面缺陷诊断的问题，本文构建了AGIDefect-4K数据集，包含来自15个生成模型的4000张图像，提供检测标签、像素级分割掩码和文本解释等分层标注。该数据集支持对生成图像细微缺陷的检测、定位与解释，为评估生成式AI的可靠性提供了新基准。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.20929v1",
+      "source": "arxiv",
+      "title": "GAP-SAM: A Global Artifact Prior for Generalizable AI-Generated Image Manipulation Localization",
+      "abstract": "AI-generated image manipulation localization identifies edited pixels, but its OOD performance lags behind image-level detection partly because pixel supervision entangles forensic evidence with dataset-specific mask geometry and semantic boundaries. Extending image-level distribution alignment to localization, we construct COCO-ControlNet with source-image Canny edges and depth maps to align semantics and geometry, improving OOD performance across multiple localizers. Yet tighter Mask-VAE Reconstruction Alignment (Mask-VAE) underperforms COCO-ControlNet, showing that VAE reconstruction artifacts transfer poorly to local diffusion-inpainting artifacts. We also identify \\emph{boundary adhesion}, where fine-tuned segmentation models snap predictions to semantic object contours rather than true manipulation boundaries. These findings motivate GAP-SAM, which encodes an image and its frozen VAE reconstruction into a global artifact token and injects it into SAM3's feature pyramid via zero-gated FiLM before pixel decoding. Without prescribing a spatial region, this token modulates dense decoding to preserve localization while suppressing semantic-boundary shortcuts. Across six datasets, GAP-SAM averages 79.8 Pixel-F1, outperforming the strongest prior method by 12.6 points. It also performs best at every tested severity of JPEG compression, Gaussian blur, and resizing.",
+      "authors": [
+        "Haozhen Yan",
+        "Siyuan Shan",
+        "Zijian Yu",
+        "Youqi Wang",
+        "Yan Hong",
+        "Jun Lan",
+        "Jianfu Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-21T09:49:58+00:00",
+      "link": "https://arxiv.org/pdf/2608.20929v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Addresses OOD generalization for AI-generated image manipulation localization, aligning semantics and geometry for cross-domain robustness.",
+      "llm_evidence_cn": "针对AI生成图像篡改定位的跨域泛化，对齐语义与几何以提升OOD鲁棒性。",
+      "llm_evidence": "针对AI生成图像篡改定位的跨域泛化，对齐语义与几何以提升OOD鲁棒性。",
+      "canonical_evidence": "针对AI生成图像篡改定位的跨域泛化，对齐语义与几何以提升OOD鲁棒性。",
+      "llm_tldr_en": "The paper tackles poor out-of-distribution performance in AI-generated image manipulation localization by aligning source-image Canny edges and depth maps to improve OOD robustness, and identifies boundary adhesion as a limitation.",
+      "llm_tldr_cn": "该论文解决AI生成图像篡改定位在跨域场景下泛化性差的问题，通过构造COCO-ControlNet利用Canny边缘和深度图对齐语义与几何以提升OOD性能。实验表明该方法优于Mask-VAE重建对齐，并发现细粒度分割中的边界粘连现象。该工作为通用AI生成图像取证定位提供了新的数据对齐策略。",
+      "llm_tldr": "该论文解决AI生成图像篡改定位在跨域场景下泛化性差的问题，通过构造COCO-ControlNet利用Canny边缘和深度图对齐语义与几何以提升OOD性能。实验表明该方法优于Mask-VAE重建对齐，并发现细粒度分割中的边界粘连现象。该工作为通用AI生成图像取证定位提供了新的数据对齐策略。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "cross domain generalization for AI generated image detection",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.20558v1",
+      "source": "arxiv",
+      "title": "Zero-Shot Color Image Manipulation Localization via Noise Residual Artifact Pattern Analysis",
+      "abstract": "Digital cameras embed device-specific artifacts into every acquired image through demosaicing, in-camera post-processing, and lossy compression. These traces constitute a forensic signal that can be exploited to assess image authenticity. Existing passive methods rely predominantly on the green channel of the Bayer residual, discarding the correlated information available in the remaining color channels and typically requiring training data or device enrollment. This work proposes a zero-shot, training-free blind image manipulation localization pipeline that estimates a reference artifact pattern directly from the noise residual of a single suspect image, without assuming a fixed filter configuration, color layout, or block period. The pipeline incorporates a principled denoiser selection criterion based on the acquired-to-interpolated noise variance ratio, a block-level correlation analysis against the estimated reference pattern, and a two-component Gaussian Mixture Model scoring stage that produces a pixel-level tampering probability map. An ablation study evaluates the impact of denoiser choice and block size on localization accuracy, and comparisons against state-of-the-art passive methods demonstrate the competitiveness of the proposed zero-shot approach.",
+      "authors": [
+        "Edgar Gonzalez-Fernandez"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-20T20:37:21+00:00",
+      "link": "https://arxiv.org/pdf/2608.20558v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "zero-shot manipulation localization for image forensics",
+      "llm_evidence_cn": "零样本图像篡改定位用于多媒体取证",
+      "llm_evidence": "零样本图像篡改定位用于多媒体取证",
+      "canonical_evidence": "零样本图像篡改定位用于多媒体取证",
+      "llm_tldr_en": "The paper addresses limitations of existing image manipulation localization that rely on green channel and require training data. It proposes a zero-shot, training-free pipeline that estimates reference artifact patterns directly from noise residuals of a single suspect image, using all color channels. Experiments demonstrate effective manipulation localization without device enrollment, providing a practical forensic tool for image authenticity assessment.",
+      "llm_tldr_cn": "针对现有图像篡改定位依赖绿色通道且需训练数据的问题，本文提出一种零样本、免训练的盲定位流水线，直接利用单张可疑图像噪声残差估计参考伪影模式，无需假定固定滤波配置。实验表明该方法能有效定位篡改区域，为图像取证提供了设备无关的实用工具。",
+      "llm_tldr": "针对现有图像篡改定位依赖绿色通道且需训练数据的问题，本文提出一种零样本、免训练的盲定位流水线，直接利用单张可疑图像噪声残差估计参考伪影模式，无需假定固定滤波配置。实验表明该方法能有效定位篡改区域，为图像取证提供了设备无关的实用工具。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
