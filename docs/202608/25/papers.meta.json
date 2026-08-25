@@ -1,0 +1,39 @@
+{
+  "label": "2026-08-25",
+  "date": "2026-08-25",
+  "generated_at": "2026-08-25T21:03:55",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202608/25/2608.23363v1-df-moe-generalizable-deepfake-detection-via-multimodal-sparse-mixture-of-experts",
+      "section": "deep",
+      "title_en": "DF-MoE: Generalizable Deepfake Detection via Multimodal Sparse Mixture-of-Experts",
+      "authors": "Vlad Hondru, Florinel Alin Croitoru, Iuliana Georgescu, A. Sophia Koepke, Radu Tudor Ionescu",
+      "date": "2026-08-24",
+      "pdf": "https://arxiv.org/pdf/2608.23363v1",
+      "score": "9.0",
+      "evidence": "音频-视觉深度伪造检测，多模态线索与跨域泛化",
+      "tldr": "音视频深度伪造检测面临跨生成方法泛化挑战，易过拟合。DF-MoE利用多种预训练模型提取嘴部运动、面部解析、表情、头部姿态、视线、心率、音频情感和语音活动等多模态线索，并通过稀疏Mixture-of-Experts骨干融合单模态与多模态特征。在五个基准的域内与跨域实验中均超越所有现有方法。代码已开源，为通用深度伪造检测提供高效方案。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Audio-visual deepfake detection is an actively studied topic, where one of the main challenges is to develop detectors able to generalize across deepfake generation methods. We conjecture that overfitting can be mitigated by extracting multiple high-level cues from the available audio and visual modalities via pre-trained models. We therefore assemble a wide variety of pre-trained models to extract features that encode mouth movements, face parsing, facial expressions, head pose, gaze tracking, heart rate, audio emotion and speech activity. We further integrate both unimodal and multimodal cues via a Mixture-of-Experts (MoE) backbone to detect deepfakes. We perform in-domain and cross-domain experiments on five benchmarks for deepfake detection (MAVOS-DD, AVLips, PolyGlotFake, BioDeepAV, FakeAVCeleb) to compare our framework (DF-MoE) with state-of-the-art methods. Our results indicate that DF-MoE obtains superior deepfake detection results, surpassing all competing methods. We release our code at https://github.com/vladhondru25/DF-MoE.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/25/2608.21455v1-tomatoes-potatoes-and-onions-questioning-the-need-for-faces-in-face-presentation-attack-detection",
+      "section": "quick",
+      "title_en": "Tomatoes, Potatoes, and Onions: Questioning the Need for Faces in Face Presentation Attack Detection",
+      "authors": "Guray Ozgur, Fadi Boutros, Naser Damer",
+      "date": "2026-08-20",
+      "pdf": "https://arxiv.org/pdf/2608.21455v1",
+      "score": "6.0",
+      "evidence": "人脸呈现攻击检测是多媒体取证中的人脸操纵检测任务。",
+      "tldr": "人脸呈现攻击检测是保障人脸识别安全的关键环节，但传统方法假设攻击痕迹与人脸特征绑定。实际上，打印、重放等伪造痕迹往往与面部内容无关。为此，本研究构建无脸TPO数据集，用西红柿、土豆、洋葱模拟真实PAD协议，训练基础模型检测器。该检测器在四个跨数据集人脸PAD基准上平均AUC达92.70%，优于合成人脸并与真实人脸训练相当，证明可迁移呈现攻击表示可独立于人脸学习，为隐私保护PAD提供新途径。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Face presentation attack detection (PAD) is traditionally formulated as a face-specific problem, although many of the visual artifacts introduced by print, replay, and recapture processes are not inherently tied to facial appearance. In this work, we investigate whether transferable PAD representations can be learned without using faces during downstream PAD training. To this end, we introduce TPO, a controlled face-free presentation attack dataset consisting of bona fide, print, and replay recordings of, almost randomly chosen, tomatoes, potatoes, and onions acquired under protocols that closely mirror conventional face PAD datasets. Using a foundation-model-based PAD architecture, we demonstrate that a detector trained on TPO achieves an average AUC of 92.70% across four standard cross-dataset face PAD benchmarks, outperforming training on synthetic faces and remaining competitive with models trained on real face datasets. Conversely, models trained on face PAD datasets transfer consistently above chance to TPO, suggesting that the learned representations capture characteristics of the presentation process rather than object semantics. Furthermore, incorporating TPO into conventional face PAD training consistently improves cross-dataset performance under fixed optimization budgets, indicating that face-free data provides complementary information rather than simply additional training samples. Finally, representation and frequency analyses provide further evidence that transferable PAD representations cannot be explained by a single spectral artifact but instead encode richer presentation cues shared across object categories. Together, these results provide empirical evidence that transferable presentation attack representations can be learned independently of facial content, opening new opportunities for privacy-preserving and identity-independent PAD development.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
