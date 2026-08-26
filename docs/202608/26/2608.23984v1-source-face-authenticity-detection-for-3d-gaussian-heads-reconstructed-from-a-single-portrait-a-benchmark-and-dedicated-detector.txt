@@ -1,0 +1,414 @@
+Title: Source-Face Authenticity Detection for 3D Gaussian Heads Reconstructed from a Single Portrait: A Benchmark and Dedicated Detector
+
+URL Source: https://arxiv.org/pdf/2608.23984v1
+
+Published Time: Wed, 26 Aug 2026 00:26:41 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# Source-Face Authenticity Detection for 3D Gaussian Heads Reconstructed from a Single Portrait: A Benchmark and Dedicated Detector 
+
+## Yujie Gao 1, Zijian Yu 2, Yan Hong 2, Jun Lan 2, Jianfu Zhang 1∗
+
+> 1
+
+Shanghai Jiaotong University 2Ant Group     
+
+> GYJgyj123@sjtu.edu.cn; thss15_yuzj@163.com; yanhong.sjtu@gmail.com; lanjun_yelan@163.com; c.sis@sjtu.edu.cn
+
+Abstract 
+
+Recent advances in single-image 3D Gaussian head recon-struction have enabled highly realistic and freely renderable digital heads from a single portrait. However, reconstruction and rendering can weaken the forgery traces in the source portrait, making the resulting 3D face difficult to classify whether its underlying face is real or fake, and thereby posing risks to identity authentication and face privacy. To study this problem, we introduce the first large-scale benchmark for this task by collecting real portraits and fake portraits from multi-ple sources and evaluate representative existing detectors on this benchmark, revealing their lack of explicit mechanisms for retaining fine-grained information and maintaining feature consistency across rendered views. To directly address these two limitations, we propose a detector trained with a two-stage strategy. In Stage I, masked autoencoding encourages the visual backbone to retain the fine-grained appearance in-formation required for local reconstruction, while multi-view contrastive learning enforces feature consistency across ren-dered views of the same head. Since CLS tokens at differ-ent depths exhibit complementary spatial attention patterns, Stage II freezes the adapted backbone and concatenates low-, middle-, and high-level CLS tokens for classification. Exper-iments show that our method achieves the highest accuracy and ranks first across all reported metrics among the evaluated detectors. 
+
+## 1 Introduction 
+
+Recent advances in single-image 3D Gaussian head gener-ation have made it increasingly practical to recover photo-realistic and renderable 3D heads from only one portrait, enabling applications in digital humans, telepresence, con-tent creation, and AR/VR. Yet a reconstructed 3D head is also an identity-bearing asset: when generated from a forged or manipulated portrait, a 3D Gaussian head may provide a persistent, freely renderable identity asset that can facilitate impersonation or attacks on identity-authentication systems. This makes authenticity detection essential for protecting both identity authentication and face privacy in 3D face ap-plications. However, existing face forgery and fake image detectors mainly target 2D images or videos, and no ded-icated method has yet been developed to determine, from a single rendered view of a 3D Gaussian head, whether its underlying source face is real or fake. The evolution of single-image 3D head generation reflects 
+
+> ∗
+
+Corresponding author. Fake Input Real Input 3D reconstruction 3D Gaussian Rendering 
+
+> Identity Authentication
+> 3D Gaussian Rendering Face Privacy
+> Real or Fake?
+
+Figure 1: Task definition. Given a 3D Gaussian head recon-structed from a single portrait image, our task is to determine whether its underlying face is real or fake. At inference time, the authenticity decision is made from a single rendered view of the reconstructed head. a steady move toward more expressive and realistic repre-sentations. Early methods typically relied on fitting paramet-ric face models, such as 3D morphable models (Blanz and Vetter 2023) and FLAME (Li et al. 2017), to estimate facial shape, expression, and pose from an input image. Later neural approaches introduced more flexible implicit 3D representa-tions, including tri-plane features (An et al. 2023; Zhang et al. 2024; Li et al. 2024) and NeRF-based radiance fields (Gafni et al. 2021). More recently, 3D Gaussian Splatting (Kerbl et al. 2023) has become a promising representation for head reconstruction. By optimizing dense Gaussians from a sin-gle portrait, recent 3D Gaussian head methods (Taubner et al. 2025; Lyu et al. 2025; He et al. 2025; Gao et al. 2026) can generate increasingly photorealistic heads that faithfully pre-serve the identity, geometry, expression, and texture cues of the input image across novel views, which also poses new challenges for identity authentication and face privacy pro-tection. In parallel, 2D visual authenticity detection has been ex-tensively studied for both face forgery and general fake-image detection (Huang et al. 2023; Rössler et al. 2019; Cui et al. 2025; Tan et al. 2024a; Zhou et al. 2026; Yan et al. 2025b; Tan et al. 2024b). Existing methods primarily distinguish arXiv:2608.23984v1 [cs.CV] 25 Aug 2026 Figure 2: Overview of our 3D Gaussian head dataset. real and fake content using manipulation artifacts, texture inconsistencies, generator fingerprints, or statistical cues in 2D images and videos. However, directly applying these 2D detectors to authenticity detection for 3D Gaussian heads reconstructed from a single image presents substantial chal-lenges: (1) 3D Gaussian reconstruction and re-rendering may compress or alter the original 2D forgery cues, leaving only subtle, localized evidence. Existing detectors lack explicit mechanisms to retain such fine-grained information, mak-ing these cues difficult to capture. (2) Changes in render-ing viewpoint alter the visibility, scale, and projection of these cues, yielding different local evidence patterns across views of the same 3D Gaussian head. As a result, detec-tors trained only with standard 2D supervision may over-fit to view-specific rendering shortcuts rather than learning view-robust authenticity cues. These challenges motivate a detector that preserves fine-grained appearance information in the 3DGS rendering domain and learns consistent authen-ticity representations across rendered views, even when only a single view is used at inference time. To systematically study this problem, we make three main contributions: (1) We introduce, to the best of our knowl-edge, the first large-scale dataset for real/fake 3D Gaus-sian head detection , where 2D forged faces from 9 meth-ods across text-to-image generation, face swapping, and expression-driven synthesis, together with genuine portraits from 5 real-face datasets, are reconstructed by 5 single-image 3D head methods and rendered into approximately 360K multi-view 3DGS head samples; (2) We establish a bench-mark on this dataset and evaluate representative baselines from both face forgery detection and general fake image de-tection, revealing their limitations in retaining fine-grained authenticity cues after Gaussian reconstruction and main-taining feature consistency across rendered views; (3) We show that reliable 3DGS head detection benefits from pre-serving fine-grained appearance information and enforcing cross-view feature consistency, while aggregating regional cues across network depths further improves classification. Guided by these findings, we propose a two-stage detec-tor : Stage I combines masked autoencoding (He et al. 2022) for detail-preserving representation learning with multi-view contrastive learning for cross-view consistency, while Stage II freezes the adapted backbone and fuses low-, middle-, and high-level CLS tokens for single-view classification. In summary, our contributions are: 
+
+• We introduce the first large-scale dataset for real/fake 3D Gaussian head detection, comprising approximately 360K multi-view renderings. 
+
+• We establish a systematic benchmark with balanced, identity-disjoint splits and evaluate representative recent 2D authenticity detectors in the 3DGS head domain under a unified protocol. 
+
+• We propose a two-stage detector that combines masked autoencoding and multi-view contrastive learning for rep-resentation learning, followed by multi-level CLS token fusion for classification. 
+
+## 2 Related Works 
+
+3D Gaussian Head Reconstruction from Single Image: 
+
+3D Gaussian head reconstruction from a single portrait im-age has recently become an active research direction. Com-pared with earlier mesh- or implicit-field-based representa-tions, 3DGS provides an explicit and efficiently renderable representation that can faithfully reproduce the input view while plausibly completing invisible regions of the head. Existing methods can be roughly grouped into several lines. Some approaches adopt a two-stage pipeline, first generating multi-view observations from the input portrait and then re-constructing a Gaussian point cloud from these synthesized views, as exemplified by FaceLift (Lyu et al. 2025). Another line incorporates parametric head priors, especially FLAME, into Gaussian representations to improve geometric stability, animation controllability, and reconstruction quality, includ-ing LAM (He et al. 2025), CAP4D (Taubner et al. 2025), and GAGAvatar (Chu and Harada 2024). More recent efforts further pursue one-step and efficient generation, aiming to reduce reconstruction latency while preserving high-quality full-head appearance, such as FastAvatar (Liang et al. 2025) and Any3DAvatar (Gao et al. 2026). These advances make single-image 3DGS head reconstruction increasingly practi-cal, but they also raise the need to verify whether the recon-structed head originates from a real or fake face. Recent work such as Fake3DGS (Di Nucci et al. 2026; Han et al. 2026) has explored detecting manipulations of 3DGS representations, but it focuses on tampering with the Gaussian point cloud rather than the authenticity of the underlying source face and is therefore not directly applicable to our task. 
+
+AI-Generated Face Detection: Contemporary face forg-eries mainly arise from three categories: text-to-image face generation (Wu et al. 2025; Z-Image Team et al. 2025; Black Forest Labs 2025; Google 2025; OpenAI 2025), expression-driven face reenactment (Guo et al. 2024; Li et al. 2026; Zhao et al. 2025), and face swapping (Shiohara, Yang, and Take-tomi 2023; Groshev et al. 2022; Wang et al. 2021; Chen et al. 2020). Accordingly, existing detection methods have devel-oped along two major directions. The first is tailored specifi-Stage 1: Self-Supervised Fine-Tuning Stage 2: Multi-Level Feature Fusion and Classification Multi-View Image Batch  𝑩  
+
+> Visual Backbone 𝒇 𝜽
+
+Contrast Learning 
+
+… …     
+
+> View atoken View ptoken
+> positive pair
+> Encourage similar latent for different views of the same head
+
+Mask Autoencoding (MAE) Decoder 
+
+𝒈 𝝓   
+
+> Learn Gaussian Texture Details MLP 𝒎 𝝍 ViT Block ViT Block ViT Block ViT Block ViT Block ViT Block
+> …
+> …
+> Visual Backbone 𝒇 𝜽
+> ViT Block ViT Block ViT Block ViT Block ViT Block ViT Block
+> …
+> cls token
+> 𝒄 𝒊 𝒍 𝒍𝒐𝒘
+> 𝒄 𝒊 𝒍 𝒎𝒊𝒅
+
+Input 𝒙 𝒊 
+
+> Norm Norm Norm
+> concatenate
+> Frozen Trainable
+> Multi-Head Self-Attention Layer Norm Feed-Forward
+> MAE Decoder
+> Mask Token Image Token Layer Norm
+> Linear &Unpatchify
+> ×𝑵
+
+…
+
+> Real or Fake
+> Group 0 Group 1
+> 𝒄 𝒊 𝒍 𝒉𝒊𝒈𝒉
+
+Figure 3: Overview of our two-stage training framework. In Stage 1, we train the visual backbone with two self-supervised objectives: masked autoencoding models local texture details and subtle Gaussian artifacts, while multi-view contrastive learning suppresses view-specific shortcuts. In Stage 2, low-, middle-, and high-level CLS tokens are normalized and concatenated, then fed into an MLP classification head for real/fake prediction. cally to facial content and exploits face-specific forensic ev-idence, such as identity inconsistency, blending boundaries, and localized manipulation artifacts, to distinguish forged faces from genuine ones (Huang et al. 2023; Rössler et al. 2019; Cui et al. 2025; Xu et al. 2023; Wang and Deng 2021; Zhao et al. 2021; Sun et al. 2022; Yan et al. 2024; Shiohara and Yamasaki 2022). The second treats forged faces as a special case of general AI-generated imagery and develops detectors over broader image domains (Yan et al. 2025a,b; Zhou et al. 2026; Tan et al. 2024b; Chen et al. 2025, 2024). By learning from diverse semantic content and generation pipelines, these general-purpose methods can capture a wider spectrum of forgery traces and often exhibit stronger cross-generator generalization. Nevertheless, both directions are designed for native 2D images, leaving the authenticity de-tection of faces reconstructed and rendered as 3D Gaussian heads largely unexplored. 
+
+## 3 Methodology 
+
+3.1 Dataset Construction 
+
+Recent single-image 3D Gaussian head reconstruction meth-ods (Taubner et al. 2025; Lyu et al. 2025; He et al. 2025; Chu and Harada 2024; Gao et al. 2026; Liang et al. 2025; Gerogiannis et al. 2025) can generate high-fidelity 3D heads that nearly replicate the input portrait, particularly when ren-dered from viewpoints close to the input view. Consequently, forged or manipulated portraits can become persistent, freely renderable 3D identity assets, threatening identity authenti-cation and intellectual property protection. To address this risk, we construct, to the best of our knowledge, the first large-scale dataset for real/fake 3D Gaussian head detection. 
+
+Dataset Details: Our dataset contains 361,469 rendered im-ages from 16,372 unique identities, comprising 170,060 real and 191,409 fake samples. Fig. 2 presents representative ex-amples from the resulting dataset. We collect real portraits from 5 real-face datasets: CelebV-HQ (Zhu et al. 2022), Ava-256 (Martinez et al. 2024), FFHQ (Karras, Laine, and Aila 2019), NeRSemble (Kirschstein et al. 2023), and VFHQ (Xie et al. 2022). We employ 9 2D face forgery methods to con-struct the fake portraits. Both real and fake portraits are then reconstructed using 5 single-image 3D Gaussian head meth-ods. Each reconstructed head is rendered at a resolution of 
+
+512 × 512 from 5–10 randomly sampled viewpoints, with yaw and pitch ranging from −45 ◦ to 45 ◦ and the camera radius sampled from 0.8 to 1.2 relative to a normalized stan-dard head scale. 
+
+Fake Head Generators: To construct fake 3D heads, we first generate forged 2D portraits spanning three categories: text-to-image generation, face swapping, and expression-driven synthesis. For each category, we select a combination of re-cent and well-established forgery methods to cover both con-temporary generation capabilities and representative classic pipelines. For text-to-image generation, we define 10 facial and appearance attributes, including gender, hairstyle, ex-pression, and ethnicity, and prepare 50 candidate values for each attribute. We randomly sample one value from each at-tribute and combine the selected values into a prompt, which is then fed into Z-Image (Z-Image Team et al. 2025), Qwen-Image (Wu et al. 2025), GPT-Image-2 (OpenAI 2025), Nano Banana Pro (Google 2025), or FLUX.2 (Black Forest Labs 2025). For face swapping and expression-driven synthesis, we randomly sample two portraits from the same real face datasets used for the genuine subset. The two portraits serve as the source and target for face swapping with HyperSwap-per (FaceFusion Team 2025) or BlendFace (Shiohara, Yang, and Taketomi 2023), and as the source and driving reference for expression transfer with LivePortrait (Guo et al. 2024) or PersonaLive (Li et al. 2026). Drawing these inputs from the real data sources helps reduce identity-distribution bias between real and fake samples. Each resulting forged portrait is subsequently reconstructed using one of five single-image 3D Gaussian head methods. We include both optimization-based and feed-forward pipelines: CAP4D (Taubner et al. 2025), FaceLift (Lyu et al. 2025), LAM (He et al. 2025), GAGAvatar (Chu and Harada 2024), and Any3DAvatar (Gao et al. 2026). The reconstructed heads are finally rendered from multiple randomly sampled viewpoints using the pro-tocol described above to produce the fake 3D head samples. 
+
+3.2 Two Stage Training 
+
+Existing 2D detectors face two challenges. First, 3D Gaussian reconstruction and re-rendering weaken forgery cues, leav-ing only subtle local evidence. Second, viewpoint changes cause this evidence to vary across views of the same head. As shown in Fig. 3, we address these challenges with a two-stage framework that first learns representations that preserve fine-grained appearance details and remain consistent across views, and then freezes the visual backbone and fuses low-, middle-, and high-level CLS tokens for authenticity classifi-cation. 
+
+Self-Supervised Training: Given an image batch B, Each batch B = {G g }Gg=1 contains G identity groups, where 
+
+Gg = {xg,k }Kk=1 consists of K views rendered from the same 3D head, while different groups correspond to differ-ent identities. The total batch size is B = GK . For the MAE branch, we flatten the grouped batch as {xi}Bi=1 and divide each image into P non-overlapping patches {pi,j }Pj=1 .
+
+Masked Autoencoding. To adapt the backbone to the 3DGS rendering domain and encourage it to retain fine-grained local appearance information, we randomly mask a ratio ρ of the patches in the MAE branch, forming a masked index set 
+
+Mi and a visible index set Vi, where |M i| = ρP and Vi =
+
+{1, . . . , P }\M i. Only the visible patches are embedded and passed through a ViT-style visual backbone fθ to produce image tokens 
+
+Zi = fθ ({pi,j }j∈V i ) . (1) We restore the image tokens to their original patch positions, insert a learned mask token at each masked position, and add positional embeddings. The complete token sequence is then processed by an MAE decoder gϕ composed of N ViT blocks. A linear layer maps each decoder output token to the flattened RGB pixels of its corresponding patch, yielding the prediction ˆpi,j . We reconstruct only the unseen patches using 
+
+LMAE = 1
+
+BρP 
+
+> B
+
+X
+
+> i=1
+
+X
+
+> j∈M i
+
+∥ˆpi,j − pi,j ∥22 . (2) The reconstruction objective does not directly supervise au-thenticity labels or artifact locations. Instead, inferring miss-ing content from visible patches provides target-domain self-supervision and encourages the backbone to preserve struc-tural and fine-grained appearance information. We hypothe-size that this information-preserving representation provides a stronger basis for the downstream real/fake classifier, a hy-pothesis evaluated by the component ablation in Experiment Section. 
+
+Multi-View Contrastive Learning. Unlike the MAE branch, the contrastive branch feeds the complete patch se-quence of each view into the visual backbone without mask-ing. We extract and ℓ2-normalize its CLS token as the la-tent representation zg,k . Let I = {(g, k )} denote all views in the batch. For an anchor a = ( g, k ), its positive set 
+
+P(a) = {(g, q ) | q̸ = k} contains the other views in the same group, while A(a) = I \ { a} contains all non-anchor views. We first define the normalized similarity between an-chor a and candidate p as 
+
+q(a, p ) = exp( z⊤ 
+
+> a
+
+zp/τ )
+
+P 
+
+> n∈A (a)
+
+exp( z⊤ 
+
+> a
+
+zn/τ ) , (3) where τ is the temperature. The multi-positive contrastive loss is 
+
+Lcon = − 1
+
+B
+
+X
+
+> a∈I
+
+1
+
+|P (a)|
+
+X
+
+> p∈P (a)
+
+log q(a, p ). (4) This objective pulls views of the same head together in the latent space and pushes views from different identity groups apart, promoting viewpoint-invariant authenticity features. 
+
+Multi-Level Feature Fusion and Classification: Different network depths produce visual representations at different levels of abstraction. Low-, middle-, and high-level repre-sentations may each contain information useful for real/fake classification, and such information may not be fully retained in the final-layer CLS token. We therefore fuse CLS tokens from multiple depths, allowing the classifier to exploit com-plementary representations across the network. In Stage 2, we freeze the self-supervised visual backbone fθ and train only an MLP classifier mψ . Given a full, unmasked image 
+
+xi, let the backbone contain L ViT blocks and let c(ℓ) 
+
+> i
+
+denote the CLS token output by block ℓ:
+
+c(ℓ) 
+
+> i
+
+=
+
+h
+
+f (ℓ) 
+
+> θ
+
+(xi)
+
+i
+
+> CLS
+
+, ℓ ∈ S = {ℓlow , ℓ mid , ℓ high }. (5) These layers provide low-, middle-, and high-level represen-tations, respectively. We first ℓ2-normalize each CLS token: 
+
+¯c(ℓ) 
+
+> i
+
+= c(ℓ)
+
+> i
+
+∥c(ℓ) 
+
+> i
+
+∥2
+
+, ℓ ∈ S . (6) The normalized tokens are then concatenated into a fused feature hi:
+
+hi = [¯ c(ℓlow ) 
+
+> i
+
+; ¯ c(ℓmid ) 
+
+> i
+
+; ¯ c(ℓhigh ) 
+
+> i
+
+]. (7) The MLP produces the real/fake prediction 
+
+ˆyi = softmax ( mψ (hi)) , (8) and is optimized using the cross-entropy loss 
+
+Lcls = − 1
+
+B
+
+> B
+
+X
+
+> i=1 2
+
+X
+
+> c=1
+
+yi,c log ˆ yi,c . (9) Method 2D Split 3D Split Total T2I ExpDriven FaceSwap Real Any3DAvatar Cap4D FaceLift GAGAvatar LAM IID 89.32 54.04 71.72 85.05 83.60 77.97 77.20 73.00 80.10 78.60                                                                       
+
+> NPR 88.72 70.04 76.80 84.84 86.60 81.67 82.07 73.57 84.50 81.68
+> FreqNet 83.48 48.64 54.64 79.04 76.83 71.80 67.07 65.63 71.90 70.65
+> ForAda 95.76 58.28 79.20 89.15 89.37 79.80 84.13 78.20 85.73 82.49
+> AIDE 95.12 56.68 68.60 72.56 75.37 71.93 72.17 72.27 73.33 73.01
+> Effort 96.20 63.40 89.44 87.32 89.20 81.60 84.67 76.93 82.67 85.17
+> PGC 96.04 63.96 83.88 83.05 84.67 82.33 81.10 76.87 85.90 82.17
+> Ours 98.28 76.24 90.04 90.84 94.97 84.10 91.67 84.77 92.07 89.51
+
+Table 1: Accuracy comparison across 2D forgery categories and 3D reconstruction methods.                                                       
+
+> Method Acc R.Acc F.Acc Macro-F1 AUC AP(fake) IID 89.64 88.44 90.85 89.64 95.52 96.68
+> NPR 80.88 87.29 74.46 80.80 89.24 90.53
+> FreqNet 80.34 76.81 83.86 80.31 89.31 91.58
+> ForAda 84.34 76.37 92.31 84.24 94.50 95.70
+> AIDE 86.63 78.14 95.11 86.53 95.07 94.51
+> Effort 91.87 87.99 95.74 91.86 98.29 98.53
+> PGC 90.37 90.22 90.53 90.37 96.41 97.06
+> Ours 96.54 95.30 97.78 96.54 99.50 99.58
+
+Table 2: OOD evaluation on the GPT-Image-2 subset.                                                       
+
+> Method Acc R.Acc F.Acc Macro-F1 AUC AP(fake) IID 78.60 81.15 76.05 78.59 86.65 88.53
+> NPR 81.68 84.84 78.52 81.66 89.54 91.06
+> FreqNet 70.65 79.04 62.25 70.44 77.61 79.13
+> ForAda 82.49 82.44 82.55 82.49 90.50 91.87
+> AIDE 73.01 72.56 73.47 73.01 81.21 83.23
+> Effort 85.17 87.32 83.01 85.16 92.98 94.16
+> PGC 82.17 83.05 81.29 82.17 89.98 91.57
+> Ours 89.51 90.84 88.19 89.51 95.36 96.03
+
+Table 3: Comparison with state-of-the-art detection base-lines. 
+
+## 4 Experiment 
+
+4.1 Experiment Settings 
+
+Training Setup: All experiments are conducted on 8 NVIDIA RTX A6000 GPUs. The MAE decoder comprises 8 ViT blocks. In Stage I, the model is trained for 70 epochs. Specifically, we freeze the visual backbone and optimize only the MAE decoder during the first 30 epochs. For the remain-ing 40 epochs, we unfreeze the visual backbone and jointly optimize it with the MAE decoder. In this stage, the learning rates are set to 1 × 10 −4 for the MAE decoder and 1 × 10 −5
+
+for the visual backbone, with a batch size of 4 per GPU. For contrastive learning, we set G = 2 , K = 2 , and the tem-perature to τ = 0 .1. During joint optimization, we optimize 
+
+LMAE +0 .1Lcon . Following the original MAE configuration, we use a masking ratio of ρ = 0 .75 , while the number of image patches P and the hidden feature dimension follow the default configuration of each visual backbone. In Stage II, we freeze the visual backbone and train only the MLP classifier for 10 epochs, using a learning rate of 1 × 10 −4 and a batch size of 64. Unless otherwise specified, all input images are resized to 224 × 224 during training. For reproducibility, we                                                       
+
+> Method Acc R.Acc F.Acc Macro-F1 AUC AP(fake) IID 67.64 81.85 53.42 66.97 70.89 75.47
+> NPR 73.37 83.00 63.74 73.12 79.69 83.06
+> FreqNet 69.91 71.50 68.33 69.91 75.52 78.18
+> ForAda 76.59 72.47 80.71 76.55 85.19 86.61
+> AIDE 59.76 56.77 62.76 59.73 62.22 60.06
+> Effort 79.43 84.04 74.83 79.39 87.62 89.52
+> PGC 83.46 92.09 74.82 83.33 93.35 93.86
+> Ours 86.49 95.88 77.09 86.37 95.61 95.94
+
+Table 4: OOD evaluation on the HyperSwapper subset.                                                       
+
+> Method Acc R.Acc F.Acc Macro-F1 AUC AP(fake) IID 59.42 98.15 20.69 52.26 60.93 68.73
+> NPR 64.65 85.43 43.88 63.06 69.54 72.63
+> FreqNet 60.42 60.16 60.68 60.42 63.73 61.34
+> ForAda 55.46 81.47 29.45 52.22 57.15 58.63
+> AIDE 55.85 51.90 59.79 55.78 56.17 52.76
+> Effort 60.65 88.98 32.31 57.21 63.83 67.90
+> PGC 64.67 94.21 35.13 61.29 76.69 78.22
+> Ours 80.93 95.44 66.42 80.52 91.94 92.69
+
+Table 5: OOD evaluation on the PersonaLive subset. 
+
+set the random seed to 42 for all experiments. 
+
+Dataset: We construct an identity-disjoint benchmark of 147,900 images from 361,469 successfully rendered and de-codable candidates, including 117,900 training, 15,000 vali-dation, and 15,000 test images. To prevent identity leakage, samples linked by any shared person ID are grouped into a connected component and assigned entirely to one split. Within each split, real and fake samples follow an exact 
+
+1:1 ratio; fake samples are equally divided among text-to-image generation, expression-driven manipulation, and face swapping; and the five 3D reconstruction methods each ac-count for 20% of the samples. The same class and forgery-category proportions are maintained within each reconstruc-tion method. Because only complete identity components satisfying these constraints are retained, the final benchmark is smaller than the candidate pool. It contains 13,981 unique identities, with no person IDs or identical rendered images shared across splits. 
+
+Baseline: We select recent detection models published at top-tier conferences that introduce substantive method-ological innovations and can be retrained on our dataset. This selection enables all baselines to be evaluated un-original masked reconstruction Figure 4: Qualitative masked-reconstruction results. With 75% of the input patches masked, the MAE recovers coherent facial structure and fine-grained local details in both real and fake 3D Gaussian-rendered heads.                                                       
+
+> Method Acc R.Acc F.Acc Macro-F1 AUC AP(fake) IID 82.55 81.91 83.19 82.55 90.16 92.06
+> NPR 81.83 88.14 75.53 81.76 87.66 90.70
+> FreqNet 68.87 72.92 64.82 68.82 76.08 77.85
+> ForAda 83.60 89.85 77.34 83.53 90.78 92.84
+> AIDE 81.40 89.11 73.69 81.29 87.20 90.19
+> Effort 85.46 89.57 81.37 85.44 92.16 93.95
+> PGC 83.33 87.64 79.03 83.30 90.26 92.59
+> Ours 89.24 91.61 86.87 89.24 95.62 96.53
+
+Table 6: OOD evaluation on the Any3DAvatar subset. 
+
+der a unified training protocol, ensuring a fair compari-son. Specifically, the selected baselines include four general-purpose real-versus-fake image detectors: AIDE (Yan et al. 2025a) (ICLR 2025), Effort (Yan et al. 2025b) (ICML 2025), PGC (Zhou et al. 2026) (ICML 2026), and FreqNet (Tan et al. 2024b) (AAAI 2024). We also evaluate three detectors de-veloped for face forgery and deepfake detection: IID (Huang et al. 2023) (CVPR 2023), ForAda (Cui et al. 2025) (CVPR 2025), and NPR (Tan et al. 2024a) (CVPR 2024). For all baselines, we standardize the input resolution to 224 × 224 
+
+and follow the best-performing training configuration pro-vided by each method’s official implementation for all other hyperparameters. For the main comparison, our model uses DINOv3 ViT-H+/16 (Siméoni et al. 2026) and concatenates the CLS tokens from blocks 10, 18, and 23 (zero-based) for Stage II classification. 
+
+Evaluation Metrics: We report overall accuracy (ACC), class-specific accuracies (Real-ACC and Fake-ACC), the macro-averaged F1 score (Macro-F1), the area under the receiver operating characteristic curve (AUC), and average precision with fake as the positive class (AP fake ). All results are reported as percentages(%). 
+
+4.2 Comparison with Baselines 
+
+Tab. 3 compares our method with recent general-purpose and face-oriented forgery detectors under the unified bench-                              
+
+> Strategy Acc R.Acc F.Acc Macro-F1 AUC AP(fake) w/o Stage I 85.79 86.39 85.20 85.79 93.18 94.14
+> w/o MAE 86.96 88.40 85.52 86.96 93.81 94.69
+> w/o CL 87.18 88.56 85.80 87.18 94.16 94.85
+> Ours 89.51 90.84 88.19 89.51 95.36 96.03
+
+Table 7: Ablation study of Stage I training. We report results without masked autoencoding (w/o MAE), without multi-view contrastive learning (w/o CL), and without Stage I training (w/o Stage I). All results are reported as percentages.                        
+
+> Strategy Intra-Sim ↑Inter-Sim ↓Sep-Gap ↑
+> Real Fake Real Fake Real Fake w/o CL 0.7427 0.7334 0.3499 0.3678 0.3928 0.3656 w/ CL 0.8965 0.8926 0.3293 0.3470 0.5672 0.5456
+
+Table 8: Cross-view representation analysis. Intra-Sim measures similarity across views of the same 3D head, Inter-Sim across different heads of the same authenticity class, and Sep-Gap is their difference. mark protocol. Our method achieves the best result across all evaluation metrics and consistently outperforms the strongest baseline. The gains in both Real-ACC and Fake-ACC further show that the improvement is balanced across the two classes rather than driven by a bias toward either real or fake sam-ples. Tab. 1 provides a finer-grained comparison across the 2D source categories and 3D reconstruction methods. Our method ranks first in every reported category and reconstruc-tion pipeline, demonstrating consistent performance across the balanced IID benchmark. For OOD evaluation, we ex-clude the newest method in each forgery category from train-ing and reserve it for testing: GPT-Image-2 for text-to-image generation, PersonaLive for expression-driven manipulation, , HyperSwapper for face swapping and Any3DAvatar for 3D methods. As shown in Tab. 2, Tab. 4, Tab. 5, and Tab. 6, our method achieves the best results across all reported metrics on all four held-out subsets, demonstrating stronger general-ization to unseen forgery methods and an unseen 3D recon-struction method. 
+
+4.3 Ablative Analyses 
+
+Masked Autoencoding: To assess the effectiveness of masked autoencoding, we remove the MAE decoder and 
+
+LMAE from Stage I while keeping all other components and training settings unchanged. As shown in Tab. 7, this removal consistently degrades all evaluation metrics, demonstrating that masked reconstruction provides complementary super-vision and contributes to downstream authenticity classifica-tion. Fig. 4 shows that, even with 75% masking, MAE pro-duces visually plausible reconstructions and recovers some personalized facial details in both real and fake samples. This observation suggests that the encoder attends to fine-grained local appearance information retained after 3D Gaussian re-construction, supporting its usefulness for downstream au-thenticity classification together with the quantitative abla-tion. Before contrastive training mean within-group cos=0.750, NN@1=0.993 
+
+> After contrastive training mean within-group cos=0.907, NN@1=1.000
+
+Figure 5: t-SNE of multi-view representations before (left) and after (right) contrastive learning, showing tighter within-head clusters and better separation across identities. Input Image Low Layer Mid Layer High Layer 
+
+Figure 6: CLS-token attention across network depths. 
+
+CLS-token attention maps, averaged over all attention heads, for the selected low-, middle-, and high-level blocks. Differ-ent depths exhibit distinct spatial response patterns. 
+
+Multi-View Contrastive Learning: To analyze the learned representation, we compute cosine similarity between final-layer CLS tokens from approximately 13,000 images in 3,800 balanced multi-view groups, forming about 52,000 positive and negative pairs. Tab. 8 shows that contrastive learning in-creases Sep-Gap mainly by improving intra-head similarity, confirming stronger cross-view consistency. Removing the contrastive branch and objective consistently degrades per-formance (Tab. 7). Consistently, the t-SNE visualization of 20 balanced identity groups (10 views each) in Fig. 5 shows more compact same-head clusters and clearer inter-group separation. 
+
+Multi-Level CLS Token Fusion: To examine how the clas-sification utility of CLS tokens varies with network depth, we freeze the Stage I visual backbone and train an identical Stage II MLP classifier using the CLS token from each Transformer block separately. We group the blocks into low-, middle-, and high-depth ranges and report the mean performance of the corresponding single-layer probes, while reporting the final block separately. As shown in Tab. 9, CLS tokens across dif-
+
+Strategy Acc R.Acc F.Acc Macro-F1 AUC AP(fake) w/ Low-Layer 68.57 69.26 67.87 68.53 75.04 75.72 
+
+w/ Mid-Layer 83.16 84.8 81.50 83.15 90.76 92.09 
+
+w/ High-Layer 85.64 87.46 83.82 85.64 92.68 93.80 
+
+w/ Last-Layer 84.31 85.93 82.69 84.31 91.62 92.95 
+
+w/ Multi-Layer 89.51 90.84 88.19 89.51 95.36 96.03 
+
+Table 9: Stage II ablation of CLS token selection. We compare the average results of single-layer classifiers in the low-, middle-, and high-depth ranges, the last-layer classifier, and low–middle–high CLS token fusion. 
+
+Visual Backbone Acc R.Acc F.Acc Macro-F1 AUC AP(fake) DINOv2 ViT-L/14 86.92 88.20 85.64 86.92 93.35 94.40 
+
+DINOv3 ViT-B/16 87.19 90.07 84.31 87.18 94.38 95.14 
+
+DINOv3 ViT-L/16 88.49 90.13 86.85 88.49 95.05 95.80 
+
+DINOv3 ViT-H+/16 89.51 90.84 88.19 89.51 95.36 96.03 
+
+Table 10: Comparison of visual backbone versions and model scales for source-face authenticity detection. DI-NOv3 ViT-H+/16 achieves the best performance across all metrics. ferent depths all contain information useful for authenticity classification, while multi-level fusion consistently outper-forms the single-layer averages and the last-layer classifier. To inspect how the spatial responses of CLS tokens vary across depth, we average the CLS-token attention weights over all attention heads for each visualized block. As shown in Fig. 6, different layers exhibit distinct attention regions, providing qualitative evidence that their spatial responses are not iden-tical. Based on layer-wise probing and attention diversity, we select blocks 10, 18, and 23 (zero-based) as representative low-, middle-, and high-level layers and concatenate their normalized CLS tokens for Stage II classification. 
+
+Visual Backbone: Tab. 10 examines the effects of backbone generation and model capacity. At a comparable scale, DI-NOv3 outperforms DINOv2, indicating the benefit of newer pretrained representations. Within DINOv3, performance consistently improves as model capacity increases, with ViT-H+/16 achieving the best overall results and therefore serving as our default backbone. Importantly, our framework still out-performs the strongest baseline when using either the older DINOv2 backbone or the smallest DINOv3 variant. This shows that stronger backbones further improve performance, while the gains of our method cannot be attributed solely to backbone scale or recency. 
+
+## 5 Conclusion 
+
+Summary: We introduce the first large-scale dataset and systematic benchmark for real/fake 3D Gaussian head de-tection, together with a two-stage detector that learns detail-preserving, cross-view-consistent representations and fuses multi-level CLS tokens for classification. Our method con-sistently outperforms existing detectors. 
+
+Limitations: Expression-driven forgeries remain challeng-ing, with an accuracy of 76.24%. Future work will expand this category for stronger detection. References 
+
+An, S.; Xu, H.; Shi, Y.; Song, G.; Ogras, Ü. Y.; and Luo, L. 2023. PanoHead: Geometry-Aware 3D Full-Head Synthesis in 360 °. In CVPR 2023 , 20950–20959. IEEE. Black Forest Labs. 2025. FLUX.2. https://blackforestlabs.ai/. Text-to-image generation model. Blanz, V.; and Vetter, T. 2023. A Morphable Model For The Synthesis Of 3D Faces . New York, NY, USA: Association for Computing Machinery, 1 edition. ISBN 9798400708978. Chen, B.; Zeng, J.; Yang, J.; and Yang, R. 2024. DRCT: Diffu-sion Reconstruction Contrastive Training towards Universal Detection of Diffusion Generated Images. In Salakhutdinov, R.; Kolter, Z.; Heller, K. A.; Weller, A.; Oliver, N.; Scarlett, J.; and Berkenkamp, F., eds., Forty-first International Con-ference on Machine Learning, ICML 2024, Vienna, Austria, July 21-27, 2024 , volume 235 of Proceedings of Machine Learning Research , 7621–7639. PMLR / OpenReview.net. Chen, R.; Chen, X.; Ni, B.; and Ge, Y. 2020. SimSwap: An Efficient Framework For High Fidelity Face Swapping. In Chen, C. W.; Cucchiara, R.; Hua, X.; Qi, G.; Ricci, E.; Zhang, Z.; and Zimmermann, R., eds., ACM MM 2020 , 2003–2011. ACM. Chen, R.; Xi, J.; Yan, Z.; Zhang, K.; Wu, S.; Xie, J.; Chen, X.; Xu, L.; Guan, I.; Yao, T.; and Ding, S. 2025. Dual Data Alignment Makes AI-Generated Image Detector Easier Generalizable. In Belgrave, D.; Zhang, C.; Montoya, L. N.; Lin, H.; Pascanu, R.; Koniusz, P.; Ghassemi, M.; Chen, N.; Ruíz, I. V. M.; and Loaiza-Bonilla, A., eds., NeurIPS 2025 .Chu, X.; and Harada, T. 2024. Generalizable and Animatable Gaussian Head Avatar. In Globersons, A.; Mackey, L.; Bel-grave, D.; Fan, A.; Paquet, U.; Tomczak, J. M.; and Zhang, C., eds., NeurIPS 2024 .Cui, X.; Li, Y.; Luo, A.; Zhou, J.; and Dong, J. 2025. Foren-sics Adapter: Adapting CLIP for Generalizable Face Forgery Detection. In CVPR 2025 , 19207–19217. Computer Vision Foundation / IEEE. Di Nucci, D.; Catalini, R.; Borghi, G.; and Vezzani, R. 2026. Fake3DGS: A Benchmark for 3D Manipulation Detection in Neural Rendering. In ICPR 2026 .FaceFusion Team. 2025. FaceFusion: Next Generation Face Swapping Framework. https://github.com/facefusion/ facefusion. Accessed: 2026. Gafni, G.; Thies, J.; Zollhöfer, M.; and Nießner, M. 2021. Dynamic Neural Radiance Fields for Monocular 4D Facial Avatar Reconstruction. In CVPR 2021 , 8649–8658. Com-puter Vision Foundation / IEEE. Gao, Y.; Xiao, Y.; Zhu, X.; Li, Y.; Zhang, Y.; Zhang, L.; and Zhang, J. 2026. Any3DAvatar: Fast and High-Quality Full-Head 3D Avatar Reconstruction from Single Portrait Image. arXiv:2604.13856. Gerogiannis, D.; Papantoniou, F. P.; Potamias, R. A.; Lattas, A.; and Zafeiriou, S. 2025. Arc2Avatar: Generating Expres-sive 3D Avatars from a Single Image via ID Guidance. In 
+
+CVPR 2025 , 10770–10782. Computer Vision Foundation / IEEE. Google. 2025. Nano Banana Pro Image Generation Model. https://ai.google. Groshev, A.; Maltseva, A.; Chesakov, D.; Kuznetsov, A.; and Dimitrov, D. 2022. GHOST—A New Face Swap Approach for Image and Video Domains. IEEE Access , 10: 83452– 83462. Guo, J.; Zhang, D.; Liu, X.; Zhong, Z.; Zhang, Y.; Wan, P.; and Zhang, D. 2024. LivePortrait: Efficient Por-trait Animation with Stitching and Retargeting Control. arXiv:2407.03168. Han, H.; Luo, Z.; Qi, J.; Rocha, A.; and Wan, R. 2026. GS-Checker: Tampering Localization for 3D Gaussian Splatting. In AAAI 2026 .He, K.; Chen, X.; Xie, S.; Li, Y.; Dollár, P.; and Girshick, R. B. 2022. Masked Autoencoders Are Scalable Vision Learners. In CVPR 2022 , 15979–15988. IEEE. He, Y.; Gu, X.; Ye, X.; Xu, C.; Zhao, Z.; Dong, Y.; Yuan, W.; Dong, Z.; and Bo, L. 2025. LAM: Large Avatar Model for One-shot Animatable Gaussian Head. In SIGGRAPH 2025 ,1–13. Huang, B.; Wang, Z.; Yang, J.; Ai, J.; Zou, Q.; Wang, Q.; and Ye, D. 2023. Implicit Identity Driven Deepfake Face Swapping Detection. In CVPR 2023 , 4490–4499. IEEE. Karras, T.; Laine, S.; and Aila, T. 2019. A Style-Based Generator Architecture for Generative Adversarial Networks. In CVPR 2019 , 4401–4410. Computer Vision Foundation / IEEE. Kerbl, B.; Kopanas, G.; Leimkühler, T.; and Drettakis, G. 2023. 3D Gaussian Splatting for Real-Time Radiance Field Rendering. ACM Trans. Graph. , 42(4): 139:1–139:14. Kirschstein, T.; Qian, S.; Giebenhain, S.; Walter, T.; and Nießner, M. 2023. NeRSemble: Multi-View Radiance Field Reconstruction of Human Heads. ACM Trans. Graph. , 42(4). Li, H.; Chen, C.; Shi, T.; Qiu, Y.; An, S.; Chen, G.; and Han, X. 2024. SphereHead: Stable 3D Full-Head Synthesis with Spherical Tri-Plane Representation. In Leonardis, A.; Ricci, E.; Roth, S.; Russakovsky, O.; Sattler, T.; and Varol, G., eds., 
+
+ECCV 2024 , Lecture Notes in Computer Science, 324–341. Springer. Li, T.; Bolkart, T.; Black, M. J.; Li, H.; and Romero, J. 2017. Learning a model of facial shape and expression from 4D scans. ACM Transactions on Graphics, (Proc. SIGGRAPH Asia) , 36(6). Li, Z.; Pun, C.; Fang, C.; Wang, J.; and Cun, X. 2026. Person-aLive! Expressive Portrait Image Animation for Live Stream-ing. In CVPR 2026 , 18118–18128. Computer Vision Foun-dation / IEEE. Liang, H.; Ge, Z.; Majee, S.; Tiwari, A.; Godaliyadda, G. M. D.; Veeraraghavan, A.; and Balakrishnan, G. 2025. Fas-tAvatar: Instant 3D Gaussian Splatting for Faces from Single Unconstrained Poses. arXiv:2508.18389. Lyu, W.; Zhou, Y.; Yang, M.; and Shu, Z. 2025. FaceLift: Single Image to 3D Head with View Generation and GS-LRM. In ICCV 2025 .Martinez, J.; Kim, E.; Romero, J.; Bagautdinov, T. M.; Saito, S.; Yu, S.; Anderson, S.; Zollhöfer, M.; Wang, T.; Bai, S.; Li, C.; Wei, S.; Joshi, R.; Borsos, W.; Simon, T.; Saragih, J. M.; Theodosis, P.; Greene, A.; Josyula, A.; Maeta, S.; Jewett, A.; Venshtain, S.; Heilman, C.; Chen, Y.; Fu, S.; Elshaer, M.; Du, T.; Wu, L.; Chen, S.; Kang, K.; Wu, M.; Emad, Y.; Longay, S.; Brewer, A.; Shah, H.; Booth, J.; Koska, T.; Haidle, K.; Andromalos, M.; Hsu, J.; Dauer, T.; Selednik, P.; Godisart, T.; Ardisson, S.; Cipperly, M.; Humberston, B.; Farr, L.; Hansen, B.; Guo, P.; Braun, D.; Krenn, S.; Wen, H.; Evans, L.; Fadeeva, N.; Stewart, M.; Schwartz, G.; Gupta, D.; Moon, G.; Guo, K.; Dong, Y.; Xu, Y.; Shiratori, T.; Prada, F.; Pires, B.; Peng, B.; Buffalini, J.; Trimble, A.; McPhail, K.; Schoeller, M.; and Sheikh, Y. 2024. Codec Avatar Studio: Paired Human Captures for Complete, Driveable, and Gen-eralizable Avatars. In Globersons, A.; Mackey, L.; Belgrave, D.; Fan, A.; Paquet, U.; Tomczak, J. M.; and Zhang, C., eds., 
+
+NeurIPS 2024 .OpenAI. 2025. GPT Image Generation Models. https:// openai.com. Rössler, A.; Cozzolino, D.; Verdoliva, L.; Riess, C.; Thies, J.; and Nießner, M. 2019. FaceForensics++: Learning to Detect Manipulated Facial Images. In ICCV 2019 , 1–11. IEEE. Shiohara, K.; and Yamasaki, T. 2022. Detecting Deepfakes with Self-Blended Images. In CVPR 2022 , 18720–18729. Shiohara, K.; Yang, X.; and Taketomi, T. 2023. BlendFace: Re-designing Identity Encoders for Face-Swapping. In ICCV 2023 , 7600–7610. IEEE. Siméoni, O.; Vo, H. V.; Seitzer, M.; Baldassarre, F.; Oquab, M.; Jose, C.; Khalidov, V.; Szafraniec, M.; Yi, S. E.; Rama-monjisoa, M.; Massa, F.; Haziza, D.; Wehrstedt, L.; Wang, J.; Darcet, T.; Moutakanni, T.; Sentana, L.; Roberts, C.; Vedaldi, A.; Tolan, J.; Brandt, J.; Couprie, C.; Mairal, J.; Jégou, H.; Labatut, P.; and Bojanowski, P. 2026. DINOv3. Trans. Mach. Learn. Res. , 2026. Sun, K.; Liu, H.; Yao, T.; Sun, X.; Chen, S.; Ding, S.; and Ji, R. 2022. An Information Theoretic Approach for Attention-Driven Face Forgery Detection. In ECCV 2022 ,111–127. Berlin, Heidelberg: Springer-Verlag. ISBN 978-3-031-19780-2. Tan, C.; Liu, H.; Zhao, Y.; Wei, S.; Gu, G.; Liu, P.; and Wei, Y. 2024a. Rethinking the Up-Sampling Operations in CNN-Based Generative Network for Generalizable Deepfake Detection. In CVPR 2024 , 28130–28139. IEEE. Tan, C.; Zhao, Y.; Wei, S.; Gu, G.; Liu, P.; and Wei, Y. 2024b. Frequency-Aware Deepfake Detection: Improving General-izability through Frequency Space Domain Learning. In Wooldridge, M. J.; Dy, J. G.; and Natarajan, S., eds., AAAI 2024 , 5052–5060. AAAI Press. Taubner, F.; Zhang, R.; Tuli, M.; and Lindell, D. B. 2025. CAP4D: Creating Animatable 4D Portrait Avatars with Mor-phable Multi-View Diffusion Models. In CVPR 2025 , 5318– 5330. Computer Vision Foundation / IEEE. Wang, C.; and Deng, W. 2021. Representative Forgery Min-ing for Fake Face Detection. In CVPR 2021 , 14918–14927. Wang, Y.; Chen, X.; Zhu, J.; Chu, W.; Tai, Y.; Wang, C.; Li, J.; Wu, Y.; Huang, F.; and Ji, R. 2021. HifiFace: 3D Shape and Semantic Prior Guided High Fidelity Face Swapping. In Zhou, Z., ed., IJCAI 2021 , 1136–1142. ijcai.org. Wu, C.; Li, J.; Zhou, J.; Lin, J.; Gao, K.; Yan, K.; Yin, S.; Bai, S.; Xu, X.; Chen, Y.; Chen, Y.; Tang, Z.; Zhang, Z.; Wang, Z.; Yang, A.; Yu, B.; Cheng, C.; Liu, D.; Li, D.; Zhang, H.; Meng, H.; Wei, H.; Ni, J.; Chen, K.; Cao, K.; Peng, L.; Qu, L.; Wu, M.; Wang, P.; Yu, S.; Wen, T.; Feng, W.; Xu, X.; Wang, Y.; Zhang, Y.; Zhu, Y.; Wu, Y.; Cai, Y.; and Liu, Z. 2025. Qwen-Image Technical Report. arXiv:2508.02324. Xie, L.; Wang, X.; Zhang, H.; Dong, C.; and Shan, Y. 2022. VFHQ: A High-Quality Dataset and Benchmark for Video Face Super-Resolution. In CVPRW 2022 , 656–665. IEEE. Xu, Y.; Liang, J.; Jia, G.; Yang, Z.; Zhang, Y.; and He, R. 2023. TALL: Thumbnail Layout for Deepfake Video Detec-tion. In ICCV 2023 , 22601–22611. IEEE. Yan, S.; Li, O.; Cai, J.; Hao, Y.; Jiang, X.; Hu, Y.; and Xie, W. 2025a. A Sanity Check for AI-generated Image Detection. In ICLR 2025 . OpenReview.net. Yan, Z.; Luo, Y.; Lyu, S.; Liu, Q.; and Wu, B. 2024. Transcending Forgery Specificity with Latent Space Aug-mentation for Generalizable Deepfake Detection. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 8984–8994. Yan, Z.; Wang, J.; Jin, P.; Zhang, K.; Liu, C.; Chen, S.; Yao, T.; Ding, S.; Wu, B.; and Yuan, L. 2025b. Orthogonal Sub-space Decomposition for Generalizable AI-Generated Image Detection. In Singh, A.; Fazel, M.; Hsu, D.; Lacoste-Julien, S.; Berkenkamp, F.; Maharaj, T.; Wagstaff, K.; and Zhu, J., eds., ICML 2025 , volume 267 of Proceedings of Machine Learning Research . PMLR / OpenReview.net. Z-Image Team; Cai, H.; Cao, S.; Du, R.; Gao, P.; Hao, A.; Hoi, S. C. H.; Hou, Z.; Huang, S.; Jiang, D.; Jiang, Y.; Jin, X.; Li, L.; Li, Z.; Li, Z.-Y.; Liu, D.; Liu, D.; Wu, Q.; Yu, F.; Zhan, Z.; Zhang, C.; Zhang, S.; Zhou, R.; and Zhou, S. 2025. Z-Image: An Efficient Image Generation Foun-dation Model with Single-Stream Diffusion Transformer. arXiv:2511.22699. Zhang, B.; Cheng, Y.; Wang, C.; Zhang, T.; Yang, J.; Tang, Y.; Zhao, F.; Chen, D.; and Guo, B. 2024. RodinHD: High-Fidelity 3D Avatar Generation with Diffusion Models. In Leonardis, A.; Ricci, E.; Roth, S.; Russakovsky, O.; Sattler, T.; and Varol, G., eds., ECCV 2024 , Lecture Notes in Com-puter Science, 465–483. Springer. Zhao, H.; Wei, T.; Zhou, W.; Zhang, W.; Chen, D.; and Yu, N. 2021. Multi-attentional Deepfake Detection. In CVPR 2021 , 2185–2194. Zhao, X.; Xu, H.; Song, G.; Xie, Y.; Zhang, C.; Li, X.; Luo, L.; Suo, J.; and Liu, Y. 2025. X-NeMo: Expressive Neural Motion Reenactment via Disentangled Latent Attention. In 
+
+ICLR 2025 . OpenReview.net. Zhou, X.; Fei, J.; Yu, P.; Xie, J.; Cheng, C.; and Xia, Z. 2026. PGC: Peak-Guided Calibration for Generalizable AI-Generated Image Detection. In ICML 2026 .Zhu, H.; Wu, W.; Zhu, W.; Jiang, L.; Tang, S.; Zhang, L.; Liu, Z.; and Loy, C. C. 2022. CelebV-HQ: A Large-Scale Video Facial Attributes Dataset. In Avidan, S.; Brostow, G. J.; Cissé, M.; Farinella, G. M.; and Hassner, T., eds., ECCV 2022 , volume 13667 of Lecture Notes in Computer Science ,650–667. Springer.

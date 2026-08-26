@@ -6,8 +6,8 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-25
-- 运行时间：2026-08-25 21:03:28 UTC
+- 最新运行日期：2026-08-26
+- 运行时间：2026-08-26 22:02:36 UTC
 - 运行状态：成功
 - 本次总论文数：2
 - 精读区：1
@@ -15,20 +15,20 @@
 
 ### 今日简报（AI）
 - 今日共生成 2 篇推荐（精读 1 篇，速读 1 篇）
-- 精读：《DF-MoE: Generalizable Deepfake Detection via Multimodal Sparse Mixture-of-Experts》（9.0/10）
-- 速读：《Tomatoes, Potatoes, and Onions: Questioning the Need for Faces in Face Presentation Attack Detection》（6.0/10）
+- 精读：《Source-Face Authenticity Detection for 3D Gaussian Heads Reconstructed from a Single Portrait: A Benchmark and Dedicated Detector》（9.0/10）
+- 速读：《Adapting Dense Vision-Language Relationships for Multi-label Classification with Partial Label》（6.0/10）
 - 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
-- 详情：[/202608/25/README](/202608/25/README)
+- 详情：[/202608/26/README](/202608/26/README)
 
 ### 精读区论文标签
-1. [DF-MoE: Generalizable Deepfake Detection via Multimodal Sparse Mixture-of-Experts](/202608/25/2608.23363v1-df-moe-generalizable-deepfake-detection-via-multimodal-sparse-mixture-of-experts)  
+1. [Source-Face Authenticity Detection for 3D Gaussian Heads Reconstructed from a Single Portrait: A Benchmark and Dedicated Detector](/202608/26/2608.23984v1-source-face-authenticity-detection-for-3d-gaussian-heads-reconstructed-from-a-single-portrait-a-benchmark-and-dedicated-detector)  
    标签：评分：9.0/10、query:deepfake-fsl
-   evidence：音频-视觉深度伪造检测，多模态线索与跨域泛化
+   evidence：检测重建的3D高斯头部下源脸真伪
 
 ### 速读区论文标签
-1. [Tomatoes, Potatoes, and Onions: Questioning the Need for Faces in Face Presentation Attack Detection](/202608/25/2608.21455v1-tomatoes-potatoes-and-onions-questioning-the-need-for-faces-in-face-presentation-attack-detection)  
+1. [Adapting Dense Vision-Language Relationships for Multi-label Classification with Partial Label](/202608/26/2608.22313v1-adapting-dense-vision-language-relationships-for-multi-label-classification-with-partial-label)  
    标签：评分：6.0/10、query:deepfake-fsl
-   evidence：人脸呈现攻击检测是多媒体取证中的人脸操纵检测任务。
+   evidence：利用密集视觉-语言关系进行部分标签多标签图像分类
 
 
 <div class="dpr-home-promo-card">
