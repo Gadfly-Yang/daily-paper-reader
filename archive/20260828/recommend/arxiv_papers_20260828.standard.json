@@ -1,0 +1,255 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-28T03:46:44.256785+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2608.26648v1",
+      "source": "arxiv",
+      "title": "Hierarchical Channel Stacking: A Structured Decision Framework for AI-Generated Image Detection",
+      "abstract": "Many synthetic-image detectors produce accurate predictions but offer limited insight into how those decisions are formed. This paper introduces Hierarchical Channel Stacking (HCS), a compact framework for AI-generated image detection that converts intermediate CNN activations into a structured 60-dimensional representation organized across three progressively deeper backbone stages. HCS uses per-channel Level-1 classifiers and a Level-2 aggregator to produce image-level predictions while preserving explicit hierarchical structure for analysis. On a benchmark spanning GAN and diffusion generators, HCS achieves 86.7% accuracy and 86.7% macro-F1 on the held-out test set. Stage ablation shows that the full three-stage system outperforms reduced single-stage and two-stage variants, indicating that the hierarchy carries complementary predictive information. Stage-level contribution analysis further shows that, in the analyzed detector setting, fake GAN and fake diffusion images exhibit distinct stage-level contribution profiles. These results position HCS not simply as a compact detector, but as a structured framework for studying how synthetic-image detectors assemble evidence across representation levels.",
+      "authors": [
+        "Saifullah Shoaib",
+        "Akash Borigi",
+        "Rupendra Lekkala",
+        "Amaury Lendasse",
+        "Edward Ratner",
+        "Sai Sowjanya Bhamidipati",
+        "Alexander Schlager",
+        "Peggy Lindner"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-08-27T05:59:23+00:00",
+      "link": "https://arxiv.org/pdf/2608.26648v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "AI-generated image detection using structured CNN channel stacking",
+      "llm_evidence_cn": "使用结构化CNN通道堆叠进行AI生成图像检测",
+      "llm_evidence": "使用结构化CNN通道堆叠进行AI生成图像检测",
+      "canonical_evidence": "使用结构化CNN通道堆叠进行AI生成图像检测",
+      "llm_tldr_en": "Introduces HCS, a compact CNN-based framework for AI-generated image detection that structures intermediate activations into a 60-dimensional representation with per-channel classifiers and an aggregator.",
+      "llm_tldr_cn": "针对现有合成图像检测器可解释性不足的问题，本文提出层次通道堆叠（HCS）框架，将CNN中间激活转换为结构化的60维表示，并通过每通道一级分类器和二级聚合器产生图像级预测。在涵盖GAN和扩散生成器的基准上，HCS达到86.7%的准确率和宏F1分数，且消融实验表明三阶段结构优于更浅配置。该方法提供了可分析的决策层次，为AI生成图像检测贡献了可解释且紧凑的解决方案。",
+      "llm_tldr": "针对现有合成图像检测器可解释性不足的问题，本文提出层次通道堆叠（HCS）框架，将CNN中间激活转换为结构化的60维表示，并通过每通道一级分类器和二级聚合器产生图像级预测。在涵盖GAN和扩散生成器的基准上，HCS达到86.7%的准确率和宏F1分数，且消融实验表明三阶段结构优于更浅配置。该方法提供了可分析的决策层次，为AI生成图像检测贡献了可解释且紧凑的解决方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.25609v1",
+      "source": "arxiv",
+      "title": "On the Separation of Human and AI-Generated Images in CLIP Embedding Space",
+      "abstract": "We identify a previously unreported phenomenon in CLIP representations: human and AI-generated paintings spontaneously separate along the dominant principal directions of their joint embedding distribution, without any supervised objective designed to distinguish the two classes. Rather than exploiting this phenomenon for detection, our objective is to interpret it: we seek to identify the visual information underlying the separation and to trace it back from the embedding space to the image domain. We pursue this objective through a progressive investigation combining interpretable image representations with gradient-based inversion, used systematically as an experimental probe of the relationships identified in feature space. Robustness experiments and increasingly expressive statistical descriptors progressively rule out several intuitive explanations based on global image properties and simple local statistics, and point instead to distributed multiscale image structure. Multiscale scattering provides the most informative interpretable representation considered, but offers only a partial account of the phenomenon.   Direct inversion provides a complementary and striking observation: substantial displacements along the dominant CLIP directions can be induced by image perturbations that remain nearly imperceptible to human observers, showing that the directions involved in the separation are highly sensitive to image variations with very low perceptual salience for humans. Taken together, these results reveal a significant difference between the visual evidence reflected in CLIP representations and that readily accessible to human perception, raising broader questions about the relationship between artificial and human vision and, ultimately, between artificial and human aesthetic judgment.",
+      "authors": [
+        "Andrea Asperti"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-26T10:26:52+00:00",
+      "link": "https://arxiv.org/pdf/2608.25609v1",
+      "tags": [
+        "keyword:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Studies spontaneous separation of human and AI-generated images in CLIP embedding space, directly relevant to distinguishing real vs generated",
+      "llm_evidence_cn": "研究CLIP空间中人类与AI生成图像的分离，直接关联真假图像区分",
+      "llm_evidence": "研究CLIP空间中人类与AI生成图像的分离，直接关联真假图像区分",
+      "canonical_evidence": "研究CLIP空间中人类与AI生成图像的分离，直接关联真假图像区分",
+      "llm_tldr_en": "Identifies and interprets the spontaneous separation of human and AI-generated images in CLIP embeddings, aiding understanding for detection.",
+      "llm_tldr_cn": "该文发现CLIP表示中人类与AI生成绘画沿主方向自发分离，且无需监督目标。作者通过可解释图像表示和梯度反演系统追踪分离背后的视觉信息。实验验证了分离的鲁棒性并解释了原因。这项研究为理解并设计AI生成图像检测方法提供了重要基础。",
+      "llm_tldr": "该文发现CLIP表示中人类与AI生成绘画沿主方向自发分离，且无需监督目标。作者通过可解释图像表示和梯度反演系统追踪分离背后的视觉信息。实验验证了分离的鲁棒性并解释了原因。这项研究为理解并设计AI生成图像检测方法提供了重要基础。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.25485v1",
+      "source": "arxiv",
+      "title": "Semi-Supervised Adaptation of Vision-Language Models for Image Classification",
+      "abstract": "Vision-language models like CLIP have shown sig- nificant potential in handling natural images, yet their perfor- mance is often limited by the distinct characteristics of satellite imagery. While parameter-efficient adaptation techniques exist, their efficacy is frequently limited by the scarcity of annotated samples. In this letter, we propose Self-Evolutionary CLIP (SE- CLIP), a semi-supervised framework designed for recursive label mining in scene classification. The approach follows a dual-phase pipeline, where an initial warm-up on a few annotated seeds is followed by a recursive discovery phase that iteratively identifies high-confidence samples from unlabeled pools. To maintain the integrity of the evolving support set, we employ a class-balanced selection strategy that prevents the model from being dominated by easily learned categories. Results on the UCM and NWPU benchmarks indicate that SE-CLIP significantly outperforms existing semi-supervised approaches. The framework provides a viable solution for adapting VLMs to the remote sensing domain with minimal human intervention.",
+      "authors": [
+        "Mohamed L. Mekhalfi",
+        "Mohamad M. Al Rahhal",
+        "Yakoub Bazi",
+        "Salah E. Khenfer",
+        "Mingdeng Shi",
+        "Hua Zou",
+        "Mansour Zuair"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-26T07:54:50+00:00",
+      "link": "https://arxiv.org/pdf/2608.25485v1",
+      "tags": [
+        "keyword:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "semi-supervised adaptation with few annotated seeds for image classification under scarce labels",
+      "llm_evidence_cn": "在标注稀缺下利用少量种子进行半监督自适应图像分类",
+      "llm_evidence": "在标注稀缺下利用少量种子进行半监督自适应图像分类",
+      "canonical_evidence": "在标注稀缺下利用少量种子进行半监督自适应图像分类",
+      "llm_tldr_en": "Addresses limited annotated samples in satellite imagery classification; proposes Self-Evolutionary CLIP (SE-CLIP) with warm-up on few seeds and recursive high-confidence mining from unlabeled pools; maintains support set integrity via class-specific criteria; improves scene classification under label scarcity, contributing to few-shot image classification.",
+      "llm_tldr_cn": "针对卫星图像分类中标注样本稀缺的问题，提出自进化CLIP（SE-CLIP）框架，先利用少量标注种子进行预热，再从无标签池中递归挖掘高置信度样本扩充支持集，并采用类别特定准则保持支持集完整性。实验表明该方法在标注有限时有效提升场景分类性能，为少样本条件下的图像分类提供了半监督自适应方案。",
+      "llm_tldr": "针对卫星图像分类中标注样本稀缺的问题，提出自进化CLIP（SE-CLIP）框架，先利用少量标注种子进行预热，再从无标签池中递归挖掘高置信度样本扩充支持集，并采用类别特定准则保持支持集完整性。实验表明该方法在标注有限时有效提升场景分类性能，为少样本条件下的图像分类提供了半监督自适应方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.22594v1",
+      "source": "arxiv",
+      "title": "Tabular foundation models for non-tabular tasks",
+      "abstract": "Tabular foundation models (TFMs) have recently emerged as a promising paradigm for machine learning on tabular data, offering the ability to generalize across datasets without task-specific training. Since many machine learning datasets can be represented as tables, this raises the question: does TFM capability extend beyond tasks traditionally regarded as tabular? We address this question by using TabPFN v3 on three non-tabular classification problems: handwritten digit recognition on MNIST, language identification of French and German words, and image classification on Tiny ImageNet. In each case, the original data are represented as rows of a table and classification is formulated as prediction of a missing label. We evaluate performance as a function of the number of context samples provided to the pretrained model, with no additional training or fine-tuning. Despite having no explicit access to the spatial or sequential structure characterizing the data, TabPFN v3 in some cases achieves accuracies comparable with that of models or methods geared specifically toward the corresponding tasks.",
+      "authors": [
+        "Goran Nakerst",
+        "John Brennan",
+        "Wouter Beugeling",
+        "Masudul Haque"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-23T20:58:39+00:00",
+      "link": "https://arxiv.org/pdf/2608.22594v1",
+      "tags": [
+        "keyword:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses TabPFN v3 for image classification with few labeled examples by representing data as tables",
+      "llm_evidence_cn": "使用TabPFN v3将图像表示为表格，在少量标注下进行分类",
+      "llm_evidence": "使用TabPFN v3将图像表示为表格，在少量标注下进行分类",
+      "canonical_evidence": "使用TabPFN v3将图像表示为表格，在少量标注下进行分类",
+      "llm_tldr_en": "Investigates whether tabular foundation models generalize to non-tabular classification tasks; applies TabPFN v3 to MNIST digit recognition and Tiny ImageNet image classification by converting data into rows of a table; evaluates performance as a function of provided context examples, showing viability beyond tabular domains; contributes a transferable few-shot learning approach for image classification.",
+      "llm_tldr_cn": "针对表格基础模型能否用于非表格任务的问题，将MNIST手写数字识别和Tiny ImageNet图像分类等任务转化为表格形式，使用TabPFN v3进行预测。实验评估了不同数量的上下文示例对性能的影响，表明表格基础模型可以扩展到图像分类领域，为少样本图像分类提供了一种新思路。该方法无需任务特定训练，有望在标注稀缺场景下发挥作用。",
+      "llm_tldr": "针对表格基础模型能否用于非表格任务的问题，将MNIST手写数字识别和Tiny ImageNet图像分类等任务转化为表格形式，使用TabPFN v3进行预测。实验评估了不同数量的上下文示例对性能的影响，表明表格基础模型可以扩展到图像分类领域，为少样本图像分类提供了一种新思路。该方法无需任务特定训练，有望在标注稀缺场景下发挥作用。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.24281v1",
+      "source": "arxiv",
+      "title": "Example-based Robust Abnormality Detection with Minimal Annotations using Exemplar Med-DETR",
+      "abstract": "Reducing annotation requirements remains a key challenge in developing robust medical object detectors. To address this, Vision-Language (VL) object detection methods leverage grounding text information to enable powerful zero-shot and few-shot object detectors in the natural image domain [1, 2, 3, 4]. However, transferring these methods to the medical domain is challenging due to the absence of comparable quality and quantity of the grounding data. Regardless, significant contextual and non-imaging information exists in medical images that remains underutilized. Few-shot learning (FSL) techniques partially address this limitation but struggle to general ize to unseen medical findings and require extensive retraining when new findings are introduced [5, 6]. To overcome these challenges, we extend our prior EM-DETR framework [7] and introduce a scalable FS detection approach designed for efficient abnormality detection in Chest X-Ray (CXR) images under minimal supervision. The proposed architecture incorporates exemplar-based feature generation and domain-aware contrastive optimization, enabling effective adaptation to novel disease findings without exhaustive retraining. Our method achieves near state-of-the-art (SOTA) detection performance using less than 10% of the annotated data, demonstrating its potential for practical, annotation-efficient clinical deployment across both proprietary and public CXR datasets.",
+      "authors": [
+        "Sheethal Bhat",
+        "Bogdan Georgescu",
+        "Awais Mansoor",
+        "Mathias Zinnen",
+        "Pranjal Sahu",
+        "Florin C. Ghesu",
+        "Sasa Grbic",
+        "Andreas Maier"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-25T09:06:23+00:00",
+      "link": "https://arxiv.org/pdf/2608.24281v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Few-shot learning with minimal annotations for medical abnormality detection; transferable few-shot detection method",
+      "llm_evidence_cn": "医学异常检测中的少样本学习方法，迁移性可用于少样本图像检测",
+      "llm_evidence": "医学异常检测中的少样本学习方法，迁移性可用于少样本图像检测",
+      "canonical_evidence": "医学异常检测中的少样本学习方法，迁移性可用于少样本图像检测",
+      "llm_tldr_en": "Addresses annotation scarcity in medical object detection by leveraging few-shot learning and exemplar-based detection with Med-DETR.",
+      "llm_tldr_cn": "该文针对医学对象检测中标注成本高的问题，提出基于示例的Med-DETR方法，利用少量标注示例进行鲁棒异常检测。方法结合视觉-语言模型和少样本学习，减少对新医学发现的重复训练需求。实验表明该方法在最小标注条件下可有效检测异常。该方法对少样本目标检测任务具有借鉴意义。",
+      "llm_tldr": "该文针对医学对象检测中标注成本高的问题，提出基于示例的Med-DETR方法，利用少量标注示例进行鲁棒异常检测。方法结合视觉-语言模型和少样本学习，减少对新医学发现的重复训练需求。实验表明该方法在最小标注条件下可有效检测异常。该方法对少样本目标检测任务具有借鉴意义。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.25480v1",
+      "source": "arxiv",
+      "title": "DeCO: Discriminative Evidence Composition for Fine-Grained Dataset Distillation",
+      "abstract": "Dataset distillation compresses a large training set into a compact synthetic set while preserving its downstream utility. However, existing methods primarily preserve global image statistics and may overlook the localized evidence essential for fine-grained visual classification (FGVC), such as object parts, subtle textures, and region-specific structures. We formulate fine-grained dataset distillation as budgeted discriminative-evidence preservation and propose Discriminative Evidence Composition (DeCO). DeCO uses attention rollout from a pretrained TransFG teacher to identify informative patches, applies spatial diversification to reduce redundant coverage, and organizes the resulting regions into class-wise evidence banks. Multiple same-class regions are then packed into compact grid-composed images. The teacher is used only for dataset construction, whereas downstream students are trained with standard hard-label supervision without teacher logits. Experiments on CUB-200-2011, FGVC-Aircraft, and Stanford Cars show that DeCO consistently outperforms representative coreset and dataset-distillation baselines under different IPC budgets.",
+      "authors": [
+        "Chuixuan Fan",
+        "Guang Li",
+        "Shijie Wang",
+        "Dongzhan Zhou",
+        "Baoli Sun",
+        "Takahiro Ogawa",
+        "Miki Haseyama",
+        "Zhihui Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-26T07:52:27+00:00",
+      "link": "https://arxiv.org/pdf/2608.25480v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Fine-grained dataset distillation for visual classification, addresses fine-grained classification and limited data",
+      "llm_evidence_cn": "细粒度数据集蒸馏，针对细粒度图像分类和有限数据场景",
+      "llm_evidence": "细粒度数据集蒸馏，针对细粒度图像分类和有限数据场景",
+      "canonical_evidence": "细粒度数据集蒸馏，针对细粒度图像分类和有限数据场景",
+      "llm_tldr_en": "Preserves discriminative local evidence for fine-grained visual classification in dataset distillation, relevant to efficient training.",
+      "llm_tldr_cn": "现有数据集蒸馏方法主要保留全局统计信息，忽视了细粒度视觉分类所需的局部判别证据。本文提出判别性证据组合方法DeCO，利用TransFG教师注意力识别信息补丁并进行空间多样化。实验表明DeCO在细粒度分类任务上优于现有蒸馏方法。该方法为有限数据下的细粒度分类提供了新思路。",
+      "llm_tldr": "现有数据集蒸馏方法主要保留全局统计信息，忽视了细粒度视觉分类所需的局部判别证据。本文提出判别性证据组合方法DeCO，利用TransFG教师注意力识别信息补丁并进行空间多样化。实验表明DeCO在细粒度分类任务上优于现有蒸馏方法。该方法为有限数据下的细粒度分类提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl:composite"
+      ],
+      "matched_query_tag": "query:deepfake-fsl:composite",
+      "matched_query_text": "Papers central to 深度伪造检测、AI生成图像检测、图像分类、少样本学习、特征对齐、细粒度分类相关论文, especially work that connects or combines: detection of deepfake images and videos using machine learning models; detecting images created by generative AI models such as GANs and diffusion models; classifying images into categories using convolutional neural networks; training models with only a small number of labeled examples per class; detecting manipulated face images in multimedia forensics; distinguishing computer-generated images from real photographs; identifying AI generated or synthetic images with limited training data; few shot learning approaches for face forgery detection and image classification; few shot deepfake detection using feature alignment; cross domain generalization for AI generated image detection.",
+      "matched_requirement_id": "req-composite-deepfake-fsl",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
