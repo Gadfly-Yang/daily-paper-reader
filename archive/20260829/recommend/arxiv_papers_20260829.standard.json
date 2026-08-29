@@ -1,0 +1,57 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-29T03:13:25.643388+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2608.22127v1",
+      "source": "arxiv",
+      "title": "Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs",
+      "abstract": "Text-Attributed Graphs (TAGs) integrate graph structures and node-associated textual attributes, and recent studies have increasingly leveraged Large Language Models (LLMs) to improve TAG learning in few-shot settings. However, existing approaches typically utilize LLM-derived information uniformly across all nodes, despite substantial variations in its reliability, while also incurring considerable monetary costs. We argue that the most appropriate source of supervision may differ across nodes, as Graph Neural Networks (GNNs) and LLMs exhibit complementary strengths in exploiting structural and semantic information, respectively. To this end, we propose CoTeach, a Confidence-aware dual-teacher learning framework that dynamically selects the more reliable teacher for each node. Experimental results demonstrate that CoTeach consistently improves few-shot node classification performance while reducing unnecessary LLM utilization and associated monetary costs.",
+      "authors": [
+        "Hojin Kim",
+        "Sujin Yoon",
+        "Sungsu Lim",
+        "Dongwon Lee",
+        "David Yoon Suk Kang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.SI"
+      ],
+      "published": "2026-08-22T22:54:42+00:00",
+      "link": "https://arxiv.org/pdf/2608.22127v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Few-shot node classification with confidence-aware dual-teacher learning on text-attributed graphs",
+      "llm_evidence_cn": "文本属性图上基于置信度感知双教师学习的少样本节点分类",
+      "llm_evidence": "文本属性图上基于置信度感知双教师学习的少样本节点分类",
+      "canonical_evidence": "文本属性图上基于置信度感知双教师学习的少样本节点分类",
+      "llm_tldr_en": "The paper addresses few-shot node classification on text-attributed graphs by proposing CoTeach, a confidence-aware dual-teacher framework that adaptively combines LLM and GNN supervision per node to exploit structural and semantic strengths.",
+      "llm_tldr_cn": "针对文本属性图少样本学习中LLM监督可靠性不一致及成本高的问题，本文提出CoTeach置信度感知双教师学习框架，根据节点特征自适应融合大语言模型与图神经网络的互补优势进行监督。实验表明，该方法能更有效地利用结构与语义信息，提升少样本节点分类性能。该工作为图上的少样本分类提供了新策略。",
+      "llm_tldr": "针对文本属性图少样本学习中LLM监督可靠性不一致及成本高的问题，本文提出CoTeach置信度感知双教师学习框架，根据节点特征自适应融合大语言模型与图神经网络的互补优势进行监督。实验表明，该方法能更有效地利用结构与语义信息，提升少样本节点分类性能。该工作为图上的少样本分类提供了新策略。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

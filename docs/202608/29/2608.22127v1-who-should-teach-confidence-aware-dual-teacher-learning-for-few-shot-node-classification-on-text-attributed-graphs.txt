@@ -1,0 +1,272 @@
+Title: Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs
+
+URL Source: https://arxiv.org/pdf/2608.22127v1
+
+Published Time: Tue, 25 Aug 2026 01:04:27 GMT
+
+Number of Pages: 5
+
+Markdown Content:
+# Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs 
+
+## Hojin Kim 
+
+Chungbuk National University Cheongju, South Korea khojin.01@cbnu.ac.kr 
+
+## Sujin Yoon 
+
+Chungbuk National University Cheongju, South Korea sujin.yoon@cbnu.ac.kr 
+
+## Sungsu Lim 
+
+Chungnam National University Daejeon, South Korea sungsu@cnu.ac.kr 
+
+## Dongwon Lee 
+
+The Pennsylvania State University University Park, PA, USA dongwon@psu.edu 
+
+## David Yoon Suk Kang ∗
+
+Chungbuk National University Cheongju, South Korea dyskang@cbnu.ac.kr 
+
+Abstract 
+
+Text-Attributed Graphs (TAGs) integrate graph structures and node-associated textual attributes, and recent studies have increasingly leveraged Large Language Models (LLMs) to improve TAG learning in few-shot settings. However, existing approaches typically utilize LLM-derived information uniformly across all nodes, despite sub-stantial variations in its reliability, while also incurring considerable monetary costs. We argue that the most appropriate source of super-vision may differ across nodes, as Graph Neural Networks (GNNs) and LLMs exhibit complementary strengths in exploiting structural and semantic information, respectively. To this end, we propose CoTeach, a Co nfidence-aware dual-teach er learning framework that dynamically selects the more reliable teacher for each node. Experimental results demonstrate that CoTeach consistently im-proves few-shot node classification performance while reducing unnecessary LLM utilization and associated monetary costs. 
+
+CCS Concepts 
+
+• Computing methodologies → Machine learning .
+
+Keywords 
+
+text-attribute graphs, confidence-aware dual-teacher, LLM, GNN 
+
+ACM Reference Format: 
+
+Hojin Kim, Sujin Yoon, Sungsu Lim, Dongwon Lee, and David Yoon Suk Kang. 2026. Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs. In . ACM, New York, NY, USA, 5 pages. https://doi.org/10.1145/nnnnnnn.nnnnnnn 
+
+1 Introduction 
+
+Background. Text-Attributed Graphs (TAGs) are graph-structured data that jointly encode relational information among nodes through 
+
+> ∗Corresponding author. Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.
+> Conference’17, Washington, DC, USA
+> © 2026 Copyright held by the owner/author(s). Publication rights licensed to ACM. ACM ISBN 978-x-xxxx-xxxx-x/YYYY/MM https://doi.org/10.1145/nnnnnnn.nnnnnnn
+
+graph topology and semantic information through node-associated textual attributes [8, 18, 20]. Owing to their ability to capture both structural and semantic characteristics, TAGs have been widely employed in numerous real-world applications, including social networks, e-commerce platforms, and online communities [7]. In these settings, effectively fusing graph structural information with node textual semantics is crucial for improving downstream graph learning tasks, such as node classification, link prediction, and recommendation [7]. Existing TAG learning methods typically encode node texts using 
+
+shallow textual representations (e.g. , TF-IDF [9] and Word2Vec [13]) or pretrained language models (PLMs) ( e.g. , BERT [2]) and integrate them with graph neural networks (GNNs) [4, 10, 16] for graph learn-ing [8, 18]. However, these methods largely treat textual semantics as static representations and cannot fully exploit the rich linguistic knowledge encoded in language models [5, 6]. To address this limitation, recent studies have begun incorpo-rating Large Language Models (LLMs) directly into TAG learn-ing frameworks [7, 15]. Representative paradigms include LLM-as-Annotator [1], LLM-as-Enhancer [5], and LLM-as-Generator [19], which leverage LLMs for annotation, representation enhancement, and data generation, respectively. These approaches have demon-strated promising improvements, particularly in label-scarce and few-shot settings [1, 5, 19]. 
+
+Motivation. Existing LLM-based TAG learning methods leverage LLM-derived supervision to enhance graph representation learn-ing [1, 5, 19]. However, they generally do not explicitly account for variations in the reliability of LLM supervision across nodes. In practice, the quality of LLM-generated supervision can vary sub-stantially across nodes. While LLM outputs may provide highly informative guidance for certain nodes, they can introduce noisy or incorrect supervision for others. For example, generated pseudo-labels may contain errors for specific nodes, whereas augmented semantic information or explanations may not be equally beneficial across the graph [1, 5]. However, LLMs are not the only source of supervision available in TAGs. Graph topology itself provides valuable structural signals, and GNN-based approaches have demonstrated that neighboring nodes can effectively guide representation learning through mes-sage passing [4, 10, 16]. Consequently, different nodes may benefit from different sources of supervision. While some nodes may be arXiv:2608.22127v1 [cs.LG] 22 Aug 2026 Conference’17, July 2017, Washington, DC, USA 
+
+Figure 1: Overview of TAG learning in CoTeach. 
+
+better guided by semantic knowledge from LLMs, others may ben-efit more from structural signals encoded in graph topology. This raises a fundamental question: Which source of supervision should guide each node? In other words, Who should teach each node? 
+
+Proposed Framework. To answer this question, we propose CoTeach, a confidence-aware dual-teacher learning framework for few-shot TAG learning. CoTeach incorporates two complementary teach-ers: a GNN Teacher that captures structural knowledge from graph topology and an LLM Teacher that exploits semantic knowledge from node texts. For each node, CoTeach first evaluates the confi-dence of GNN predictions. Nodes with high-confidence predictions are directly supervised by the GNN teacher, whereas uncertain nodes are further examined by the LLM teacher. Only reliable LLM predictions, as determined by confidence scoring, are incorporated as supervision. Through this confidence-aware teacher selection, CoTeach provides a simple yet effective mechanism for adaptive supervision in few-shot TAG learning while reducing unnecessary monetary costs associated with commercial LLM inference. 
+
+Contributions. The contributions of this paper are as follows: 
+
+• New Perspective. We introduce an adaptive supervision per-spective that accounts for node-level variations in the reliability of LLM-derived supervision. 
+
+• Novel Framework. We propose CoTeach, a confidence-aware dual-teacher learning framework that adaptively selects the most reliable teacher for each node. 
+
+• Extensive Evaluation. We conduct comprehensive evaluations on four real-world TAGs, validating the effectiveness and cost efficiency of CoTeach. 
+
+2 CoTeach: Proposed Framework 
+
+Overview. In this section, we present CoTeach, a confidence-aware dual-teacher learning framework for few-shot text-attributed graph learning. As illustrated in Figure 1, CoTeach consists of three main components: (S1) GNN teacher, (S2) LLM teacher, and 
+
+(S3) Student model. Given a TAG, the GNN teacher first gener-ates pseudo-labels and confidence scores based on structural in-formation (Figure 1-(a)). Nodes with high-confidence predictions are directly supervised by the GNN teacher, whereas nodes with low-confidence predictions are delegated to the LLM teacher for se-mantic reasoning. The LLM teacher then produces complementary pseudo-labels for these uncertain nodes using textual information (Figure 1-(b)). Finally, the student model learns from confidence-aware pseudo-labels provided by both teachers (Figure 1-(c)). 
+
+GNN Teacher. The GNN teacher is designed to generate structure-aware supervision by exploiting relational information embedded in the graph topology. Specifically, we employ Deep Graph Infomax (DGI) [17] to learn node representations in a self-supervised man-ner and train a two-layer MLP classifier [3] on top of the learned embeddings. The GNN Teacher then produces a pseudo-label and a confidence score for each node, where the pseudo-label corresponds to the most probable class and the confidence score is defined as its associated prediction probability. Using a confidence threshold 𝛾 𝑔 ,each node 𝑣 𝑖 in V are partitioned into two groups: 
+
+V𝐺𝑁 𝑁 = {𝑣 𝑖 ∈ V | 𝑐 𝑔 𝑖 ≥ 𝛾 𝑔 }, V𝑅 = V \ V 𝐺𝑁 𝑁 . (1) Here, V𝐺𝑁 𝑁 denotes the set of nodes for which the GNN teacher makes highly confident predictions, while V𝑅 denotes the set of nodes with relatively low confidence. We interpret nodes in V𝑅 as cases where structural information alone is insufficient to gener-ate reliable predictions. Consequently, the GNN teacher provides reliable pseudo-labels for structurally informative nodes while iden-tifying nodes for which structural information alone is insufficient for confident prediction. These nodes are subsequently passed to the LLM teacher, which provides complementary supervision based on semantic information. 
+
+LLM Teacher. The LLM teacher is designed to generate semantic-aware supervision by leveraging the textual semantics of nodes. It focuses on nodes in V𝑅 , where structural information alone is insufficient for reliable prediction. Since querying LLMs for all nodes in V𝑅 incurs substantial monetary costs, we first select a subset of representative nodes using a seed node selection strategy. Specifically, following [21], we cluster node representations and select nodes closest to the cluster centroids as seed nodes. This strategy reduces the number of LLM queries while selecting se-mantically representative nodes from diverse regions of the feature space, thereby encouraging balanced semantic supervision across different classes. For each selected node, the LLM teacher receives a prompt consisting of the node text and candidate label descriptions, and predicts a probability distribution over the candidate labels. 1 The pseudo-label is assigned as the label with the highest predicted probability, while the corresponding probability is used as the con-fidence score. Only predictions whose confidence scores exceed a  
+
+> 1An example prompt is available at: https://buly.kr/GP4yN34 Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs Conference’17, July 2017, Washington, DC, USA
+
+predefined threshold 𝛾 𝑙 are retained and assigned to the node set 
+
+V𝐿𝐿𝑀 , while the remaining predictions are discarded. The resulting node set V𝐿𝐿𝑀 is then used, together with V𝐺𝑁 𝑁 , to supervise the student model. 
+
+Student Model. The Student model is a component designed to learn node representations under the supervision of both the GNN teacher and the LLM teacher. Specifically, nodes in V𝐺𝑁 𝑁 are su-pervised using the pseudo-labels and class probability distributions produced by the GNN teacher, whereas nodes in V𝐿𝐿𝑀 are super-vised using those generated by the LLM teacher. In this way, each node selectively receives supervision from the teacher that provides the most reliable prediction. The student produces node-level class logits as follows: z𝑠 𝑖 = 𝑔 𝜙 𝑠 
+
+ 𝑓 𝜃 𝑠 (X, A) , (2) where 𝑓 𝜃 𝑠 and 𝑔 𝜙 𝑠 denote the student GNN encoder and classifi-cation head, respectively. The student is trained using both hard pseudo-label supervision and soft distribution distillation. To learn the pseudo-labels generated by each teacher, we employ the follow-ing cross-entropy loss: 
+
+L𝑇 𝐶𝐸 =∑︁  
+
+> 𝑣 𝑖 ∈ V 𝑇
+
+CE 
+
+
+
+z𝑠 𝑖 , ˆ𝑦 𝑇 𝑖 
+
+
+
+, (3) where 𝑇 ∈ { 𝐺𝑁 𝑁 , 𝐿𝐿𝑀 }, V𝑇 denotes the node set supervised by teacher 𝑇 , and ˆ 𝑦 𝑇 𝑖 denotes the corresponding pseudo-label. To fur-ther transfer the uncertainty and inter-class relationships captured by each teacher, we perform knowledge distillation by matching the class probability distributions: 
+
+L𝑇 𝐾𝐷 =∑︁  
+
+> 𝑣 𝑖 ∈ V 𝑇
+
+KL 
+
+
+
+p𝑇 𝑖 ∥p𝑠 𝑖 
+
+
+
+, (4) where p𝑇 𝑖 and p𝑠 𝑖 denote the class probability distributions of the teacher and the student, respectively. The final training objective is defined as 
+
+L = 𝛼 
+
+
+
+L𝐺𝑁 𝑁 𝐶𝐸 + L 𝐺𝑁 𝑁 𝐾𝐷 
+
+
+
++ ( 1 − 𝛼 )
+
+
+
+L𝐿𝐿𝑀 𝐶𝐸 + L 𝐿𝐿𝑀 𝐾𝐷 
+
+
+
+, (5) where 𝛼 ∈ [ 0, 1] controls the relative contributions of the GNN teacher and LLM teacher. Consequently, the student effectively combines structure-aware supervision from the GNN teacher and semantic supervision from the LLM teacher, leading to improved few-shot node classification performance. 
+
+3 Evaluation 
+
+We evaluate CoTeach to answer the following questions: 
+
+• EQ1. How does each teacher contribute to the effectiveness of CoTeach? 
+
+• EQ2. : Does CoTeach outperform existing state-of-the-art TAG learning methods? 
+
+• EQ3. How cost-efficient is CoTeach compared with existing LLM-based methods? 
+
+• EQ4. How sensitive is CoTeach to key hyperparameters? 
+
+3.1 Experimental Settings 
+
+Datasets and TAG Learning Methods. Following [12, 19, 21], we evaluate CoTeach on 4 real-world TAGs: Cora, Citeseer, Pubmed, and WikiCS. Here, we summarize the basic statistics of these datasets in Table 1, where | 𝑉 |, | 𝐸 |, and | 𝐶 | denote the number of nodes, 
+
+Table 1: Statistics of real-world TAGs used in our experiments                          
+
+> |𝑉 ||𝐸 ||𝐶 |Domain Text Attribute
+> Cora 2,078 5,278 7Citation Title & abstract of a paper
+> Citeseer 3,186 4,225 6Citation Title & abstract of a paper
+> Pubmed 19,717 44,324 3Citation Title & abstract of a paper
+> WikiCS 11,701 215,603 10 Web Content of a article
+
+edges, and classes, respectively. We compare CoTeach with the following 10 competing methods: (1) 3 backbone GNN methods ( i.e. ,GCN [10], GAT [16], and GraphSAGE [4]); (2) 3 PLM methods ( i.e. ,BERT [2], BART [11], and SBERT [14]); (3) 1 GNN+PLM method (i.e. , GLEM [22]); and (4) 3 GNN+LLM methods ( i.e. , LLMGNN [1], TAPE [5], and LLM4NG [19]). All hyperparameters are configured using the best settings identified through an extensive grid search within the ranges recommended in the corresponding papers. 
+
+Implementation. In CoTeach, GPT-3.5-turbo is used as the LLM Teacher, while GCN, GAT, and GraphSAGE serve as the student model backbones. To facilitate reproducibility, we publicly release the source code, hyperparameter settings, and implementation de-tails at: https://buly.kr/GP4yN34. 
+
+Evaluation Protocol. Following [12], we split each dataset into training, validation, and test sets with a ratio of 60%, 20%, and 20%, respectively. For 𝑘 -shot learning, we randomly sample 𝑘 ∈{3, 5, 7, 10 } labeled nodes per class from the training set. Perfor-mance is evaluated by test accuracy and reported as the mean and standard deviation over five runs. 
+
+3.2 Experimental Results 
+
+EQ1: Ablation Study. We first individually assess the effectiveness of the supervision strategies proposed in CoTeach. Specifically, we compare four settings: no teacher, GNN teacher only, LLM teacher only, and both GNN and LLM teachers. For a fair comparison, all settings employ GraphSAGE as the student backbone model. Note that the no teacher setting corresponds to the original GraphSAGE. Unless otherwise specified, the results in this section are reported on WikiCS using GraphSAGE as the student backbone model due to space limitations. Similar trends were observed across the other datasets and backbone architectures. We summarize the results in Figure 2 as follows. First, combin-ing both GNN and LLM teachers consistently achieves the best performance across all few-shot settings. This result demonstrates that structural knowledge from the GNN teacher and semantic knowledge from the LLM teacher are complementary and can be effectively integrated to provide more reliable supervision. Sec-ond, employing either the GNN teacher or the LLM teacher alone consistently outperforms the no teacher setting. This observation confirms the effectiveness of teacher-generated supervision for im-proving node classification performance under limited labeled data. Third, neither the GNN teacher nor the LLM teacher consistently dominates the other across different few-shot settings. This sug-gests that the two teachers capture different yet complementary aspects of node information, motivating the need to jointly exploit both supervision sources. 
+
+EQ2: Accuracy Comparison. Next, we evaluate the performance of CoTeach against 10 competing methods. Table 2 shows the results for k-shot node classification. For each dataset, the best Conference’17, July 2017, Washington, DC, USA 
+
+Table 2: Few-shot node classification accuracy of CoTeach and 10 competing methods on four real-world datasets. 
+
+GNN PLM GNN+PLM GNN+LLM Gain 
+
+(%) 
+
+k GCN GAT GraphSAGE BERT BART SBERT GLEM TAPE LLMGNN LLM4NG CoTeach G CoTeach A CoTeach S
+
+> Cora
+
+3 65.5 ±2.7 (7) 64.3 ±4.7 (8) 59.0 ±4.3 (9) 27.4 ±3.5 (13) 28.8 ±4.8 (12) 50.6 ±3.6 (11) 52.8 ±6.8 (10) 65.6 ±4.1 (6) 68.6 ±2.5 (5) 72.2 ±3.8 (4) 76.5 ±2.4 (2) 77.5 ±2.9 (1) 75.7 ±2.5 (3) +7.3 
+
+5 73.0 ±3.7 (6) 71.8 ±4.6 (7) 68.5 ±1.3 (9) 30.1 ±4.6 (13) 31.6 ±6.4 (12) 56.6 ±3.1 (11) 59.1 ±5.5 (10) 73.6 ±3.5 (5) 70.4 ±2.1 (8) 76.8 ±2.6 (4) 81.0 ±1.1 (1) 81.0 ±1.4 (2) 80.2 ±0.8 (3) +5.5 
+
+7 74.5 ±4.7 (6) 74.8 ±2.8 (5) 72.6 ±1.9 (8) 32.2 ±5.3 (13) 33.2 ±5.5 (12) 58.8 ±3.6 (11) 66.7 ±3.1 (10) 74.0 ±2.7 (7) 71.8 ±2.3 (9) 78.6 ±1.1 (4) 81.5 ±1.0 (2) 82.0 ±0.5 (1) 81.3 ±1.5 (3) +4.3 
+
+10 76.7 ±2.9 (5) 75.1 ±3.8 (7) 74.6 ±1.4 (8) 34.9 ±3.8 (13) 35.1 ±5.5 (12) 60.9 ±2.9 (11) 71.0 ±4.1 (10) 76.2 ±2.6 (6) 72.9 ±2.1 (9) 80.7 ±1.5 (4) 82.1 ±1.4 (3) 82.8 ±2.3 (1) 82.4 ±1.5 (2) +2.6 
+
+> Citeseer
+
+3 46.9 ±6.9 (10) 49.2 ±3.5 (8) 43.0 ±3.6 (11) 31.8 ±3.6 (13) 33.8 ±4.2 (12) 55.2 ±4.0 (7) 48.8 ±6.9 (9) 62.3 ±3.4 (5) 61.3 ±3.2 (6) 67.1 ±1.6 (3) 65.1 ±1.9 (4) 67.6 ±1.2 (2) 68.1 ±1.8 (1) +1.5 
+
+5 51.2 ±4.0 (10) 55.3 ±4.7 (8) 47.2 ±7.5 (11) 33.3 ±3.7 (13) 36.3 ±5.5 (12) 58.4 ±3.3 (7) 54.6 ±3.6 (9) 63.9 ±5.1 (5) 62.4 ±1.9 (6) 67.2 ±1.8 (3) 66.8 ±1.8 (4) 69.1 ±2.1 (1) 68.5 ±3.0 (2) +2.8 
+
+7 57.3 ±4.2 (10) 59.6 ±3.1 (8) 53.5 ±5.4 (11) 33.6 ±1.1 (13) 38.8 ±4.0 (12) 58.1 ±2.2 (9) 60.7 ±6.5 (7) 65.8 ±4.1 (5) 63.0 ±1.9 (6) 67.9 ±1.3 (3) 67.2 ±3.3 (4) 68.8 ±2.9 (2) 69.3 ±1.3 (1) +2.1 
+
+10 58.8 ±3.3 (10) 60.0 ±2.4 (8) 56.0 ±5.2 (11) 36.0 ±1.3 (13) 42.9 ±3.4 (12) 59.8 ±3.4 (9) 64.5 ±2.4 (6) 66.3 ±3.6 (5) 63.3 ±2.1 (7) 68.3 ±1.1 (3) 67.9 ±2.7 (4) 70.3 ±1.4 (1) 69.8 ±2.8 (2) +2.9 
+
+> Pubmed
+
+3 63.6 ±8.8 (7) 62.6 ±8.5 (8) 58.9 ±6.9 (9) 36.8 ±3.3 (13) 55.8 ±7.2 (11) 44.9 ±7.7 (12) 56.4 ±5.1 (10) 72.2 ±9.8 (6) 79.7 ±1.3 (4) 74.9 ±3.7 (5) 80.6 ±1.3 (3) 81.5 ±2.7 (2) 81.9 ±2.5 (1) +2.8 
+
+5 69.8 ±5.7 (7) 69.5 ±6.7 (8) 66.4 ±7.0 (9) 38.3 ±2.4 (13) 57.5 ±9.0 (11) 50.9 ±5.0 (12) 59.0 ±3.6 (10) 79.0 ±4.5 (5) 81.6 ±1.2 (3) 77.4 ±3.1 (6) 81.2 ±3.2 (4) 81.9 ±1.7 (2) 82.2 ±1.7 (1) +0.7 
+
+7 72.7 ±5.8 (7) 71.9 ±6.2 (8) 71.3 ±4.6 (9) 39.4 ±5.5 (13) 59.6 ±6.4 (11) 51.3 ±6.2 (12) 63.0 ±3.1 (10) 79.7 ±3.3 (5) 82.4 ±1.2 (4) 78.6 ±2.7 (6) 82.8 ±0.9 (3) 83.0 ±0.7 (2) 83.2 ±1.4 (1) +1.0 
+
+10 76.2 ±2.3 (7) 75.4 ±2.2 (8) 74.3 ±1.9 (9) 40.2 ±5.2 (13) 62.4 ±6.0 (11) 54.2 ±4.5 (12) 63.4 ±4.8 (10) 81.6 ±1.9 (5) 83.0 ±1.0 (3) 80.4 ±1.4 (6) 83.5 ±1.3 (2) 82.2 ±1.4 (4) 83.6 ±2.0 (1) +0.7  
+
+> WikiCS 3
+
+57.3 ±6.5 (7) 58.7 ±4.6 (6) 55.6 ±3.8 (9) 30.5 ±4.5 (13) 36.4 ±1.3 (12) 43.4 ±6.5 (11) 51.9 ±9.7 (10) 56.1 ±4.1 (8) 71.7 ±2.4 (5) 72.1 ±4.3 (4) 72.2 ±4.1 (3) 74.2 ±3.6 (1) 74.0 ±2.3 (2) +2.9 
+
+5 65.2 ±3.9 (6) 63.2 ±5.6 (7) 62.4 ±3.9 (9) 35.9 ±3.4 (13) 41.9 ±2.4 (12) 46.8 ±5.1 (11) 62.8 ±9.5 (8) 61.1 ±3.8 (10) 72.4 ±1.5 (5) 72.5 ±3.9 (4) 73.8 ±2.7 (3) 76.2 ±2.0 (1) 75.3 ±2.1 (2) +5.1 
+
+7 67.4 ±2.8 (7) 65.2 ±3.9 (8) 64.8 ±3.6 (9) 40.4 ±1.8 (13) 44.1 ±1.9 (12) 50.4 ±3.6 (11) 68.0 ±7.5 (6) 64.0 ±6.1 (10) 71.9 ±1.2 (5) 72.9 ±3.3 (4) 74.6 ±2.8 (3) 76.0 ±1.6 (1) 75.6 ±1.8 (2) +4.3 
+
+10 70.0 ±2.6 (7) 68.2 ±4.3 (9) 68.9 ±3.2 (8) 44.0 ±3.2 (13) 47.7 ±2.9 (12) 53.8 ±3.1 (11) 72.2 ±4.3 (6) 66.9 ±4.5 (10) 73.5 ±0.9 (5) 75.2 ±1.7 (4) 76.3 ±1.4 (3) 77.4 ±1.2 (1) 77.4 ±2.1 (2) +2.9 
+
+AR ↓ 7.4 7.6 9.3 13.0 11.8 10.5 8.8 6.4 5.4 4.2 3.0 1.6 1.8 –3 5 7 10 
+
+40 50 60 70 80 
+
+> Accuracy (%)
+
+No Teacher GNN Only LLM Only GNN+LLM 
+
+Figure 2: Comparison of different supervision strategies on WikiCS under varying few-shot settings. 
+
+performance among CoTeach variants and the best performance among existing competing methods are highlighted in bold and underline , respectively. AR denotes the average rank across all datasets. CoTeach 𝐺 , CoTeach 𝐴 , and CoTeach 𝑆 denote the vari-ants of CoTeach employing GCN, GAT, and GraphSAGE as the backbone architecture of the student model, respectively. We summarize the results in Table 2 as follows. First, CoTeach achieves the best overall performance across most settings. In partic-ular, CoTeach attains the best overall average rank, with CoTeach 𝑆 
+
+achieving an AR of 1.6, substantially outperforming existing base-lines. These results demonstrate the effectiveness of the proposed confidence-aware dual-teacher framework for few-shot TAG learn-ing. Second, CoTeach consistently improves over strong baselines across most few-shot settings, with particularly notable gains on Cora and Pubmed. For instance, under the most challenging set-ting ( 𝑘 = 3), CoTeach outperforms the strongest baseline by 6.9% and 4.9% on Cora and Pubmed, respectively. These results indicate that adaptive teacher selection can effectively improve pseudo-label quality, especially when reliable supervision is limited. Third, CoTeach remains effective across different student backbone ar-chitectures. Although GCN, GAT, and GraphSAGE exhibit different learning characteristics, all CoTeach variants consistently rank among the top-performing methods. While certain variants occa-sionally underperform the strongest baseline, all variants remain competitive, and at least one CoTeach variant achieves the best performance in every dataset and few-shot setting. Combined with the findings of EQ1 , these results further confirm the effectiveness of confidence-aware teacher selection. 
+
+3 5 7 10 
+
+10 2
+
+10 3
+
+10 4
+
+> # LLM Tokens
+
+TAPE LLMGNN LLM4NG CoTeach 
+
+Figure 3: Comparison of LLM token consumption under dif-ferent few-shot settings (log scale). EQ3: Cost-Effectiveness. We further evaluate the cost-efficiency of CoTeach through LLM token consumption. As shown in Fig-ure 3, CoTeach requires substantially fewer tokens than TAPE and LLMGNN, reducing token usage by up to 67.6× and 8.3×, re-spectively. Although LLM4NG is more token-efficient, CoTeach achieves the best average rank, demonstrating a favorable cost-effectiveness trade-off. 
+
+EQ4: Hyperparameter Sensitivity. Lastly, we conduct sensitivity analyses on four key hyperparameters, including the loss weight (𝛼 ), GNN confidence threshold ( 𝛾 𝑔 ), LLM confidence threshold ( 𝛾 𝑙 ), and the ratio of selected seed nodes. The results show that CoTeach is generally robust to hyperparameter choices, with the best per-formance achieved under moderate confidence thresholds and suf-ficient seed node coverage. Detailed experimental results and anal-yses are provided at https://buly.kr/GP4yN34. 
+
+4 Conclusions 
+
+In this paper, we propose CoTeach, a confidence-aware dual-teacher learning framework for few-shot text-attributed graph learning. Motivated by the observation that the reliability of LLM-derived supervision varies across nodes, CoTeach adaptively se-lects supervisory signals from GNN and LLM teachers based on prediction confidence. Experimental results on 4 real-world text-attributed graphs demonstrate that CoTeach achieves the best overall performance across most settings, validating the effective-ness of confidence-aware teacher selection. As future work, we plan to extend CoTeach beyond node-level tasks to edge-level and graph-level learning scenarios. Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs Conference’17, July 2017, Washington, DC, USA 
+
+Acknowledgments 
+
+This work was supported by the National Research Foundation of Korea(NRF) grant funded by the Korea government(MSIT and MOE) (RS-2026-25494906 and RS-2025-2543583). 
+
+GenAI Usage Disclosure 
+
+In accordance with the ACM Authorship Policy, we disclose that generative AI tools were selectively employed during this research. Generative AI models (including ChatGPT-3.5 Turbo) were utilized as core components of the proposed LLM teacher in CoTeach. Beyond this intended methodological use, these models were not employed in any other stages of the research process, including data collection, preprocessing, experimental evaluation, or result analy-sis. GenAI-assisted writing support was strictly limited to editing and polishing author-written content, including minor grammatical corrections, phrasing refinements, and word-level autocorrections. 
+
+References 
+
+[1] Z. Chen, H. Mao, H. Wen, H. Han, W. Jin, H. Zhang, H. Liu, and J. Tang. 2024. Label-Free Node Classification on Graphs with Large Language Models (LLMs). In Proceedings of International Conference on Learning Representations (ICLR) .[2] J. Devlin, M. Chang, K. Lee, and K. Toutanova. 2019. Bert: Pre-training of Deep Bidirectional Transformers for Language Understanding. In Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL) .[3] M. Gardner and S. Dorling. 1998. Artificial Neural Networks (the Multilayer Perceptron)—A Review of Applications in the Atmospheric Sciences. Atmospheric environment (1998). [4] W. Hamilton, Z. Ying, and J. Leskovec. 2017. Inductive Representation Learning on Large Graphs. In Proceedings of Advances in Neural Information Processing Systems (NeurIPS) .[5] X. He, X. Bresson, T. Laurent, A. Perold, Y. LeCun, and B. Hooi. 2024. Harness-ing Explanations: LLM-to-LM Interpreter for Enhanced Text-Attributed Graph Representation Learning. In Proceedings of International Conference on Learning Representations (ICLR) .[6] X. Ji, J. Liu, L. Li, M. Wang, and Z. Zhang. 2024. Verbalized Graph Representation Learning: A Fully Interpretable Graph Model Based on Large Language Models Throughout the Entire Process. arXiv preprint arXiv:2410.01457 (2024). [7] B. Jin, G. Liu, C. Han, M. Jiang, H. Ji, and J. Han. 2024. Large Language Models on Graphs: A Comprehensive Survey. IEEE Transactions on Knowledge and Data Engineering (2024). [8] B. Jin, W. Zhang, Y. Zhang, Y. Meng, X. Zhang, Q. Zhu, and J. Han. 2023. Patton: Language Model Pretraining on Text-Rich Networks. In Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL) .[9] K. Sparck Jones. 1972. A Statistical Interpretation of Term Specificity and Its Application in Retrieval. Journal of Documentation (1972). [10] T. Kipf and M. Welling. 2017. Semi-Supervised Classification with Graph Convo-lutional Networks. In Proceedings of International Conference on Learning Repre-sentations (ICLR) .[11] M. Lewis, Y. Liu, N. Goyal, M. Ghazvininejad, A. Mohamed, O. Levy, V. Stoyanov, and L. Zettlemoyer. 2020. BART: Denoising Sequence-to-Sequence Pre-Training for Natural Language Generation, Translation, and Comprehension. In Proceed-ings of the Annual Meeting of the Association for Computational Linguistics (ACL) .[12] Q. Li, T. Zhao, L. Chen, J. Xu, and S. Wang. 2024. Enhancing Graph Neural Networks with Limited Labeled Data by Actively Distilling Knowledge from Large Language Models. In Proceedings of IEEE International Conference on Big Data (BigData) .[13] T. Mikolov, K. Chen, G. Corrado, and J. Dean. 2013. Efficient Estimation of Word Representations in Vector Space. arXiv preprint arXiv:1301.3781 (2013). [14] N. Reimers and I. Gurevych. 2019. Sentence-Bert: Sentence Embeddings Using Siamese Bert-Networks. In Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP) .[15] X. Ren, J. Tang, D. Yin, N. Chawla, and C. Huang. 2024. A Survey of Large Language Models for Graphs. In Proceedings of ACM International Conference on Knowledge Discovery and Data Mining (KDD) .[16] P. Veličković, G. Cucurull, A. Casanova, A. Romero, P. Lio, and Y. Bengio. 2017. Graph Attention Networks. arXiv preprint arXiv:1710.10903 (2017). [17] P. Veličković, W. Fedus, W. Hamilton, P. Liò, Y. Bengio, and R. Hjelm. 2018. Deep Graph Infomax. In Proceedings of International Conference on Learning Representations (ICLR) .[18] H. Yan, C. Li, R. Long, C. Yan, J. Zhao, W. Zhuang, J. Yin, P. Zhang, W. Han, H. Sun, et al. 2023. A Comprehensive Study on Text-Attributed Graphs: Benchmarking and Rethinking. In Proceedings of Advances in Neural Information Processing Systems (NeurIPS) .[19] J. Yu, Y. Ren, C. Gong, J. Tan, X. Li, and X. Zhang. 2025. Leveraging Large Language Models for Node Generation in Few-Shot Learning on Text-Attributed Graphs. In Proceedings of AAAI Conference on Artificial Intelligence (AAAI) .[20] J. Zhang, J. Chen, M. Yang, A. Feng, S. Liang, J. Shao, and R. Ying. 2024. DTGB: A Comprehensive Benchmark for Dynamic Text-Attributed Graphs. In Proceedings of Advances in Neural Information Processing Systems (NeurIPS) .[21] T. Zhang, R. Yang, Y. Lai, M. Yan, X. Ye, and D. Fan. 2025. Leveraging Large Language Models for Effective Label-Free Node Classification in Text-Attributed Graphs. In Proceedings of the ACM International Conference on Research and Development in Information Retrieval (SIGIR) .[22] J. Zhao, M. Qu, C. Li, H. Yan, Q. Liu, R. Li, X. Xie, and J. Tang. 2021. Learning on Large-Scale Text-Attributed Graphs via Variational Inference. In Proceedings of International Conference on Machine Learning (ICML) .

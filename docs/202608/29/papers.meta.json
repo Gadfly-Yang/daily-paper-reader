@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-29",
+  "date": "2026-08-29",
+  "generated_at": "2026-08-29T03:15:12",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/29/2608.22127v1-who-should-teach-confidence-aware-dual-teacher-learning-for-few-shot-node-classification-on-text-attributed-graphs",
+      "section": "quick",
+      "title_en": "Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs",
+      "authors": "Hojin Kim, Sujin Yoon, Sungsu Lim, Dongwon Lee, David Yoon Suk Kang",
+      "date": "2026-08-22",
+      "pdf": "https://arxiv.org/pdf/2608.22127v1",
+      "score": "6.0",
+      "evidence": "文本属性图上基于置信度感知双教师学习的少样本节点分类",
+      "tldr": "文本属性图上的少样本节点分类中，现有方法盲目依赖大语言模型生成信息，忽视其可靠性不均且成本高昂。提出置信度感知双教师学习框架CoTeach，动态判断每个节点更适合GNN还是LLM监督。实验表明CoTeach在多个数据集上持续提升分类性能，同时显著减少不必要的LLM调用。该工作为高效融合结构与语义信息提供了新思路，降低了实际部署成本。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Text-Attributed Graphs (TAGs) integrate graph structures and node-associated textual attributes, and recent studies have increasingly leveraged Large Language Models (LLMs) to improve TAG learning in few-shot settings. However, existing approaches typically utilize LLM-derived information uniformly across all nodes, despite substantial variations in its reliability, while also incurring considerable monetary costs. We argue that the most appropriate source of supervision may differ across nodes, as Graph Neural Networks (GNNs) and LLMs exhibit complementary strengths in exploiting structural and semantic information, respectively. To this end, we propose CoTeach, a Confidence-aware dual-teacher learning framework that dynamically selects the more reliable teacher for each node. Experimental results demonstrate that CoTeach consistently improves few-shot node classification performance while reducing unnecessary LLM utilization and associated monetary costs.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
