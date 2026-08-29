@@ -1,20 +1,20 @@
 # 日报 · 2026-08-29
 
-- 生成时间：2026-08-29 03:14:45 UTC
+- 生成时间：2026-08-29 21:54:41 UTC
 - 当次推荐总数：1
 - 精读区：0
 - 速读区：1
 
 ## 今日简报（AI）
-- 今日共生成 1 篇推荐（精读 0 篇，速读 1 篇）
-- 速读：《Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs》（6.0/10）
-- 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
+今天速读了一篇少样本工业异常检测论文《DriftAD》，聚焦视觉引导的文本漂移方法，评分6.0/10。  
+最值得关注的方向是把视觉信号与文本提示结合，用于解决工业质检中样本稀缺的异常检测难题。  
+建议
 
 ## 精读区
 - 本次无精读推荐。
 
 ## 速读区
-1. [Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs](/202608/29/2608.22127v1-who-should-teach-confidence-aware-dual-teacher-learning-for-few-shot-node-classification-on-text-attributed-graphs) （6.0/10）
+1. [DriftAD: Visually-Guided Text Drift for Few-Shot Industrial Anomaly Detection](/202608/29/2608.23723v1-driftad-visually-guided-text-drift-for-few-shot-industrial-anomaly-detection) （6.0/10）
 
 ---
 使用键盘方向键可在日报/论文之间快速切换。

@@ -1,21 +1,21 @@
 {
   "label": "2026-08-29",
   "date": "2026-08-29",
-  "generated_at": "2026-08-29T03:15:12",
+  "generated_at": "2026-08-29T21:55:09",
   "count": 1,
   "papers": [
     {
-      "paper_id": "202608/29/2608.22127v1-who-should-teach-confidence-aware-dual-teacher-learning-for-few-shot-node-classification-on-text-attributed-graphs",
+      "paper_id": "202608/29/2608.23723v1-driftad-visually-guided-text-drift-for-few-shot-industrial-anomaly-detection",
       "section": "quick",
-      "title_en": "Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs",
-      "authors": "Hojin Kim, Sujin Yoon, Sungsu Lim, Dongwon Lee, David Yoon Suk Kang",
-      "date": "2026-08-22",
-      "pdf": "https://arxiv.org/pdf/2608.22127v1",
+      "title_en": "DriftAD: Visually-Guided Text Drift for Few-Shot Industrial Anomaly Detection",
+      "authors": "Wenyang Liu, Tianyi Liu, Dongshuo Zhang, Kejun Wu, Adams Wai-Kin Kong",
+      "date": "2026-08-24",
+      "pdf": "https://arxiv.org/pdf/2608.23723v1",
       "score": "6.0",
-      "evidence": "文本属性图上基于置信度感知双教师学习的少样本节点分类",
-      "tldr": "文本属性图上的少样本节点分类中，现有方法盲目依赖大语言模型生成信息，忽视其可靠性不均且成本高昂。提出置信度感知双教师学习框架CoTeach，动态判断每个节点更适合GNN还是LLM监督。实验表明CoTeach在多个数据集上持续提升分类性能，同时显著减少不必要的LLM调用。该工作为高效融合结构与语义信息提供了新思路，降低了实际部署成本。",
+      "evidence": "少样本工业异常检测中的视觉-文本特征对齐",
+      "tldr": "小样本工业异常检测利用CLIP对齐视觉与文本，但静态提示难以应对缺陷的局部化与尺度依赖。DriftAD通过ASA空间-频率分支增强细微异常信号，VGTD根据视觉上下文动态漂移冻结CLIP文本嵌入，DGSG则用漂移描述符作空间探针选择性增强相关视觉特征，并辅以漂移分离与门监督损失。在MVTec-AD和VisA上，1/2/4-shot设置下图像级与像素级指标均取得最优。该方法为视觉引导的文本适应在小样本异常检测中提供了新范式。",
       "tags": "query:deepfake-fsl",
-      "abstract_en": "Text-Attributed Graphs (TAGs) integrate graph structures and node-associated textual attributes, and recent studies have increasingly leveraged Large Language Models (LLMs) to improve TAG learning in few-shot settings. However, existing approaches typically utilize LLM-derived information uniformly across all nodes, despite substantial variations in its reliability, while also incurring considerable monetary costs. We argue that the most appropriate source of supervision may differ across nodes, as Graph Neural Networks (GNNs) and LLMs exhibit complementary strengths in exploiting structural and semantic information, respectively. To this end, we propose CoTeach, a Confidence-aware dual-teacher learning framework that dynamically selects the more reliable teacher for each node. Experimental results demonstrate that CoTeach consistently improves few-shot node classification performance while reducing unnecessary LLM utilization and associated monetary costs.",
+      "abstract_en": "Few-shot anomaly detection (FSAD) has recently benefited from vision-language models such as CLIP, which enable anomaly de?tection by aligning visual features with text descriptions of normal and abnormal states. However, existing methods typically rely on static text prompts that are applied uniformly across the entire feature hierarchy and spatial dimensions. This rigid global-to-local matching fails to capture the highly localized and scale-dependent physical variations of industrial defects. To address this, we propose DriftAD, a FSAD framework built on three key modules. First, an Anomaly Signal Amplification (ASA) module enhances subtle defect signals through spatial and frequency branches before text-visual matching. Second, Visually-Guided Text Drift (VGTD) dynamically transforms frozen CLIP text embeddings, steering them into layer?wise, spatially-adaptive anomaly descriptors conditioned on local visual context at each encoder depth. Third, Drift-Guided Spatial Gating (DGSG) uses the drifted abnormal descriptor as a spatial probe to selectively enhance anomaly-relevant visual features. Addi?tionally, a drift separation loss prevents representational collapse of the drifted descriptors, and a gate supervision loss enforces spatially discriminative gating in DGSG. Extensive experiments on MVTec?AD and VisA demonstrate state-of-the-art performance across all 1-, 2-, and 4-shot settings on both image-level and pixel-level metrics. Code is available at https://github.com/wenyang001/DriftAD.",
       "source": "arxiv",
       "selection_source": "fresh_fetch"
     }

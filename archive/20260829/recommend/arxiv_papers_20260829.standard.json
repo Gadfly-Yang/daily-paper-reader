@@ -1,6 +1,6 @@
 {
   "mode": "standard",
-  "generated_at": "2026-08-29T03:13:25.643388+00:00",
+  "generated_at": "2026-08-29T21:52:41.635443+00:00",
   "stats": {
     "mode": "standard",
     "tag_count": 1,
@@ -14,36 +14,35 @@
   "deep_dive": [],
   "quick_skim": [
     {
-      "id": "2608.22127v1",
+      "id": "2608.23723v1",
       "source": "arxiv",
-      "title": "Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs",
-      "abstract": "Text-Attributed Graphs (TAGs) integrate graph structures and node-associated textual attributes, and recent studies have increasingly leveraged Large Language Models (LLMs) to improve TAG learning in few-shot settings. However, existing approaches typically utilize LLM-derived information uniformly across all nodes, despite substantial variations in its reliability, while also incurring considerable monetary costs. We argue that the most appropriate source of supervision may differ across nodes, as Graph Neural Networks (GNNs) and LLMs exhibit complementary strengths in exploiting structural and semantic information, respectively. To this end, we propose CoTeach, a Confidence-aware dual-teacher learning framework that dynamically selects the more reliable teacher for each node. Experimental results demonstrate that CoTeach consistently improves few-shot node classification performance while reducing unnecessary LLM utilization and associated monetary costs.",
+      "title": "DriftAD: Visually-Guided Text Drift for Few-Shot Industrial Anomaly Detection",
+      "abstract": "Few-shot anomaly detection (FSAD) has recently benefited from vision-language models such as CLIP, which enable anomaly de?tection by aligning visual features with text descriptions of normal and abnormal states. However, existing methods typically rely on static text prompts that are applied uniformly across the entire feature hierarchy and spatial dimensions. This rigid global-to-local matching fails to capture the highly localized and scale-dependent physical variations of industrial defects. To address this, we propose DriftAD, a FSAD framework built on three key modules. First, an Anomaly Signal Amplification (ASA) module enhances subtle defect signals through spatial and frequency branches before text-visual matching. Second, Visually-Guided Text Drift (VGTD) dynamically transforms frozen CLIP text embeddings, steering them into layer?wise, spatially-adaptive anomaly descriptors conditioned on local visual context at each encoder depth. Third, Drift-Guided Spatial Gating (DGSG) uses the drifted abnormal descriptor as a spatial probe to selectively enhance anomaly-relevant visual features. Addi?tionally, a drift separation loss prevents representational collapse of the drifted descriptors, and a gate supervision loss enforces spatially discriminative gating in DGSG. Extensive experiments on MVTec?AD and VisA demonstrate state-of-the-art performance across all 1-, 2-, and 4-shot settings on both image-level and pixel-level metrics. Code is available at https://github.com/wenyang001/DriftAD.",
       "authors": [
-        "Hojin Kim",
-        "Sujin Yoon",
-        "Sungsu Lim",
-        "Dongwon Lee",
-        "David Yoon Suk Kang"
+        "Wenyang Liu",
+        "Tianyi Liu",
+        "Dongshuo Zhang",
+        "Kejun Wu",
+        "Adams Wai-Kin Kong"
       ],
-      "primary_category": "cs.LG",
+      "primary_category": "cs.CV",
       "categories": [
-        "cs.LG",
-        "cs.SI"
+        "cs.CV"
       ],
-      "published": "2026-08-22T22:54:42+00:00",
-      "link": "https://arxiv.org/pdf/2608.22127v1",
+      "published": "2026-08-24T18:09:46+00:00",
+      "link": "https://arxiv.org/pdf/2608.23723v1",
       "tags": [
         "keyword:deepfake-fsl",
         "query:deepfake-fsl"
       ],
       "llm_score": 6.0,
-      "llm_evidence_en": "Few-shot node classification with confidence-aware dual-teacher learning on text-attributed graphs",
-      "llm_evidence_cn": "文本属性图上基于置信度感知双教师学习的少样本节点分类",
-      "llm_evidence": "文本属性图上基于置信度感知双教师学习的少样本节点分类",
-      "canonical_evidence": "文本属性图上基于置信度感知双教师学习的少样本节点分类",
-      "llm_tldr_en": "The paper addresses few-shot node classification on text-attributed graphs by proposing CoTeach, a confidence-aware dual-teacher framework that adaptively combines LLM and GNN supervision per node to exploit structural and semantic strengths.",
-      "llm_tldr_cn": "针对文本属性图少样本学习中LLM监督可靠性不一致及成本高的问题，本文提出CoTeach置信度感知双教师学习框架，根据节点特征自适应融合大语言模型与图神经网络的互补优势进行监督。实验表明，该方法能更有效地利用结构与语义信息，提升少样本节点分类性能。该工作为图上的少样本分类提供了新策略。",
-      "llm_tldr": "针对文本属性图少样本学习中LLM监督可靠性不一致及成本高的问题，本文提出CoTeach置信度感知双教师学习框架，根据节点特征自适应融合大语言模型与图神经网络的互补优势进行监督。实验表明，该方法能更有效地利用结构与语义信息，提升少样本节点分类性能。该工作为图上的少样本分类提供了新策略。",
+      "llm_evidence_en": "few-shot industrial anomaly detection with visual-text feature alignment",
+      "llm_evidence_cn": "少样本工业异常检测中的视觉-文本特征对齐",
+      "llm_evidence": "少样本工业异常检测中的视觉-文本特征对齐",
+      "canonical_evidence": "少样本工业异常检测中的视觉-文本特征对齐",
+      "llm_tldr_en": "Proposes DriftAD, a few-shot anomaly detection framework that uses visually-guided text drift and feature alignment to capture localized industrial defects.",
+      "llm_tldr_cn": "针对现有少样本异常检测方法中静态文本提示无法捕捉局部尺度变化缺陷的问题，提出DriftAD框架，通过异常信号放大和视觉引导的文本漂移增强视觉-文本对齐。",
+      "llm_tldr": "针对现有少样本异常检测方法中静态文本提示无法捕捉局部尺度变化缺陷的问题，提出DriftAD框架，通过异常信号放大和视觉引导的文本漂移增强视觉-文本对齐。",
       "llm_tags": [
         "query:deepfake-fsl"
       ],
