@@ -1,0 +1,100 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-30T22:50:08.875298+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2608.22127v1",
+      "source": "arxiv",
+      "title": "Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs",
+      "abstract": "Text-Attributed Graphs (TAGs) integrate graph structures and node-associated textual attributes, and recent studies have increasingly leveraged Large Language Models (LLMs) to improve TAG learning in few-shot settings. However, existing approaches typically utilize LLM-derived information uniformly across all nodes, despite substantial variations in its reliability, while also incurring considerable monetary costs. We argue that the most appropriate source of supervision may differ across nodes, as Graph Neural Networks (GNNs) and LLMs exhibit complementary strengths in exploiting structural and semantic information, respectively. To this end, we propose CoTeach, a Confidence-aware dual-teacher learning framework that dynamically selects the more reliable teacher for each node. Experimental results demonstrate that CoTeach consistently improves few-shot node classification performance while reducing unnecessary LLM utilization and associated monetary costs.",
+      "authors": [
+        "Hojin Kim",
+        "Sujin Yoon",
+        "Sungsu Lim",
+        "Dongwon Lee",
+        "David Yoon Suk Kang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.SI"
+      ],
+      "published": "2026-08-22T22:54:42+00:00",
+      "link": "https://arxiv.org/pdf/2608.22127v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Few-shot learning on text-attributed graphs with dual-teacher framework",
+      "llm_evidence_cn": "文本属性图上的少样本学习双教师框架",
+      "llm_evidence": "文本属性图上的少样本学习双教师框架",
+      "canonical_evidence": "文本属性图上的少样本学习双教师框架",
+      "llm_tldr_en": "The paper proposes CoTeach, a confidence-aware dual-teacher learning framework for few-shot node classification on text-attributed graphs, where GNN and LLM teachers supervise adaptively per node.",
+      "llm_tldr_cn": "该论文针对文本属性图少样本节点分类中LLM信息使用不均衡、成本高的问题，提出置信度感知的双教师学习框架CoTeach。该框架根据每个节点的结构和语义特征动态选择GNN或LLM作为监督教师，通过置信度加权融合两者预测。实验在多个少样本节点分类基准上表明，CoTeach相比单一教师方法取得更高准确率，同时显著降低对LLM的调用成本。这一设计为图上少样本学习提供了更灵活可靠的知识融合范式。",
+      "llm_tldr": "该论文针对文本属性图少样本节点分类中LLM信息使用不均衡、成本高的问题，提出置信度感知的双教师学习框架CoTeach。该框架根据每个节点的结构和语义特征动态选择GNN或LLM作为监督教师，通过置信度加权融合两者预测。实验在多个少样本节点分类基准上表明，CoTeach相比单一教师方法取得更高准确率，同时显著降低对LLM的调用成本。这一设计为图上少样本学习提供了更灵活可靠的知识融合范式。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.25480v1",
+      "source": "arxiv",
+      "title": "DeCO: Discriminative Evidence Composition for Fine-Grained Dataset Distillation",
+      "abstract": "Dataset distillation compresses a large training set into a compact synthetic set while preserving its downstream utility. However, existing methods primarily preserve global image statistics and may overlook the localized evidence essential for fine-grained visual classification (FGVC), such as object parts, subtle textures, and region-specific structures. We formulate fine-grained dataset distillation as budgeted discriminative-evidence preservation and propose Discriminative Evidence Composition (DeCO). DeCO uses attention rollout from a pretrained TransFG teacher to identify informative patches, applies spatial diversification to reduce redundant coverage, and organizes the resulting regions into class-wise evidence banks. Multiple same-class regions are then packed into compact grid-composed images. The teacher is used only for dataset construction, whereas downstream students are trained with standard hard-label supervision without teacher logits. Experiments on CUB-200-2011, FGVC-Aircraft, and Stanford Cars show that DeCO consistently outperforms representative coreset and dataset-distillation baselines under different IPC budgets.",
+      "authors": [
+        "Chuixuan Fan",
+        "Guang Li",
+        "Shijie Wang",
+        "Dongzhan Zhou",
+        "Baoli Sun",
+        "Takahiro Ogawa",
+        "Miki Haseyama",
+        "Zhihui Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-26T07:52:27+00:00",
+      "link": "https://arxiv.org/pdf/2608.25480v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Fine-grained dataset distillation preserving discriminative evidence for classification",
+      "llm_evidence_cn": "细粒度数据集蒸馏保留判别性证据用于分类",
+      "llm_evidence": "细粒度数据集蒸馏保留判别性证据用于分类",
+      "canonical_evidence": "细粒度数据集蒸馏保留判别性证据用于分类",
+      "llm_tldr_en": "The paper proposes DeCO, which uses attention rollout and spatial diversification to preserve discriminative evidence for fine-grained visual classification under budgeted dataset distillation.",
+      "llm_tldr_cn": "该论文针对细粒度视觉分类中数据集蒸馏容易丢失局部判别信息的问题，提出DeCO方法。它利用预训练TransFG的注意力展开定位有效图像块，并通过空间多样化构建类别证据库。实验表明DeCO在压缩数据集上保持了更高的细粒度分类精度。其贡献在于为细粒度分类提供了一种保留判别证据的数据蒸馏新范式。",
+      "llm_tldr": "该论文针对细粒度视觉分类中数据集蒸馏容易丢失局部判别信息的问题，提出DeCO方法。它利用预训练TransFG的注意力展开定位有效图像块，并通过空间多样化构建类别证据库。实验表明DeCO在压缩数据集上保持了更高的细粒度分类精度。其贡献在于为细粒度分类提供了一种保留判别证据的数据蒸馏新范式。",
+      "llm_tags": [
+        "query:deepfake-fsl:composite"
+      ],
+      "matched_query_tag": "query:deepfake-fsl:composite",
+      "matched_query_text": "Papers central to 深度伪造检测、AI生成图像检测、图像分类、少样本学习、特征对齐、细粒度分类相关论文, especially work that connects or combines: detection of deepfake images and videos using machine learning models; detecting images created by generative AI models such as GANs and diffusion models; classifying images into categories using convolutional neural networks; training models with only a small number of labeled examples per class; detecting manipulated face images in multimedia forensics; distinguishing computer-generated images from real photographs; identifying AI generated or synthetic images with limited training data; few shot learning approaches for face forgery detection and image classification; few shot deepfake detection using feature alignment; cross domain generalization for AI generated image detection.",
+      "matched_requirement_id": "req-composite-deepfake-fsl",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

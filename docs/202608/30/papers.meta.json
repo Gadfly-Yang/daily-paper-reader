@@ -1,0 +1,39 @@
+{
+  "label": "2026-08-30",
+  "date": "2026-08-30",
+  "generated_at": "2026-08-30T22:51:27",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202608/30/2608.22127v1-who-should-teach-confidence-aware-dual-teacher-learning-for-few-shot-node-classification-on-text-attributed-graphs",
+      "section": "quick",
+      "title_en": "Who Should Teach? Confidence-Aware Dual-Teacher Learning for Few-Shot Node Classification on Text-Attributed Graphs",
+      "authors": "Hojin Kim, Sujin Yoon, Sungsu Lim, Dongwon Lee, David Yoon Suk Kang",
+      "date": "2026-08-22",
+      "pdf": "https://arxiv.org/pdf/2608.22127v1",
+      "score": "7.0",
+      "evidence": "文本属性图上的少样本学习双教师框架",
+      "tldr": "文本属性图上的少样本节点分类中，现有方法统一使用大语言模型（LLM）信息，但LLM输出可靠性因节点而异且成本高昂。为此，提出CoTeach——置信度感知的双教师学习框架，利用图神经网络与LLM在结构和语义上的互补优势，动态为每个节点选择更可靠的教师。实验表明CoTeach持续提升少样本节点分类性能，并显著减少不必要的LLM调用和金钱成本。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Text-Attributed Graphs (TAGs) integrate graph structures and node-associated textual attributes, and recent studies have increasingly leveraged Large Language Models (LLMs) to improve TAG learning in few-shot settings. However, existing approaches typically utilize LLM-derived information uniformly across all nodes, despite substantial variations in its reliability, while also incurring considerable monetary costs. We argue that the most appropriate source of supervision may differ across nodes, as Graph Neural Networks (GNNs) and LLMs exhibit complementary strengths in exploiting structural and semantic information, respectively. To this end, we propose CoTeach, a Confidence-aware dual-teacher learning framework that dynamically selects the more reliable teacher for each node. Experimental results demonstrate that CoTeach consistently improves few-shot node classification performance while reducing unnecessary LLM utilization and associated monetary costs.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/30/2608.25480v1-deco-discriminative-evidence-composition-for-fine-grained-dataset-distillation",
+      "section": "quick",
+      "title_en": "DeCO: Discriminative Evidence Composition for Fine-Grained Dataset Distillation",
+      "authors": "Chuixuan Fan, Guang Li, Shijie Wang, Dongzhan Zhou, Baoli Sun, Takahiro Ogawa, Miki Haseyama, Zhihui Wang",
+      "date": "2026-08-26",
+      "pdf": "https://arxiv.org/pdf/2608.25480v1",
+      "score": "6.0",
+      "evidence": "细粒度数据集蒸馏保留判别性证据用于分类",
+      "tldr": "现有数据集蒸馏方法主要保留全局图像统计，难以捕捉细粒度分类所需的物体部件、细微纹理和区域结构等局部判别证据。DeCO 使用预训练 TransFG 教师的注意力 rollout 识别信息 patch，进行空间多样化以降低冗余，并将同类区域组织为证据银行后打包成网格合成图像。在 CUB-200-2011、FGVC-Aircraft 和 Stanford Cars 三个数据集上，DeCO 在不同 IPC 预算下均一致优于代表性 coreset 和数据集蒸馏基线。该方法仅利用教师构建数据集，下游学生使用标准硬标签监督，有效提升了细粒度数据集蒸馏性能。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Dataset distillation compresses a large training set into a compact synthetic set while preserving its downstream utility. However, existing methods primarily preserve global image statistics and may overlook the localized evidence essential for fine-grained visual classification (FGVC), such as object parts, subtle textures, and region-specific structures. We formulate fine-grained dataset distillation as budgeted discriminative-evidence preservation and propose Discriminative Evidence Composition (DeCO). DeCO uses attention rollout from a pretrained TransFG teacher to identify informative patches, applies spatial diversification to reduce redundant coverage, and organizes the resulting regions into class-wise evidence banks. Multiple same-class regions are then packed into compact grid-composed images. The teacher is used only for dataset construction, whereas downstream students are trained with standard hard-label supervision without teacher logits. Experiments on CUB-200-2011, FGVC-Aircraft, and Stanford Cars show that DeCO consistently outperforms representative coreset and dataset-distillation baselines under different IPC budgets.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
