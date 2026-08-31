@@ -1,0 +1,54 @@
+{
+  "label": "2026-08-31",
+  "date": "2026-08-31",
+  "generated_at": "2026-08-31T23:26:47",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202608/31/2608.27492v1-can-tainted-pixels-expose-deepfake-videos",
+      "section": "deep",
+      "title_en": "Can Tainted Pixels Expose Deepfake Videos?",
+      "authors": "Juan Hu, Shaojing Fan, Sanjay Saha, Marc Herrera, Terence Sim",
+      "date": "2026-08-26",
+      "pdf": "https://arxiv.org/pdf/2608.27492v1",
+      "score": "9.0",
+      "evidence": "在面部区域嵌入水印的主动视频保护方法暴露深度伪造操纵",
+      "tldr": "深度伪造工具普及使普通用户可生成假视频，但现有防御多为事后检测且仅针对静态图像，缺乏主动保护已发布视频的方法。TaintedPixels向面部蓝色通道注入结构化周期扰动，在源视频不显眼但被操纵后变得明显，并采用运动自适应部署。在三个现成操纵工具上，其达到最高伪造假率且扰动仅LPIPS 0.0042；人类研究中受保护源视频怀疑率3.26%，伪造品被识别为假达90.72%。该方法作为首个针对黑盒操纵工具的主动视频防御，验证了有效性。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Publicly-acceesible face-manipulation tools have made deepfake creation accessible to non-expert users. Against these, existing defenses are mostly post-hoc, detecting only after forgery has occurred, and operating on still images rather than videos. Research is lacking in i) the proactive protection of published facial videos against black-box manipulation tools, and in (ii) understanding its perceptual effect on human viewers. We introduce TaintedPixels, a proactive video-protection method built around an asymmetric visibility trade-off: the embedded watermark should remain inconspicuous in the published video but become obvious once a downstream tool manipulates the video. TaintedPixels injects structured periodic perturbations into the blue channel of facial regions and refines them under stripe-visibility, color-cast, and video-level LPIPS budgets, with lightweight motion-adaptive deployment. We believe TaintedPixels is the first proactive defense designed specifically against black-box manipulation tools rather than image-level pipelines or specific surrogate generators. Across three publicly available off-the-shelf video manipulation tools and two off-the-shelf detectors, TaintedPixels attains the highest forgery fake rate while keeping perturbations small (LPIPS = 0.0042). Our non-expert human study, conducted on a diverse set of 300 video stimuli spanning different lighting conditions, backgrounds, and skin tones, shows that protected source videos draw a 3.26% suspicion rate, while forgeries from protected sources are identified as fake much more often than forgeries from unprotected sources (90.72% vs. 56.71%). This validates the effectiveness of TaintedPixels.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/31/2608.28302v1-fused-forensic-semantic-mixture-of-experts-for-ai-inpainting-detection-and-localization",
+      "section": "deep",
+      "title_en": "FUSED: Forensic-Semantic Mixture-of-Experts for AI Inpainting Detection and Localization",
+      "authors": "Anton Nuzhdin, Marcel Worring, Ivona Najdenkoska",
+      "date": "2026-08-28",
+      "pdf": "https://arxiv.org/pdf/2608.28302v1",
+      "score": "9.0",
+      "evidence": "AI修复检测与定位的专家混合方法",
+      "tldr": "扩散修复模型仅修改图像局部区域，但现有AI图像检测器普遍依赖全局伪影且无法定位，这些伪影随生成器变化导致跨生成器迁移性差。FUSED为此提出统一框架，融合低级取证线索与高级语义特征，利用稀疏门控混合专家架构对每个token自适应选择最相关信号，并同时预测图像级操纵分数与像素级修复掩码。在OpenSDID跨生成器基准上，FUSED检测与定位均达最佳，对未见生成器增益最大；直接迁移到AutoSplice和CocoGlide时定位性能提升一倍以上。该工作显著提升了AI修复检测与定位的跨生成器鲁棒性，并揭示现有方法部分依赖生成器伪影作为证据。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Diffusion-based inpainting models modify only a localized part of an image, while many AI-image detectors rely on global artifacts and do not localize. These artifacts vary across generators, limiting detector transfer under distribution shifts. Recent work shows that restoring the authentic pixels outside the inpainted region removes these cues and can degrade pretrained detectors. To address this, we present FUSED, a unified framework for the joint detection and localization of AI-generated inpainting. FUSED combines low-level forensic cues with high-level semantic features using a sparsely-gated Mixture-of-Experts architecture, enabling the model to adaptively prioritize the most relevant signal for each token. For each input, FUSED predicts both an image-level manipulation score and a pixel-level mask of the inpainted area. On the OpenSDID cross-generator benchmark, FUSED achieves the best average detection and localization, with the largest gains on unseen generators. The same model transfers directly to the held-out AutoSplice and CocoGlide benchmarks, more than doubling localization performance. Evaluating each held-out benchmark with and without the global generator artifact further shows that all evaluated methods, ours included, partly read the artifact as evidence of manipulation, and FUSED remains the strongest under both conditions. Code and pretrained models are available at https://github.com/AntonNuzhdin/FUSED.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/31/2608.28524v1-texture-image-classification-using-dwt-alexnet-feature-fusion-and-deep-neural-networks",
+      "section": "deep",
+      "title_en": "Texture Image Classification Using DWT AlexNet Feature Fusion and Deep Neural Networks",
+      "authors": "Arun D. Kulkarni",
+      "date": "2026-08-28",
+      "pdf": "https://arxiv.org/pdf/2608.28524v1",
+      "score": "8.0",
+      "evidence": "基于DWT与AlexNet特征融合的纹理图像分类",
+      "tldr": "纹理图像分类在工业检测、医学图像和遥感等领域应用广泛，但手工特征难以表征复杂模式，深度模型未能充分挖掘多尺度空间频率信息。本文提出DWT_AlexNet_DNN混合特征融合框架，结合离散小波变换与AlexNet深度特征，以利用多尺度空间频率信息。实验表明该融合方法有效提升了纹理分类的判别性能，为纹理分析提供了新思路。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Texture image classification plays a significant role in computer vision applications, including industrial inspection, medical image analysis, remote sensing, and object recognition. Handcrafted features can capture local texture characteristics but may have limited capability to represent complex visual patterns. In contrast, deep learning models automatically learn discriminative representations but may not fully exploit the multiscale spatial-frequency information inherent in texture images. This paper proposes a hybrid feature fusion framework, termed DWT_AlexNet_DNN, which combines Discrete Wavelet Transform (DWT) features with deep features extracted using AlexNet for texture image classification.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
