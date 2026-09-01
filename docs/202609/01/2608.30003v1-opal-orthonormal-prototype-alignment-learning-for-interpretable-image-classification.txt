@@ -1,0 +1,706 @@
+Title: OPAL: Orthonormal Prototype Alignment Learning for Interpretable Image Classification
+
+URL Source: https://arxiv.org/pdf/2608.30003v1
+
+Published Time: Tue, 01 Sep 2026 02:06:54 GMT
+
+Number of Pages: 33
+
+Markdown Content:
+# OPAL: Orthonormal Prototype Alignment Learning for Interpretable Image Classification 
+
+Ilán Carretero 1 , Gustavo Jesús Angulo 2 ,Rocío del Amor 1,3 , and Valery Naranjo 1,3 
+
+> 1
+
+CVBLab, HumanTech, Universitat Politècnica de València, Valencia, Spain 
+
+{ilcarjuc,madeam2,vnaranjo}@upv.es  
+
+> 2
+
+CMA, Mines Paris, PSL University, Sophia Antipolis, France 
+
+jesus.angulo_lopez@minesparis.psl.eu  
+
+> 3
+
+Artikode Intelligence S.L., Valencia, Spain 
+
+Abstract. Prototypical part-based models provide explainable predic-tions by comparing input regions to learned prototypes. However, current approaches are burdened by complex, multi-stage training pipelines and heavily rely on auxiliary regularization to prevent prototype collapse. To overcome these limitations, we introduce Orthonormal Prototype Align-ment Learning (OPAL), a single-stage, end-to-end framework that sim-plifies interpretable classification. Our approach anchors the latent space using predefined orthonormal bases, embedding each class within a dedi-cated subspace spanned by fixed part-prototypes. To achieve precise part localization, OPAL enforces spatial competition across feature maps. This mechanism isolates sparse, discriminative regions, directing each prototype to consistently attend to the same semantic concept across dif-ferent images. By framing classification as a direct representation align-ment task, our method eliminates the need for auxiliary losses. Extensive experiments on fine-grained benchmarks demonstrate that OPAL outper-forms both its non-interpretable counterparts and state-of-the-art part-prototype methods, delivering granular visual explanations by explicitly revealing the specific image regions driving every prediction. Code is available at https://github.com/ilancarretero/OPAL .
+
+Keywords: Explainable computer vision · Prototype-based classifica-tion · Representation alignment · Fine-grained image recognition 
+
+## 1 Introduction 
+
+Deep neural networks have revolutionized the field of computer vision, deliver-ing unprecedented performance across a spectrum of complex recognition tasks [9, 12, 23, 24]. Despite these advancements, the inherent opacity of these archi-tectures presents a fundamental challenge [4, 15, 25]. Beyond the critical trust issues arising in high-stakes deployment scenarios [6, 10], the inability to inves-tigate the internal reasoning of a network limits the capacity to identify when and why the model fails, mitigate systematic errors, and potentially derive novel arXiv:2608.30003v1 [cs.CV] 30 Aug 2026 2 Carretero et al. 
+
+Table 1: High-level comparison between a standard CNN and representative inherently interpretable models, including our contribution, OPAL. ✓ indicates that the method satisfies the corresponding property, and ✗ otherwise. “Aux-loss free” denotes training without additional auxiliary regularizers beyond the standard classification objective. “External-model free” denotes no reliance on auxiliary pretrained models or external part-discovery modules.                                                                 
+
+> Method Single-stage Aux-loss External-model Interpretable training free free by design
+> Standard CNN ✓✓✓✗
+> ProtoPNet NeurIPS ’19 [3] ✗✗✓✓
+> ProtoTree CVPR ’21 [30] ✗✓✓✓
+> ProtoPShare KDD ’21 [39] ✗✗✓✓
+> TesNet ICCV ’21 [48] ✗✗✓✓
+> ProtoPool ECCV ’22 [38] ✗✗✓✓
+> PIP-Net CVPR ’23 [29] ✗✗✓✓
+> MCPNet CVPR ’24 [46] ✓✗✓✓
+> LucidPPN ICLR ’25 [33] ✗✗✗✓
+> OPAL (Ours) ✓✓✓✓
+
+domain knowledge from learned feature representations. While post-hoc expla-nation methods, such as saliency maps [36, 40], attempt to interpret trained networks by highlighting relevant input regions, they have been shown to lack faithfulness to the actual decision-making process [1, 37]. Consequently, reliance on these approximations can be misleading, driving a paradigm shift towards inherently interpretable architectures where transparency is not a retrospective approximation, but a structural constraint enforced by design. Among inherently interpretable models, Prototypical Part-based Networks (ProtoPNet) [3] and their recent variants [29, 33, 38, 39] have emerged as the dominant paradigm. These architectures ground their decision process in case-based reasoning, decomposing classification into a transparent matching process where local image regions are compared against a set of learned latent prototypes. However, despite their conceptual appeal, optimizing these frameworks involves a structural complexity significantly higher than their non-interpretable coun-terparts. As systematically illustrated in Tab. 1, state-of-the-art methods rely on cumbersome, multi-stage training pipelines that alternate between backbone optimization, prototype clustering, and discrete projection steps to map latent vectors to real training patches. This complexity stems fundamentally from the 
+
+“moving target” problem [3, 48]: since prototypes are learnable parameters resid-ing in a continuously shifting latent space, the model struggles to simultaneously learn discriminative features and align prototypes to them. To mitigate semantic collapse, where prototypes converge to identical features [39], existing approaches depend on multiple auxiliary regularization terms (e.g., separation, clustering, and diversity losses). This dependency significantly increases the complexity of hyperparameter tuning, as balancing these competing objectives requires metic-ulous dataset-specific calibration. OPAL: Orthonormal Prototype Alignment Learning 3OPAL                            
+
+> Unconstrained
+> latent space
+> Geometry -constrained
+> latent space
+> SSS,,SSSSSS,,⊥⊥⊥
+> Fig. 1: Conceptual overview of OPAL. Prior inherently interpretable approaches typ-ically learn prototypes in an ( unconstrained latent space ), where class evidence may overlap in a shared representation. OPAL instead imposes a ( geometry-constrained la-tent space ) by assigning each class cto a dedicated orthonormal subspace Sc⊂RK,shown as S◦,S△,S⋄in the figure. This structure encourages different prototype coordi-nates within Scto capture distinct semantic attributes and supports faithful part-based evidence, visualized as the image regions selected by the corresponding prototype ac-tivations.
+
+In this work, we introduce a geometry-driven formulation for interpretable prototype-based classification that replaces unconstrained prototype discovery with structured subspace alignment. Leveraging the principle that fixed, max-imally separable geometric constraints induce robust and transferable feature representations [8, 13, 26, 34], we introduce Orthonormal Prototype Alignment Learning (OPAL). As illustrated in Fig. 1, OPAL anchors each class to a pre-assigned orthonormal subspace and represents interpretability as alignment within this fixed geometry, rather than as the optimization of free prototype loca-tions. This design decouples prototype geometry from representation learning and turns classification into a direct alignment task in a stable, theoretically grounded coordinate system. To translate this geometric alignment into granular visual explanations, OPAL incorporates an intrinsic spatial competition mechanism. Unlike traditional ap-proaches that rely on soft attention maps or auxiliary concentration losses to localize parts [21, 51], our method enforces exclusiveness through channel-wise normalization followed by global feature selection. By compelling feature maps to compete for activation at each spatial location, OPAL prevents semantic con-cepts from overlapping. Consequently, a specific image region cannot simulta-neously represent multiple distinct prototypes. This “winner-takes-all” dynamic, combined with the structural stability of the orthonormal basis, naturally drives 4 Carretero et al. 
+
+the network to discover sparse and highly discriminative object parts without requiring part-level annotations or complex bounding-box supervision [32, 52]. The main contributions of this work are summarized as follows: 
+
+– We introduce OPAL, a geometry-constrained approach to interpretable pro-totype based classification that moves from unconstrained prototype discov-ery to structured alignment in a predefined orthonormal space. This design enables a single-stage, end-to-end training pipeline without warm-up phases or alternating optimization steps. 
+
+– We identify that imposing strict orthogonality on the output space, com-bined with an explicit spatial competition mechanism, is sufficient to induce semantic sparsity, eliminating the need for the auxiliary regularization terms (e.g., separation, clustering, or diversity losses) required by prior art to pre-vent prototype collapse. This results in a minimalist architecture that natu-rally isolates discriminative image regions by projecting them onto exclusive, preassigned semantic axes. 
+
+– We conduct an extensive evaluation across five fine-grained benchmarks, where OPAL attains leading performance among inherently interpretable models on most datasets. Moreover, OPAL consistently outperforms the cor-responding non-interpretable CNN backbones across diverse architectures and model capacities. Qualitative results further indicate that prototype slots align with distinct semantic parts, yielding granular and conceptually meaningful visual explanations. 
+
+## 2 Related work 
+
+2.1 Interpretable Image Classification 
+
+The domain of interpretable image classification builds on the Prototypical Part Network (ProtoPNet) [3], which introduced the case-based reasoning paradigm. However, its original formulation imposed a heavy optimization burden, relying on a multi-stage training pipeline and auxiliary regularization terms to align la-tent prototypes with training patches. Subsequent works aimed to mitigate pro-totype redundancy and improve reasoning efficiency: ProtoTree [30] structured prototypes hierarchically, ProtoPShare [39] and ProtoPool [38] introduced mech-anisms for prototype merging and differentiable assignment, and TesNet [48] represented each class through dedicated subspaces of a transparent embedding space. Despite their efficacy in compacting the latent space, these methods re-tain, and in cases like ProtoPool even increase, the complexity of the training objective by requiring extensive hyperparameter tuning for multiple competing auxiliary losses. More recent state-of-the-art approaches prioritize the semantic grounding of prototypes to ensure they align with human-interpretable features. PIP-Net [29] improves upon the visual coherence of explanations by framing classification as a sparse scoring task. By leveraging a self-supervised part-discovery objective, it ensures that prototypes correspond to consistent semantic patches, effectively OPAL: Orthonormal Prototype Alignment Learning 5
+
+identifying specific object parts rather than abstract latent vectors. However, achieving this alignment requires a decoupled two-stage training schedule and two auxiliary loss functions. MCPNet [46] captures various semantic granularities through a multi-level hierarchy. However, its reliance on abstract concept pro-totypes rather than distinct prototypical parts compromises the interpretability of high-level attributes, making it difficult to differentiate the specific localized regions the model is attending to. Most recently, LucidPPN [33] seeks to disen-tangle features such as color and shape, yet it crucially depends on an external part-discovery model, PDiscoNet [44], for initial prototype alignment. This in-troduces an additional layer of auxiliary pre-training and parameter tuning. A separate line pursues prototype-based interpretability post-hoc, on top of frozen classifiers. Tan et al . [41] decompose a trained classification head into part-prototypes using non-negative matrix factorization, while EPIC [2] disentangles the final-layer channels with a learnable invertible transform, both producing prototype explanations without altering the original predictions. By operating on a frozen backbone, however, these methods explain a representation they cannot reshape, and the quality of their prototypes remains bounded by the features the model has already learned. In contrast, OPAL is interpretable by design while remaining single-stage. It removes the structural and procedural dependencies of prior ante-hoc methods and, unlike post-hoc approaches, jointly learns the representation and its explanation within a fixed, maximally separable class geometry. This matches the end-to-end simplicity of a standard CNN while providing robust, semantically meaningful interpretability. 
+
+2.2 Representation Learning and Metric Alignment 
+
+A complementary line of work studies how discriminative representations emerge from geometric constraints on the embedding space [8, 18]. Normalizing features to lie on the unit hypersphere and optimizing angular objectives has been highly effective in practice, particularly through margin-based formulations that oper-ate directly in cosine space [22, 47]. In parallel, contrastive learning provides a geometric view of representation quality through alignment and distributional spread on the hypersphere [49], and supervised contrastive objectives further strengthen class-level clustering in the normalized embedding space [17]. These perspectives motivate OPAL’s use of a fixed, structured geometry where classi-fication can be expressed as alignment in a normalized space. Metric learning methods also commonly replace standard linear classifiers with distance-based objectives defined over class representatives. Proxy-based approaches introduce class proxies to accelerate and stabilize metric learning, optimizing distances to representative points instead of relying on expensive sample mining [18, 27, 43]. Related observations further suggest that fixing the classifier geometry can be surprisingly effective, reducing the reliance on learning dense classification heads [13]. OPAL builds on these insights, but departs from prior proxy formulations by fixing the class geometry a priori through orthonor-mal subspaces and anchors, and by coupling this structure with competitive 6 Carretero et al. 𝑓 𝜃                    
+
+> 𝑊
+> 1x1
+> 𝐻
+> 𝐷
+> CWS GMP
+> 𝐴 1
+> 𝐴 2
+> 𝐴 𝐾
+> 𝑠 1
+> 𝑠 2
+> 𝑠 3
+> 𝑠 4
+> 𝑠 5
+> 𝑠 6
+> L2
+> − 𝒛 − 𝒂 𝒄 𝟐
+> 𝒔 𝒛 𝒂 𝟏 𝒂 𝟐 𝒂 𝑪
+> argmax
+> ෝ𝒚
+> 𝑭 𝑨
+> 𝐾
+> 𝑮
+> 𝐴 3
+> 𝑠 𝐾−2
+> 𝑠 𝐾
+> 𝑠 𝐾−1
+> Linear coordinate rescaling Channel identification
+> 𝒙
+> 𝐻 0
+> 𝑊 0
+> Input Backbone Spatial competition for part localization Orthonormal subspaces
+> Prediction
+> Part -prototypes
+> Conv
+> 𝐻
+> 𝑊
+> 𝑧 1
+> 𝑧 2
+> 𝑧 3
+> 𝑧 4
+> 𝑧 5
+> 𝑧 6
+> 𝑧 𝐾−2
+> 𝑧 𝐾
+> 𝑧 𝐾−1
+
+Fig. 2: Overview of the OPAL framework. Given an input image  x ∈ R3×H0×W0 , a convolutional backbone  fθ produces a feature map  F (x) ∈ RD×H×W , which is projected via a  1 × 1 convolution to  G(x) ∈ RK×H×W with  K = C · m channels ( m = 3 
+
+shown as a representative example). OPAL enforces part selection through ( channel-wise softmax , CWS), followed by ( global max pooling , GMP) and  L2 normalization to obtain the embedding  z ∈ RK . Classification is performed by distance-based alignment to fixed class anchors  {ac}Cc=1  in ( orthonormal subspaces ), yielding the prediction  ˆy.For interpretability, OPAL identifies the channels associated with  ˆy, and maps their spatial maximizers back to the input via ( linear coordinate rescaling ) to produce part-prototype evidence. 
+
+spatial evidence aggregation to obtain interpretable, part-based decisions under image-level supervision. 
+
+## 3 Orthonormal Prototype Alignment Learning (OPAL) 
+
+An overview of OPAL is provided in Fig. 2. The following subsections present the problem formulation and the key components of the method. 
+
+3.1 Preliminaries and Problem Formulation 
+
+We address supervised fine-grained image classification under image-level su-pervision. Let  D = {(xi, y i)}Ni=1  denote a dataset of  N labeled images, where each image is  xi ∈ R3×H0×W0 with height  H0 and width  W0, and its label is 
+
+yi ∈ { 1, . . . , C }. The supervision is limited to the global class label. No addi-tional annotations are assumed, including part labels, segmentation masks, or any other region-level information. Our objective is to learn a predictor that is accurate while remaining inherently interpretable by design. In addition to a predicted label  ˆy, the model must provide a transparent account of the evidence supporting its decision in terms of localized image regions. OPAL: Orthonormal Prototype Alignment Learning 7
+
+We build on a convolutional feature extractor  fθ that maps an input image 
+
+x ∈ R3×H0×W0 to a final convolutional feature map  F = fθ (x) ∈ RD×H×W ,where  D is the number of channels and  H × W is the spatial resolution at the last convolutional stage. OPAL then refines this representation through a lightweight reparameterization and a competitive aggregation mechanism, and uses the resulting features to impose a structured output geometry that enables part-based reasoning under image-level supervision. 
+
+3.2 Predefined Orthonormal Subspaces 
+
+OPAL fixes the geometry of the output space by assigning each class to a ded-icated orthonormal subspace. Let  m ∈ N denote the number of prototype slots per class and define the structured output dimensionality as  K = C · m. The coordinate set  {1, . . . , K } is arranged into  C disjoint blocks  {Bc}Cc=1 , where 
+
+Bc = {(c − 1) m + 1 , . . . , c · m} contains the  m coordinates reserved for class  c.These blocks induce class-specific subspaces in  RK . Let  {ek}Kk=1  be the canonical basis of  RK . The subspace associated with class  c is  Sc = span {ek : k ∈ Bc}. By construction,  Sc ⊥ S c′ for any  c̸ = c′, and every vector  z ∈ RK admits a unique decomposition into components lying in these mutually orthogonal subspaces. Within each Sc, we define m fixed part-prototypes for class c, denoted by 
+
+{pc,j }mj=1 ⊂ RK , which act as canonical prototype directions (one per slot). Con-cretely, the set  {pc,j }mj=1  is given by  pc,j = e(c−1) m+j . These canonical directions are unit-norm and mutually orthogonal. Therefore,  {pc,j } forms an orthonor-mal family, yielding a maximally separated coordinate system for part-based evidence. For class-level decisions, each block is represented by a single class anchor  ac ∈ RK , defined as the normalized block-uniform vector 
+
+ac = 1
+
+√m
+
+> m
+
+X
+
+> j=1
+
+pc,j . (1) This choice satisfies  ∥ac∥2 = 1  and  ⟨ac, a c′ ⟩ = 0  for  c̸ = c′, anchoring each class to a unit vector and enforcing maximal angular separation between class representatives. The block-uniform anchor also introduces an inductive bias that favors distributing evidence across the  m slots of the correct class block rather than concentrating it on a single coordinate. A formal justification is provided in Sec. A.1 of the supplementary material. 
+
+3.3 Spatial Competition for Part Localization 
+
+OPAL promotes part-based evidence by enforcing explicit competition across channels at the last convolutional stage. Starting from the backbone feature map 
+
+F ∈ RD×H×W , a  1 × 1 convolutional projection maps  D channels to  K = C · m
+
+channels, aligned with the  K prototype coordinates introduced in the previous subsection. This produces a projected activation tensor  G ∈ RK×H×W . The spatial grid is indexed by  Ω = {1, . . . , H } × { 1, . . . , W }, and  Gk(u, v ) denotes 8 Carretero et al. 
+
+the activation of channel  k at location  (u, v ) ∈ Ω. Competition is enforced by applying a channel-wise softmax (CWS) over the  K channels independently at every spatial location  (u, v ). This yields normalized maps  A ∈ [0 , 1] K×H×W
+
+defined as: 
+
+Ak(u, v ) = exp( Gk(u, v )) 
+
+PKj=1 exp( Gj (u, v )) , (u, v ) ∈ Ω.  (2) By construction,  PKk=1 Ak(u, v ) = 1  for every  (u, v ), coupling all channels through direct competition. As a result, a single spatial location cannot simultaneously support multiple channels, which encourages different channels to specialize in distinct discriminative regions. A global representation is obtained via global max pooling (GMP) per chan-nel. For each channel  k, OPAL aggregates spatial evidence and records the cor-responding maximizer according to: 
+
+sk = max  
+
+> (u,v )∈Ω
+
+Ak(u, v ), (u∗
+
+> k
+
+, v ∗
+
+> k
+
+) = arg max  
+
+> (u,v )∈Ω
+
+Ak(u, v ). (3) Stacking  {sk}Kk=1  yields  s ∈ RK , and the final embedding is obtained by  L2
+
+normalization,  z = s/ ∥s∥2 ∈ RK . This design directly ties representation learn-ing to localized evidence. Each coordinate  zk is sourced from a single spatial location  (u∗
+
+> k
+
+, v ∗
+
+> k
+
+) selected by max pooling, and the corresponding image patch constitutes the exact evidence that determines the channel contribution used by the classifier. 
+
+3.4 Single-stage Optimization and Inference 
+
+OPAL is trained end-to-end in a single stage using a standard discriminative ob-jective. The forward pass produces the normalized embedding  z ∈ RK described in Sec. 3.3. Classification is reformulated as metric alignment in the fixed out-put geometry defined by the orthonormal class anchors  {ac}Cc=1  introduced in Sec. 3.2. Rather than learning a dense classifier, OPAL directly uses distances to these anchors as predicted class-logit values. In particular, the logit for class 
+
+c and the prediction are: 
+
+ℓc = −∥ z − ac∥2, ˆy = arg max 
+
+> c∈{ 1,...,C }
+
+ℓc. (4) Since both  z and  ac are  L2-normalized, Euclidean distances depend only on the inter-vector angle. We analyze  ∥z − ac∥22 since it induces the same ordering as  ∥z − ac∥2 on  R≥0, and obtain  ∥z − ac∥22 = 2 − 2⟨z, a c⟩. Thus, distance-based alignment is equivalent to maximizing cosine similarity on the unit hypersphere, with class separation enforced by anchor orthogonality. Parameter update is guided by the minimization of the cross-entropy (CE) with respect to distance-based logits, mathematically formulated as: 
+
+LCE = − log exp( ℓy )
+
+PCc=1 exp( ℓc) , (5) OPAL: Orthonormal Prototype Alignment Learning 9
+
+where  ℓy denotes the logit of the ground-truth class  y. Gradients are backprop-agated through the full model, while the anchors remain fixed. This leads to a single-stage pipeline without auxiliary clustering, projection steps, or additional regularization losses. At inference time, OPAL produces visual explanations as a direct byproduct of the forward pass. The  1 × 1 projection yields  K = C · m output channels that are in one-to-one correspondence with the fixed prototype coordinates defined in Sec. 3.2. Since each class anchor  ac has support only on its block  Bc, a prediction 
+
+ˆy naturally selects the subset of channels  k ∈ Bˆy as the prototype slots used to form class evidence. For each selected channel  k, global max pooling identifies a unique maximizer  (u∗
+
+> k
+
+, v ∗
+
+> k
+
+) ∈ Ω that determines the pooled response  sk, ensuring that the contribution of  zk is sourced from a single spatial location. Finally, the maximizer coordinates are mapped back to the input resolution by linearly rescaling from the feature-map grid  H × W to  H0 × W0, yielding the localized evidence patches that constitute the explanation. 
+
+## 4 Experiments 
+
+4.1 Experimental Setup Datasets. We evaluate OPAL on five standard fine-grained benchmarks: CUB-200-2011 (200 bird species) [45], Stanford Cars (196 car models) [19], Oxford-IIIT Pet (37 breeds of cats and dogs) [35], Stanford Dogs (120 dog breeds) [16], and Oxford Flowers-102 (102 flower categories) [31]. We follow the official train/test splits for all datasets. Additional dataset details and preprocessing steps are provided in Sec. B.1 of the supplementary material. 
+
+Implementation Details. We evaluate OPAL across three convolutional back-bone families at three model scales each: ResNet-50/101/152 [12], EfficientNet-V2 S/M/L [42], and ConvNeXt Tiny/Small/Base [24]. Images are resized to 
+
+224 × 224  and augmented with TrivialAugment [28], as in [29]. We fix the num-ber of prototypes per class to  m = 5  across all datasets and backbones, with sensitivity to  m analyzed in Sec. 4.4. Across all settings, models are trained for 30 epochs using Adam with a learning rate of  1 × 10 −4 and a batch size of 64. All experiments were run on an NVIDIA A100 (40GB) GPU and repeated with three different random seeds, reporting results averaged across runs. In addi-tion to mean performance, we report the absolute percentage-point difference relative to the corresponding CNN backbone trained under the same protocol. Additional implementation details are provided in Sec. B.2 of the supplementary material. 
+
+4.2 Quantitative Evaluation Comparison with Inherently Interpretable Models. Tab. 2 reports top-1 accuracy on five fine-grained benchmarks and compares OPAL against eight 10 Carretero et al. 
+
+Table 2: Top-1 accuracy (%) comparison on five fine-grained benchmarks between OPAL and representative inherently interpretable models. ↑ and ↓ denote the absolute percentage point difference with respect to the ConvNeXt-Tiny baseline. ProtoTree exhibits low performance on DOGS and FLOWER, a behavior also observed on these datasets in [33] and reported on another fine-grained benchmark in [46].                                                                          
+
+> Method Accuracy ( ↑)CUB CARS PETS DOGS FLOWER
+> Baseline (ConvNext-Tiny) 84.2 87.8 91.0 85.3 95.6 ProtoPNet NeurIPS ’19 [3] 79.2 ↓5.0 86.1 ↓1.7 80.9 ↓10.1 77.4 ↓7.9 92.1 ↓3.5
+> ProtoTree CVPR ’21 [30] 82.2 ↓2.0 86.6 ↓1.2 75.0 ↓16.0 58.9 ↓26.4 17.5 ↓78.1
+> ProtoPShare KDD ’21 [39] 74.7 ↓9.5 86.4 ↓1.4 81.2 ↓9.8 74.1 ↓11.2 90.3 ↓5.3
+> TesNet ICCV ’21 [48] 84.6 ↑0.4 92.6 ↑4.8 88.7 ↓2.3 80.7 ↓4.6 83.4 ↓12.2
+> ProtoPool ECCV ’22 [38] 85.5 ↑1.3 88.9 ↑1.1 80.8 ↓10.2 71.7 ↓13.6 92.7 ↓2.9
+> PIP-Net CVPR ’23 [29] 84.3 ↑0.1 88.2 ↑0.4 92.0 ↑1.0 80.8 ↓4.5 91.8 ↓3.8
+> MCPNet CVPR ’24 [46] 83.5 ↓0.7 83.2 ↓4.6 91.3 ↑0.3 76.5 ↓8.8 94.7 ↓0.9
+> LucidPPN ICLR ’25 [33] 81.5 ↓2.7 91.6 ↑3.8 92.1 ↑1.1 79.5 ↓5.8 95.0 ↓0.6
+> OPAL (Ours) 85.6 ↑1.4 90.3 ↑2.5 92.8 ↑1.8 86.9 ↑1.6 96.1 ↑0.5
+
+interpretable methods, together with a non-interpretable counterpart. We use ConvNeXt-Tiny as the baseline backbone, consistent with recent prototype-based approaches that report results on this architecture [29, 33, 46], enabling direct backbone-aligned comparisons. Overall, this setting provides a broad side-by-side evaluation across datasets and representative interpretable baselines. OPAL achieves the best performance on 4 out of 5 datasets and ranks third on CARS, behind TesNet [48] and LucidPPN [33]. Notably, OPAL is the only method that consistently surpasses the corresponding CNN backbone across all benchmarks, with an average improvement of +1.56 absolute percentage points over the baseline. These results suggest that imposing a fixed, highly discrimina-tive latent space enables a single-stage training pipeline without auxiliary losses, thereby improving not only interpretability but also performance. 
+
+Backbone Generalization and Scalability. Tab. 3 evaluates OPAL as a plug-in module across three convolutional backbone families and three model scales per family, always comparing against the corresponding CNN backbone trained under the same protocol. This setting isolates the effect of OPAL from backbone-specific design choices and tests whether the approach transfers across architectural families and capacities. Overall, OPAL improves or matches the non-interpretable counterpart in 39 out of 45 backbone–dataset experiments, with an average gain of +2.94 absolute percentage points in top-1 accuracy across all datasets and backbones. In the few cases where OPAL does not outperform the baseline, the largest drop is 1.0 percentage points, indicating that the method is broadly robust and does not trade performance for interpretability when integrated into diverse convolutional architectures. OPAL: Orthonormal Prototype Alignment Learning 11 
+
+Table 3: Backbone generalization and scalability of OPAL across three convolutional backbone families and three model scales per family. Each backbone is evaluated in its standard form and with OPAL integrated (shaded rows). ↑ and ↓ denote the absolute percentage-point difference with respect to the corresponding CNN backbone.                                                                                                
+
+> Backbone Accuracy ( ↑)CUB CARS PETS DOGS FLOWER
+> ResNet-50 72.6 71.9 89.5 81.3 92.8 w/ OPAL 80.8 ↑8.2 84.3 ↑12.4 89.8 ↑0.3 81.0 ↓0.3 92.7 ↓0.1
+> ResNet-101 74.9 73.8 88.5 83.5 91.6 w/ OPAL 81.4 ↑6.5 83.9 ↑10.1 91.0 ↑2.5 83.0 ↓0.5 93.0 ↑1.4
+> ResNet-152 76.0 73.7 90.3 83.1 92.4 w/ OPAL 80.7 ↑4.7 85.1 ↑11.4 90.1 ↓0.2 84.1 ↑1.0 93.8 ↑1.4
+> EfficientNet-V2 S 78.3 76.7 89.6 84.5 95.3 w/ OPAL 83.5 ↑5.2 87.2 ↑10.5 90.4 ↑0.8 85.8 ↑1.3 95.3 - 0.0
+> EfficientNet-V2 M 79.4 80.3 89.0 83.3 93.9 w/ OPAL 82.6 ↑3.2 82.7 ↑2.4 90.6 ↑1.6 85.7 ↑2.4 92.9 ↓1.0
+> EfficientNet-V2 L 84.1 85.9 90.0 81.4 94.9 w/ OPAL 86.9 ↑2.8 89.4 ↑3.5 90.0 - 0.0 83.1 ↑1.7 96.6 ↑1.7
+> ConvNeXt-Tiny 84.2 87.8 91.0 85.3 95.6 w/ OPAL 85.6 ↑1.4 90.3 ↑2.5 92.8 ↑1.8 86.9 ↑1.6 96.1 ↑0.5
+> ConvNeXt-Small 81.7 83.9 91.8 86.5 95.3 w/ OPAL 85.6 ↑3.9 90.6 ↑6.7 93.4 ↑1.6 87.7 ↑1.2 95.5 ↑0.2
+> ConvNeXt-Base 82.1 82.1 92.0 88.9 97.2 w/ OPAL 86.3 ↑4.2 91.4 ↑9.3 93.9 ↑1.9 90.2 ↑1.3 96.6 ↓0.6
+
+4.3 Qualitative Interpretability Analysis 
+
+Interpretable predictions are essential to understand which visual evidence drives a model decision. Fig. 3 illustrates OPAL explanations across all five datasets. Across benchmarks, OPAL yields non-collapsed prototypes that activate on mul-tiple, distinct regions of the object within a single image. In each example, the 
+
+m = 5  prototypes provide a compact set of complementary, localized evidence spanning different discriminative parts of the object. This is especially impor-tant in fine-grained recognition, where class separation is often driven by subtle part-level attributes rather than a single salient region. Beyond diversity, the retrieved evidence is also consistent within class across images, suggesting that individual prototypes acquire stable semantic roles. The same prototype repeatedly activates on visually and semantically related parts for different instances, indicating that the fixed class-wise orthonormal struc-ture encourages different prototype directions to align with recurring attributes (e.g., ears for Abyssinian cats in PETS or eyes for Maltese dogs in DOGS). Fur-ther qualitative results are provided in the supplementary material, including additional prototype-based explanations (Sec. C.1), the qualitative effect of the number of prototypes per class (Sec. C.2), and an analysis of prototype collapse (Sec. D.1). As a complementary quantitative assessment, and since part-level an-12 Carretero et al. (a) CUB  (b) CARS  (c) PETS  (d) DOGS  (e) FLOWER 
+
+Fig. 3: Qualitative prototype-based explanations produced by OPAL on five fine-grained benchmarks ( m = 5 ). For each dataset, we show two test images and the corresponding prototype-wise evidence. Colored boxes indicate the spatial maximizers selected for each prototype. The patch grids visualize the evidence associated with each prototype, with the first row extracted from the shown image and subsequent rows taken from other images of the same predicted class. 
+
+notations are available only for CUB-200-2011, we report prototype consistency and stability on this dataset in Sec. E.3 of the supplementary material, where OPAL attains the second-best results among prototype-based methods. 
+
+4.4 Ablation Studies Architectural Component Analysis. Tab. 4 analyzes the contribution of OPAL components by selectively enabling the projection, competitive normal-ization, pooling, and orthonormal anchoring mechanisms. Since the orthonormal anchors are defined in a  K = C · m space, they require the  1 × 1 projection to match the channel dimensionality, so configurations with Orth. necessarily in-clude Proj. Two observations are consistent across datasets. First, the orthonormal an-chors play a central role: enabling Orth. yields a clear and consistent improve-ment over the corresponding non-orthogonal variants (+4.07 percentage points OPAL: Orthonormal Prototype Alignment Learning 13 
+
+Table 4: Architectural ablation of OPAL components on five fine-grained benchmarks, reported as top-1 accuracy (%). Columns correspond to the  1 × 1 convolutional projec-tion (Proj.), global max pooling (GMP), channel-wise softmax (CWS), and orthonor-mal anchors (Orth.). ✓ and ✗ indicate whether a component is enabled or not. When GMP is disabled, global average pooling is used. The all-crosses configuration ( ✗✗✗✗ )corresponds to the convolutional baseline, while the all-checks configuration ( ✓✓✓✓ )corresponds to full OPAL. ↑ and ↓ denote absolute percentage-point differences with respect to the baseline.                                                                                                
+
+> Architectural Components Accuracy ( ↑)Proj. GMP CWS Orth. CUB CARS PETS DOGS FLOWER
+> ✗✗✗✗84.2 87.8 91.0 85.3 95.6
+> ✓✗✗✗82.3 ↓1.9 86.3 ↓1.5 92.0 ↑1.0 86.2 ↑0.9 96.3 ↑0.7
+> ✗✓✗✗79.6 ↓4.6 75.7 ↓12.1 88.9 ↓2.1 84.1 ↓1.2 93.4 ↓2.2
+> ✗✗✓✗57.4 ↓26.8 48.9 ↓38.9 88.1 ↓2.9 74.6 ↓10.7 91.5 ↓4.1
+> ✓✓✗✗77.1 ↓7.1 73.5 ↓14.3 91.6 ↑0.6 86.5 ↑1.2 94.2 ↓1.4
+> ✗✓✓✗54.6 ↓29.6 31.9 ↓55.9 86.2 ↓4.8 80.2 ↓5.1 86.3 ↓9.3
+> ✓✗✓✗73.7 ↓10.5 70.5 ↓17.3 91.1 ↑0.1 84.7 ↓0.6 95.0 ↓0.6
+> ✓✗✗✓85.0 ↑0.8 90.6 ↑2.8 92.6 ↑1.6 85.8 ↑0.5 96.3 ↑0.7
+> ✓✓✗✓82.0 ↓2.2 85.5 ↓2.3 93.2 ↑2.2 87.2 ↑1.9 94.0 ↓1.6
+> ✓✗✓✓84.0 ↓0.2 90.4 ↑2.6 93.4 ↑2.4 86.8 ↑1.5 95.2 ↓0.4
+> ✓✓✓✓85.6 ↑1.4 90.3 ↑2.5 92.8 ↑1.8 86.9 ↑1.6 96.1 ↑0.5
+
+in top-1 accuracy on average, across matched settings). Second, pooling-based localization alone is not sufficient. Configurations that rely on GMP without Orth. (rows 3/5/6) incur a substantial average drop (-9.86 percentage points in top-1 accuracy) relative to the baseline, despite producing localized evidence. Consequently, the ablation indicates that OPAL benefits arise from coupling competitive, localized aggregation with the fixed class-structured geometry in-duced by orthonormal anchoring. Although certain ablated variants outperform full OPAL on isolated datasets (e.g., Proj+GMP+Orth without CWS in PETS/DOGS, or Proj+CWS+Orth without GMP in CARS/PETS), these configurations compromise key properties that OPAL is designed to provide. In particular, removing GMP breaks the one-maximizer-per-channel mechanism, weakening the direct traceability between each prototype activation and a unique localized image region, which is cen-tral to faithful, part-based explanations. Conversely, removing CWS eliminates explicit spatial competition, which empirically increases prototype redundancy and makes it harder to obtain diverse prototypes with distinct semantic roles. Both quantitative and qualitative evidence of the resulting prototype collapse is provided in Sec. D.1 of the supplementary material. Overall, these findings indicate that strong performance together with reliable prototype diversity and localized interpretability requires combining orthonormal anchoring with spatial competition and max-based aggregation. 14 Carretero et al.        
+
+> Fig. 4: Sensitivity to the number of prototypes per class m. OPAL is evaluated with
+> m∈ { 1,3,5,10 }on (a) CUB, (b) CARS, (c) PETS, (d) DOGS, and (e) FLOWER, with (f) reporting the average across datasets. The dashed line denotes the ConvNeXt-Tiny baseline, and points correspond to OPAL under the same training protocol.
+
+Sensitivity to the Number of Prototypes We analyze the sensitivity of OPAL to the number of prototypes per class  m by varying  m ∈ { 1, 3, 5, 10 }
+
+while keeping the remaining training protocol fixed. Fig. 4 reports results across datasets and their average. Using a single prototype per class ( m = 1 ) is in-sufficient and underperforms the ConvNeXt-Tiny baseline by  −1.04  percentage points on average. In contrast, selecting  m ∈ { 3, 5, 10 } yields consistent gains, with an average improvement of  +1 .25  percentage points over the baseline when averaging the three configurations. A clear trend emerges in most benchmarks: allocating too few prototypes limits representational capacity, while an excessive number of prototypes can dilute discriminative evidence, leading to slightly lower accuracy than the best setting. These results indicate that a moderate number of prototypes per class (m = 5  in our main experiments) provides a robust operating point, enabling OPAL to deliver interpretable predictions while improving performance over the non-interpretable counterpart. Additional qualitative results for  m ∈ { 1, 3, 5, 10 }
+
+are presented in Sec. C.2 of the supplementary material. 
+
+## 5 Conclusion 
+
+In this work, we introduced OPAL, an inherently interpretable framework that shifts prototype-based classification from learning latent prototypes to aligning representations within a fixed, class-structured geometry. OPAL anchors each class in a predefined orthonormal subspace and couples this structure with com-petitive feature aggregation, yielding localized evidence directly tied to the model computation. This design enables a single-stage, end-to-end training pipeline OPAL: Orthonormal Prototype Alignment Learning 15 
+
+with a standard classification objective, while preserving interpretable, part-based explanations without auxiliary regularizers or multi-stage optimization schedules. OPAL also has limitations that motivate future research directions. First, the current formulation leverages the inductive bias of convolutional backbones, where locality and hierarchical feature composition naturally ground prototype evidence in the image plane. Extending OPAL to vision transformers will require designing token-level competition and aggregation mechanisms that preserve the benefits of fixed, discriminative latent geometries while remaining competitive and interpretable. Second, OPAL currently uses a fixed number of prototypes per class and does not share prototypes across classes, which can be restrictive when class complexity varies or when attributes recur across categories. Future work will explore adaptive prototype allocation and controlled prototype sharing strategies to better reflect class complexity and cross-class regularities while preserving interpretability and performance guarantees. 
+
+## Acknowledgements 
+
+This work has been supported by the Generalitat Valenciana (GVA) through the project CIPROM/2022/20 (PROMETEO). The contribution of GJ. Angulo was supported by his AI Chair PR[AI]RIE–PSAI (ANR-23-IACL-0008, France 2030). 
+
+## References 
+
+1. Adebayo, J., Gilmer, J., Muelly, M., Goodfellow, I., Hardt, M., Kim, B.: Sanity checks for saliency maps. Advances in neural information processing systems 31 
+
+(2018) 2. Borycki, P., Trędowicz, M., Janusz, S., Tabor, J., Spurek, P., Lewicki, A., Struski, Ł.: Epic: Explanation of pretrained image classification networks via prototypes. In: Proceedings of the AAAI Conference on Artificial Intelligence. vol. 40, pp. 17366–17373 (2026) 3. Chen, C., Li, O., Tao, D., Barnett, A., Rudin, C., Su, J.K.: This looks like that: deep learning for interpretable image recognition. Advances in neural information processing systems 32 (2019) 4. Choi, H., Jin, S., Han, K.: Icev2: Interpretability, comprehensiveness, and explain-ability in vision transformer: H. choi et al. International Journal of Computer Vision 133 (5), 2487–2504 (2025) 5. Cimpoi, M., Maji, S., Kokkinos, I., Mohamed, S., Vedaldi, A.: Describing textures in the wild. In: Proceedings of the IEEE conference on computer vision and pattern recognition. pp. 3606–3613 (2014) 6. Codevilla, F., Müller, M., López, A., Koltun, V., Dosovitskiy, A.: End-to-end driv-ing via conditional imitation learning. In: 2018 IEEE international conference on robotics and automation (ICRA). pp. 4693–4700. IEEE (2018) 7. Deng, J., Dong, W., Socher, R., Li, L.J., Li, K., Fei-Fei, L.: Imagenet: A large-scale hierarchical image database. In: 2009 IEEE conference on computer vision and pattern recognition. pp. 248–255. Ieee (2009) 16 Carretero et al. 8. Deng, J., Guo, J., Xue, N., Zafeiriou, S.: Arcface: Additive angular margin loss for deep face recognition. In: Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. pp. 4690–4699 (2019) 9. Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S., et al.: An image is worth 16x16 words: Transformers for image recognition at scale. arXiv preprint arXiv:2010.11929 (2020) 10. Esteva, A., Kuprel, B., Novoa, R.A., Ko, J., Swetter, S.M., Blau, H.M., Thrun, S.: Dermatologist-level classification of skin cancer with deep neural networks. nature 
+
+542 (7639), 115–118 (2017) 11. Fei-Fei, L., Fergus, R., Perona, P.: One-shot learning of object categories. IEEE transactions on pattern analysis and machine intelligence 28 (4), 594–611 (2006) 12. He, K., Zhang, X., Ren, S., Sun, J.: Deep residual learning for image recognition. In: Proceedings of the IEEE conference on computer vision and pattern recognition. pp. 770–778 (2016) 13. Hoffer, E., Hubara, I., Soudry, D.: Fix your classifier: the marginal value of training the last weight layer. arXiv preprint arXiv:1801.04540 (2018) 14. Huang, Q., Xue, M., Huang, W., Zhang, H., Song, J., Jing, Y., Song, M.: Evaluation and improvement of interpretability for self-explainable part-prototype networks. In: Proceedings of the IEEE/CVF International Conference on Computer Vision. pp. 2011–2020 (2023) 15. Kazmierczak, R., Berthier, E., Frehse, G., Franchi, G.: Explainability and vision foundation models: A survey. Information Fusion 122 , 103184 (2025) 16. Khosla, A., Jayadevaprakash, N., Yao, B., Li, F.F.: Novel dataset for fine-grained image categorization: Stanford dogs. In: Proc. CVPR workshop on fine-grained visual categorization (FGVC). vol. 2 (2011) 17. Khosla, P., Teterwak, P., Wang, C., Sarna, A., Tian, Y., Isola, P., Maschinot, A., Liu, C., Krishnan, D.: Supervised contrastive learning. Advances in neural information processing systems 33 , 18661–18673 (2020) 18. Kim, S., Kim, D., Cho, M., Kwak, S.: Proxy anchor loss for deep metric learn-ing. In: Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. pp. 3238–3247 (2020) 19. Krause, J., Stark, M., Deng, J., Fei-Fei, L.: 3d object representations for fine-grained categorization. In: Proceedings of the IEEE international conference on computer vision workshops. pp. 554–561 (2013) 20. Lee, W., Li, W., Lin, B., Monod, A.: Tropical optimal transport and wasserstein distances. Information Geometry 5(1), 247–287 (2022) 21. Li, Z., Bao, W., Zheng, J., Xu, C.: Deep grouping model for unified perceptual parsing. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. pp. 4053–4063 (2020) 22. Liu, W., Wen, Y., Yu, Z., Li, M., Raj, B., Song, L.: Sphereface: Deep hypersphere embedding for face recognition. In: Proceedings of the IEEE conference on com-puter vision and pattern recognition. pp. 212–220 (2017) 23. Liu, Z., Lin, Y., Cao, Y., Hu, H., Wei, Y., Zhang, Z., Lin, S., Guo, B.: Swin transformer: Hierarchical vision transformer using shifted windows. In: Proceedings of the IEEE/CVF international conference on computer vision. pp. 10012–10022 (2021) 24. Liu, Z., Mao, H., Wu, C.Y., Feichtenhofer, C., Darrell, T., Xie, S.: A convnet for the 2020s. In: Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. pp. 11976–11986 (2022) OPAL: Orthonormal Prototype Alignment Learning 17 25. Longo, L., Brcic, M., Cabitza, F., Choi, J., Confalonieri, R., Del Ser, J., Guidotti, R., Hayashi, Y., Herrera, F., Holzinger, A., et al.: Explainable artificial intelligence (xai) 2.0: A manifesto of open challenges and interdisciplinary research directions. Information Fusion 106 , 102301 (2024) 26. Mettes, P., Van der Pol, E., Snoek, C.: Hyperspherical prototype networks. Ad-vances in neural information processing systems 32 (2019) 27. Movshovitz-Attias, Y., Toshev, A., Leung, T.K., Ioffe, S., Singh, S.: No fuss dis-tance metric learning using proxies. In: Proceedings of the IEEE international conference on computer vision. pp. 360–368 (2017) 28. Müller, S.G., Hutter, F.: Trivialaugment: Tuning-free yet state-of-the-art data aug-mentation. In: Proceedings of the IEEE/CVF international conference on computer vision. pp. 774–782 (2021) 29. Nauta, M., Schlötterer, J., Van Keulen, M., Seifert, C.: Pip-net: Patch-based in-tuitive prototypes for interpretable image classification. In: Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. pp. 2744–2753 (2023) 30. Nauta, M., Van Bree, R., Seifert, C.: Neural prototype trees for interpretable fine-grained image recognition. In: Proceedings of the IEEE/CVF conference on com-puter vision and pattern recognition. pp. 14933–14943 (2021) 31. Nilsback, M.E., Zisserman, A.: Automated flower classification over a large number of classes. In: 2008 Sixth Indian conference on computer vision, graphics & image processing. pp. 722–729. IEEE (2008) 32. Oquab, M., Bottou, L., Laptev, I., Sivic, J.: Is object localization for free?-weakly-supervised learning with convolutional neural networks. In: Proceedings of the IEEE conference on computer vision and pattern recognition. pp. 685–694 (2015) 33. Pach, M., Lewandowska, K., Tabor, J., Zieliński, B.M., Rymarczyk, D.D.: Lu-cidPPN: Unambiguous prototypical parts network for user-centric interpretable computer vision. In: The Thirteenth International Conference on Learning Repre-sentations (2025), https://openreview.net/forum?id=BM9qfolt6p 
+
+34. Papyan, V., Han, X., Donoho, D.L.: Prevalence of neural collapse during the ter-minal phase of deep learning training. Proceedings of the National Academy of Sciences 117 (40), 24652–24663 (2020) 35. Parkhi, O.M., Vedaldi, A., Zisserman, A., Jawahar, C.: Cats and dogs. In: 2012 IEEE conference on computer vision and pattern recognition. pp. 3498–3505. IEEE (2012) 36. Ribeiro, M.T., Singh, S., Guestrin, C.: " why should i trust you?" explaining the predictions of any classifier. In: Proceedings of the 22nd ACM SIGKDD interna-tional conference on knowledge discovery and data mining. pp. 1135–1144 (2016) 37. Rudin, C.: Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead. Nature machine intelligence 1(5), 206–215 (2019) 38. Rymarczyk, D., Struski, Ł., Górszczak, M., Lewandowska, K., Tabor, J., Zieliński, B.: Interpretable image classification with differentiable prototypes assignment. In: European Conference on Computer Vision. pp. 351–368. Springer (2022) 39. Rymarczyk, D., Struski, Ł., Tabor, J., Zieliński, B.: Protopshare: Prototypical parts sharing for similarity discovery in interpretable image classification. In: Proceedings of the 27th ACM SIGKDD Conference on Knowledge Discovery & Data Mining. pp. 1420–1430 (2021) 40. Selvaraju, R.R., Cogswell, M., Das, A., Vedantam, R., Parikh, D., Batra, D.: Grad-cam: Visual explanations from deep networks via gradient-based localization. In: 18 Carretero et al. Proceedings of the IEEE international conference on computer vision. pp. 618–626 (2017) 41. Tan, A., Zhou, F., Chen, H.: Post-hoc part-prototype networks. Proceedings of the 41st International Conference on Machine Learning (2024) 42. Tan, M., Le, Q.: Efficientnetv2: Smaller models and faster training. In: Interna-tional conference on machine learning. pp. 10096–10106. PMLR (2021) 43. Teh, E.W., DeVries, T., Taylor, G.W.: Proxynca++: Revisiting and revitalizing proxy neighborhood component analysis. In: European conference on computer vision. pp. 448–464. Springer (2020) 44. Van Der Klis, R., Alaniz, S., Mancini, M., Dantas, C.F., Ienco, D., Akata, Z., Mar-cos, D.: Pdisconet: Semantically consistent part discovery for fine-grained recog-nition. In: Proceedings of the IEEE/CVF international conference on computer vision. pp. 1866–1876 (2023) 45. Wah, C., Branson, S., Welinder, P., Perona, P., Belongie, S., et al.: The caltech-ucsd birds-200-2011 dataset. Tech. rep., Technical Report CNS-TR-2011-001, California Institute of Technology (2011) 46. Wang, B.S., Wang, C.Y., Chiu, W.C.: Mcpnet: An interpretable classifier via multi-level concept prototypes. In: Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition. pp. 10885–10894 (2024) 47. Wang, H., Wang, Y., Zhou, Z., Ji, X., Gong, D., Zhou, J., Li, Z., Liu, W.: Cosface: Large margin cosine loss for deep face recognition. In: Proceedings of the IEEE conference on computer vision and pattern recognition. pp. 5265–5274 (2018) 48. Wang, J., Liu, H., Wang, X., Jing, L.: Interpretable image recognition by construct-ing transparent embedding space. In: Proceedings of the IEEE/CVF international conference on computer vision. pp. 895–904 (2021) 49. Wang, T., Isola, P.: Understanding contrastive representation learning through alignment and uniformity on the hypersphere. In: International conference on ma-chine learning. pp. 9929–9939. PMLR (2020) 50. Xiao, J., Hays, J., Ehinger, K.A., Oliva, A., Torralba, A.: Sun database: Large-scale scene recognition from abbey to zoo. In: 2010 IEEE computer society conference on computer vision and pattern recognition. pp. 3485–3492. IEEE (2010) 51. Zheng, H., Fu, J., Mei, T., Luo, J.: Learning multi-attention convolutional neural network for fine-grained image recognition. In: Proceedings of the IEEE interna-tional conference on computer vision. pp. 5209–5217 (2017) 52. Zhou, B., Khosla, A., Lapedriza, A., Oliva, A., Torralba, A.: Learning deep features for discriminative localization. In: Proceedings of the IEEE conference on computer vision and pattern recognition. pp. 2921–2929 (2016) OPAL: Orthonormal Prototype Alignment Learning 19 
+
+# OPAL: Orthonormal Prototype Alignment Learning for Interpretable Image Classification 
+
+# Supplementary Material 
+
+Ilán Carretero 1 Gustavo Jesús Angulo 2
+
+Rocío del Amor 1,3 Valery Naranjo 1,3    
+
+> 1CVBLab, HumanTech, Universitat Politècnica de València, Valencia, Spain
+> {ilcarjuc,madeam2,vnaranjo}@upv.es
+> 2CMA, Mines Paris, PSL University, Sophia Antipolis, France
+> jesus.angulo_lopez@minesparis.psl.eu
+> 3Artikode Intelligence S.L., Valencia, Spain
+
+## Contents 
+
+A Extended Theoretical Details . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19 A.1 Formal Justification of the Block-uniform Anchor . . . . . . . . . . . . . . 19 A.2 Canonicity of the Prototype Basis . . . . . . . . . . . . . . . . . . . . . . . . . . . 21 B Additional Experimental Setup . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 B.1 Dataset Details and Preprocessing . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 B.2 Implementation Details . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 C Additional Qualitative Interpretability Analysis . . . . . . . . . . . . . . . . . . . . 23 C.1 Additional Prototype-Based Explanations . . . . . . . . . . . . . . . . . . . . 23 C.2 Qualitative Effect of the Number of Prototypes per Class m . . . . 23 D Additional Ablation Studies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23 D.1 Quantifying Prototype Collapse . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23 E Additional Analyses . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24 E.1 Alternative Distance Functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24 E.2 Computational Efficiency . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25 E.3 Prototype Consistency and Stability on CUB-200-2011 . . . . . . . . . 26 E.4 Scalability and Generality Beyond Fine-Grained Benchmarks . . . 28 F Detailed Quantitative Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28 F.1 Main-Paper Tables with Mean ± Standard Deviation Across Three Seeds . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28 
+
+## A Extended Theoretical Details 
+
+A.1 Formal Justification of the Block-uniform Anchor 
+
+Below, we formalize the role of the predefined class anchor in promoting dis-tributed evidence within the correct class block, as stated in Section 3.2 of the main paper. 20 Carretero et al. 
+
+For any embedding  z ∈ RK , let  zBc denote the restriction of  z to the co-ordinates in block  Bc, with all remaining coordinates set to zero. Equivalently, 
+
+zBc is the orthogonal projection of  z onto the class subspace  Sc. We define its in-block energy as: 
+
+rc := ∥zBc ∥2.
+
+Recall that the class anchor is: 
+
+ac = 1
+
+√m
+
+> m
+
+X
+
+> j=1
+
+pc,j ,
+
+where  {pc,j }mj=1  is an orthonormal basis of  Sc. Since OPAL applies channel-wise softmax, global max pooling, and  L2 normalization, the final embedding  z is coordinate-wise non-negative and unit-norm. 
+
+Proposition. For a fixed class  c, suppose that the in-block energy  rc is held constant. Then the similarity  ⟨z, a c⟩ is maximized if and only if 
+
+zBc = rcac,
+
+that is, when the evidence inside block  Bc is distributed uniformly across its  m
+
+slots. In contrast, if the same in-block energy collapses onto a single slot, namely 
+
+zBc = rcpc,j 
+
+for some  j ∈ { 1, . . . , m }, then 
+
+⟨z, a c⟩ = rc
+
+√m .
+
+Hence, for any  m > 1, the block-uniform anchor assigns strictly higher similarity to a distributed configuration than to a one-slot collapsed one. 
+
+Proof. Since  ac ∈ S c and is zero outside block  Bc, it follows that: 
+
+⟨z, a c⟩ = ⟨zBc , a c⟩.
+
+Now fix  rc = ∥zBc ∥2. By Cauchy–Schwarz, 
+
+⟨zBc , a c⟩ ≤ ∥ zBc ∥2∥ac∥2 = rc,
+
+since  ∥ac∥2 = 1 . Equality holds if and only if  zBc is a non-negative scalar mul-tiple of  ac, which under the constraint  ∥zBc ∥2 = rc is equivalent to  zBc = rcac.Therefore, among all embeddings with fixed in-block energy, the maximum sim-ilarity is attained exactly when the evidence is uniformly distributed across the 
+
+m slots of block  Bc. Now consider the collapsed configuration  zBc = rcpc,j  . Then 
+
+⟨z, a c⟩ = ⟨rcpc,j , a c⟩ = rc
+
+*
+
+pc,j , 1
+
+√m
+
+> m
+
+X
+
+> ℓ=1
+
+pc,ℓ 
+
++
+
+= rc
+
+√m ,OPAL: Orthonormal Prototype Alignment Learning 21 
+
+by orthonormality of the prototype directions. For  m = 1 , the statement is trivial, since the class block contains a single slot and there is no distinction between distributed and collapsed evidence. □
+
+Since both  z and  ac are unit-norm, larger similarity  ⟨z, a c⟩ is equivalent to smaller Euclidean distance  ∥z − ac∥2. Therefore, for  m > 1, OPAL assigns a larger correct-class logit to distributed in-block evidence than to collapsed evidence with the same in-block energy. 
+
+A.2 Canonicity of the Prototype Basis 
+
+In Sec. 3.2, we fixed the part-prototypes to the canonical directions pc,j =
+
+e(c−1) m+j . We show here that this choice is not arbitrary. Under the two struc-tural requirements imposed by OPAL, the admissible prototype bases reduce to permutations of the canonical basis, and any such permutation is absorbed by the learned 1 × 1 projection. The canonical basis is therefore the natural repre-sentative of the only admissible family, rather than one option among many. The two requirements are the following. First, orthonormality of the proto-type family {pc,j }, which underpins the geometry of the mutually orthogonal class subspaces {S c}Cc=1 and the maximal angular separation between class an-chors. Second, coordinate-wise non-negativity: the embedding z ∈ RK 
+
+> ≥0
+
+is non-negative by construction, since it is produced by a channel-wise softmax, a global max pooling, and an L2 normalization (CWS+GMP+L 2). The prototype direc-tions, which the embedding is aligned to, are taken to be non-negative accord-ingly. 
+
+Proposition. Let {pk}Kk=1 ⊂ RK 
+
+> ≥0
+
+be an orthonormal family of coordinate-wise non-negative vectors. Then {pk}Kk=1 is a permutation of the canonical basis 
+
+{ek}Kk=1 .
+
+Proof. Consider any two distinct vectors p, q in the family. Since both are non-negative, their inner product is a sum of non-negative terms, 
+
+⟨p, q ⟩ =
+
+> K
+
+X
+
+> k=1
+
+pk qk = 0 ,
+
+so orthogonality forces pk qk = 0 for every coordinate k, and hence p and q
+
+have disjoint supports. The K vectors thus have pairwise disjoint supports, and since each is unit-norm, every support is nonempty. We then have K disjoint nonempty subsets within K coordinates, which fit only if each support is a sin-gle coordinate, so the supports partition {1, . . . , K }. A unit-norm, non-negative vector supported on one coordinate then equals a canonical basis vector, and the assignment of coordinates to vectors is a permutation. □
+
+Finally, any such permutation merely relabels the K output coordinates, which amounts to a row reordering of the 1 × 1 projection producing G. As this projection is learned, the relabeling is absorbed during training and all permutations are equivalent. We therefore adopt the block-ordered assignment 
+
+pc,j = e(c−1) m+j as the natural canonical representative. 22 Carretero et al. 
+
+## B Additional Experimental Setup 
+
+B.1 Dataset Details and Preprocessing 
+
+We evaluate OPAL on five standard fine-grained benchmarks: CUB-200-2011 [45], Stanford Cars [19], Oxford-IIIT Pets [35], Stanford Dogs [16], and Oxford Flowers-102 [31]. For all datasets, we follow the official train/test partitions provided by the dataset authors. For datasets without an official validation split, we reserve a stratified 20% subset of the training data for validation. No custom re-splitting, relabeling, or sample filtering is performed. All images are resized to a final input resolution of 224×224. Following common practice in prior work [29, 33, 46], all backbones are initialized from ImageNet-pretrained weights, and inputs are normalized using the standard Im-ageNet mean and standard deviation. During training, we use the TrivialAug-ment [28] data augmentation scheme, combining geometric and photometric transformations with standard random horizontal flipping, to produce the fi-nal 224×224 input. This follows the same general strategy adopted in prior prototype-based methods [29, 33]. CUB-200-2011 and Stanford Dogs are cropped to the annotated object bound-ing boxes prior to training and evaluation, as in prior prototype-based works [29,30,33,38,46], whereas Stanford Cars, Oxford-IIIT Pets, and Oxford Flowers-102 are used without spatial cropping. Bounding boxes are used only for offline image preprocessing, and no part annotations, segmentation masks, attributes, or other forms of localized supervision are used during training or inference. 
+
+B.2 Implementation Details 
+
+All experiments follow the same training protocol across datasets, backbones, and classification heads. Models are fine-tuned end-to-end for 30 epochs with Adam, using a fixed learning rate of  1 × 10 −4 and a batch size of 64. We evaluate ResNet-50/101/152 [12], EfficientNet-V2 S/M/L [42], and ConvNeXt Tiny/Small/Base [24], using the official torchvision ImageNet-pretrained weights: 
+
+IMAGENET1K_V2 for the ResNet models and IMAGENET1K_V1 for the EfficientNet-V2 and ConvNeXt models. The same protocol is used for both the standard linear-head baselines and their OPAL variants. The final checkpoint is selected on the held-out validation split described in Sec. B.1 according to the lowest validation cross-entropy loss, and final perfor-mance is reported as top-1 accuracy on the official test split. Each setting is repeated with three independent random seeds. The main paper reports mean accuracy along with the absolute percentage-point difference relative to the cor-responding CNN baseline, whereas the standard deviations across runs are pro-vided in Tables G, H, I, and J. Results for competing prototype-based methods are obtained from their official repositories and, when available, from the cor-responding publications. For reproducibility, all experiments were conducted in Python 3.10 with PyTorch 2.1 and torchvision 0.16 inside the Docker image 
+
+nvcr.io/nvidia/pytorch:23.10-py3 .OPAL: Orthonormal Prototype Alignment Learning 23 
+
+## C Additional Qualitative Interpretability Analysis 
+
+C.1 Additional Prototype-Based Explanations 
+
+Fig. A presents additional qualitative visualizations for  m = 5 . Across all five datasets, the learned prototypes do not collapse and appear to retain clear se-mantic expressiveness, with different prototype slots consistently attending to distinct and meaningful image regions. Moreover, prototypes associated with different test images from the same class often retrieve highly similar evidence. This suggests that OPAL tends to capture visually consistent and semantically meaningful prototype patterns at the class level. 
+
+C.2 Qualitative Effect of the Number of Prototypes per Class m
+
+As illustrated in Fig. B, for  m ∈ { 1, 3, 5}, the selected prototypes generally at-tend to semantically meaningful image regions across datasets. When increasing the number of prototypes to  m = 10 , most prototype slots still focus on informa-tive regions, but a small subset begins to attend to areas with limited semantic relevance and, in some cases, even to background regions. This behavior is con-sistent with the idea that each class contains only a limited number of salient and discriminative regions, meaning that, beyond a certain point, increasing the number of prototypes can lead some slots to capture weakly informative or even null evidence. These qualitative observations are in line with the quantitative trend reported in the main paper (Fig. 4), where moderate values of  m provide the most favorable trade-off between representational capacity and discrimina-tive focus. 
+
+## D Additional Ablation Studies 
+
+D.1 Quantifying Prototype Collapse 
+
+To quantify the prototype redundancy suggested by the ablation experiments in the main paper, we introduce a simple Spatial Prototype Collapse (SPC) score. For a test image  x of class  c, let  Kc denote the set of class-specific prototype channels and  (uk, v k) = arg max Ak the spatial maximizer selected by channel 
+
+k ∈ K c on the feature map. We define: 
+
+SPC( x) = 1 − |{ (uk, v k) : k ∈ K c}| − 1
+
+|K c| − 1 .
+
+By construction,  SPC( x) = 0  means that all class-specific prototypes peak at distinct spatial locations, whereas  SPC( x) = 1  indicates complete collapse onto a single feature-map cell. We report the average SPC over the test set, so lower values indicate less collapse and greater spatial diversity. The results in Tab. A reveal a clear effect of channel-wise softmax (CWS). When CWS is removed while keeping the projection layer, global max pooling 24 Carretero et al. 
+
+Table A: Effect of channel-wise softmax on spatial prototype collapse across five fine-grained benchmarks. Columns correspond to the  1 × 1 convolutional projection (Proj.), global max pooling (GMP), channel-wise softmax (CWS), and orthonormal basis (Orth.). ✓ and ✗ indicate whether a component is enabled or not. Values are reported as mean  ± standard deviation, where lower values indicate less spatial proto-type collapse.                        
+
+> Architectural Components Spatial Prototype Collapse ( ↓)Proj. GMP CWS Orth. CUB CARS PETS DOGS FLOWER
+> ✓✓✗✓77.3 ±21.5 78.7 ±23.4 93.2 ±13.9 93.6 ±12.8 72.1 ±25.4
+> ✓✓✓✓1.7 ±8.2 1.4 ±8.8 1.0 ±7.2 4.9 ±15.3 0.1 ±2.0
+
+(GMP), and the orthonormal basis fixed, spatial collapse becomes severe across all five benchmarks, with SPC values ranging from  72 .1 to  93 .6. By contrast, full OPAL reduces SPC to near-zero values on all datasets, indicating that the se-lected prototypes are typically associated with different spatial positions rather than repeatedly collapsing onto the same one. These results underscore the im-portance of explicit spatial competition in reducing prototype redundancy. Qualitative examples in Fig. C reinforce the same conclusion. Without CWS, many prototype slots repeatedly attend to one or two dominant regions, produc-ing highly redundant evidence patches. With CWS, the selected prototypes be-come substantially more diverse and typically cover distinct, semantically mean-ingful regions of the object. Overall, the quantitative and qualitative evidence consistently support the combination of the orthonormal basis and CWS, indi-cating that both components are important for achieving strong performance, preserving inherent interpretability, and preventing prototype collapse. 
+
+## E Additional Analyses 
+
+E.1 Alternative Distance Functions 
+
+While the main paper adopts Euclidean distance for class-logit computation, alternative choices can also be considered. Nevertheless, Euclidean distance is particularly well matched to OPAL, since both the embedding  z and the class anchors  ac are  L2-normalized, making Euclidean alignment equivalent to cosine-based comparison on the unit hypersphere. For completeness, we therefore eval-uate several alternative distances and divergences, namely  L1, L3, L∞ (Cheby-shev), Kullback-Leibler divergence, and tropical projective distance [20]. Cosine distance is not included separately because, under the normalized formulation of OPAL, it induces the same ordering as the Euclidean distance. The results in Tab. B show that  L1, L2, and  L3 consistently provide the strongest performance across datasets. In particular,  L1 and  L3 remain highly competitive, which is consistent with their similarity to  L2 as full-vector discrep-ancy measures. By contrast, Chebyshev distance performs substantially worse on all benchmarks, while Kullback-Leibler divergence and tropical projective OPAL: Orthonormal Prototype Alignment Learning 25 
+
+Table B: Sensitivity of OPAL to the choice of distance/divergence function, reported as top-1 accuracy (%) on five fine-grained benchmarks. ↑ and ↓ denote the absolute percentage-point difference with respect to the ConvNeXt-Tiny baseline.                                             
+
+> Method Accuracy ( ↑)CUB CARS PETS DOGS FLOWER
+> Baseline (ConvNeXt-Tiny) 84.2 87.8 91.0 85.3 95.6 OPAL ( L1distance) 85.0 ↑0.8 90.2 ↑2.4 92.6 ↑1.6 88.2 ↑2.9 95.5 ↓0.1
+> OPAL ( L3distance) 85.5 ↑1.3 90.4 ↑2.6 92.7 ↑1.7 87.7 ↑2.4 95.8 ↑0.2
+> OPAL ( L∞distance, Chebyshev) 50.5 ↓33.7 46.9 ↓40.9 80.1 ↓10.9 64.3 ↓21.0 73.8 ↓21.8
+> OPAL (Kullback–Leibler divergence) 76.7 ↓7.5 80.8 ↓7.0 91.5 ↑0.5 86.0 ↑0.7 90.6 ↓5.0
+> OPAL (Tropical projective distance) 81.5 ↓2.7 79.9 ↓7.9 92.8 ↑1.8 87.2 ↑1.9 90.6 ↓5.0
+> OPAL ( L2distance, Euclidean) 85.6 ↑1.4 90.3 ↑2.5 92.8 ↑1.8 86.9 ↑1.6 96.1 ↑0.5
+
+distance are more competitive than Chebyshev but still underperform the  Lp
+
+distances with  p ∈ { 1, 2, 3}.This behavior is consistent with the geometry induced by OPAL. The  L1, L2,and  L3 distances aggregate deviations across the full embedding and therefore remain compatible with the desired alignment of multiple prototype slots within the correct class block. In contrast,  L∞ depends only on the largest coordinate discrepancy, which is poorly matched to a representation whose decision should reflect joint alignment across several coordinates. Kullback-Leibler divergence and tropical projective distance are likewise less compatible with the normalized orthonormal-anchor formulation, as they emphasize distributional asymmetry or relative coordinate ratios rather than the global geometric alignment captured naturally by the Euclidean distance. 
+
+E.2 Computational Efficiency 
+
+Analyzing computational efficiency is important to assess whether the perfor-mance and interpretability gains provided by OPAL come at a meaningful prac-tical cost. Tab. C therefore reports both the complexity of each backbone and the additional dataset-dependent overhead introduced by the standard linear classifier and by OPAL. Compared with a standard linear head, OPAL incurs a higher computational cost because it replaces the final classifier with a prototype-based head built on a 1×1 projection to  K = C ·m channels. In terms of parameters, this overhead is entirely due to the learned projection, since the remaining components are either fixed or parameter-free. In terms of GFLOPs, the  1×1 projection is also expected to dominate, whereas the subsequent operations, including spatial competition and comparisons to fixed orthonormal anchors, remain relatively lightweight. The dataset dependence follows directly from the fact that  K = C · m, so the overhead increases with the number of classes and would likewise increase for larger values of  m.More importantly, the dominant computational burden remains the backbone rather than the OPAL head. Across all configurations, the standard linear head 26 Carretero et al. 
+
+Table C: Computational complexity of the evaluated backbones and the additional dataset-dependent overhead introduced by the standard classification head and OPAL. Backbone columns report the total parameter count and GFLOPs of the feature ex-tractor. For each dataset, we report the additional parameters and GFLOPs of the dataset-specific classification head. Rows named after the backbone correspond to the standard classification head, while shaded rows report the additional overhead intro-duced by OPAL. Values are expressed in k/M for readability.                                                                                                                                                                                                                       
+
+> Backbone Backbone Additional Overhead Params GFLOPs CUB CARS PETS DOGS FLOWER Params GFLOPs Params GFLOPs Params GFLOPs Params GFLOPs Params GFLOPs
+> ResNet-50 23.5M 4.13 409.8k 0.0006 401.6k 0.0006 75.8k 0.0003 245.9k 0.0004 209.0k 0.0004 w/ OPAL 2.049M 0.1005 2.008M 0.0985 379.1k 0.0186 1.229M 0.0603 1.045M 0.0513 ResNet-101 42.5M 7.86 409.8k 0.0006 401.6k 0.0006 75.8k 0.0003 245.9k 0.0004 209.0k 0.0004 w/ OPAL 2.049M 0.1005 2.008M 0.0985 379.1k 0.0186 1.229M 0.0603 1.045M 0.0513 ResNet-152 58.1M 11.60 409.8k 0.0006 401.6k 0.0006 75.8k 0.0003 245.9k 0.0004 209.0k 0.0004 w/ OPAL 2.049M 0.1005 2.008M 0.0985 379.1k 0.0186 1.229M 0.0603 1.045M 0.0513 EfficientNet-V2 S 20.2M 8.90 256.2k 0.0004 251.1k 0.0004 47.4k 0.0002 153.7k 0.0003 130.7k 0.0003 w/ OPAL 1.281M 0.0629 1.255M 0.0617 237.0k 0.0116 768.6k 0.0377 653.3k 0.0321 EfficientNet-V2 M 52.9M 24.54 256.2k 0.0004 251.1k 0.0004 47.4k 0.0002 153.7k 0.0003 130.7k 0.0003 w/ OPAL 1.281M 0.0629 1.255M 0.0617 237.0k 0.0116 768.6k 0.0377 653.3k 0.0321 EfficientNet-V2 L 117.2M 56.12 256.2k 0.0004 251.1k 0.0004 47.4k 0.0002 153.7k 0.0003 130.7k 0.0003 w/ OPAL 1.281M 0.0629 1.255M 0.0617 237.0k 0.0116 768.6k 0.0377 653.3k 0.0321 ConvNeXt-Tiny 27.8M 4.49 153.8k 0.0002 150.7k 0.0002 28.5k 0.0001 92.3k 0.0002 78.4k 0.0002 w/ OPAL 769.0k 0.0378 753.6k 0.0371 142.3k 0.0070 461.4k 0.0227 392.2k 0.0193 ConvNeXt-Small 49.5M 8.74 153.8k 0.0002 150.7k 0.0002 28.5k 0.0001 92.3k 0.0002 78.4k 0.0002 w/ OPAL 769.0k 0.0378 753.6k 0.0371 142.3k 0.0070 461.4k 0.0227 392.2k 0.0193 ConvNeXt-Base 87.6M 15.42 205.0k 0.0003 200.9k 0.0003 37.9k 0.0001 123.0k 0.0002 104.6k 0.0002 w/ OPAL 1.025M 0.0504 1.004M 0.0494 189.6k 0.0093 615.0k 0.0302 522.8k 0.0257
+
+accounts for only  0.04%  to  1.74%  of the backbone parameters and less than 
+
+0.015%  of its GFLOPs, while OPAL accounts for  0.20%  to  8.72%  of the backbone parameters and  0.02%  to  2.43%  of its GFLOPs. Averaged across all backbones and datasets, the OPAL head represents only  2.36%  of the backbone parameters and  0.53%  of its GFLOPs. Therefore, although OPAL is less efficient than a non-interpretable linear classifier, its additional cost remains small relative to the feature extractor, indicating that the proposed design remains practical from a deployment perspective. 
+
+E.3 Prototype Consistency and Stability on CUB-200-2011 
+
+While qualitative prototype visualizations are informative, quantitative evalu-ation is particularly valuable for assessing whether the learned prototypes are semantically meaningful and robust. This type of evaluation requires part-level annotations, which are available only for CUB-200-2011 among the five fine-grained benchmarks considered in this work. Following [14, 33], we therefore report prototype consistency and stability only on CUB. Consistency measures whether a prototype is repeatedly associated with the same annotated object part across test images from its assigned class, while stability measures whether this association is preserved under input perturbations. In our case, stability is evaluated under the Gaussian random-noise protocol of [14]. To remain com-parable with prior work, we use the previously reported results from [14, 33] whenever available, and compute the missing entries under the same evaluation protocol. OPAL: Orthonormal Prototype Alignment Learning 27 
+
+Table D: Prototype consistency and stability on CUB-200-2011, evaluated following [14, 33]. Higher values indicate better semantic alignment and robustness. The best result in each column is highlighted in bold, the second-best is underlined.                              
+
+> Method CUB Consistency ( ↑)Stability ( ↑)
+> ProtoPNet NeurIPS ’19 [3] 28.3 56.7 ProtoTree CVPR ’21 [30] 16.4 23.2 ProtoPShare KDD ’21 [39] 9.9 58.8 ProtoPool ECCV ’22 [38] 35.7 58.4 PIP-Net CVPR ’23 [29] 49.8 89.7
+> LucidPPN ICLR ’25 [33] 71.2 66.3 OPAL (Ours) 50.5 75.9
+
+The results are summarized in Tab. D. OPAL achieves the second-best score on both metrics, obtaining  50 .5 in consistency and  75 .9 in stability. Although this evaluation is limited to a single benchmark and should therefore not be over-generalized, it provides quantitative evidence that OPAL yields reliable prototype explanations under part-level supervision. In particular, OPAL com-pares favorably with most competing prototype-based models and exhibits a well-balanced quantitative interpretability profile when consistency and stabil-ity are considered jointly. LucidPPN [33] attains the highest consistency, which may partly stem from its use of PDiscoNet-generated [44] part segmentation masks to more explicitly align prototypes with semantic object parts during training [33]. While effective, this also introduces dependence on an additional external model for prototype discovery. PIP-Net [29], in turn, achieves the highest stability, which may be related to its dedicated self-supervised prototype warm-up stage and auxiliary regularization losses. This design, however, makes the training pipeline heav-ier and introduces additional tuning complexity compared with a single-stage formulation. Overall, OPAL emerges as a particularly strong solution that com-bines competitive performance and prototype quality with the simplicity of a single-stage end-to-end training pipeline. The comparison in Tab. D places OPAL among existing methods, but it does not reveal which of its components are responsible for the observed prototype quality. We therefore isolate the two mechanisms that produce localized, non-redundant evidence: CWS, which prevents prototype collapse, and GMP, which anchors each prototype to a single image region. As shown in Tab. E, remov-ing both (w/o CWS+GMP) yields only a slight drop in accuracy, yet markedly degrades consistency and stability on CUB-200-2011. Spatial competition and max-based aggregation thus couple the fixed-class geometry to faithful and lo-calized evidence, a quality that accuracy alone does not capture. 28 Carretero et al. 
+
+Table E: Ablation of channel-wise softmax (CWS) and global max pooling (GMP) on accuracy and interpretability metrics on CUB-200-2011. Removing both mechanisms preserves accuracy but markedly degrades prototype consistency and stability. ↑ de-notes the absolute difference with respect to the ablated variant.           
+
+> Variant CUB Accuracy ( ↑)Consistency ( ↑)Stability ( ↑)
+> w/o CWS + GMP 85.0 40.3 65.1 OPAL (Full) 85.6 ↑0.6 50.5 ↑10.2 75.9 ↑10.8
+
+E.4 Scalability and Generality Beyond Fine-Grained Benchmarks 
+
+We test whether the plug-in behavior of OPAL (main paper, Tab. 3) carries over beyond fine-grained benchmarks, evaluating it on ImageNet-1K (IN-1K) [7], Caltech-101 (CT-101) [11], Describable Textures (DTD-47) [5], and Scene UN-derstanding (SUN-397) [50] against its own ConvNeXt-Tiny backbone under an identical protocol (Sec. B.2). Tab. F shows that OPAL remains competitive with the non-interpretable baseline on IN-1K and CT-101, and consistently improves on DTD-47 and SUN-397. These results suggest that OPAL’s benefit is not tied to fine-grained part structure and could extend to broader settings. 
+
+Table F: Scalability and generality of OPAL beyond fine-grained benchmarks, as top-1 accuracy under the ConvNeXt-Tiny backbone. ↑/↓ denote the percentage-point difference with respect to the baseline.              
+
+> Method IN-1K CT-101 DTD-47 SUN-397
+> Baseline (ConvNeXt-Tiny) 76.7 96.9 73.2 60.3 OPAL (Ours) 76.1 ↓0.6 97.2 ↑0.3 76.0 ↑2.8 62.6 ↑2.3
+
+## F Detailed Quantitative Results 
+
+F.1 Main-Paper Tables with Mean ± Standard Deviation Across Three Seeds 
+
+In the main paper, to highlight performance differences in a more direct and visually interpretable manner, we reported not only the mean accuracy across three runs but also the absolute percentage-point difference with respect to the corresponding non-inherently interpretable counterpart. For completeness, Ta-bles G, H, I, and J present the same quantitative results together with their corresponding standard deviations across three random seeds. OPAL: Orthonormal Prototype Alignment Learning 29 CUB  CARS  PETS  DOGS  FLOWER 
+
+Fig. A: Additional qualitative prototype-based explanations produced by OPAL on five fine-grained benchmarks ( m = 5 ). Colored boxes mark the spatial maximizers selected by each prototype. In the patch grids, the first row is extracted from the displayed test image, while the remaining rows are drawn from other images of the same predicted class. 30 Carretero et al. m=1 m=3 m=5 m=10     
+
+> CUB CARS PETS DOGS FLOWER
+> m=1 m=3 m=5 m=10
+
+Fig. B: Qualitative prototype-based explanations produced by OPAL on five fine-grained benchmarks for  m ∈ { 1, 3, 5, 10 }. Colored boxes mark the spatial maximizers selected by each prototype. OPAL: Orthonormal Prototype Alignment Learning 31 w/ CWS w/o CWS     
+
+> CUB CARS PETS DOGS FLOWER
+> w/ CWS w/o CWS
+
+Fig. C: Qualitative prototype-based explanations on five fine-grained benchmarks (m = 5 ). Columns correspond to datasets. Rows labeled w/ CWS show full OPAL, whereas rows labeled w/o CWS show the variant without channel-wise softmax. Col-ored boxes mark the spatial maximizers selected by each prototype. 32 Carretero et al. 
+
+Table G: Expanded version of Table 2 in the main paper. Here, the small values reported after each score denote the standard deviation across three random seeds. For methods whose results were taken directly from prior publications, we retain the originally reported values. Consequently, standard deviations are unavailable for some entries. This follows the same reporting practice adopted in prior work [29,30,33,38,46]. 
+
+Method Accuracy ( ↑)CUB CARS PETS DOGS FLOWER 
+
+Baseline (ConvNext-Tiny) 84.2 ±0.1 87.8 ±0.2 91.0 ±0.5 85.3 ±0.3 95.6 ±0.1 
+
+ProtoPNet NeurIPS ’19 [3] 79.2 86.1 80.9 ±0.4 77.4 ±0.2 92.1 ±0.3 
+
+ProtoTree CVPR ’21 [30] 82.2 ±0.7 86.6 ±0.2 75.0 ±0.8 58.9 ±0.8 17.5 ±0.5 
+
+ProtoPShare KDD ’21 [39] 74.7 86.4 81.2 ±0.4 74.1 ±0.3 90.3 ±0.2 
+
+TesNet ICCV ’21 [48] 84.6 ±0.3 92.6 ±0.3 88.7 ±0.4 80.7 ±0.2 83.4 ±0.5 
+
+ProtoPool ECCV ’22 [38] 85.5 ±0.1 88.9 ±0.1 80.8 ±0.4 71.7 ±0.2 92.7 ±0.1 
+
+PIP-Net CVPR ’23 [29] 84.3 ±0.2 88.2 ±0.5 92.0 ±0.3 80.8 ±0.4 91.8 ±0.5 
+
+MCPNet CVPR ’24 [46] 83.5 83.2 ±0.4 91.3 ±0.2 76.5 ±0.4 94.7 ±0.2 
+
+LucidPPN ICLR ’25 [33] 81.5 ±0.4 91.6 ±0.2 92.1 ±0.3 79.5 ±0.4 95.0 ±0.3 
+
+OPAL (Ours) 85.6 ±0.2 90.3 ±0.1 92.8 ±0.2 86.9 ±0.2 96.1 ±0.3 
+
+Table H: Expanded version of Table 3 in the main paper. Here, the small values reported after each score denote the standard deviation across three random seeds, whereas the corresponding main-paper table reports the absolute percentage-point dif-ference relative to the corresponding backbone baseline. Shaded rows denote the OPAL variants. 
+
+Backbone Accuracy ( ↑)CUB CARS PETS DOGS FLOWER 
+
+ResNet-50 72.6 ±0.2 71.9 ±0.2 89.5 ±0.2 81.3 ±0.3 92.8 ±0.3 
+
+w/ OPAL 80.8 ±0.1 84.3 ±0.1 89.8 ±0.3 81.0 ±0.7 92.7 ±0.3 
+
+ResNet-101 74.9 ±0.2 73.8 ±0.2 88.5 ±0.2 83.5 ±0.4 91.6 ±0.3 
+
+w/ OPAL 81.4 ±0.2 83.9 ±0.1 91.0 ±0.3 83.0 ±0.7 93.0 ±0.3 
+
+ResNet-152 76.0 ±0.3 73.7 ±0.1 90.3 ±0.3 83.1 ±0.4 92.4 ±0.3 
+
+w/ OPAL 80.7 ±0.1 85.1 ±0.2 90.1 ±0.3 84.1 ±0.6 93.8 ±0.2 
+
+EfficientNet-V2 S 78.3 ±0.3 76.7 ±0.2 89.6 ±0.7 84.5 ±0.1 95.3 ±0.5 
+
+w/ OPAL 83.5 ±0.7 87.2 ±0.1 90.4 ±0.3 85.8 ±0.6 95.3 ±0.3 
+
+EfficientNet-V2 M 79.4 ±0.3 80.3 ±0.2 89.0 ±0.2 83.3 ±0.1 93.9 ±0.9 
+
+w/ OPAL 82.6 ±0.2 82.7 ±0.1 90.6 ±0.9 85.7 ±0.2 92.9 ±0.5 
+
+EfficientNet-V2 L 84.1 ±0.3 85.9 ±0.1 90.0 ±0.3 81.4 ±0.7 94.9 ±0.2 
+
+w/ OPAL 86.9 ±0.1 89.4 ±0.2 90.0 ±0.1 83.1 ±0.8 96.6 ±0.4 
+
+ConvNeXt-Tiny 84.2 ±0.1 87.8 ±0.2 91.0 ±0.5 85.3 ±0.3 95.6 ±0.1 
+
+w/ OPAL 85.6 ±0.2 90.3 ±0.1 92.8 ±0.2 86.9 ±0.2 96.1 ±0.3 
+
+ConvNeXt-Small 81.7 ±0.2 83.9 ±0.2 91.8 ±0.1 86.5 ±0.4 95.3 ±0.1 
+
+w/ OPAL 85.6 ±0.1 90.6 ±0.2 93.4 ±0.5 87.7 ±0.6 95.5 ±0.3 
+
+ConvNeXt-Base 82.1 ±0.2 82.1 ±0.2 92.0 ±0.3 88.9 ±0.4 97.2 ±0.3 
+
+w/ OPAL 86.3 ±0.1 91.4 ±0.2 93.9 ±0.4 90.2 ±0.6 96.6 ±0.3 OPAL: Orthonormal Prototype Alignment Learning 33 
+
+Table I: Expanded version of Table 4 in the main paper. Here, the small values reported after each score denote the standard deviation across three random seeds, whereas the corresponding main-paper table reports the absolute percentage-point dif-ference relative to the baseline. Columns correspond to the  1 × 1 convolutional projec-tion (Proj.), global max pooling (GMP), channel-wise softmax (CWS), and orthonor-mal anchors (Orth.). ✓ and ✗ indicate whether a component is enabled or not. When GMP is disabled, global average pooling is used. The all-crosses configuration ( ✗✗✗✗ )corresponds to the convolutional baseline, while the all-checks configuration ( ✓✓✓✓ )corresponds to full OPAL. 
+
+Architectural Components Accuracy ( ↑)Proj. GMP CWS Orth. CUB CARS PETS DOGS FLOWER 
+
+✗ ✗ ✗ ✗ 84.2 ±0.1 87.8 ±0.2 91.0 ±0.5 85.3 ±0.3 95.6 ±0.1 
+
+✓ ✗ ✗ ✗ 82.3 ±0.4 86.3 ±0.3 92.0 ±0.1 86.2 ±0.3 96.3 ±0.1 
+
+✗ ✓ ✗ ✗ 79.6 ±0.5 75.7 ±0.9 88.9 ±0.9 84.1 ±0.6 93.4 ±0.1 
+
+✗ ✗ ✓ ✗ 57.4 ±0.9 48.9 ±0.5 88.1 ±0.7 74.6 ±0.6 91.5 ±0.2 
+
+✓ ✓ ✗ ✗ 77.1 ±0.1 73.5 ±0.7 91.6 ±0.2 86.5 ±0.1 94.2 ±0.2 
+
+✗ ✓ ✓ ✗ 54.6 ±0.9 31.9 ±0.2 86.2 ±0.1 80.2 ±0.2 86.3 ±0.4 
+
+✓ ✗ ✓ ✗ 73.7 ±0.1 70.5 ±0.2 91.1 ±0.9 84.7 ±0.3 95.0 ±0.1 
+
+✓ ✗ ✗ ✓ 85.0 ±0.2 90.6 ±0.1 92.6 ±0.2 85.8 ±0.9 96.3 ±0.2 
+
+✓ ✓ ✗ ✓ 82.0 ±0.2 85.5 ±0.2 93.2 ±0.3 87.2 ±0.3 94.0 ±0.1 
+
+✓ ✗ ✓ ✓ 84.0 ±0.2 90.4 ±0.1 93.4 ±0.5 86.8 ±0.3 95.2 ±0.1 
+
+✓ ✓ ✓ ✓ 85.6 ±0.2 90.3 ±0.1 92.8 ±0.2 86.9 ±0.2 96.1 ±0.3 
+
+Table J: Tabular version of Fig. 4. While the sensitivity analysis is presented graphi-cally in the main paper, we provide the corresponding numerical values here for com-pleteness and ease of reference. All values are reported as mean  ± standard deviation across three random seeds. 
+
+Method Accuracy ( ↑)CUB CARS PETS DOGS FLOWER 
+
+Baseline (ConvNext-Tiny) 84.2 ±0.1 87.8 ±0.2 91.0 ±0.5 85.3 ±0.3 95.6 ±0.1 
+
+w/ OPAL m=1 81.3 ±0.1 84.9 ±0.7 93.1 ±0.6 86.1 ±0.3 93.3 ±0.1 
+
+w/ OPAL m=3 85.2 ±0.1 89.6 ±0.4 93.1 ±0.5 86.4 ±0.4 95.3 ±0.1 
+
+w/ OPAL m=5 85.6 ±0.2 90.3 ±0.1 92.8 ±0.2 86.9 ±0.2 96.1 ±0.3 
+
+w/ OPAL m=10 84.5 ±0.3 90.2 ±0.2 92.6 ±0.2 86.5 ±0.4 95.3 ±0.1

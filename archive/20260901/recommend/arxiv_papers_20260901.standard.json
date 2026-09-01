@@ -1,0 +1,398 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-01T21:41:35.210478+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 6,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2608.28685v1",
+      "source": "arxiv",
+      "title": "Data Diversity, Not Frequency Invariance: A Controlled and Self-Audited Study of Compression-Robust Deepfake Detection",
+      "abstract": "Frequency features and compression-invariant representation learning are widely assumed to be key to deepfake detection that survives video compression. We test this with CAFRL - block-DCT and FFT-phase streams, compression-level-conditioned band attention, and adversarial (gradient-reversal) compression invariance - and report a controlled negative. Under a pre-registered protocol with capacity- and augmentation-matched controls, a plain EfficientNet-B0 on multi-quality data beat CAFRL as specified at every compression level on the FaceForensics++ test split, by 3.66 AUC points at CRF 40 (paired, single seed). A self-audit of our own negative found four defects biased against the frequency hypothesis, and pre-specified re-tests repairing all four showed the deficit to be a recipe artifact, not an architecture failure: the baseline recipe recovered 3.96 points over the matching shipped-recipe variant. The frequency path made no detectable difference: discriminative alone (standalone validation AUC 0.91-0.98 late in training) but of no marginal value under this fusion, at two feature widths of one 4.0 M trunk, every seed-pooled interval for the intra-dataset compression contrasts including zero; on the single held-out manipulation tested, the fair variants sat below the plain backbone. The adversarial branch, as specified, added nothing and degraded its own conditioning estimator; at the fair recipe it is untested. Robustness under single-pass H.264 re-encoding came instead from data diversity: real constant-rate-factor variants beat synthetic JPEG augmentation by 7.3 points (single runs, non-overlapping intervals). The evidence is FaceForensics++-family, GAN-era and single-codec. Match controls on training recipe as well as capacity, and buy compression robustness with codec diversity before architecture.",
+      "authors": [
+        "Abbas Aliyev",
+        "Samir Rustamov"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "cs.MM"
+      ],
+      "published": "2026-08-26T12:05:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.28685v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "deepfake detection under compression; frequency vs data diversity",
+      "llm_evidence_cn": "压缩下深度伪造检测；频率特征与数据多样性对比",
+      "llm_evidence": "压缩下深度伪造检测；频率特征与数据多样性对比",
+      "canonical_evidence": "压缩下深度伪造检测；频率特征与数据多样性对比",
+      "llm_tldr_en": "The paper challenges the assumption that frequency and compression-invariance features improve deepfake detection under video compression, showing that data diversity matters more.",
+      "llm_tldr_cn": "针对深度伪造检测在视频压缩后性能下降的问题，本文检验频率特征和压缩不变性的有效性。提出CAFRL框架融合块DCT、FFT相位流、条件带注意力与对抗压缩不变性，并与普通EfficientNet-B0受控比较。在FaceForensics++上，普通EfficientNet-B0在多质量数据上优于CAFRL，CRF 40时高出3.66 AUC点。研究表明数据多样性比频率不变性对压缩鲁棒深度伪造检测更重要。",
+      "llm_tldr": "针对深度伪造检测在视频压缩后性能下降的问题，本文检验频率特征和压缩不变性的有效性。提出CAFRL框架融合块DCT、FFT相位流、条件带注意力与对抗压缩不变性，并与普通EfficientNet-B0受控比较。在FaceForensics++上，普通EfficientNet-B0在多质量数据上优于CAFRL，CRF 40时高出3.66 AUC点。研究表明数据多样性比频率不变性对压缩鲁棒深度伪造检测更重要。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.28777v1",
+      "source": "arxiv",
+      "title": "FairReL: Deepfake Detection using Fairness-Aware Representation Learning",
+      "abstract": "Although recent deepfake detectors achieve high overall accuracy, their errors remain unevenly distributed across demographic subgroups, with real faces from certain groups more often misclassified as fake. Existing fairness-aware detectors typically regularise the entire feature representation, without identifying or controlling the specific components that drive unfair predictions. Such coarse intervention can over-suppress useful forgery cues while leaving demographic structure in component-specific subspaces. To address this, we identify two subgroup-sensitive components: multi-scale spatial features, which encode local facial and forgery patterns, and fine-tuning-induced residual features, which adapt the backbone to the unfair training distribution. We propose FairReL, a fairness-aware representation-learning framework that targets both components with dedicated demographic supervision. FairReL uses an SVD-decomposed foundation-model backbone to isolate the fine-tuning-induced residual representation, and introduces two complementary losses. Group-Conditional Wavelet Decorrelation (GCWD) suppresses subgroup-imbalanced structure across spatial wavelet sub-bands, while Subspace-Localised Mean Alignment (SLMA) aligns subgroup means within each real/fake class in the residual representation. Experiments on FF++, Celeb-DF, DFD and DFDC show that, against the state-of-the-art fairness-aware detector, FairReL improves unseen-dataset AUC by 3.9% while reducing subgroup FPR disparity by 10.2%. Code is available at https://github.com/xiaoman89/FairReL .",
+      "authors": [
+        "Xiaoman Lu",
+        "Jiaqi Li",
+        "Shuntian Zheng",
+        "Huiping Chen",
+        "Yu Guan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-28T18:34:15+00:00",
+      "link": "https://arxiv.org/pdf/2608.28777v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "fairness-aware deepfake detection on face images",
+      "llm_evidence_cn": "人脸深度伪造检测中的公平感知表示学习",
+      "llm_evidence": "人脸深度伪造检测中的公平感知表示学习",
+      "canonical_evidence": "人脸深度伪造检测中的公平感知表示学习",
+      "llm_tldr_en": "Addresses demographic bias in deepfake detectors by identifying and controlling subgroup-sensitive feature components, improving fairness without sacrificing detection accuracy.",
+      "llm_tldr_cn": "现有深度伪造检测器整体准确率高，但错误在不同人口子群间分布不均。本文识别出两个子群敏感成分：多尺度空间特征和微调残差特征，并提出公平感知表示学习方法，针对这些成分进行控制而非粗粒度正则化整个特征。实验表明该方法在提高公平性的同时保持检测性能，为深度伪造检测的公平性提供了精细调控方案。",
+      "llm_tldr": "现有深度伪造检测器整体准确率高，但错误在不同人口子群间分布不均。本文识别出两个子群敏感成分：多尺度空间特征和微调残差特征，并提出公平感知表示学习方法，针对这些成分进行控制而非粗粒度正则化整个特征。实验表明该方法在提高公平性的同时保持检测性能，为深度伪造检测的公平性提供了精细调控方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.29802v1",
+      "source": "arxiv",
+      "title": "Foundation and Multimodal Large Language Models for Face Presentation and Morph Attack Detection",
+      "abstract": "Face recognition systems are increasingly deployed in security-critical applications, yet they remain vulnerable to presentation and morph attacks. Presentation attack detection (PAD) and morphing attack detection (MAD) are therefore essential components of trustworthy face biometrics. Despite advancements in PAD and MAD methods, existing detectors suffer from limited generalization and degrade in cross-dataset evaluation. In this paper, we systematically investigate whether general-purpose foundation models (FMs) and multimodal large language models (MLLMs) encode PAD-relevant and MAD-relevant information, and how such models can best be deployed for both tasks. We study five approaches with increasing access to the internal information of the model: (i) zero-shot prompting of off-the-shelf MLLMs; (ii) training a shallow model on the next-token logit probabilities at the output of the MLLM; (iii) parameter-efficient fine-tuning on task-specific question-answer data, yielding two specialized MLLMs, called PADLLM and MADLLM, which additionally provide textual reasoning for their decisions; (iv) linear probing of frozen vision encoders; and (v) fine-tuning of vision encoders of FMs and MLLMs. We benchmark 16 open-weight MLLMs and 30 vision encoder backbones on four PAD datasets (MSU-MFSD, CASIA-FASD, Replay-Attack, and OULU-NPU) and four MAD datasets (FFHQ, FRGC, FRLL, and FERET). Our experiments show that FMs and MLLMs can achieve significant performance for PAD and MAD. In addition, the fine-tuned models achieve state-of-the-art detection performance in cross-dataset evaluation, indicating that general-purpose pretrained representations carry substantial attack-relevant information. Source code of all our experiments will be publicly released.",
+      "authors": [
+        "Hatef Otroshi Shahreza",
+        "Asif Hussain Khan",
+        "Peter Lorenz",
+        "Alain Komaty",
+        "Sébastien Marcel"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-30T14:07:31+00:00",
+      "link": "https://arxiv.org/pdf/2608.29802v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Face presentation and morphing attack detection using foundation models and multimodal LLMs",
+      "llm_evidence_cn": "使用基础模型和多模态大语言模型进行人脸呈现与变形攻击检测",
+      "llm_evidence": "使用基础模型和多模态大语言模型进行人脸呈现与变形攻击检测",
+      "canonical_evidence": "使用基础模型和多模态大语言模型进行人脸呈现与变形攻击检测",
+      "llm_tldr_en": "The paper systematically investigates whether foundation models and multimodal LLMs encode PAD-relevant and MAD-relevant information, and proposes five approaches with increasing access to internal representations for cross-dataset face attack detection.",
+      "llm_tldr_cn": "人脸识别系统易受呈现攻击和变形攻击，现有检测器跨数据集泛化能力有限。本文系统研究了通用基础模型和多模态大语言模型是否包含攻击检测相关信息，并设计了五种不同内部访问级别的检测方法。实验表明这些模型能有效提升跨数据集情境下的人脸攻击检测性能。该工作为利用大规模预训练模型增强人脸生物特征安全性提供了新方向。",
+      "llm_tldr": "人脸识别系统易受呈现攻击和变形攻击，现有检测器跨数据集泛化能力有限。本文系统研究了通用基础模型和多模态大语言模型是否包含攻击检测相关信息，并设计了五种不同内部访问级别的检测方法。实验表明这些模型能有效提升跨数据集情境下的人脸攻击检测性能。该工作为利用大规模预训练模型增强人脸生物特征安全性提供了新方向。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.30704v1",
+      "source": "arxiv",
+      "title": "TUE-Detector: A Tool-Using Expert MLLM-Based Detector for AI-Generated Videos",
+      "abstract": "AI-generated video detection, which aims to distinguish AI-generated videos from real ones, has recently received increasing research attention. To perform this task reliably, a key challenge lies in accurately identifying subtle-yet-measurable unnatural artifacts. In this work, we address this challenge from a novel perspective of tool-mediated evidence discovery and propose Tool-Using Expert MLLM-based AI-generated Video Detector (TUE-Detector), a novel framework for AI-generated video detection. TUE-Detector trains a general MLLM into a task-tailored tool-using expert detector that learns to invoke suitable tools, collect concrete evidence of unnaturalness, and reason over the evidence for reliable detection. Meanwhile, TUE-Detector further introduces novel designs to equip the expert detector with high-quality and suitable tools. Extensive experiments demonstrate the effectiveness of our framework.",
+      "authors": [
+        "Yichen Wu",
+        "Haoxuan Qu",
+        "Yongxing Dai",
+        "Yan Bai",
+        "Yihang Lou",
+        "Yuqi Lin",
+        "Hossein Rahmani",
+        "Jun Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T12:42:38+00:00",
+      "link": "https://arxiv.org/pdf/2608.30704v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "MLLM-based detector for AI-generated videos with tool-mediated evidence discovery",
+      "llm_evidence_cn": "基于多模态大语言模型和工具证据发现的AI生成视频检测",
+      "llm_evidence": "基于多模态大语言模型和工具证据发现的AI生成视频检测",
+      "canonical_evidence": "基于多模态大语言模型和工具证据发现的AI生成视频检测",
+      "llm_tldr_en": "TUE-Detector trains an MLLM as a tool-using expert that invokes suitable tools to collect unnatural artifacts and reason over them for reliable AI-generated video detection.",
+      "llm_tldr_cn": "针对AI生成视频检测中难以准确识别细微不自然伪影的问题，本文提出TUE-Detector，将通用多模态大语言模型训练为工具使用专家检测器，学习调用合适工具、收集具体不自然证据并推理，实现可靠的AI生成视频检测。",
+      "llm_tldr": "针对AI生成视频检测中难以准确识别细微不自然伪影的问题，本文提出TUE-Detector，将通用多模态大语言模型训练为工具使用专家检测器，学习调用合适工具、收集具体不自然证据并推理，实现可靠的AI生成视频检测。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.30183v1",
+      "source": "arxiv",
+      "title": "ConCA: Concentration-Aware Channel Attention for Fine-Grained Visual Recognition",
+      "abstract": "Lightweight channel attention mechanisms are widely used in image classification, yet their effectiveness in fine-grained visual recognition (FGVR) remains limited. Most modules summarize each channel by global average pooling (GAP), which captures activation magnitude but ignores spatial concentration, so channels with different spatial distributions but identical means receive the same descriptor. We propose Concentration-Aware Channel Attention (ConCA), which pairs the mean with a shift-invariant negative-input entropy (NegEnt), computed via a softmax over the negated activations, forming a dual descriptor that jointly encodes magnitude and concentration. A depthwise 1-D convolutional multi-layer perceptron (MLP), whose parameter count is linear in the number of channels, maps the pair to a per-channel weight. On six fine-grained benchmarks, ConCA improves over attention-free, SE-Net, and ECA-Net baselines as well as four richer descriptor-based modules under a controlled from-scratch protocol, and it generalizes across eight backbones on iNat2021-mini. These results indicate that the channel descriptor, together with the per-channel gating that maps it to attention weights, is an important but underexplored aspect of lightweight channel attention in FGVR.",
+      "authors": [
+        "Yu-Sheng Liu",
+        "Yu-Chen Tung"
+      ],
+      "primary_category": "hep-ex",
+      "categories": [
+        "hep-ex",
+        "cs.CV"
+      ],
+      "published": "2026-08-31T03:07:59+00:00",
+      "link": "https://arxiv.org/pdf/2608.30183v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "channel attention mechanism for fine-grained image classification in CNNs",
+      "llm_evidence_cn": "用于CNN细粒度图像分类的通道注意力机制",
+      "llm_evidence": "用于CNN细粒度图像分类的通道注意力机制",
+      "canonical_evidence": "用于CNN细粒度图像分类的通道注意力机制",
+      "llm_tldr_en": "ConCA proposes a concentration-aware channel attention module that augments global average pooling with negative-input entropy to capture spatial concentration, improving fine-grained visual recognition.",
+      "llm_tldr_cn": "现有轻量级通道注意力在细粒度视觉识别中效果有限，因为全局平均池化忽略空间集中度。本文提出ConCA，将均值与平移不变负输入熵结合形成双描述符，同时编码幅度与集中度，并通过深度一维卷积MLP提升细粒度分类性能。",
+      "llm_tldr": "现有轻量级通道注意力在细粒度视觉识别中效果有限，因为全局平均池化忽略空间集中度。本文提出ConCA，将均值与平移不变负输入熵结合形成双描述符，同时编码幅度与集中度，并通过深度一维卷积MLP提升细粒度分类性能。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.30714v1",
+      "source": "arxiv",
+      "title": "SegWave: Wavelet-Driven Segmentation of Tampered Regions",
+      "abstract": "Verifying image authenticity is increasingly difficult, posing serious risks across journalism, law enforcement, and political domains. Most existing forensic methods rely on high-level visual artifacts and treat frame detection as a simple binary task. To address this, we propose SegWave, a hybrid framework that jointly leverages spatial and frequency-domain cues for image tampering detection. SegWave integrates a transformer-based architecture with the Discrete Wavelet Transform (DWT) to capture localized, multi-scale frequency inconsistencies indicative of manipulation. To further improve localization effectiveness, we introduce an Adaptive Sub-band Attention module (ASA) that dynamically highlights the informative high-frequency wavelet components. Extensive experiments on multiple benchmark datasets demonstrate that SegWave consistently outperforms state-of-the-art tampering detection methods in challenging evaluation settings.",
+      "authors": [
+        "Siddhi Pravin Lipare",
+        "Vishesh Kumar",
+        "Akshay Agarwal"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T12:54:11+00:00",
+      "link": "https://arxiv.org/pdf/2608.30714v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Wavelet-driven segmentation of tampered regions for image authenticity verification",
+      "llm_evidence_cn": "小波驱动的篡改区域分割，用于图像真伪验证",
+      "llm_evidence": "小波驱动的篡改区域分割，用于图像真伪验证",
+      "canonical_evidence": "小波驱动的篡改区域分割，用于图像真伪验证",
+      "llm_tldr_en": "The paper proposes SegWave, a hybrid framework combining transformer and discrete wavelet transform to detect and localize image tampering. An adaptive sub-band attention dynamically highlights high-frequency wavelet components. Experiments show improved tampering detection and localization performance.",
+      "llm_tldr_cn": "面对图像篡改日益难以辨别的严峻问题，现有取证方法多依赖高层视觉伪影且仅做二分类。本文提出SegWave框架，结合Transformer与离散小波变换捕捉多尺度频域不一致性，并通过自适应子带注意力动态增强高频小波成分。实验表明该方法在篡改检测与定位上表现优越。其贡献在于为多媒体取证提供了融合空间与频域线索的有效方案。",
+      "llm_tldr": "面对图像篡改日益难以辨别的严峻问题，现有取证方法多依赖高层视觉伪影且仅做二分类。本文提出SegWave框架，结合Transformer与离散小波变换捕捉多尺度频域不一致性，并通过自适应子带注意力动态增强高频小波成分。实验表明该方法在篡改检测与定位上表现优越。其贡献在于为多媒体取证提供了融合空间与频域线索的有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.28671v1",
+      "source": "arxiv",
+      "title": "Measuring Similarity between Artistic and AI Generated Images using Siamese Neural Networks",
+      "abstract": "AI-generated art has sparked debates around potential plagiarism, as these images may closely resemble existing artworks. This research quantifies the similarity between original pieces and AI-generated counterparts, particularly those produced by the Stable Diffusion XL Refiner 1.0. We use Siamese Networks with frozen CLIP encoders and cosine similarity optimized through triplet loss. A dataset of paired original and generated images was built using image-to-image generation and custom prompts, enriched with semantic descriptors and BLIP-2 captions. Prior studies report up to 81\\% style replication and 90\\% visual similarity. Our results show high discriminative performance: training accuracy reached 99.9\\%, and the best model configuration achieved 99.4\\% test accuracy with strong inter-class separation ($δμ$ = 0.677), demonstrating the effectiveness of our semantic-visual embeddings.",
+      "authors": [
+        "Diego Castro Elvira",
+        "Navil Pineda Rugerio",
+        "Jesús García-Ramírez",
+        "Cecilia Reyes-Peña",
+        "Ricardo Ramos-Aguilar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-24T19:42:35+00:00",
+      "link": "https://arxiv.org/pdf/2608.28671v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Siamese network measures similarity between original and AI-generated images",
+      "llm_evidence_cn": "孪生网络测量原始与AI生成图像相似度",
+      "llm_evidence": "孪生网络测量原始与AI生成图像相似度",
+      "canonical_evidence": "孪生网络测量原始与AI生成图像相似度",
+      "llm_tldr_en": "Uses Siamese networks with CLIP encoders and triplet loss to measure similarity between artistic and AI-generated images, achieving high accuracy.",
+      "llm_tldr_cn": "针对AI生成艺术可能抄袭原作的问题，提出使用冻结CLIP编码器的孪生网络和三元组损失来量化原始与AI生成图像的相似度。在配对的图像数据集上训练，模型达到99.9%训练精度，表明可有效区分AI生成图像与原始作品。",
+      "llm_tldr": "针对AI生成艺术可能抄袭原作的问题，提出使用冻结CLIP编码器的孪生网络和三元组损失来量化原始与AI生成图像的相似度。在配对的图像数据集上训练，模型达到99.9%训练精度，表明可有效区分AI生成图像与原始作品。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.29475v1",
+      "source": "arxiv",
+      "title": "Seeing Through Extreme Visual Sparsity: Surface Understanding from a Single Random Visual Patch",
+      "abstract": "Surface material recognition from incomplete visual observations remains a challenging problem in robotic perception and environmental understanding. This paper discusses Sparse Surface Understanding Framework (SSUF), a unified dual-task learning framework that adapts four pretrained architectures-Convolutional Autoencoder (ConvAE), Vision Transformer (ViT), Swin Transformer, and Masked Autoencoder (MAE) for si-multaneous surface reconstruction and material classification. Experiments were conducted on the Touch-and-Go dataset using a sparse observation protocol in which only 10% of the original image remained visible while the remaining regions were masked. To enable a fair comparison, reconstruction-oriented models were extended with classification heads, whereas classification- oriented models were augmented with reconstruction decoders. The resulting architectures were assessed using reconstruction quality, classification performance, model complexity, and in-ference efficiency metrics. Experimental results revealed distinct strengths across the models. Swin Transformer achieved the best classification performance with an accuracy of 89.21%, an F1-score of 0.8922, and a ROC-AUC of 0.9813. In contrast, MAE produced the highest reconstruction scores among evaluated models, with a PSNR of 16.06 dB and an SSIM of 0.4501, while ViT provided the best overall balance between reconstruction and classification performance. Furthermore, all models achieved real-time inference, requiring less than 5 ms per image. Over-all, the results show that pretrained architectures can support material recognition under severe visual sparsity, while accurate image reconstruction remains challenging.",
+      "authors": [
+        "Sindhuja Penchala",
+        "Sudip Mittal",
+        "Noorbakhsh Amiri Golilarz"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-30T00:08:41+00:00",
+      "link": "https://arxiv.org/pdf/2608.29475v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "classifies surface materials using convolutional neural networks",
+      "llm_evidence_cn": "使用卷积神经网络进行表面材料分类",
+      "llm_evidence": "使用卷积神经网络进行表面材料分类",
+      "canonical_evidence": "使用卷积神经网络进行表面材料分类",
+      "llm_tldr_en": "The paper proposes a unified dual-task framework adapting pretrained CNN and Transformer architectures for surface reconstruction and material classification from sparse visual observations, achieving high accuracy with only 10 percent visible pixels.",
+      "llm_tldr_cn": "该文针对机器人感知中极端视觉稀疏条件下表面材质识别困难的问题，提出统一双任务学习框架SSUF，适配ConvAE、ViT、Swin Transformer和MAE四种预训练架构，同时进行表面重建与材质分类。在Touch-and-Go数据集上采用10%可见像素的稀疏观测协议进行验证，结果表明该方法能够有效利用预训练模型从少量视觉信息中恢复表面特征。该工作为机器人环境感知和稀疏视觉分类提供了重要参考。",
+      "llm_tldr": "该文针对机器人感知中极端视觉稀疏条件下表面材质识别困难的问题，提出统一双任务学习框架SSUF，适配ConvAE、ViT、Swin Transformer和MAE四种预训练架构，同时进行表面重建与材质分类。在Touch-and-Go数据集上采用10%可见像素的稀疏观测协议进行验证，结果表明该方法能够有效利用预训练模型从少量视觉信息中恢复表面特征。该工作为机器人环境感知和稀疏视觉分类提供了重要参考。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.30003v1",
+      "source": "arxiv",
+      "title": "OPAL: Orthonormal Prototype Alignment Learning for Interpretable Image Classification",
+      "abstract": "Prototypical part-based models provide explainable predictions by comparing input regions to learned prototypes. However, current approaches are burdened by complex, multi-stage training pipelines and heavily rely on auxiliary regularization to prevent prototype collapse. To overcome these limitations, we introduce Orthonormal Prototype Alignment Learning (OPAL), a single-stage, end-to-end framework that simplifies interpretable classification. Our approach anchors the latent space using predefined orthonormal bases, embedding each class within a dedicated subspace spanned by fixed part-prototypes. To achieve precise part localization, OPAL enforces spatial competition across feature maps. This mechanism isolates sparse, discriminative regions, directing each prototype to consistently attend to the same semantic concept across different images. By framing classification as a direct representation alignment task, our method eliminates the need for auxiliary losses. Extensive experiments on fine-grained benchmarks demonstrate that OPAL outperforms both its non-interpretable counterparts and state-of-the-art part-prototype methods, delivering granular visual explanations by explicitly revealing the specific image regions driving every prediction. Code is available at https://github.com/ilancarretero/OPAL.",
+      "authors": [
+        "Ilán Carretero",
+        "Gustavo Jesús Angulo",
+        "Rocío del Amor",
+        "Valery Naranjo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-30T19:54:58+00:00",
+      "link": "https://arxiv.org/pdf/2608.30003v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "prototypical part-based interpretable image classification with prototype alignment",
+      "llm_evidence_cn": "基于原型部件对齐的可解释图像分类",
+      "llm_evidence": "基于原型部件对齐的可解释图像分类",
+      "canonical_evidence": "基于原型部件对齐的可解释图像分类",
+      "llm_tldr_en": "OPAL is a single-stage end-to-end framework that anchors latent space with orthonormal bases and spatial competition to learn interpretable part-prototypes for classification.",
+      "llm_tldr_cn": "现有原型部件模型训练复杂且依赖辅助正则化防止原型崩溃，本文提出正交原型对齐学习（OPAL），通过固定正交基锚定潜在空间，将每个类别嵌入专用子空间，并利用特征图空间竞争实现精确部件定位，单阶段端到端实现可解释分类。",
+      "llm_tldr": "现有原型部件模型训练复杂且依赖辅助正则化防止原型崩溃，本文提出正交原型对齐学习（OPAL），通过固定正交基锚定潜在空间，将每个类别嵌入专用子空间，并利用特征图空间竞争实现精确部件定位，单阶段端到端实现可解释分类。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.30656v1",
+      "source": "arxiv",
+      "title": "APT: Anchor-aligned Perturbations for Tamper Localization in Fully Regenerated Images",
+      "abstract": "Proactive tamper localization embeds an imperceptible signal into an image prior to distribution, enabling pixel-level manipulation detection. Existing methods assume a spliced (SP) setting, where synthesized regions are composited onto the original background, leaving embedded signals intact. However, real-world diffusion-based inpainting operates in a fully regenerated (FR) setting, where the entire image undergoes denoising, disrupting background signals and rendering existing frameworks ineffective. We propose APT, a semi-fragile latent-space perturbation that embeds a dense, vector-wise localization signal. By aligning each spatial feature vector toward a fixed anchor direction, APT localizes tampering via the alignment disparity between synthesized foreground and anchor-aligned background features after inpainting. The proposed hard negative mining loss and noisy perturbation branch further enforce uniform alignment. Experiments on COCO demonstrate that APT achieves an FR IoU of 0.92, outperforming the strongest baseline (WAM, 0.84), while existing methods collapse to near-random performance (AUC 0.5), establishing APT as a practical forensic framework generalizable across tampering types unknown at test time.",
+      "authors": [
+        "Suhyeon Ha",
+        "Woo Jae Kim",
+        "Joonsung Jeon",
+        "Sooel Son",
+        "Sung-eui Yoon"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T11:56:39+00:00",
+      "link": "https://arxiv.org/pdf/2608.30656v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "proactive tamper localization in diffusion-inpainted images",
+      "llm_evidence_cn": "扩散修复图像中的主动篡改定位",
+      "llm_evidence": "扩散修复图像中的主动篡改定位",
+      "canonical_evidence": "扩散修复图像中的主动篡改定位",
+      "llm_tldr_en": "Proposes anchor-aligned latent perturbations to localize tampering in fully regenerated diffusion-inpainted images, achieving robust manipulation detection.",
+      "llm_tldr_cn": "现有主动篡改定位方法假设拼接合成，背景信号保持完整，但在真实的扩散修复中整幅图像经过降噪重建，导致嵌入信号被破坏。本文提出锚点对齐的半脆弱潜在空间扰动，将每个空间特征向量对齐到固定锚点方向，通过计算对齐差异实现像素级篡改定位。在完全再生场景下，该方法能够有效恢复篡改区域，证明了其在多媒体取证中的实用价值。",
+      "llm_tldr": "现有主动篡改定位方法假设拼接合成，背景信号保持完整，但在真实的扩散修复中整幅图像经过降噪重建，导致嵌入信号被破坏。本文提出锚点对齐的半脆弱潜在空间扰动，将每个空间特征向量对齐到固定锚点方向，通过计算对齐差异实现像素级篡改定位。在完全再生场景下，该方法能够有效恢复篡改区域，证明了其在多媒体取证中的实用价值。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

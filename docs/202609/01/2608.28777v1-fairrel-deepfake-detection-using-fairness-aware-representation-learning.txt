@@ -1,0 +1,762 @@
+Title: FairReL: Deepfake Detection using Fairness-Aware Representation Learning
+
+URL Source: https://arxiv.org/pdf/2608.28777v1
+
+Published Time: Tue, 01 Sep 2026 00:08:56 GMT
+
+Number of Pages: 26
+
+Markdown Content:
+> arXiv:2608.28777v1 [cs.CV] 28 Aug 2026
+
+LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 1
+
+# FairReL: Deepfake Detection using Fairness-Aware Representation Learning 
+
+Xiaoman Lu 1
+
+xiaoman.lu@warwick.ac.uk 
+
+Jiaqi Li 1
+
+Jiaqi.Li.16@warwick.ac.uk 
+
+Shuntian Zheng 1
+
+Shuntian.Zheng@warwick.ac.uk 
+
+Huiping Chen 2
+
+h.chen.13@bham.ac.uk 
+
+Yu Guan *1
+
+Yu.Guan@warwick.ac.uk  
+
+> 1
+
+Department of Computer Science University of Warwick Coventry, United Kingdom  
+
+> 2
+
+School of Computer Science University of Birmingham Birmingham, United Kingdom 
+
+Abstract 
+
+Although recent deepfake detectors achieve high overall accuracy, their errors re-main unevenly distributed across demographic subgroups, with real faces from certain groups more often misclassified as fake. Existing fairness-aware detectors typically reg-ularise the entire feature representation, without identifying or controlling the specific components that drive unfair predictions. Such coarse intervention can over-suppress useful forgery cues while leaving demographic structure in component-specific sub-spaces. To address this, we identify two subgroup-sensitive components: multi-scale spatial features, which encode local facial and forgery patterns, and fine-tuning-induced residual features, which adapt the backbone to the unfair training distribution. We pro-pose FairReL, a fairness-aware representation-learning framework that targets both com-ponents with dedicated demographic supervision. FairReL uses an SVD-decomposed foundation-model backbone to isolate the fine-tuning-induced residual representation, and introduces two complementary losses. Group-Conditional Wavelet Decorrelation (GCWD) suppresses subgroup-imbalanced structure across spatial wavelet sub-bands, while Subspace-Localised Mean Alignment (SLMA) aligns subgroup means within each real/fake class in the residual representation. Experiments on FF++, Celeb-DF, DFD and DFDC show that, against the state-of-the-art fairness-aware detector, FairReL improves unseen-dataset AUC by 3.9% while reducing subgroup FPR disparity by 10.2%. Code is available at https://github.com/xiaoman89/FairReL .
+
+# 1 Introduction 
+
+With rapid advances in generative AI, deepfakes have become increasingly realistic and accessible [33]. These synthetic facial images and videos can be produced by modern 
+
+© 2026. The copyright of this document resides with its authors. It may be distributed unchanged freely in print or electronic forms. 
+
+> *
+
+Corresponding author. 2 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING Male White Male Asian Male Black Female White Female Asian Female Black 0510 15 20 25 30    
+
+> False Positive Rate (%)
+> 7.8% 10.5% 15.2% 12.4% 14.1% 24.9%
+> Male Female
+> Female-Black Group FPR
+> Male-White Group FPR
+> Misclassified Correct
+> 24.9% 7.8%
+
+Figure 1: False positive rate (the fraction of real faces misclassified as fake, the lower the better) across six demographic subgroups for a vanilla Xception detector [4], evaluated at a single shared threshold. The Female-Black group shows the highest rate. generative models, including variational autoencoders [22, 41], generative adversarial net-works [15, 20, 21], and diffusion models [7], raising serious societal concerns [33]. In re-sponse, extensive research has focused on deepfake detection, with recent detectors achiev-ing strong overall accuracy on standard benchmarks [4, 23, 35] and showing improved gen-eralisation to manipulation methods unseen during training [44, 46, 49]. However, recent studies have shown that current deepfake detectors exhibit demographic unfairness [30, 31, 42], with detection errors unevenly distributed across groups such as gender and ethnicity [43]. As shown in Figure 1, a vanilla Xception detector [4] misclassifies real Female-Black faces as fake over three times as often as real Male-White faces. This calls for a fairness-aware deepfake detector that reduces subgroup-level error gaps without sacrificing detection accuracy, while preserving such fairness across manipulation methods and demographic distributions unseen during training. Existing fairness-aware deepfake detectors mainly reduce subgroup disparity by adding fairness constraints during training. Some methods operate on the final prediction by reweight-ing samples or penalising group-specific error gaps [3, 19, 26], while others regularise learned features by matching their distributions across demographic groups [11, 28, 37, 38]. However, both strategies intervene only after multiple sources of evidence have already been mixed together, and therefore provide limited control over what is actually being suppressed. In prediction-level methods, subgroup-sensitive shortcuts may remain encoded in the repre-sentation even if the final outputs appear more balanced, making the fairness gain brittle under distribution shift [3, 26]. In representation-level methods, applying the same regulari-sation to the entire feature can blur the distinction between harmful subgroup cues and use-ful forgery evidence, leading to a trade-off between fairness and detection performance [11]. This suggests that the key question is not simply whether to impose a fairness constraint, but where subgroup-sensitive structure arises and how it can be targeted more precisely. Building on this gap, our motivation is to control two sources of unfairness in deepfake detectors. The first source comes from the spatial-scale mismatch between demographic appearance and forgery evidence. Many subgroup-related facial attributes (e.g., skin tone, overall facial geometry) are expressed as relatively coarse and spatially smooth patterns, whereas many forgery cues arise from more local inconsistencies (e.g., blending boundaries, texture artefacts, and synthesis traces) [35]. This scale difference suggests that decomposing the spatial feature map into frequency bands can provide a useful handle for separating part LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 3
+
+of the demographic-related appearance variation from forgery-related evidence. The second source arises during task adaptation. Modern deepfake detectors are commonly fine-tuned on benchmarks whose demographic coverage is limited or unevenly distributed [43]. When a pre-trained backbone is adapted on such data, subgroup-specific correlations can be absorbed into the task-adapted representation and later be mistaken for evidence of fakeness [19, 42]. Motivated by these two bias sources, we propose FairReL , a fairness-aware representation-learning framework for generalisable deepfake detection. Instead of imposing a single fair-ness constraint on the final embedding, FairReL intervenes at the stages where subgroup bias is most likely to enter and be amplified. First, before global pooling collapses spatial struc-ture, Group-Conditional Wavelet Decorrelation (GCWD) decomposes the spatial feature map into wavelet sub-bands and penalises subgroup-dependent spectral imbalance. This al-leviates demographic appearance shortcuts at the spatial-frequency level while preserving local forgery evidence. Second, to prevent biased fine-tuning from contaminating the whole backbone, FairReL decomposes each adapted weight into a frozen principal component and a trainable residual component. Subspace-Localised Mean Alignment (SLMA) then aligns subgroup means only in the residual representation and only within the same real/fake class, reducing adaptation-induced demographic shifts without weakening the discriminative space used for detection. In this way, FairReL targets two complementary mechanisms of unfair-ness (spatial-frequency bias and residual adaptation bias) while requiring demographic labels only during training and adding no inference-time overhead. Extensive experiments demon-strate that FairReL improves the average AUC on unseen datasets by 3.9 percentage points over existing fairness-aware detector, while reducing subgroup FPR disparity by 10.2% com-pared to existing fairness-aware detectors. The main contributions of this paper are as follows. • We identify two representation components that are closely linked to unfairness in deep-fake detection. One is the spatial feature map, where frequency decomposition helps sep-arate demographic appearance cues from forgery evidence. The other is the fine-tuning residual, where imbalanced training data can introduce subgroup-specific shifts. • We propose FairReL , a targeted fairness-aware framework that controls these components without regularising the whole embedding. GCWD reduces subgroup imbalance in the wavelet bands of spatial features, while SLMA aligns class-conditional subgroup means in the residual subspace to suppress adaptation-induced bias. • We conduct extensive experiments on FF++ [39], Celeb-DF [25], DFD [10] and DFDC [9], showing that FairReL achieves a stronger fairness–generalisation trade-off than ERM, generalisation-oriented and fairness-oriented baselines. Ablations and representation-level analyses further confirm that GCWD and SLMA target complementary sources of sub-group bias and that localising fairness supervision to the trainable residual is effective. 
+
+# 2 Related Work 
+
+2.1 Generalisable Deepfake Detection 
+
+Early deepfake detectors exploit visual or temporal artefacts, such as warping traces, head-pose inconsistencies, blending boundaries and temporal cues [17, 23, 24, 39, 47]; while accurate on their training distribution, they tend to degrade on unseen datasets and forgery methods. More recent work targets generalisable detection through common-forgery fea-tures, foundation-model-based detectors, large benchmarks and forgery-semantic decou-4 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+pling [32, 44, 45, 46, 48]. FairReL sits in this setting but treats fairness as a co-equal re-quirement: a detector should transfer across forgery methods and demographic groups. 
+
+2.2 Fairness in Deepfake Detection 
+
+Fairness in face-related vision systems is an established concern because performance varies across demographic groups [2, 16]. Within deepfake detection, early work examines de-mographic bias, evaluation protocols and balanced data [31, 34, 42], while more recent work introduces algorithm-level fairness objectives and fairness generalisation under do-main shift [1, 3, 12, 19, 26, 43]. Ju et al . [19] apply demographic-aware fairness losses at the prediction layer; Lin et al . [26] show that source-domain fairness often fails to trans-fer to unseen datasets; Cheng et al . [3] use same-label feature alignment to improve cross-domain robustness. These methods supervise fairness either at the prediction layer or on the pooled embedding as a whole, treating the representation as a single undifferentiated object. FairReL departs from this view: it intervenes at two distinct representation levels—multi-scale spectral structure of the spatial feature map, and the trainable residual of the pooled feature—which lets it preserve the transferable visual prior in the principal subspace while still removing adaptation-induced demographic shifts. 
+
+2.3 Fairness-Aware Representation Learning 
+
+Fair representation learning aims to remove subgroup information from learned features via adversarial removal [11, 28], null-space projection [37, 38] or moment matching [18]. These methods usually act on the final embedding, which is coarse for deepfake detection because demographic appearance and forgery evidence can be mixed after pooling. Recent stud-ies show that deepfake datasets are demographically uneven, and that detectors fine-tuned on them often inherit subgroup disparities [19, 42, 43]. This suggests that fairness should also examine the part of the model that changes during fine-tuning. Effort [46] provides a useful motivation for this separation by decomposing the backbone with SVD into a frozen principal subspace and a trainable residual subspace. However, Effort is designed for gen-eralisation rather than fairness, and therefore does not explicitly constrain unfair subgroup shifts in the residual pathway or separate demographic appearance from forgery evidence in spatial features. FairReL addresses these limitations by aligning subgroup means in the class-conditioned residual representation, and by reducing subgroup imbalance in wavelet bands before spatial information is pooled away. 
+
+# 3 FairReL 
+
+3.1 Problem Definition 
+
+Given a deepfake detection dataset D = {(xi, yi, si)}Ni=1 with N samples, each image xi is associated with a real/fake label yi ∈ { 0, 1}, where 0 denotes real and 1 denotes fake, and a demographic subgroup label si. Here, si ∈ { 0, 1}G is a one-hot vector, G denotes the total number of demographic subgroups, and ∑Gg=1 si,g = 1. At test time, the model receives only the image x and predicts whether it is real or fake. LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 51. Input 2. Subspace-Decomposed Backbone 3. Dual Demographic-Disentanglement 4. Prediction   
+
+> Image 𝐀
+> …
+> Demographic Group 𝐀
+
+…= +   
+
+> Pre-trained Weight 𝐀 𝐀 ∈ ℝ 𝐀×𝐀
+> Principal (frozen)
+> 𝐀 𝐀
+> Residual (trainable)
+> ∆𝐀
+> For each decomposed attention linear layer 𝐀
+> Input Feature Output Feature
+> ……
+
+…Layer 𝐀               
+
+> Spatial Feature Map 𝐀 ∈ ℝ 𝐀×𝐀×𝐀
+> Residual Pooled Feature 𝐀 ∆∈ ℝ 𝐀
+> …
+> …
+> …
+> Residual Subspace Group-wise Mean Align to Global Mean 𝐀
+> (B) Subspace-Localised Mean Alignment (SLMA) On Residual Pooled Feature 𝐀 ∆
+> (A) Group-Conditional Wavelet Decorrelation (GCWD) On Spatial Feature Map 𝐀 𝐀 1𝐀 2𝐀 𝐀
+> …
+> 2-level db4 DWT
+> Level-2 (coarse) Level-1 (detail) LL 2LH 2HL 2HH 2
+> LH 1HL 1HH 1
+> Subband-wise Decorrelation across groups
+> 𝐀 1
+> 𝐀 2
+> 𝐀 𝐀
+> …
+
+…       
+
+> Global Pooled Feature 𝐀 ∈ ℝ 𝐀
+> Condition on Group 𝐀
+> During training only
+> Linear Classifier 𝐀 𝐀
+> Real / Fake
+> (𝐀 ∈ 𝐀, 𝐀 )
+> Frozen (pre-trained) Male-White Data flow Male-Black Female-Asian Female-Black
+> Trainable (updated) Conditioning (Train only)
+> Fake Probability
+> 𝐀 = 𝐀 𝐀 (𝐀)
+
+Figure 2: Training pipeline of FairReL. The backbone is decomposed into a frozen principal part Wp and a trainable residual part ∆W. Given an input image, the standard path produces a spatial feature map F and a pooled prediction feature z, while the residual-only path produces 
+
+z∆. (A) GCWD applies a wavelet transform to F and reduces subgroup differences in each frequency band. (B) SLMA aligns subgroup means in z∆ within each real/fake class, so that the residual update is less subgroup-dependent. Only z is fed to the classifier for real/fake prediction. At inference, only the backbone and the classifier are retained. 
+
+Detector. Let B denote the backbone, fp the pooling operation, and hφ the binary classi-fier. For an input image xi, the standard detector follows 
+
+Fi = B(xi) ∈ Rh×w×d , zi = fp(Fi) ∈ Rd , ˆpi = hφ (zi) ∈ [0, 1], (1) where Fi is the spatial feature map with height h, width w, and channel dimension d; zi is the pooled representation; and ˆ pi is the predicted probability that xi is fake. A binary prediction is obtained by thresholding ˆ pi at an operating point τ, where ˆ yi = 1 if ˆ pi > τ and ˆ yi = 0otherwise. This forward path determines where fairness should be imposed. Before pooling, 
+
+Fi still contains spatial and scale information, which is useful for separating demographic appearance patterns from local forgery evidence. After pooling, zi becomes compact and prediction-ready, but spatial information has already been mixed. 
+
+Overview. FairReL reframes fairness-aware deepfake detection as a problem of targeted representation control. We first decompose the backbone B into a frozen principal part and a trainable residual part. Instead of regularising the pooled embedding zi, FairReL applies GCWD to the pre-pooling feature map Fi to reduce subgroup imbalance in spatial-frequency statistics, and applies SLMA to the fine-tuning residual representation of backbone B to suppress subgroup shifts introduced by imbalanced fine-tuning. Figure 2 shows our pipeline. 
+
+3.2 Subspace-Decomposed Backbone 
+
+Fine-tuning on demographically imbalanced data can introduce subgroup-specific shifts into the adapted representation. A fairness constraint on the full pooled feature zi is too coarse, 6 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+because zi contains both the stable visual prior inherited from pre-training and the task-specific changes introduced by deepfake fine-tuning. To isolate the latter, FairReL decom-poses the backbone into a frozen principal component and a trainable residual component. Following the SVD decomposition in Effort [46], each pre-trained linear weight W ∈
+
+Rm×n with s = min (m, n) singular directions is split as 
+
+W = U:s−r Σ:s−r V⊤
+
+> :s−r
+
+| {z }   
+
+> Wp(frozen, top-(s−r))
+
++ Us−r: Σs−r: V⊤
+
+> s−r:
+
+| {z }  
+
+> ∆W(trainable, rank r)
+
+, (2) where U and V are the left and right singular-vector matrices, and Σ is the diagonal singular-value matrix. Here : s−r denotes the top s−r singular directions and s−r : the remaining 
+
+r, so Wp retains the dominant pre-trained subspace and stays frozen while ∆W has rank 
+
+r. As in [46], we set r=1; for ViT-L/14 attention projections this gives frozen rank 1023 and trainable rank 1. We denote the standard backbone using Wp + ∆W as Bp+∆, and the residual-only backbone using ∆W as B∆. Only ∆W and the classifier parameters hφ are trainable. To keep this split meaningful during training, we follow [46] and penalise overlap be-tween the principal and residual singular-vector bases. Let ˆ U = [ U:r, Ur:] and ˆ V = [ V:r, Vr:].The orthogonality regulariser is 
+
+Lorth = ˆU⊤ ˆU − I 2 
+
+> F
+
++ ˆV⊤ ˆV − I 2 
+
+> F
+
+, (3) where I is the identity matrix of appropriate dimension. This term is not a fairness loss. It preserves the principal/residual separation so that the effect of fine-tuning could be isolated. 
+
+Two forward passes. During training, the standard path uses the full backbone Bp+∆
+
+and produces the features Fi used for detection. Since a deep backbone contains attention, normalisation, nonlinearities and layer interactions, the residual representation cannot be re-liably obtained by subtracting a principal output from the standard forward pass. In addition to [46], to measure the representation change introduced only by fine-tuning, we further run a second path with the frozen principal component Wp removed (replaced by 0): 
+
+z∆,i = fp
+
+ B∆(xi)|Wp ← 0. (4) The separate residual-only path provides a clean training-time estimate of the adaptation-induced representation, while inference keeps only the standard path. 
+
+3.3 Group-Conditional Wavelet Decorrelation (GCWD) 
+
+GCWD targets unfairness before pooling. The intuition is that demographic appearance cues and forgery cues may appear at different spatial scales [35]. If fairness supervision is applied only after pooling, these signals have already been mixed. GCWD instead operates on the spatial feature map Fi and reduces subgroup imbalance in its wavelet statistics (Figure 3). 
+
+Wavelet decomposition. For each spatial feature map Fi, we apply a channel-wise 2D Daubechies-4 Discrete Wavelet Transform (DWT) [6, 29]. DWT decomposes Fi into L sub-band tensors {Ci,ℓ }L
+
+> ℓ=1
+
+, where L is determined by the decomposition depth. The decom-position produces one low-frequency approximation band LL and, at each level, three detail bands LH, HL and HH, corresponding to high-frequency variations along different spatial di-rections. This lets GCWD measure subgroup imbalance in frequency-localised components rather than on the whole feature map. When using two decomposition levels, the resulting LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 7① 2D Wavelet Decomposition 
+
+> DWT
+
+𝐀 𝐀 𝐀ℝ ℎ×𝐀×𝐀                             
+
+> LL 2LH 2
+> HL 2HH 2
+> LH 1
+> HL 1HH 1
+> 2-level DWT
+> 𝐀 𝐀 : the spatial feature map
+> 𝐀, 𝐀, 𝐀 : height, width, channels
+> 7 sub-bands: 2222111{LL , LH , HL , HH , LH , HL , HH } 
+> 1: LL 22: LH 23: HL 24: HH 25: LH 16: HL 17: HH 1
+> ,1DWT( ){}LiiCF
+> Legend:
+> Feature tensor Energy magnitude
+> ②Group-Conditional Sub-band Energy and Discrepancy ③Adaptive Weights
+
+H             
+
+> WC
+> Data flow Wavelet sub-bands low energy high energy
+> Per-group sub-band energy
+> 2,,,
+> 1,||g
+> giiiFig
+> EeeC
+> 
+> 
+
+   ‖ ‖      
+
+> MM
+> LL
+> ₂LH
+> ₂HL
+> ₂HH
+> ₂LH
+> ₁HL
+> ₁HH
+> ₁
+> G1(MW) G2(MA) G3(MB) G4(FW) G5(FA) G6(FB)
+> Discrepancy of each sub-band
+> Dℓ
+
+ℓ1 2 3 4 5 6 7
+
+ 21    
+
+> Ggg
+> DEE
+> 
+> 
+
+       
+
+> 1
+> 1Ggg
+> EEG
+> 
+
+          
+
+> ④Effect of GCWD on Sub-band Discrepancy
+> Wℓ
+> ℓ1234567
+> Before GCWD After GCWD
+> Optimize with ℓ𝐀𫠀𝐀𪠀
+
+    
+
+> 1
+> exp sg( ) / exp sg( ) /
+> L
+> DwD
+> 
+> 
+
+
+
+> 
+
+Dℓ
+
+ℓ1 2 3 4 5 6 7
+
+Dℓ
+
+ℓ1 2 3 4 5 6 7 
+
+> GCWD 1
+> L
+> w D
+> 
+> 
+
+      
+
+> L
+> Demographic groups
+> Male Female White Asian Black
+> 6{0,1} , GiGs
+> GCWD reduces group inconsistency across wavelet sub-bands, improving decorrelation while preserving group semantics and spatial-frequency locality.
+
+Figure 3: GCWD computation pipeline. (1) The spatial feature map F is decomposed by DWT into frequency sub-bands, each describing a different scale and direction of spatial variation. (2) GCWD computes the average energy of each sub-band within every demo-graphic subgroup and measures the cross-subgroup discrepancy Dℓ. (3) A detached softmax converts {Dℓ} into adaptive weights {wℓ}, so the loss focuses on the sub-bands with the strongest subgroup imbalance. LGCWD reduces these imbalanced frequency components. bands are {LL 2, LH 2, HL 2, HH 2, LH 1, HL 1, HH 1}, giving L = 7. We define the energy of sample i in sub-band ℓ as ei,ℓ = ∥Ci,ℓ ∥2
+
+F .
+
+Group-conditional sub-band discrepancy. After decomposing Fi into sub-bands, GCWD asks whether each sub-band is used similarly across demographic subgroups. If a sub-band has very different energy across groups, the model may be encoding subgroup-related ap-pearance in that frequency range. We therefore measure the cross-group variation of sub-band energy and use it as the fairness signal. For a mini-batch M, let Mg denote the samples from subgroup g. We compute the average energy of band ℓ for subgroup g as Eg
+
+ℓ = |M g|−1 ∑i∈Mg ei,ℓ , and use the cross-subgroup average ¯ Eℓ = G−1 ∑Gg=1 Eg
+
+ℓ as the reference energy for this band. The subgroup discrepancy Dℓ of band ℓ is 
+
+Dℓ =
+
+G
+
+# ∑
+
+g=1
+
+ Eg
+
+ℓ − ¯Eℓ
+
+2 . (5) A larger Dℓ means that band ℓ is more subgroup-imbalanced, while a smaller Dℓ means that the band is used more consistently across subgroups. 
+
+Adaptive sub-band weighting. A direct choice would be to minimise the sum of dis-crepancies {Dℓ} over all bands. However, many bands may already be balanced across subgroups, and some high-frequency bands may contain useful forgery evidence. GCWD therefore assigns larger weights to bands with stronger subgroup discrepancy and applies weaker supervision to bands that are already subgroup-consistent. Specifically, we convert the current discrepancy values {Dℓ}ℓ∈A into adaptive weights 
+
+wℓ by a temperature-controlled softmax: 
+
+wℓ = exp (sg (Dℓ)/τ)
+
+∑ℓ′∈A exp (sg (Dℓ′ )/τ) , LGCWD = ∑
+
+ℓ∈A
+
+wℓDℓ, (6) 8 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+where τ controls how concentrated the weights are, and sg (·) denotes stop-gradient. Since Dℓ measures how unevenly band ℓ behaves across subgroups, minimising the weighted sum directly reduces the most subgroup-imbalanced frequency components. The stop-gradient makes wℓ act only as an importance score computed from the current batch, preventing the model from trivially changing the weights instead of reducing the discrepan-cies. Thus, GCWD suppresses subgroup-dependent spatial-frequency imbalance by flatten-ing the cross-group energy differences in the most biased bands, without forcing the entire spatial feature map to be group-invariant. 
+
+3.4 Subspace-Localised Mean Alignment (SLMA) 
+
+GCWD reduces subgroup imbalance in the spatial feature map, but it does not directly con-trol the bias introduced during fine-tuning. We do not assume that the frozen principal component Wp is demographic-free. As the dominant part of a pre-trained visual repre-sentation, Wp inevitably encodes facial appearance, including skin tone, face shape, and gender-correlated cues. However, these features belong to the frozen visual prior and are not changed by deepfake fine-tuning. The fairness risk we target is different: when the train-ing data is demographically imbalanced, the trainable residual component ∆W can absorb subgroup-specific shifts and turn them into shortcuts for real/fake prediction. SLMA therefore regularises the residual view z∆,i (Eq. (4)) rather than the full pooled feature zi. This design constrains the adaptation pathway through which unfairness can be newly introduced during fine-tuning. Intuitively, among real samples, the residual update should not systematically shift one subgroup away from another; the same should also hold among fake samples. Otherwise, the classifier may exploit subgroup-dependent residual shifts as shortcuts for prediction [14]. We implement this idea with class-conditional first-moment matching [3, 11, 28], but localise it to the residual view z∆,i rather than the full feature zi.For class y and subgroup g, let My,g denote the mini-batch samples with label y and subgroup g. We compute the average residual representation μy,g of subgroup g within class 
+
+y and use the class-wise subgroup average ¯ μy as the reference: 
+
+μy,g = 1
+
+|M y,g| ∑
+
+> i∈My,g
+
+z∆,i, ¯μy = 1
+
+G
+
+> G
+
+# ∑
+
+> g=1
+
+μy,g. (7) Here, μy,g describes how fine-tuning shifts subgroup g on average within class y, while ¯ μy
+
+represents the subgroup-neutral residual shift for that class. SLMA penalises subgroup-specific deviations from this reference: 
+
+LSLMA = ∑
+
+> y∈{ 0,1}
+> G
+
+# ∑
+
+> g=1
+
+μy,g − ¯μy 
+
+> 22
+
+. (8) Conditioning on y is essential. It aligns subgroups only among samples with the same real/fake label, so the loss reduces demographic shifts in the residual pathway without pulling real and fake representations together. 
+
+3.5 Training Objective and Inference 
+
+FairReL is trained with one detection objective and three auxiliary regularisation terms. The binary cross-entropy loss LCE trains the real/fake prediction from ˆ pi, Lorth (Eq. 3) preserves LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 9
+
+the SVD-based separation between principal component and trainable residual, LGCWD (Eq. 6) reduces subgroup imbalance in the spatial feature map Fi, and LSLMA (Eq. 8) suppresses subgroup-dependent shifts in the residual view z∆,i. The full objective is 
+
+L = LCE ( ˆp, y) + λorth Lorth + λGLGCWD + λSLSLMA , (9) where λorth , λG, and λS control the auxiliary terms. Only the residual weights ∆W and the classifier parameters hφ are updated, while the principal weights Wp remain frozen. At inference, FairReL reduces to the standard detector ˆp = hφ
+
+  fp
+
+ Bp+∆(x) . The residual-only path, wavelet transform, fairness losses, and demographic labels are removed, so FairReL adds no inference-time overhead. 
+
+# 4 Experiments 
+
+4.1 Experimental Setup 
+
+Datasets. We evaluate FairReL under a cross-dataset fairness protocol, where the model is trained on a source dataset and tested on both source-domain and unseen target-domain data. This setting is important because fairness measured on the training domain does not neces-sarily transfer to new manipulations, identities, or demographic distributions [26]. Follow-ing prior work [3, 26], models are trained on FaceForensics++ (FF++, c23) [39] and tested on three unseen datasets with different data sources and manipulations: Celeb-DF [25], DFD [10], and DFDC [9]. Further dataset details and subgroup statistics are provided in the supplementary material. 
+
+Demographic annotations. We use the demographic annotations released by Lin et al. [26], which follow the pipeline of prior fairness studies [19, 43]. We report fairness over the intersectional gender–race partition with six subgroups: Male-White (M-W), Male-Asian (M-A), Male-Black (M-B), Female-White (F-W), Female-Asian (F-A) and Female-Black (F-B). Demographic labels are not required by the detector at inference. 
+
+Detection metrics. We report the frame-level Area Under the ROC Curve (AUC) for real/fake separability, and additionally a group-averaged AUC (AUC avg ) defined as the mean of per-subgroup AUCs, which weights every demographic subgroup equally and exposes detection quality on minority subgroups that the overall AUC would otherwise hide. 
+
+Fairness metrics. We evaluate subgroup fairness mainly through False Positive Rate (FPR) disparity following Ju et al . [19] and Lin et al . [26], since a false positive wrongly flags a real face as fake and can directly harm innocent users. We report Equal FPR (FFPR ), which measures how much each subgroup’s FPR deviates from the overall FPR; and Max Equalized Odds (FMEO ), which captures the worst-case subgroup gap over either FPR or TPR. Formal definitions are provided in the supplementary material. Since FPR gaps can be artificially reduced by changing the decision threshold τ (for classifier hφ in Eq. 1), we follow Grother et al . [16] and fix τ on the FF++ validation split at source-domain True Positive Rate (TPR) of 0.90 for all FPR-based metrics. 
+
+Baseline methods. To provide a comprehensive evaluation, we compare FairReL with three categories of baselines. (i) ERM baselines: Xception [4] and CLIP-ERM, where CLIP-ERM denotes an ERM classifier trained on CLIP ViT-L/14 features [36]. (ii) Generalisation-oriented detectors, designed for cross-domain robustness rather than demographic fairness and all built on CLIP ViT-L/14: ForAda [5], Effort [46] (which also serves as our SVD-decomposed backbone) and GenD [49]. (iii) Fairness-oriented detectors: DAW-FDD [19] 10 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+and PG-FDD [26] on Xception, and FairAdapter [8] on CLIP ViT-L/14. All reproduced baselines and FairReL are evaluated under the same protocol described above. 
+
+Implementation details. We use CLIP ViT-L/14 [32, 36] with SVD decomposition on all self-attention projections. The residual rank r is set to 1 following [46]. Loss weights are selected on the FF++ validation split as λorth = 0.1 and λG = λS = 0.5. Further details are provided in the supplementary material. 
+
+4.2 Main Results 
+
+Comparison with baseline methods. Table 1 evaluates FF++-trained models on three un-seen datasets: Celeb-DF, DFD and DFDC. FairReL achieves the lowest FFPR and FMEO on all three unseen datasets while preserving competitive AUC.                                                                                                                                                     
+
+> Type Method Backbone
+> Celeb-DF DFD DFDC
+> Detection (%) Fairness (%) Detection (%) Fairness (%) Detection (%) Fairness (%) AUC ↑AUC avg ↑FFPR ↓FMEO ↓AUC ↑AUC avg ↑FFPR ↓FMEO ↓AUC ↑AUC avg ↑FFPR ↓FMEO ↓
+> ERM Xception [4] Xception 70.94 70.75 25.43 16.81 76.73 76.57 29.20 18.11 60.58 60.45 48.89 37.15 CLIP-ERM [36] CLIP 74.37 74.26 23.25 15.71 81.14 81.06 31.54 20.69 62.35 62.30 51.15 39.46 Gen. ForAda [5] CLIP 80.21 80.26 20.35 12.75 85.50 85.53 27.41 23.46 64.82 64.87 49.70 38.61 Effort [46] CLIP 78.52 78.58 19.61 13.44 84.22 84.26 19.37 15.08 65.08 65.14 52.04 40.31 GenD [49] CLIP 80.85 80.92 18.76 11.07 86.43 86.48 20.01 17.77 66.85 66.88 50.81 41.35 Fair. DAW-FDD [19] Xception 70.46 70.52 15.11 11.18 73.65 73.71 18.23 13.41 58.41 58.53 43.26 35.85 PG-FDD [26] Xception 75.42 75.57 12.82 9.12 82.32 82.47 15.67 10.30 63.70 63.79 40.56 33.97 FairAdapter [8] CLIP 75.65 75.82 13.48 10.56 80.76 80.92 14.86 9.11 62.16 62.38 39.02 33.22 Ours FairReL CLIP 80.64 81.26 10.12 7.03 86.13 86.78 13.55 8.98 66.34 67.03 38.36 30.02
+
+Table 1: Cross-domain comparison on Celeb-DF, DFD and DFDC after training on FF++. “Type” groups methods into ERM baselines, generalisation-oriented detectors (Gen.), and fairness-aware detectors (Fair.). ↑/↓ indicate higher/lower is better. The best results are shown in bold and the second-best are underlined. 
+
+Per-subgroup AUC (%) ↑ Overall (%) Type Method M-W M-A M-B F-W F-A F-B AUC ↑ AUC avg ↑ AUC gap ↓
+
+ERM Xception [4] 61.06 60.69 60.28 61.56 59.78 59.34 60.58 60.45 2.22 CLIP-ERM [36] 62.87 62.53 62.14 63.34 61.67 61.26 62.35 62.30 2.08 Gen. ForAda [5] 65.38 65.07 64.73 65.80 64.31 63.94 64.82 64.87 1.86 Effort [46] 65.64 65.34 65.00 66.06 64.59 64.22 65.08 65.14 1.84 GenD [49] 67.93 67.19 66.59 67.86 65.91 65.77 66.85 66.88 2.16 Fair. DAW-FDD [19] 58.86 58.66 58.43 59.14 58.16 57.92 58.41 58.53 1.22 PG-FDD [26] 64.11 63.92 63.70 64.37 63.44 63.21 63.70 63.79 1.16 FairAdapter [8] 62.73 62.52 62.28 63.02 61.99 61.74 62.16 62.38 1.28 Ours FairReL 67.35 67.42 67.02 67.10 66.33 66.95 66.34 67.03 1.09 
+
+Table 2: Per-subgroup AUC (%) on DFDC (trained on FF++). FairReL slightly trails the strongest generalisation-oriented detector GenD [49] in overall AUC but achieves higher AUC avg and lower fairness disparities. Cross-domain robustness alone thus does not remove subgroup-sensitive structure: forgery-relevant features still carry subgroup imbalance. FairReL therefore localises fairness supervision to these two sources of imbalance. Against fairness-oriented baselines such as DAW-FDD [19] and PG-FDD [26], FairReL further lowers cross-domain fairness disparities: rather than regularising only the prediction LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 11 
+
+layer, it intervenes at these two localised sources of bias, which explains its stronger transfer under distribution shift. 
+
+Per-subgroup analysis. In Table 2, FairReL achieves the highest AUC avg and the smallest AUC gap, while GenD [49] remains higher on the two White subgroups. This indicates that FairReL transfers detection quality more evenly across subgroups under domain shift, while GenD’s small overall-AUC lead is concentrated in the majority White subgroups rather than uniformly across all groups. We further examine per-subgroup FPR at the threshold fixed on the FF++ validation split at TPR=0.90. Figure 4 shows that FairReL lowers worst-subgroup FPR and narrows the best–worst gap across all four datasets. This improvement is most visible on minority Female and Black subgroups, where GenD produces concentrated false positives. These re-sults suggest that FairReL reduces subgroup-dependent decision shortcuts rather than merely improving the average detector. FairReL does this by targeting two sites: GCWD weakens subgroup-imbalanced spatial frequencies before pooling, while SLMA suppresses adaptation-induced subgroup shifts in the residual, which we verify directly in the next section. M-W M-A M-B F-W F-A F-B 0.0 2.5 5.0 7.5 10.0 12.5 15.0 FPR (%)             
+
+> FF++
+> M-W M-B F-W F-B 0510 15 20 25 30 FPR (%)
+> Celeb-DF
+> M-W M-B F-W F-B 0510 15 20 25 30 FPR (%)
+> DFD
+> M-W M-A M-B F-W F-A F-B 010 20 30 40 50 60 FPR (%)
+> DFDC
+> GenD FairReL (Ours)
+
+Figure 4: Per-subgroup FPR (%) of GenD [49] and FairReL. 
+
+4.3 Mechanistic Analysis of FairReL 
+
+In this section, we examine the sources of subgroup unfairness that motivate FairReL. We analyse whether unfairness is concentrated in spatial-frequency structure, motivating GCWD, and in the fine-tuning residual representation, motivating SLMA. All diagnostics use DFDC [9], with results on other targets provided in the appendix. 
+
+Frequency-wise analysis. We first locate subgroup-dependent variation across the wavelet sub-bands of the spatial feature map. GCWD computes the subgroup discrepancy Dℓ for each band ℓ (Eq. 5). A larger Dℓ means stronger subgroup-dependent variation in band ℓ, so plotting Dℓ across bands reveals where demographic imbalance is most exposed. Figure 5(a) shows that the normalised Dℓ peaks in the coarse, low-frequency bands, where global appearance statistics such as skin tone, illumination, and colour distribution are more visible. In contrast, the normalised real–fake energy gap is stronger in finer bands, which better capture local texture, boundary and synthesis artefacts. This separation explains why GCWD regularises sub-band discrepancies rather than the whole feature map. It iden-tifies frequency bands with large subgroup imbalance and applies stronger decorrelation to those bands, while leaving more balanced or forgery-discriminative bands less constrained. Consistently, Figure 5(b) shows that FairReL mainly reduces the low-frequency subgroup discrepancy, where demographic imbalance is strongest, while largely preserving the higher-frequency bands that carry stronger real–fake separation. 
+
+Residual analysis. We next examine whether fine-tuning-induced subgroup shifts are con-centrated in the residual pathway. To test this, we compare a principal-only view ( ∆W ← 0), 12 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING LL 2 LH 2 HL 2 HH 2 LH 1 HL 1 HH 1        
+
+> (a) Wavelet sub-band
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> Normalised discrepancy
+> low freq. high freq.
+> demographic forgery LL 2LH 2HL 2HH 2LH 1HL 1HH 1
+> (b) Wavelet sub-band
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> Normalised discrepancy
+> high freq. low freq.
+> w/o FairReL w/ FairReL
+
+Figure 5: Frequency-wise diagnostics of subgroup imbalance and forgery separability. (a) Sub-band diagnostic statistics. (b) Sub-band discrepancy before and after FairReL. where the residual component is removed, and a residual-only view ( Wp ← 0), where the frozen principal component is removed. For each view, we measure the subgroup mean shift (Eq.7) by computing the distance from the average feature of each subgroup to the overall average. If samples from one subgroup have a different average representation from other subgroups, the classifier may learn from this unfair shortcut. low high shift                          
+
+> gender ethnicity gender ethnicity
+> 0.12 0.08 0.34 0.21 0.09 0.22 0.41 0.13 1.00 1.00 0.16 0.58
+> Spatial (GCWD) Pooled (SLMA)
+> Principal Wp
+> Residual
+> ΔW
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> D= 0.17, FFPR = − −
+> Pre-trained
+> D= 0.39, FFPR = 11.8
+> Balanced-FT
+> D= 1.00, FFPR = 14.6
+> Imbalanced-FT
+> (a) Localisation of subgroup imbalance (b) Emergence of subgroup-mean dispersion under fine-tuning
+> M-W M-A M-B F-W F-A F-B class mean ̄ μy
+
+Figure 6: Mechanistic diagnostics on DFDC. (a) Principal-vs-residual comparison of sub-group imbalance across spatial-frequency and pooled-feature statistics. (b) PCA visualisa-tion of residual subgroup centroids after subgroup-balanced/imbalanced fine-tuning. Figure 6(a) separates this analysis by attribute and bias type. The low-frequency discrep-ancy is stronger than high-frequency discrepancy, especially for ethnicity, supporting the spatial-frequency motivation of GCWD. More importantly for SLMA, the pooled mean shift is consistently larger in the residual view than in the principal view, with the strongest effect appearing for gender. This shows that fine-tuning concentrates subgroup bias as subgroup mean shifts in the trainable residual pathway. Therefore, existing fairness-aware methods, which regularise the full pooled feature, do not distinguish the residual shift from the prin-cipal representation that supports real/fake discrimination. SLMA avoids this problem by aligning subgroup means only in the residual representation and only within each real/fake class, directly reducing adaptation-induced bias while preserving the full detection feature. 
+
+Feature dynamics. We finally examine how subgroup shifts emerge during fine-tuning. Fig-ure 6(b) visualises the residual feature z∆ with subgroup centroids under three stages: before fine-tuning, balanced fine-tuning, and imbalanced fine-tuning. Before fine-tuning, the sub-LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 13 
+
+group centroids are relatively compact. Balanced fine-tuning introduces only moderate sep-aration, whereas imbalanced fine-tuning spreads the subgroup centroids much further apart. Demographic imbalance in the training data is thus injected into the residual representation during adaptation, precisely the bias source targeted by SLMA. 
+
+4.4 Ablation Studies 
+
+Necessity of subspace decomposition. We first test whether the SVD residual split is nec-essary. Table 3 compares FairReL with a variant that fully fine-tunes CLIP and applies GCWD with SLMA on the full pooled feature z. The full-feature variant is competitive yet consistently worse than FairReL in both AUC and FFPR . This supports localising fairness supervision to the trainable residual. 
+
+FF++ Celeb-DF DFD DFDC 
+
+Variant AUC ↑ FFPR ↓ AUC ↑ FFPR ↓ AUC ↑ FFPR ↓ AUC ↑ FFPR ↓
+
+w/o subspace decomposition 95.37 12.83 79.12 11.87 84.91 15.26 64.79 40.47 
+
+FairReL (w/ decomposition) 96.14 10.97 80.64 10.12 86.13 13.55 66.34 38.36 
+
+Table 3: Effect of subspace decomposition. Without decomposition, CLIP is fully fine-tuned; GCWD acts on F and SLMA is applied to the full pooled feature z.                                                                                       
+
+> Variant Setting FF++ Celeb-DF DFD DFDC GCWD SLMA Cond. AUC ↑FFPR ↓AUC ↑FFPR ↓AUC ↑FFPR ↓AUC ↑FFPR ↓
+> SVD baseline [46] –––94.83 14.57 78.52 19.61 84.22 19.37 65.08 52.04 GCWD only ✓––95.34 12.68 79.43 14.87 85.04 16.37 65.43 44.76 SLMA only –z∆✓95.12 13.04 79.08 15.31 84.77 16.83 65.24 45.58 GCWD + SLMA on z✓z✓95.62 11.88 79.73 12.39 85.24 15.12 65.72 41.19 GCWD + SLMA on z∆✓z∆–93.18 11.43 77.28 11.64 83.03 14.37 62.54 40.08
+> FairReL ✓z∆✓96.14 10.97 80.64 10.12 86.13 13.55 66.34 38.36
+
+Table 4: Unified ablation of GCWD, SLMA and class conditioning across four datasets. “Cond.” indicates whether SLMA aligns subgroup means within each real/fake class. 
+
+Celeb-DF DFD DFDC 
+
+Method on the same backbone AUC ↑ FFPR ↓ FMEO ↓ AUC ↑ FFPR ↓ FMEO ↓ AUC ↑ FFPR ↓ FMEO ↓
+
+Subspace-decomposed baseline [46] 78.52 19.61 13.44 84.22 19.37 15.08 65.08 52.04 40.31 + prediction-level fairness loss [28] 78.43 18.92 13.08 84.11 18.57 14.73 64.91 50.82 39.58 + adversarial classifier (GRL) [13, 50] 77.88 18.23 12.64 83.62 18.08 14.12 64.23 49.71 38.87 + full-feature mean alignment 78.82 18.03 12.38 84.43 17.82 13.76 66.02 49.24 38.41 
+
+FairReL (Ours) 80.64 10.12 7.03 86.13 13.55 8.98 66.34 38.36 30.02 
+
+Table 5: Comparison of alternative fairness interventions on the same subspace-decomposed backbone under cross-domain evaluation. 
+
+Loss and alignment ablation. Table 4 jointly ablates GCWD, SLMA and the alignment design. GCWD and SLMA each improve fairness alone, and their combination gives the best overall balance between AUC and FFPR . Applying SLMA to z∆ outperforms aligning 14 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+the full z, and removing class conditioning sharply reduces AUC. Table 5 further compares against external fairness objectives. 
+
+Alternative Fairness Objectives. These families share the same subspace-decomposed backbone: (i) a prediction-level fairness loss [18, 28]; (ii) an adversarial demographic classi-fier with gradient-reversal [11, 13, 50]; and (iii) full-feature mean alignment, which applies first-moment matching on the full pooled z. The external objectives provide modest fair-ness improvements, but their gains are smaller than FairReL and often come with reduced cross-domain AUC. The strongest baseline, full-feature mean alignment, still trails FairReL on all cross-domain fairness metrics: fairness supervision is more effective on the trainable residual than on the full pooled representation. 
+
+4.5 Visualisation Results 
+
+Figure 7 presents Grad-CAM [40] visualisations for one test image from each gender–race subgroup on FF++ [39] and DFDC [9]. Compared with Effort [46], which we use as the SVD-decomposed backbone, FairReL produces more spatially consistent activations across subgroups, concentrated on central facial regions rather than subgroup-correlated areas such as hair or background. These examples suggest that FairReL yields less subgroup-dependent attention while preserving facial evidence for classification. 
+
+Figure 7: Grad-CAM attribution across the six subgroups on FF++ (left) and DFDC (right). 
+
+# 5 Conclusion 
+
+We presented FairReL , a fairness-aware representation-learning framework for generalis-able deepfake detection. Unlike existing approaches that regularise only the final predic-tion or the pooled representation as a whole, FairReL targets two sources of subgroup bias: spectral imbalance in spatial features and adaptation-induced shifts in the trainable resid-ual subspace. GCWD reduces subgroup-imbalanced wavelet statistics before pooling, while SLMA aligns class-conditional subgroup means in the residual representation of an SVD-decomposed backbone. Experiments on FF++, Celeb-DF, DFD and DFDC show that Fair-ReL reduces cross-domain fairness disparities while preserving competitive detection per-formance. Ablations and representation analyses further confirm that the two objectives are complementary. Overall, FairReL improves fairness and cross-dataset generalisation on standard face-manipulation deepfake benchmarks with available demographic annotations. LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 15 
+
+# Acknowledgements 
+
+This work was supported by the China Scholarship Council–Warwick Joint Scholarship. 
+
+# References 
+
+[1] Akshay Agarwal and Nalini Ratha. Deepfake: Classifiers, fairness, and demographi-cally robust algorithm. In 2024 IEEE 18th International Conference on Automatic Face and Gesture Recognition , pages 1–9. IEEE, 2024. [2] Joy Buolamwini and Timnit Gebru. Gender shades: Intersectional accuracy disparities in commercial gender classification. In Conference on Fairness, Accountability and Transparency , pages 77–91, 2018. [3] H. Cheng, M. H. Liu, Y. Guo, et al. Fair deepfake detectors can generalize. Advances in Neural Information Processing Systems , 38:52596–52621, 2025. [4] François Chollet. Xception: Deep learning with depthwise separable convolutions. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition ,pages 1251–1258, 2017. [5] Xinjie Cui, Yuezun Li, Ao Luo, Jiaran Zhou, and Junyu Dong. Forensics adapter: Adapting clip for generalizable face forgery detection. In Proceedings of the Computer Vision and Pattern Recognition Conference (CVPR) , pages 19207–19217, 2025. [6] Ingrid Daubechies. Ten Lectures on Wavelets , volume 61 of CBMS-NSF Regional Con-ference Series in Applied Mathematics . SIAM, 1992. [7] Prafulla Dhariwal and Alexander Nichol. Diffusion models beat gans on image synthe-sis. Advances in neural information processing systems , 34:8780–8794, 2021. [8] Feng Ding, Jun Zhang, Xinan He, and Jianfeng Xu. Fairadapter: Detecting ai-generated images with improved fairness. In ICASSP 2025 – 2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) , pages 1–5. IEEE, 2025. [9] Brian Dolhansky, Joanna Bitton, Ben Pflaum, Jikuo Lu, Russ Howes, Menglin Wang, and Cristian Canton Ferrer. The deepfake detection challenge dataset. In arXiv preprint arXiv:2006.07397 , 2020. [10] Nick Dufour and Andrew Gully. Contributing data to deepfake detection re-search. Google AI Blog, 2019. URL https://research.google/ blog/contributing-data-to-deepfake-detection-research/ .Google/Jigsaw DeepFake Detection Dataset. [11] Harrison Edwards and Amos Storkey. Censoring representations with an adversary. In 
+
+International Conference on Learning Representations , 2016. [12] Uchenna Ezeakunne, Chigozie Eze, and Xiaoming Liu. Data-driven fairness general-ization for deepfake detection. arXiv preprint arXiv:2412.16428 , 2024. 16 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+[13] Yaroslav Ganin, Evgeniya Ustinova, Hana Ajakan, Pascal Germain, Hugo Larochelle, François Laviolette, Mario Marchand, and Victor Lempitsky. Domain-adversarial train-ing of neural networks. Journal of Machine Learning Research , 17(59):1–35, 2016. [14] Robert Geirhos, Jörn-Henrik Jacobsen, Claudio Michaelis, Richard Zemel, Wieland Brendel, Matthias Bethge, and Felix A. Wichmann. Shortcut learning in deep neural networks. Nature Machine Intelligence , 2(11):665–673, 2020. [15] Ian J Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. Generative adversarial nets. Ad-vances in neural information processing systems , 27, 2014. [16] Patrick Grother, Mei Ngan, and Kayee Hanaoka. Face recognition vendor test part 3: Demographic effects. Technical report, National Institute of Standards and Technology, 2019. [17] David G"uera and Edward J. Delp. Deepfake video detection using recurrent neural networks. In IEEE International Conference on Advanced Video and Signal Based Surveillance , pages 1–6, 2018. [18] Moritz Hardt, Eric Price, and Nathan Srebro. Equality of opportunity in supervised learning. In Advances in Neural Information Processing Systems (NeurIPS) , pages 3315–3323, 2016. [19] Yan Ju, Shu Hu, Shan Jia, George H. Chen, and Siwei Lyu. Improving fairness in deep-fake detection. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision , pages 4655–4665, 2024. [20] Tero Karras, Samuli Laine, and Timo Aila. A style-based generator architecture for generative adversarial networks. In Proceedings of the IEEE/CVF conference on com-puter vision and pattern recognition , pages 4401–4410, 2019. [21] Tero Karras, Samuli Laine, Miika Aittala, Janne Hellsten, Jaakko Lehtinen, and Timo Aila. Analyzing and improving the image quality of stylegan. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 8110–8119, 2020. [22] Diederik P Kingma and Max Welling. Auto-encoding variational bayes. arXiv preprint arXiv:1312.6114 , 2013. [23] Lingzhi Li, Jianmin Bao, Ting Zhang, Hao Yang, Dong Chen, Fang Wen, and Bain-ing Guo. Face x-ray for more general face forgery detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 5001–5010, 2020. [24] Yuezun Li and Siwei Lyu. Exposing deepfake videos by detecting face warping arti-facts. In IEEE Conference on Computer Vision and Pattern Recognition Workshops ,pages 46–52, 2019. [25] Yuezun Li, Xin Yang, Pu Sun, Honggang Qi, and Siwei Lyu. Celeb-df: A large-scale challenging dataset for deepfake forensics. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 3207–3216, 2020. LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 17 
+
+[26] Li Lin, Xinan He, Yan Ju, Xin Wang, Feng Ding, and Shu Hu. Preserving fairness generalization in deepfake detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 16815–16825, 2024. [27] Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. In Interna-tional Conference on Learning Representations (ICLR) , 2019. [28] David Madras, Elliot Creager, Toniann Pitassi, and Richard Zemel. Learning adversar-ially fair and transferable representations. In Proceedings of the International Confer-ence on Machine Learning (ICML) , pages 3384–3393, 2018. [29] Stephane G. Mallat. A theory for multiresolution signal decomposition: The wavelet representation. IEEE Transactions on Pattern Analysis and Machine Intelligence , 11 (7):674–693, 1989. [30] Momina Masood, Mariam Nawaz, Khalid Mahmood Malik, Ali Javed, Aun Irtaza, and Hafiz Malik. Deepfakes generation and detection: state-of-the-art, open challenges, countermeasures, and way forward: Deepfakes generation and detection: state-of-the-art, open challenges, countermeasures, and way forward. Applied intelligence , 53(4): 3974–4026, 2023. [31] Akash Varma Nadimpalli and Ajita Rattani. Gbdf: Gender balanced deepfake dataset towards fair deepfake detection. In International Conference on Pattern Recognition ,pages 320–337. Springer, 2022. [32] Utkarsh Ojha, Yuheng Li, and Yong Jae Lee. Towards universal fake image detectors that generalize across generative models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 24480–24489, 2023. [33] Gan Pei, Jiangning Zhang, Menghan Hu, Zhenyu Zhang, Chengjie Wang, Yunsheng Wu, Guangtao Zhai, Jian Yang, and Dacheng Tao. Deepfake generation and detection: A benchmark and survey. ACM Computing Surveys , 58(11):1–41, 2026. [34] Mengxi Pu, Ming Yang Kuan, Nicholas Tze Lim, et al. Fairness evaluation in deepfake detection models using metamorphic testing. In Proceedings of the 7th International Workshop on Metamorphic Testing , pages 7–14, 2022. [35] Yuyang Qian, Guojun Yin, Lu Sheng, Zixuan Chen, and Jing Shao. Thinking in fre-quency: Face forgery detection by mining frequency-aware clues. In European confer-ence on computer vision , pages 86–103. Springer, 2020. [36] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sand-hini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, and Ilya Sutskever. Learning transferable visual models from natural lan-guage supervision. In Proceedings of the International Conference on Machine Learn-ing (ICML) , pages 8748–8763, 2021. [37] Shauli Ravfogel, Yanai Elazar, Hila Gonen, Michael Twiton, and Yoav Goldberg. Null it out: Guarding protected attributes by iterative nullspace projection. In Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL) ,pages 7237–7256, 2020. 18 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+[38] Shauli Ravfogel, Michael Twiton, Yoav Goldberg, and Ryan Cotterell. Linear adver-sarial concept erasure. In Proceedings of the International Conference on Machine Learning (ICML) , pages 18400–18421, 2022. [39] Andreas R"ossler, Davide Cozzolino, Luisa Verdoliva, Christian Riess, Justus Thies, and Matthias Nießner. Faceforensics++: Learning to detect manipulated facial images. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 1–11, 2019. [40] Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, and Dhruv Batra. Grad-cam: Visual explanations from deep networks via gradient-based localization. In ICCV , 2017. [41] Kihyuk Sohn, Honglak Lee, and Xinchen Yan. Learning structured output represen-tation using deep conditional generative models. Advances in neural information pro-cessing systems , 28, 2015. [42] Loc Trinh and Yan Liu. An examination of fairness of ai models for deepfake detection. 
+
+arXiv preprint arXiv:2105.00558 , 2021. [43] Yuhang Xu, Philipp Terhörst, Marius Pedersen, et al. Analyzing fairness in deepfake detection with massively annotated databases. IEEE Transactions on Technology and Society , 5(1):93–106, 2024. [44] Zhiyuan Yan, Yong Zhang, Yanbo Fan, and Baoyuan Wu. Ucf: Uncovering common features for generalizable deepfake detection. In Proceedings of the IEEE/CVF Inter-national Conference on Computer Vision , pages 22412–22423, 2023. [45] Zhiyuan Yan, Yong Zhang, Xinhang Yuan, Siwei Lyu, and Baoyuan Wu. A comprehen-sive benchmark of deepfake detection. In Advances in Neural Information Processing Systems Datasets and Benchmarks Track , 2023. [46] Zhiyuan Yan, Jiangming Wang, Peng Jin, Ke-Yue Zhang, Chengchun Liu, Shen Chen, Taiping Yao, Shouhong Ding, Baoyuan Wu, and Li Yuan. Orthogonal subspace decom-position for generalizable ai-generated image detection. In Proceedings of the 42nd International Conference on Machine Learning (ICML) , 2025. [47] Xin Yang, Yuezun Li, and Siwei Lyu. Exposing deep fakes using inconsistent head poses. In IEEE International Conference on Acoustics, Speech and Signal Processing ,pages 8261–8265, 2019. [48] Wei Ye, Xinan He, and Feng Ding. Decoupling forgery semantics for generalizable deepfake detection. In British Machine Vision Conference , 2024. [49] Andrii Yermakov, Jan Cech, Jiri Matas, and Mario Fritz. Deepfake detection that gen-eralizes across benchmarks. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision , pages 773–783, 2026. [50] Brian Hu Zhang, Blake Lemoine, and Margaret Mitchell. Mitigating unwanted biases with adversarial learning. In AAAI/ACM Conference on AI, Ethics, and Society , pages 335–340, 2018. LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 19 
+
+This appendix collects details and analyses deferred from the main text for space. Sec-tions A–C cover the four datasets and their demographic statistics, the sample-level evaluation-metric definitions, and the full implementation details. Sections D–G extend the experi-ments: the intra-domain FF++ comparison, per-run standard deviations, a check that the fixed operating point does not collapse target-domain sensitivity, and the full per-subgroup AUC breakdown on every dataset. Sections H–I provide the λorth sensitivity analysis and the extended mechanistic analysis behind Figs. 5–6 of the main text, and Section J discusses the use of demographic labels and deployment considerations. 
+
+# A Datasets and Demographic Statistics 
+
+We use four datasets with different data sources and forgery pipelines to evaluate fairness generalisation. FF++ [39] is used as the source dataset and contains controlled manipula-tions generated by multiple face manipulation methods. Celeb-DF [25] contains high-quality celebrity DeepFakes collected from in-the-wild videos. DFD [10] contains controlled record-ings from paid actors and their manipulated versions. DFDC [9] is a large-scale challenge dataset with diverse actors, scenes, and manipulation methods. Together, these datasets test whether a detector trained on FF++ remains fair under different identities, recording condi-tions, and forgery distributions. We use the demographic annotations of [26]. Following our six-group evaluation proto-col, we consider intersectional groups formed by two gender categories, male and female, and three race categories, Asian, White, and Black. Table S1 summarises the dataset split and demographic coverage used in our experiments. Table S2 reports the number of samples in each intersectional subgroup used in this six-group protocol.                          
+
+> Dataset Train Val. Test Dataset role Retained intersectional attributes FF++ [39] 45,377 15,126 15,126 Source domain M-A, M-W, M-B, F-A, F-W, F-B Celeb-DF [25] ––87,213 Unseen target M-W, M-B, F-W, F-B DFD [10] ––20,032 Unseen target M-W, M-B, F-W, F-B DFDC [9] ––63,225 Unseen target M-A, M-W, M-B, F-A, F-W, F-B
+
+Table S1: Dataset split and demographic coverage after excluding samples annotated as Others. M/F denote male/female, and A/W/B denote Asian/White/Black. FF++ is used as the source domain and is split into training, validation, and test sets with an approximate 60/20/20 ratio. Celeb-DF, DFD, and DFDC are used only as unseen target-domain test sets.                                    
+
+> Dataset M-A M-W M-B F-A F-W F-B Total FF++ [39] 2,475 31,281 1,468 8,013 31,281 1,111 75,629 Celeb-DF [25] –81,194 600 –5,389 30 87,213 DFD [10] –7,784 6,482 –4,127 1,639 20,032 DFDC [9] 2,144 21,755 9,603 1,915 18,502 9,306 63,225
+
+Table S2: Number of samples in each retained intersectional demographic group after excluding the Others category. The six groups are defined by gender {M, F} and race 
+
+{Asian , White , Black }. “–” means that the subgroup does not exist in the dataset annota-tion. 20 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+# B Evaluation Metrics 
+
+This section gives the complete sample-level definitions of the two fairness metrics in the main text, together with the group-averaged AUC and AUC gap used in Sec. G, following Ju et al . [19] and Lin et al . [26] for direct comparability. 
+
+Notation. For sample i in a test set {1, . . . , n}, let Yi ∈ { 0, 1} be the ground-truth label (0 real, 1 fake), ˆ Yi ∈ { 0, 1} the predicted label obtained by thresholding the detector score at the operating point τ, and Gi ∈ G its demographic subgroup ( G is the set of six intersectional gender–race groups). ⊮[·] is the indicator function. Both fairness metrics are reported in percent and are lower-is-better, with 0 denoting perfect subgroup parity. The subgroup and overall false-positive rates are FPR g = ∑ni=1 ⊮[ ˆYi = 1, Gi = g, Yi = 0]
+
+∑ni=1 ⊮[Gi = g, Yi = 0] , FPR o = ∑ni=1 ⊮[ ˆYi = 1, Yi = 0]
+
+∑ni=1 ⊮[Yi = 0] , (10) and the subgroup true-positive rate TPR g is defined analogously by conditioning on Yi = 1. 
+
+Equal FPR ( FFPR ). Because real faces vastly outnumber fakes in deployment and the harm-ful error is flagging a real face as fake [19, 26], our primary metric sums each subgroup’s deviation from the overall false-positive rate, 
+
+FFPR = ∑
+
+> g∈G
+
+FPR g − FPR o . (11) This is the Equal FPR metric reported in the main text. 
+
+Max Equalized Odds ( FMEO ). For true class c ∈ { 0, 1}, let R(0) 
+
+> g
+
+= FPR g and R(1) 
+
+> g
+
+= TPR g.
+
+FMEO is the larger of the worst-case FPR gap and the worst-case TPR gap across subgroups, 
+
+FMEO = max 
+
+> c∈{ 0,1}
+
+
+
+max  
+
+> g∈G
+
+R(c) 
+
+> g
+
+− min 
+
+> g′∈G
+
+R(c)
+
+> g′
+
+
+
+, (12) the sample-level form of the Max Equalized Odds metric reported in the main text. 
+
+Detection metrics in the per-subgroup tables. In addition to the overall AUC, the per-subgroup analysis (Sec. G) reports the group-averaged AUC and the AUC gap, AUC avg = 1
+
+|G| ∑
+
+> g∈G
+
+AUC g, AUC gap = max  
+
+> g∈G
+
+AUC g − min  
+
+> g∈G
+
+AUC g, (13) where AUC g is the AUC within subgroup g. Unlike the overall AUC, which is dominated by majority subgroups, AUC avg weights every subgroup equally, and the AUC gap measures the spread between the best- and worst-served subgroups. 
+
+# C Implementation Details 
+
+We train with AdamW [27] (learning rate 1 ×10 −3, weight decay 4 ×10 −3, batch size 64, input resolution 224 ×224, single H100 GPU). The wavelet transform in GCWD is a 2-level ( J=2) Daubechies-4 decomposition yielding L = 3J+1 = 7 sub-bands. To make the subgroup moments in the GCWD and SLMA losses of the main text well defined, we use a group-balanced sampler that draws ≈ 10–12 samples per subgroup per batch; (y, g) cells with fewer than two samples in a batch fall back to an exponential-moving-average estimate LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 21 
+
+(decay 0 .9), which is invoked on under 1% of batches. The hyperparameters (λorth , λG, λS, r)
+
+are selected on the FF++ validation split using a combined source-domain AUC and FPR-disparity score at TPR =0.90; target-domain test results are never used for selection, yielding 
+
+λorth =0.1, λG=λS=0.5 and r=1. 
+
+# D Intra-Domain Comparison on FF++ 
+
+For completeness, Table S3 reports the intra-domain comparison on the FF++ test split un-der the fixed-threshold protocol of the main text ( τ pinned on the FF++ validation split at TPR =0.90); “Req. Demo” marks whether a method uses demographic labels during training (the fairness-aware DAW-FDD, PG-FDD and FairReL do, FairAdapter does not). FairReL attains the highest AUC and AUC avg and the lowest FFPR and FMEO , consistent with the cross-domain trend in the main text.                                                                   
+
+> Type Method Backbone Req. Demo FF++
+> AUC ↑AUC avg ↑FFPR ↓FMEO ↓
+> ERM Xception-ERM [4] Xception No 88.50 88.46 16.84 12.07 CLIP-ERM [36] CLIP ViT-L/14 No 92.40 92.44 15.92 11.38 Gen. ForAda [5] CLIP ViT-L/14 No 94.10 94.21 15.13 10.86 Effort [46] CLIP ViT-L/14 No 94.83 94.92 14.57 10.41 GenD [49] CLIP ViT-L/14 No 95.35 95.48 14.06 10.02 Fair. DAW-FDD [19] Xception Yes 90.40 90.53 13.21 9.34 PG-FDD [26] Xception Yes 92.80 93.02 12.42 8.76 FairAdapter [8] CLIP ViT-L/14 No 93.25 93.49 11.93 8.41 Ours FairReL CLIP ViT-L/14 Yes 96.14 96.54 10.97 7.41
+
+Table S3: Intra-domain comparison on FF++ [39] (trained and tested on FF++). Detec-tion is measured by AUC and AUC avg ; fairness by FFPR and FMEO (%, lower is better), at the threshold pinned on the FF++ validation split at TPR =0.90. “Req. Demo” denotes whether demographic labels are used during training. The best results are in bold and the second-best are underlined. 
+
+# E Per-Run Standard Deviations 
+
+All numbers in the main text are averaged over three runs with different random seeds (iden-tical schedule and data). Table S4 reports the mean ± standard deviation for FairReL on the four datasets; deviations are small ( ≤ 0.4 on the AUC metrics and ≤ 0.6 on the fairness metrics), so the rankings in the main tables are stable across seeds. 
+
+# F Target-Domain Sensitivity at the Fixed Operating Point 
+
+FPR-based gaps can be trivially shrunk by raising the threshold, so all FPR metrics use a single τ pinned on a held-out FF++ split at source-domain TPR =0.90 and reused on every dataset (Sec. 4.1 of the main text). Table S5 confirms this shared τ does not buy Fair-ReL’s lower FPR by sacrificing detection: at the same threshold, the realised target-domain 22 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING                                                         
+
+> Detection Fairness Dataset AUC ↑AUC avg ↑FFPR ↓FMEO ↓
+> FF++ (intra) 96 .14 ±0.296 .54 ±0.210 .97 ±0.37.41 ±0.3Celeb-DF 80 .64 ±0.481 .26 ±0.310 .12 ±0.57.03 ±0.4DFD 86 .13 ±0.386 .78 ±0.313 .55 ±0.68.98 ±0.5DFDC 66 .34 ±0.467 .03 ±0.438 .36 ±0.630 .02 ±0.5
+
+Table S4: Mean ± standard deviation of FairReL over three seeds. Variation is small relative to the gaps to competing methods in the main tables. The reported means match the headline FairReL entries in the main text (Tables 1–2 and the ablation tables). TPR and balanced accuracy are consistently higher for FairReL than for the subspace-decomposed baseline on all three targets.                     
+
+> Celeb-DF DFD DFDC
+> Method TPR ↑BalAcc. ↑TPR ↑BalAcc. ↑TPR ↑BalAcc. ↑
+> Effort [46] 71.4 64.7 80.6 71.5 60.5 58.4
+> FairReL (Ours) 74.9 69.6 83.2 76.7 62.5 62.8
+
+Table S5: Target-domain TPR (%) and balanced accuracy (%) under the same τ pinned to source-domain TPR =0.90: FairReL’s lower FPR does not come at the cost of cross-domain sensitivity. 
+
+# G Per-Subgroup AUC on Each Dataset 
+
+The main text reports the per-subgroup AUC breakdown only on DFDC (Table 2). Table S6 gives the full breakdown for all methods on the source domain FF++ and the two remaining unseen targets, Celeb-DF and DFD, in a single combined table. The Asian subgroups (M-A, F-A) are not annotated in Celeb-DF and DFD (Table S1) and are left blank; AUC avg and the AUC gap are computed over the available subgroups. The F-B subgroup of Celeb-DF contains only 30 test samples, so its per-subgroup AUC carries high variance and should be interpreted with caution. Across all four datasets FairReL attains the highest AUC avg and the smallest AUC gap, matching the DFDC trend in the main text. The DFDC breakdown is in Table 2 of the main text. Across all four datasets FairReL shows the same pattern: the most uniform per-subgroup AUC (largest AUC avg , smallest gap) while staying detection-competitive in overall AUC. It therefore improves the fairness– generalisation trade-off rather than trading accuracy for subgroup fairness. 
+
+# H Sensitivity to the Orthogonality Weight λorth 
+
+λorth was tuned in [46] without fairness supervision: a too-loose value lets principal direc-tions leak into the residual and dilutes SLMA, while a too-tight one over-constrains it, so we re-tune it on the FF++ validation split. Table S7 sweeps λorth ∈ { 0, 0.01 , 0.1, 1.0, 10 } with both losses active; the validated λorth =0.1 is the best cross-domain entry on every target and both extremes are visibly suboptimal, confirming the value differs from [46]. LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 23 
+
+Per-subgroup AUC (%) ↑ Overall (%) Data Type Method M-W M-A M-B F-W F-A F-B AUC ↑ AUC avg ↑ gap ↓
+
+> FF++
+
+ERM Xception-ERM [4] 89.73 88.73 87.68 89.15 88.26 87.18 88.50 88.46 2.55 CLIP-ERM [36] 93.64 92.70 91.71 93.09 92.25 91.24 92.40 92.44 2.40 Gen. ForAda [5] 95.26 94.43 93.57 94.78 94.04 93.16 94.10 94.21 2.10 Effort [46] 95.90 95.13 94.32 95.45 94.76 93.94 94.83 94.92 1.96 GenD [49] 96.38 95.67 94.93 95.97 95.33 94.57 95.35 95.48 1.81 Fair. DAW-FDD [19] 91.21 90.68 90.12 90.90 90.43 89.86 90.40 90.53 1.35 PG-FDD [26] 93.67 93.16 92.63 93.38 92.92 92.37 92.80 93.02 1.30 FairAdapter [8] 94.13 93.63 93.09 93.84 93.38 92.84 93.25 93.49 1.29 Ours FairReL 96.94 96.63 96.30 96.76 96.48 96.14 96.14 96.54 0.80 Celeb-DF 
+
+ERM Xception-ERM [4] 71.69 – 70.41 71.18 – 69.71 70.94 70.75 1.98 CLIP-ERM [36] 75.13 – 73.94 74.66 – 73.29 74.37 74.26 1.84 Gen. ForAda [5] 81.05 – 79.97 80.62 – 79.38 80.21 80.26 1.67 Effort [46] 79.36 – 78.30 78.93 – 77.72 78.52 78.58 1.64 GenD [49] 81.57 – 80.68 81.22 – 80.20 80.85 80.92 1.37 Fair. DAW-FDD [19] 71.04 – 70.34 70.76 – 69.95 70.46 70.52 1.09 PG-FDD [26] 76.06 – 75.40 75.80 – 75.03 75.42 75.57 1.03 FairAdapter [8] 76.36 – 75.62 76.07 – 75.21 75.65 75.82 1.15 Ours FairReL 81.59 – 81.14 81.41 – 80.90 80.64 81.26 0.69 DFD 
+
+ERM Xception-ERM [4] 77.57 – 76.21 77.03 – 75.47 76.73 76.57 2.10 CLIP-ERM [36] 81.93 – 80.75 81.46 – 80.10 81.14 81.06 1.83 Gen. ForAda [5] 86.28 – 85.26 85.87 – 84.71 85.50 85.53 1.57 Effort [46] 85.00 – 84.00 84.60 – 83.45 84.22 84.26 1.55 GenD [49] 87.15 – 86.24 86.79 – 85.75 86.43 86.48 1.40 Fair. DAW-FDD [19] 74.24 – 73.52 73.95 – 73.12 73.65 73.71 1.12 PG-FDD [26] 82.97 – 82.28 82.70 – 81.91 82.32 82.47 1.06 FairAdapter [8] 81.43 – 80.74 81.15 – 80.36 80.76 80.92 1.07 Ours FairReL 87.15 – 86.64 86.95 – 86.37 86.13 86.78 0.78 
+
+Table S6: Per-subgroup AUC (%) on the source domain FF++ [39] (intra-domain test split) and on the unseen targets Celeb-DF [25] and DFD [10] (trained on FF++). The Asian sub-groups (M-A, F-A) are not annotated in Celeb-DF and DFD and are left blank. “gap” de-notes the AUC gap (best −worst subgroup AUC). The best results are shown in bold and the second-best are underlined. 
+
+Celeb-DF DFD DFDC 
+
+λorth AUC ↑ FFPR ↓ AUC ↑ FFPR ↓ AUC ↑ FFPR ↓
+
+0 77.85 12.64 84.71 15.83 63.74 41.92 0.01 79.48 11.21 85.62 14.58 64.93 39.86 
+
+0.1 (ours ) 80.64 10.12 86.13 13.55 66.34 38.36 
+
+1.0 80.21 10.54 85.79 13.92 65.78 38.94 10 77.42 12.03 84.33 15.31 63.12 41.27 
+
+Table S7: Sensitivity to λorth on cross-domain test performance with GCWD and SLMA both active. The optimal value λorth =0.1 is selected on the FF++ validation split (Sec. 4.1 of the main text) and matches the FairReL entry in Table 1 of the main text. 24 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+# I Extended Mechanistic Analysis 
+
+This section supports Sec. 4.3 of the main text: a per-sub-band linear-probe analysis behind Figure 5, the numerical localisation behind Fig. 6(a), and the per-attribute complementarity behind the leakage probe. 
+
+I.1 Per-Sub-Band Probing of Demographic and Forgery Information 
+
+Figure 5(a) of the main text compares, per sub-band, an energy-based demographic discrep-ancy against a real-vs-fake effect size. Energy differences alone, however, need not imply that a band is useful for classification. We therefore probe directly which sub-bands encode demographic versus forgery information. For each sub-band ℓ we form a per-sample fea-ture by global-average-pooling the magnitude of its coefficient tensor, vi,ℓ = GAP (|Ci,ℓ |),and train two one-layer linear probes on it: a demographic probe (subgroup label) and a 
+
+forgery probe (real/fake). We report demographic-probe balanced accuracy (chance 16 .7% over G=6) and forgery-probe AUC on the DFDC splits.                   
+
+> Sub-band Demographic probe Forgery probe (ℓ)balanced acc. (%) ↑AUC (%) ↑
+> LL 248.6 71.2 LH 240.2 77.8 HL 242.1 75.9 HH 234.8 82.4 LH 126.9 89.1 HL 128.4 87.6 HH 124.7 91.3
+
+Table S8: Per-sub-band linear probes on DFDC. Demographic information (probe balanced accuracy) is highest in the coarse low-frequency bands, while forgery-discriminative infor-mation (probe AUC) is highest in the fine high-frequency bands. Table S8 shows the two kinds of information separate by scale: the demographic probe is most accurate in the coarse level-2 bands (highest in LL 2) and degrades towards the fine bands, whereas the forgery probe strengthens from coarse to fine and is strongest in the high-frequency level-1 bands, with some variation among directional bands of the same scale. This recoverable-information view agrees with the energy-based separation in Figure 5(a) and supports decorrelating only the subgroup-imbalanced low-frequency bands, which carry little forgery-discriminative signal. 
+
+I.2 Localisation of Subgroup-Sensitive Structure 
+
+Fig. 6(a) of the main text localises subgroup-sensitive structure with two intervention-based views of a trained subspace-decomposed detector; Table S9 gives the numbers. The principal-only view sets ∆W←0 at every decomposed layer (isolating the frozen pre-trained pathway); the residual-only view sets Wp ← 0 (the subspace decomposition in the main text), isolating the adaptation-induced pathway. As the backbone is non-linear, these are diagnostic probes rather than an exact additive split. For each view we measure (i) the spatial sub-band dis-crepancy Dℓ, grouped into low-frequency (level-2) and high-frequency (level-1), and (ii) the class-conditional subgroup mean shift of the pooled feature (the statistic SLMA aligns), for LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 25 
+
+the gender and ethnicity partitions. All quantities are on DFDC, normalised by the largest entry in their column.                     
+
+> Attribute Spatial spectral (GCWD) Pooled (SLMA) Feature view (a)low-freq high-freq mean shift Principal-only ( Wp)gender 0.12 0.08 0.34 ethnicity 0.21 0.09 0.22 Residual-only ( ∆W)gender 0.41 0.13 1.00
+> ethnicity 1.00 0.16 0.58
+
+Table S9: Subgroup-sensitive structure on a trained subspace-decomposed detector (DFDC), normalised per column. Visualised as Fig. 6(a) of the main text. Table S9 shows the residual carries far more subgroup-sensitive structure than the frozen principal, in both the low-frequency bands and the pooled mean shift, while high frequencies stay low everywhere. Within the residual, ethnicity dominates the low-frequency spatial discrepancy whereas gender dominates the pooled mean shift. 
+
+I.3 Complementarity of GCWD and SLMA 
+
+Table S10 reports a leakage probe that trains a one-layer linear classifier to predict gender (2-class) or ethnicity (3-class) from the residual z∆ on the DFDC splits (20 AdamW epochs). We report balanced accuracy, where chance is 50 .0% for gender and 33 .3% for ethnicity.                        
+
+> Feature / model AUC ↑Gender ↓(chance 50.0) Ethnicity ↓(chance 33.3)
+> Principal-only zp(reference) –80.1 66.0 Subspace-decomposed baseline [46], z∆65.1 78.4 63.7 + GCWD only 65.6 71.6 54.9 + SLMA only 65.4 65.8 58.4
+> FairReL (GCWD + SLMA) 66.3 58.5 50.9
+
+Table S10: Leakage probe on DFDC: detection AUC (%) and linear-probe balanced accu-racy (%) for recovering gender/ethnicity from the residual. Lower gender/ethnicity accuracy indicates less recoverable demographic information. Though both losses are defined over all G subgroups, GCWD dents ethnicity-probe ac-curacy more (63 .7→54 .9) while SLMA is more effective on gender (78 .4→65 .8), mirroring Table S9: ethnicity surfaces as a low-frequency spectral-energy discrepancy, whereas gender appears as a class-conditional first-moment shift of the pooled embedding. The two losses thus target different signatures of different attributes and are complementary rather than re-dundant. 
+
+# J Discussion 
+
+Demographic labels raise ethical and privacy concerns in fairness-aware deepfake detection. They involve sensitive attributes such as gender and ethnicity, and collecting or predict-ing them at deployment may introduce additional privacy risks or even reinforce protected-26 LU ET AL.: FAIRREL: FAIRNESS-AWARE REPRESENTATION LEARNING 
+
+attribute profiling. However, subgroup information is still necessary for diagnosing and mit-igating unfair detector behaviour; without it, we cannot know which groups are underserved. FairReL reduces this tension by using demographic labels only during training and only to compute group-level fairness losses. The deployed detector takes only the input image and does not require demographic labels, demographic classifiers, group-specific thresholds, or attribute-based routing. Thus, demographic information is used to remove subgroup-dependent shortcuts from the representation, not to condition individual predictions at test time. This makes FairReL a less intrusive and more deployment-friendly way to improve fairness under the ethical constraints of demographic annotation.
