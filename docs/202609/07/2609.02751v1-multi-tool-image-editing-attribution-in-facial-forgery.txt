@@ -1,0 +1,705 @@
+Title: Multi-Tool Image Editing Attribution in Facial Forgery
+
+URL Source: https://arxiv.org/pdf/2609.02751v1
+
+Published Time: Thu, 03 Sep 2026 01:30:56 GMT
+
+Number of Pages: 27
+
+Markdown Content:
+# Multi-Tool Image Editing Attribution in Facial Forgery 
+
+Sheng Liu 1,2 , Qiang Sheng 1,2 , Danding Wang 1,2 , Yu Li 1, Chenming Zhou 1,2 , and Juan Cao 1,2 1Institute of Computing Technology, Chinese Academy of Sciences, Beijing, China 
+
+> 2
+
+University of Chinese Academy of Sciences, Beijing, China As generative AI tools become increasingly powerful and easy to use, people can easily edit portrait images with a prompt, necessitating the task of image editing attribution, which predicts the involved editing tools from the given image. Existing attribution methods hold the single-tool assumption and can only attribute a specific editing tool, but struggle to handle the more complex and increasingly common multi-tool editing scenarios, where artifacts left by different editing tools are composite and overlapped. To address this gap, we explore Multi-Tool Image Editing Attribution ( MIEA ), which aims to identify multiple editing tools involved in a multi-tool edited facial image. To simulate the real-life editing operations on facial images, we then construct a new dataset, MultiEdit , which contains 500k+ edited facial images and covers six types of editing tools that support face swapping (Deepfake) and various facial enhancements. Inspired by the findings from data analysis, we design DPEC , a multi-tool attribution method that can capture distinguishable, locality-aware editing tool traces from both spatial and frequency domains with the support of an error-based curriculum learning strategy. Experiments show DPEC outperforms nine methods for facial images edited in at most five steps. 
+
+Date : September 2, 2026 
+
+Code, Data & Extended Materials : https://github.com/ICTMCG/MIEA 
+
+Venue : ACM Multimedia 2026 
+
+## 1. Introduction 
+
+With the proliferation of powerful generative AI techniques like generative adversarial networks (Goodfellow et al., 2014, Yang and Lim, 2019) and diffusion models (Ho et al., 2020), the creation and manipulation of digital images has become increasingly accessible and affordable for ordinary people. Using convenient AI image tools and software, users can produce vivid images that are hard for humans to distinguish with only a prompt (Cooke et al., 2024), a phenomenon evidenced by its popularity on social media: 71% of social media images are now AI-generated or AI-edited 1.Meanwhile, such widespread adoption of AI image tools has led to a growing risk of misuse. Fake facial images produced by AI have been used for fake news fabrication (Dufour et al., 2024, Liu et al., 2025), celebrity reputation damage (Stokel-Walker, 2023), and academic fraud (Davydiuk et al., 2025), posing severe challenges to online information ecosystems. Although researchers have made remarkable progress in AI-generated content detection (Wang et al., 2025, Yang et al., 2019) and attribution (Yang et al., 2022, 2023), we argue that the recent paradigm shift from single-tool use to combinational multi-tool use in AI image editing presents a new challenge that existing solutions can hardly address . While some AI editing tools claim to accomplish complex edits in a single step, the final edited images circulated online 
+
+> 1
+
+https://artsmart.ai/blog/ai-image-generator-market-statistics/ 
+
+> Corresponding author(s): Qiang Sheng Email(s): liusheng@ict.ac.cn, shengqiang18z@ict.ac.cn, wangdanding@ict.ac.cn, liyu@ict.ac.cn, zhouchenming21b@ict.ac.cn, caojuan@ict.ac.cn arXiv:2609.02751v1 [cs.CV] 2 Sep 2026 Multi-Tool Image Editing Attribution in Facial Forgery
+
+# Existing: Single-Tool Attribution Editing Process Editing Result 
+
+# Single-Tool Detector 
+
+# Multi-Tool Detector 
+
+Unseen Seen 
+
+# Tool B 
+
+Smooth Skin 
+
+# Tool A 
+
+Add Makeups 
+
+Undetected Detected 
+
+# Tool C 
+
+Slim Face 
+
+Detected 
+
+last-tool trace 
+
+# Ours: Multi-Tool Attribution 
+
+max prob. 
+
+Undetected 
+
+multi-tool traces 
+
+Detected Detected 
+
+Figure 1: Multi-Tool Image Editing and Attribution. A polished portrait often undergoes multiple editing operations from different tools, and the whole editing process remains unseen and undisclosed . Existing single-tool attribution methods focus on extracting specific features produced by a single tool, which, to their best, only produces an incomplete prediction. In this paper, we explore how to build a multi-tool attributor that can identify all involved tools in the image editing process from a given edited result image. 
+
+are often created through multiple editing operations involving various tools (Yan et al., 2025). On one hand, even general-purpose image editing tools are rarely fully capable in all functions, encouraging users to apply different tools for incremental image adjustments to achieve desired effects (Joseph et al., 2024, Zhou et al., 2025). On the other hand, an image may also be edited by multiple people independently, using diverse tools for different purposes. Consequently, multi-tool editing results in a mixture of different AI tool artifacts within a single image, violating the basic assumption that only one type of tool trace exists on an image. This renders existing methods ineffective in practice, as they can only identify the use of one tool, and their single-tool detection sensitivity degrades significantly when other editing operations are applied afterward (we will demonstrate this empirically in Sec. 3). If we perform forensic analysis of maliciously edited images using single-tool attribution methods, we cannot recover the full set of involved editing tools and may only detect benign edits while missing the actual malicious operations, allowing malicious actors to evade accountability. Therefore, to achieve accurate image forensics, it is critical to reconstruct the entire editing chain. By identifying every tool employed, we can demystify the black-box editing workflow, increase the transparency of the editing process, and reduce the room for hidden malicious manipulation. 
+
+> 2Multi-Tool Image Editing Attribution in Facial Forgery
+
+To address these challenges, we carry out this work across three core dimensions: task formulation, dataset construction, and method design. We first formulate a new task, Multi-Tool Image Editing Attribution ( MIEA )that aims to identify multiple editing tools involved in a multi-tool edited image (Fig. 1). We then construct a large-scale facial editing dataset, MultiEdit , which contains over 500k edited facial images and covers six representative types of editing tools. Based on detailed analysis of tool-specific patterns, we propose 
+
+Dual-domain Patchwise Enhancement with Curriculum learning ( DPEC ), a multi-tool attribution method that captures distinguishable, locality-aware editing tool traces from both spatial and frequency domains, supported by an error-based curriculum learning strategy. Moreover, DPEC is designed to recover all tools in the image editing chain, effectively preventing early editing traces from going undetected due to being overwritten or degraded by subsequent editing operations. Experiments show that DPEC outperforms existing methods in MIEA and achieves competitive performance in the conventional detection task. In summary, our main contributions are: • New task : We propose a challenging task, Multi-Tool Image Editing Attribution, that attributes a multi-tool-edited image to the multiple tools involved in its whole editing process, instead of only detecting the final editing tool. • New method : We propose a multi-tool attribution method DPEC that can extract distinguishable features of editing tools from multi-edited images via dual-domain patchwise feature enhancement and error-based curriculum learning. By uncovering the editing chain despite trace-masking from sequential edits, DPEC enables more transparent and precise image forensics. • New dataset : We construct MultiEdit , a large-scale dataset covering 500k+ facial images and 6 common editing tools, on which we experimentally verify the effectiveness of DPEC. 
+
+## 2. Related Works 
+
+Face Forgery Generation & Detection The escalating realism of synthetic media has sparked an arms race between face forgery generation and detection techniques. Traditional editing tools like Photoshop and GIMP, which rely on manual pixel-level operations ( e.g. , splicing, liquify), often leave detectable inconsistencies (Wang et al., 2019, Zhang et al., 2023). With rapid advancement of deep generative models, particularly Autoencoders (Bounareli et al., 2025), Generative Adversarial Networks (GANs) (Ling et al., 2021, Jiang et al., 2025, Yang and Lim, 2019), and more recently, Diffusion Models (Huang et al., 2023, Wei et al., 2025) have significantly elevated the visual fidelity of various manipulation techniques, including deepfake, face reenactment, and attribute manipulation. Accordingly, numerous deep learning-based approaches have emerged as the mainstream for manipulation detection. Specifically, Xception (Chollet, 2017), TSA-Net (Yan et al., 2022) and constrained convolutional layers (Bayar and Stamm, 2018) leverage both spatial and frequency-domain features to amplify subtle manipulation traces, while F 3-Net (Qian et al., 2020) employs frequency-component partitioning for detection purposes. Recent works have further focused on cross-attention-based detectors ( e.g. , NPR (Tan et al., 2024) and FatFormer (Liu et al., 2024)) to cope with diverse forgery patterns in face manipulation. These efforts are supported by benchmark datasets such as ImgEdit-Bench (Ye et al., 2025), yet standardized evaluation protocols for multi-tool attribution still remain underdeveloped. 
+
+Model Attribution The core task of model attribution is identifying the specific tool or model behind an edit, primarily relying on proactive watermarks (Zhang et al., 2018a, Singh and Singh, 2024) and detecting unique model fingerprints (Yang et al., 2022). Proactive embedded fingerprints (invisible watermarks) are alternatively engineered during model training/inference for more direct provenance tracing (Zhang et al., 2018a, Singh and Singh, 2024), while model fingerprint extraction uses deep learning classifiers (Ganguly et al., 2022, Yang et al., 2023, Liu et al., 2024) to learn unique artifacts embedded by models like GANs.                  
+
+> 3Multi-Tool Image Editing Attribution in Facial Forgery
+> Table 1: Selected tools and their editing types. Empty cell means type not supported or with unsatisfactory effects.
+> Tool Editing Type
+> Deepfake Shape Beauty Skin Beauty Makeup FaceFusion ✓
+> DiffSwap ✓
+> SHMT ✓✓
+> CSD-MT ✓✓
+> OpenCV ✓✓✓
+> FLUX.1 ✓✓✓
+
+Typical contrastive learning based attribution methods, such as RepMix (Bui et al., 2022) and DNA-Det (Yang et al., 2022), usually assume that an image is fingerprinted by only one model, while multi-tool editing may mask and overwrite earlier traces, thereby rendering these methods ineffective. For example, a filter adjuster B may destroy the traces left by the emotion-editing model A. On the subject of multi-tool editing, Fakechain (Heo and Woo, 2025) discovered the impacts of mixed traces on detection methods. MSA (Tan et al., 2025) aims to identify involved editing tools between two sequentially edited images, a special case in MIEA. Moreover, its requirement for paired sequentially edited images is too difficult to meet, as in-the-wild images hardly carry editing history records, which limits the task’s practicality, while our proposed task and method aim to identify multiple editing tools used based on the final edited image only. 
+
+## 3. Dataset Construction 
+
+3.1. Selected Editing Tools 
+
+To investigate the traces left by different image editing tools when modifying a portrait image in a sequential manner, we selected six image editing tools based on five distinct model/algorithm frameworks: OpenCV 2,FaceFusion 3, DiffSwap (Zhao et al., 2023), CSD-MT (Sun et al., 2024b), SHMT (Sun et al., 2024a), and FLUX.1-Kontext-[dev] (Labs et al., 2025). 
+
+Deepfake Tools FaceFusion is an industry-leading face manipulation platform that integrates multiple advanced model architectures for face swapping, lip-syncing and so on. DiffSwap, on the other hand, is a diffusion-based framework designed for high-fidelity and highly controllable face swapping following a conditional inpainting methodology. 
+
+Face Beautify Tools OpenCV is selected as the representative non-generative method, and we implemented three types of face beauty algorithms based on its official tutorial 4. CSD-MT (Sun et al., 2024b) is an unsuper-vised makeup transfer method that decouples facial content and makeup style via frequency decomposition. SHMT (Sun et al., 2024a) builds upon LDM (Rombach et al., 2022), proposing a self-supervised hierarchical makeup transfer method and enabling precise, natural makeup transfer while preserving the source facial content. FLUX.1-Kontext-[dev] (Labs et al., 2025) focuses exclusively on editing tasks. The model enables iterative text-guided editing, excels at character preservation across diverse scenes, and allows both precise local and global edits. Considering the typical designed use scenarios of these tools and their practical editing effects, we select the editing types where these tools excel in the editing process (shown in Table 1). For each editing type, 
+
+> 2https://opencv.org/
+> 3https://docs.facefusion.io/
+> 4https://docs.opencv.org/4.x/d4/d48/tutorial_gapi_face_beautification
+> 4Multi-Tool Image Editing Attribution in Facial Forgery
+
+we define a set of editing targets covering frequent daily editing operations for better simulation (shown in Table 2).     
+
+> Table 2: Involved editing types and their editing targets
+> Editing Type Editing Target
+> Deepfake Identity change Skin Acne/wrinkle removal Skin whitening Skin smoothing Shape Face slim Eyes/nose/mouth size adjustment Mouth length adjustment Lips thickness adjustment Makeup Blush Eyeshadow Lip color adjustment Full-face makeup
+
+3.2. Multi-Tool Editing Workflow 
+
+To cover as many combinations of editing tools and types as possible in real-world scenarios, we considered editing types, tools, targets, and sequential positions of tools. Algorithm 1 shows a general editing process of k beautification steps. Specifically, in line with the practical application logic of deepfake technology—where it does not perform face-swapping after facial enhancement is completed—we restrict deepfake technology to only appear in the first step of the multistep editing process. During the actual generation process, we set k = 4 and adopt the method of random sampling without replacement to select the editing tool t used in each step. To control the data quality and evaluate the edited images, we use the SSIM (Wang et al., 2004) metric to measure the similarity between the two images before and after a single editing operation, and employ Qwen3-VL (Qwen Team, 2025) to determine whether the image has achieved the editing goal. An editing process is considered successful if and only if the SSIM score falls between 0.4 and 0.98 and Qwen3-VL judges that the target editing goal has been achieved in all steps. 
+
+3.3. Dataset Overview 
+
+For authentic real facial images, we selected 200 real human portrait images from the DEFACTO-Face subset (Mahfoudi et al., 2019) as the source set S. For each image in S, we enumerate all possible permutations (i.e., unique tool-use sequences) specified in Algorithm 1, and then filter out unsuccessful editing cases. Ultimately, each image is processed with 648 valid plans, yielding a total of 510k edited images in MultiEdit. The statistical details of MultiEdit are summarized in Table 3. 
+
+3.4. Data Analysis 
+
+Since different editing tools may leave different traces in their editing areas, a multi-tool editing process can lead to more complex trace mixtures and overwriting issues. To guide the following method design, 
+
+> 5Multi-Tool Image Editing Attribution in Facial Forgery
+
+Algorithm 1: Multi-tool face editing process 
+
+Input: 
+
+Portrait set S = {I1, ⋯, In}
+
+A portrait image I ∈ S
+
+Beautify steps parameter k
+
+Deepfake Tools D = {FaceFusion, DiffSwap }
+
+Beauty Tools 
+
+M = {OpenCV, CSD-MT, SHMT, FLUX }
+
+Beauty Types E = {Shape, Skin, Makeup }
+
+Tool Target T= {Tm = {tm,1 , ⋯, tm,n}} m∈M
+
+Result: Edited Images IE = {I1, I2, ⋯, Ik} 
+
+> 1
+
+rface ← rand in S ∪ {None }; 
+
+> 2
+
+if rface ≠ None then  
+
+> 3
+
+Iswap ← randomly select from S \ { I}; 
+
+> 4
+
+I1 ← replace face of I with face from Iswap ; 
+
+> 5
+
+else  
+
+> 6
+
+I1 ← I; 
+
+> 7
+
+end  
+
+> 8
+
+IE ← [I1]; 
+
+> 9
+
+for i ← 2 to k do  
+
+> 10
+
+(m,e,t) ← randomly select from (M, E, Tm); 
+
+> 11
+
+Ii ← apply (m, e, t) on Ii−1; 
+
+> 12
+
+Add Ii to IE; 
+
+> 13
+
+end  
+
+> 14
+
+return IE;we perform analysis on MultiEdit samples to discover the editing impacts in single-tool detectability (Q1), domain diversity (Q2), regional effect (Q3), and inter-tool interaction (Q4). 
+
+Q1: Does multi-tool editing make tools harder to detect? Previous detection methods (Qian et al., 2020, Chollet, 2017) and attribution methods (Bui et al., 2022, Yang et al., 2022) show good performance in detecting tools in single-tool edited images. To explore whether multi-tool editing makes it harder for these methods to detect specific tools, we conducted experiments where the training set comprised real images and images subjected to single-step editing solely by a specific tool, and the model was trained to perform binary classification to distinguish real from fake images. For the test set, images were produced by applying subsequent multi-step editing with other tools on the basis of the aforementioned single-step edited images, and the model was then adopted to execute the same real-versus-fake binary classification on these test images. We calculate the recall of each face beauty tool and report the mean recall across editing tools at each number of subsequent editing steps. As shown in Figure 2, as the number of subsequent editing steps increases, the recall of both detection and attribution methods shows a significant decline, indicating that 
+
+the multi-tool editing indeed makes it harder to detect specific tools .
+
+Q2: What editing patterns do editing tools exhibit in spatial and frequency domains? To investigate the patterns exhibited by different editing tools, we analyze the spatial and frequency domain similarities between the images before and after editing by specific tools on different facial regions. Let the flattened original image patch be denoted as x and the corresponding edited image patch as y. For spatial domain, we 
+
+> 6Multi-Tool Image Editing Attribution in Facial Forgery
+
+Table 3: Statistics of MultiEdit. A permutation (Perm) is a unique tool-use editing sequence. We removed implausible permutations to better simulate real-life scenarios. 
+
+Number of Samples 517,540 
+
+Number of Editing Steps 
+
+1 (w. 5 Perms) 43,168 2 (w. 17 Perms) 129,385 3 (w. 36 Perms) 129,385 4 (w. 48 Perms) 129,385 5 (w. 24 Perms) 86,127 
+
+Number of Samples Per Editing Tool 
+
+FaceFusion 172,684 DiffSwap (Zhao et al., 2023) 172,184 CSD-MT (Sun et al., 2024b) 323,551 SHMT (Sun et al., 2024a) 323,479 FLUX.1 (Labs et al., 2025) 323,388 OpenCV 323,432 
+
+Number of Samples Per Editing Type 
+
+Shape Beauty 86,267 Makeup 345,019 Skin Beauty 345,024 Deepfake 344,868 0 1 2 3 4#Subsequent Editing Steps 0.0 0.2 0.4 0.6 0.8 1.0 Recall 
+
+DNA-Det     
+
+> 01234#Subsequent Editing Steps
+
+F3-Net 
+
+> DF CSD-MT SHMT FLUX.1
+
+Figure 2: Recalls of two methods (F 3-Net and DNA-Det) on detecting single editing tool. The number of subsequent editing steps indicates how many editing operations were applied after the target tool was used. 
+
+compute the L2 distance by pixel-wise subtraction between the edited and the original image patches: 
+
+Dspatial (x, y) = ∥x − y∥2, (1) For frequency-domain similarity, the 2D Discrete Cosine Transform (DCT) transforms patched image data into orthogonal frequency components: 
+
+X = 2D-DCT (x), Y = 2D-DCT (y). (2) Therefore, we calculate cosine similarity without the DC component to obtain the frequency-domain distance of two regions. Let XAC and YAC denote the frequency vectors with the DC component removed. The cosine similarity is calculated using the dot product: Sim f req (XAC , YAC ) = XAC ⋅ YAC 
+
+∥XAC ∥2∥YAC ∥2
+
+. (3) 
+
+> 7Multi-Tool Image Editing Attribution in Facial Forgery
+
+Finally, the frequency-domain distance between the two regions is obtained as: 
+
+Df req (x, y) = 1 − Sim f req (XAC , YAC ). (4) Accordingly, we concatenate Dspatial and Df req from different facial regions and plot the ridge plot to visualize both distributions for different editing tools. As illustrated in Figure 3, the spatial domain distributions for CSD-MT, SHMT, and DF overlap considerably, yet their frequency domain profiles are clearly distinct. Similarly, OpenCV and FLUX display comparable behaviors in the frequency domain while exhibiting highly divergent distributions in the spatial domain. These findings demonstrate that editing tools sharing similar statistical patterns in one domain can still be differentiated in the other. Consequently, the spatial and frequency domains offer mutually complementary information for the MIEA task .Spatial Domain Frequency Domain  
+
+> Figure 3: Ridge graph of the spatial and frequency domains among editing tools. We analyze the spatial and frequency domain differences between the images before and after editing by specific tools on different facial regions. In the spatial domain, CSD-MT, SHMT, and DeepFake show similar distributions, while totally differing in the frequency domain. Likewise, the distributions of OpenCV and FLUX are similar in the frequency domain while varying in the spatial domain.
+
+Q3: Does a single editing tool exhibit the same editing pattern among regions? For MIEA, identifying the editing tools involved in the editing process is the core, and the key to this problem is to capture the distinguishable traces left by different editing tools. To explore the regional characteristics of different editing tools, we conduct analysis on the frequency domain based on distribution distance to discover the consistency of editing intensity across facial regions. Inspired by Qian et al. (2020) and Cox et al. (1997), we split the DCT coefficients into three bands (low, mid, high), select low band and mid band for further analysis by Manhattan distance, and conduct Kruskal–Wallis H test (K-W test) to determine whether there are statistically significantly different distributions of Df req between edited patches and original patches among edited facial regions for each tool. Results are shown in Figure 4. The K-W test shows that in the low and mid-frequency bands, all tools exhibit statistically significant inter-region differences, indicating that one tool can also alter different facial regions to varying degrees .
+
+Q4: What influences does the multi-tool editing process bring? An intuitive thought is that as the number of editing steps increases, the edited image gradually deviates from the original image, leading to a continuous increase in human perceptual loss. From this perspective, we apply the Learned Perceptual Image Patch 
+
+> 8Multi-Tool Image Editing Attribution in Facial Forgery
+
+Figure 4: Grouped box plots of low and mid band of D f req distributions between edited and original patches across four facial regions for each editing tool. ∗ indicates significance levels from the Kruskal-Wallis H test with the hypothesis that distributions among regions are not consistent. 
+
+Similarity (LPIPS) (Zhang et al., 2018b) metric to measure the human perceptual loss between the original image and the edited images with different numbers of editing steps. LPIPS captures high-level semantic and perceptual features to align its evaluations more closely with human visual perception, with a lower score indicating better consistency of visual features before and after editing. In Figure 5 a), from step 2 to step 5, the LPIPS score does not increase continuously, which goes against the intuition above. This counterintuitive phenomenon may be because the subsequent round of editing overwrites the relevant information of the previous round, causing the impact of the previous editing to be gradually diluted and overwritten .0.35 0.02 0.17 0.02 0.20 0.05 0.21 0.07 0.19 0.09 0.40 0.19 0.07 0.01 0.17 0.02 0.12 0.05 0.17 0.07 1 2 3 4 50.0 0.1 0.2 0.3 0.4 LPIPS Score a) b) DF OpenCV FLUX.1 SHMT CSD-MT 5%~95% Mean 
+
+Figure 5: Box Plots of LPIPS Score. a) LPIPS Score between the original image and edited images with different numbers of editing steps; b) LPIPS Score between the images before and after editing by specific tools. DF=Deepfake Tools. Note that for results produced by deepfake tools, we calculate the LPIPS score between the target face image (to be swapped) and the generated result. 
+
+## 4. Proposed Method: DPEC 
+
+4.1. Problem Formulation & Method Overview 
+
+We formulate multi-tool image editing attribution as a multi-label classification task: Given an edited image 
+
+Is, an attribution model ℳ predicts which tool(s) in an n-tool set 𝒯 were applied to Is editing. ℳ outputs an n-dimensional vector for Is, each entry of which corresponds to a tool in 𝒯 and denotes the probability of its being used for Is editing. 5
+
+> 5
+
+We omit the tool-use order here for practical considerations because: 1) Detecting a tool’s involvement without knowing its order is already sufficient for further forensic investigation; and 2) the feasibility of order prediction is unknown due to the possible 
+
+> 9Multi-Tool Image Editing Attribution in Facial Forgery Slide Window DCT
+> Spatial Feature Encoder
+> +POS +POS
+> Patchwise Feature Enhancement
+> DCT Feature Encoder
+> Multi-Label Classifier
+> Prediction
+> Attention
+> qkv
+> Attention
+> kqv
+
+A 0.98 
+
+B 0.08 
+
+C 0.14 
+
+D 0.96 YES YES NO NO 
+
+E 0.86 YES  
+
+> Used?
+> Easy Hard
+> Prob. Next Sampler
+> 24
+> #Edit Steps
+> Error-Based Data Sampling Sample Scheduler
+> Error
+> 3
+
+b) a) 
+
+> IS
+> If
+> FS
+> Ff
+> FS’
+> Ff’
+> Conv Attention
+
+=Feature Fusion + ×𝑛  
+
+> 5
+> Newly Selected Samples 1
+> Feature Fusion
+> IS
+> Current Sampler
+> Tool B Tool C Tool A
+> Tool D
+
+Figure 6: Overview of DPEC. DPEC consists of a) Patchwise Feature Enhancement (PFE) module and b) Error-based Curriculum Learning (ECL) module. PFE applies Slide Window DCT and a patchwise cross-attention to capture distinguishable, locality-aware features in both spatial and frequency domains. ECL adjusts data sampling weights of each subset of different difficulties during training based on error rate feedback, enabling the model to learn progressively from simple to hard samples. Based on the fused feature, a multi-label classifier finally predicts which tools in the candidates manipulated the given edited image IS.
+
+As presented in Figure 6, our proposed DPEC is a fine-grained attribution framework to figure out the involvement of editing tools in a facial image, consisting of the Patchwise Feature Enhancement (PFE) module and the Error-based Curriculum Learning (ECL) strategy. The PFE module is designed to extract distinguishable, locality-aware features generated by different editing tools patch by patch from both spatial and frequency domains, while the ECL strategy enables the model to progressively learn to capture individual characteristics of different tools, starting from easy samples undergoing fewer editing steps to hard samples that underwent more editing steps, by adaptively adjusting the proportion of easy and hard samples based on error feedback. 
+
+4.2. Patchwise Feature Enhancement 
+
+Based on the findings from Q2 and Q3 in Sec. 3.4, the PFE module is designed to select distinctive patches with the most discriminative features for different editing tools, via patch-level feature co-attention across both spatial and frequency domains. This mechanism enables position-aware patch selection, feature extraction, and dual-domain feature enhancement, all tailored to the characteristics of each editing tool, to effectively capture both intra- and inter-patch features. Formally, given an input image Is ∈ RH×W×C, we apply Slide-Window DCT (SWDCT) (Qian et al., 2020) with window size h × w and step d to obtain If :
+
+If = {If1 , If2 , ⋯, IfN } SWDCT 
+
+←−−−−− Is, (5) where Ifi ∈ Rh×w×C denotes the DCT coefficients of the i-th patch, and N = ( H−hd + 1) × ( W−wd + 1). Then, we extract spatial features Fs and frequency features Ff from Is and If using two separate backbones. Considering 
+
+inter-tool commutativity. The order prediction could be a future research direction. 
+
+> 10 Multi-Tool Image Editing Attribution in Facial Forgery
+
+the different editing intensities across facial regions, we add learnable position encoding to flattened Fs and 
+
+Ff to enhance the position awareness of features, denoted as Fsp and Ff p , respectively. The cross attention is computed in two directions: spatial features attending to frequency features and vice versa. Thus, the output features of PFE F′ 
+
+> s
+
+and F′ 
+
+> f
+
+are updated as: Attn (Q, K, V) = softmax ( QK ⊤
+
+√dk
+
+) V, (6) 
+
+F′ 
+
+> s
+
+= Fs + Reshape (Attn (QFsp , KFf p , VFf p )) , (7) 
+
+F′ 
+
+> f
+
+= Ff + Reshape (Attn (QFf p , KFsp , VFsp )) , (8) where QF, KF, and VF denote query, key, and value projections of F, and dk is the dimension of the key vectors. 
+
+4.3. Error-Based Curriculum Learning 
+
+Based on the observation from Q4 that simply increasing the number of editing steps will not affect the edited perceptual distance linearly, we apply an Error-Based Curriculum Learning (ECL) strategy to progres-sively train the model from easy samples (small number of editing steps with more clean traces) to hard samples (large number of editing steps with more non-linearly mixed effects) by adjusting the proportion of easy and hard samples based on error feedback. Specifically, we first divide the training dataset into 
+
+M subsets according to the number of editing steps, where subset Si contains images edited with i steps. During training, we maintain a dynamic sampling weight P = {p1, ⋯, pM} over these subsets. At the end of each epoch, based on validation performance, we compute the error rate ei for each subset Si. To adjust sampling probability, we follow the Self-Paced Learning (SPL) (Jiang et al., 2015) methodology and apply the polynomial soft weighting strategy (Gong et al., 2018). Formally, the training objective of the model with SPL regularizer is defined as: 
+
+min  
+
+> w;p∈[0,1 ]N
+
+E(w, p; λ)
+
+> M
+
+∑
+
+> i=1
+
+piei + Q(p; λ). (9) where w denotes model parameters, pi is the weight assigned to the i-th subset (initialized to a uniform distribution), ei is the average error for subset i, and λ refers to the age parameter incremented epoch by epoch. The above learning objective is often optimized with the Alternative Optimization Strategy (Jiang et al., 2015). Based on the error rates ei, we update the sampling probabilities pi for each subset Si as follows. Given the polynomial SPL regularizer set: 
+
+Q = { f (p; λ) = λ ( 1
+
+t
+
+> M
+
+∑
+
+> i=1
+
+pti −
+
+> M
+
+∑
+
+> i=1
+
+pi)»»»»»»»
+
+t > 1} , (10) the closed-form optimal solution for pi can be derived as: 
+
+p∗ 
+
+> i
+
+= {(1 − ei 
+
+> λ
+
+)1/( t−1)
+
+ei < λ,0 ei ≥ λ. (11) 
+
+> 11 Multi-Tool Image Editing Attribution in Facial Forgery
+
+Table 4: Performance of models at different editing steps. Acc-S=Strict Accuracy. Acc-T=Toolwise Accuracy.                                                                                                                                           
+
+> #Editing Step(s) 12345Mean Method Acc-S Acc-T Acc-S Acc-T Acc-S Acc-T Acc-S Acc-T Acc-S Acc-T Acc-S Acc-T ResNet18(He et al., 2016) 0.7982 0.9557 0.7123 0.9344 0.5271 0.8944 0.4096 0.8590 0.3485 0.8444 0.5372 0.8924 ResNet50(He et al., 2016) 0.8889 0.9766 0.8647 0.9715 0.7190 0.9416 0.5967 0.9116 0.5249 0.8941 0.7070 0.9366 Xception(Chollet, 2017) 0.8513 0.9689 0.7008 0.9372 0.5435 0.8995 0.3611 0.8409 0.2567 0.8008 0.5153 0.9061 SwinT(Liu et al., 2021) 0.9444 0.9878 0.8308 0.9646 0.6059 0.9190 0.4224 0.8778 0.3161 0.8537 0.5965 0.9150 F3-Net(Qian et al., 2020) 0.9753 0.9950 0.9524 0.9904 0.9131 0.9826 0.8550 0.9705 0.8094 0.9614 0.8963 0.9790 Qwen3-VL 0.0498 0.6702 0.0561 0.5110 0.0005 0.4788 0.0000 0.4664 0.0000 0.3989 0.0184 0.4864 Qwen3-VL-CLS 0.3990 0.8411 0.1532 0.7402 0.1668 0.7570 0.1700 0.7200 0.1764 0.7331 0.1852 0.7466 NPR(Tan et al., 2024) 0.7731 0.9027 0.3894 0.8537 0.3344 0.8235 0.2145 0.7705 0.2294 0.7684 0.3250 0.8152 FatFormer(Liu et al., 2024) 0.9514 0.9902 0.9070 0.9812 0.8066 0.9608 0.7029 0.9395 0.6108 0.9209 0.7853 0.9564
+> DPEC 0.9938 0.9988 0.9806 0.9961 0.9309 0.9861 0.8918 0.9779 0.8740 0.9742 0.9293 0.9856
+
+p∗ 
+
+> i
+
+decreases with respect to ei and increases with respect to λ. It holds that lim ei →0 p∗ 
+
+> i
+
+= 1, lim ei →∞ p∗ 
+
+> i
+
+= 0,
+
+lim λ→0 p∗ 
+
+> i
+
+= 0, and lim λ→∞ p∗ 
+
+> i
+
+= 1. That is, as the accuracy increases and the training progresses, the ECL strategy will increasingly add hard samples into subsequent training. 
+
+## 5. Experiments 
+
+5.1. Experimental Settings Evaluation Metrics We employ Strict Accuracy (Acc-S) and Toolwise Accuracy (Acc-T) to respectively reflect the sample and tool-level performance. Acc-S measures the accuracy of predicting the exact tools in the image editing process, while Acc-T shows the proportion of correctly identified editing tools. For example, given an image edited by three tools, if the prediction = {1, 0, 1 } and label = {1, 1, 1 }, Acc-S will be 0 and Acc-T will be 0.67. 
+
+Dataset We split MultiEdit into training and test sets in a 9:1 ratio. To avoid potential face ID bias, the original faces of training and testing samples do not overlap. 
+
+Baselines Since no existing models are perfectly tailored for our task, we selected models with widely-used architectures and state-of-the-art methods for image forgery detection and attribution as baselines, including ResNet18 (He et al., 2016), ResNet50 (He et al., 2016), Xception (Chollet, 2017), NPR (Tan et al., 2024), F3-Net (Qian et al., 2020), SwinT (Liu et al., 2021), and FatFormer (Liu et al., 2024). Additionally, we employ vanilla Qwen3-VL-30B (Qwen Team, 2025) for zero-shot inference, and replace its unembedding layer with an MLP classifier (dubbed Qwen3-VL-CLS), so as to evaluate the performance of large vision-language models on this task. 
+
+Implementation Details For PFE, we utilize the first three layers of Xception (Chollet, 2017) as the backbone for dual-domain feature extraction. The SWDCT window size is set to 16 × 16 with a step size of 2. For ECL, we set the number of subsets M = 5 corresponding to images with 1 to 5 editing steps, and use a polynomial SPL regularizer with t = 3. For ECL, the initial sampling weight for each subset is set to 0.2 and the model age parameter λ is initialized to 0.5 and increased by 1 after each epoch. Further details are provided in the supplementary materials. 
+
+> 12 Multi-Tool Image Editing Attribution in Facial Forgery
+
+5.2. Main Results DPEC outperforms all baselines on edited images of all difficulty levels Specifically, DPEC achieves a mean strict accuracy of 92.93% and a mean toolwise accuracy of 98.56%, significantly surpassing the baselines and SOTA methods. Also, its performance on the most difficult cases (5 editing steps) is superior, with 87.40% strict accuracy. This highlights the superiority of DPEC in addressing the challenges posed by multi-tool image editing attribution. Moreover, consistent with the results in (Heo and Woo, 2025), as the number of editing steps increases, all models suffer varying degrees of performance degradation. This is primarily because the traces left by different editing tools on the image overlap and mask each other more severely. Further, methods are tailored to extract features from single-tool edited images and attribute all observed features exclusively to a single tool, naturally restricting their capacity to analyze the complex and cumulative effects. 
+
+5.3. Performance on Binary Detection 
+
+Although DPEC is designed to detect the involvement of editing tools in the post-detection stage, it can also be extended naturally to detect fake images. To evaluate the traditional detection performance, we conducted experiments where we replaced all deepfake-tool-edited images in the training set with images from FF++ and collected the prediction results associated with the deepfake tag among the multi-label prediction outcomes to determine whether the image is fake or not. As shown in Table 5, DPEC achieves performance competitive with those baselines on both FF++ (in-dataset) and Celeb-DF (cross-dataset). This also demonstrates that DPEC can effectively distinguish between real and edited images, which is crucial for practical digital forensics and media authenticity.              
+
+> Table 5: Cross-dataset binary detection performance. For baseline methods, we directly apply binary classification heads after their backbone networks and train the whole model on the respective datasets. For DPEC, we replace all Deepfake-tool-edited images with those from the respective datasets and choose the toolwise prediction result (Deepfake tool) to determine whether the image is fake or not.
+> Model Train On Test Dataset (ACC) FF++ Celeb-DF (Li et al., 2020)
+> ResNet50(He et al., 2016) FF++(Rössler et al., 2019) 0.887 0.615 Xception(Chollet, 2017) 0.919 0.695 F3-Net(Qian et al., 2020) 0.926 0.788 NPR(Tan et al., 2024) 0.925 0.726
+> DPEC 0.922 0.786
+
+5.4. Performance on Compressed Images 
+
+In real-world scenarios, the edited images may be compressed and resized when being uploaded to social media platforms, which can further obscure the traces left by editing tools. To evaluate the robustness of DPEC under such conditions, we apply common compression and resizing operations to the test set and assess the model’s performance. The results show that while there is a decline in accuracy compared to uncompressed images, DPEC still maintains a significant performance advantage over baseline methods, demonstrating its robustness in practical applications. 
+
+> 13 Multi-Tool Image Editing Attribution in Facial Forgery
+
+0 1 2 3 4 5#Editing Steps 
+
+> 0.7 0.8 0.9 1.0
+> Acc-T
+
+Q=100 0 1 2 3 4 5#Editing Steps 
+
+Q=75 0 1 2 3 4 5#Editing Steps 
+
+Q=50 0 1 2 3 4 5#Editing Steps 
+
+Q=25 
+
+> F3-Net NPR DPEC
+
+Figure 7: Performance comparison on compressed images. 
+
+5.5. Ablation Study Module-Level: Effectiveness of PFE and ECL To validate the effectiveness of each component in DPEC, we conduct ablation studies by removing the PFE module, the ECL strategy, or both, respectively. As shown in G1 of Table 6, removing either PFE or ECL results in a significant drop in performance, demonstrating their crucial roles in feature extraction and progressive learning. 
+
+Table 6: Strict accuracies (Acc-S) of DPEC and the ablative variants at the module (G1) and transform (G2) levels. Results with 3 to 5 editing steps are reported for brevity. The model without PFE uses the vanilla backbone for feature extraction. The patch size for image splitting is set to match the sliding window size of SWDCT. 
+
+#Editing Steps 3 4 5DPEC 0.9309 0.8918 0.8740 
+
+G1: Modules w/o PFE 0.9121 0.8325 0.8234 w/o ECL 0.9270 0.8872 0.8568 w/o ECL & PFE 0.8278 0.7968 0.7297 G2: Transforms Patched-DWT 0.8223 0.7857 0.7438 Patched-DCT 0.8875 0.8226 0.8097 
+
+Transform-Level: Effectiveness of SWDCT To assess the impact of SWDCT in the PFE module, we replace it with standard DCT and DWT and evaluate the model’s performance. As shown in G2 of Table 6, the original model that adopts SWDCT outperforms the variants by approximately 14.7% and 7.1%, respectively. This superiority remains consistent across different editing steps, demonstrating that the SWDCT is more effective in providing distinguishable frequency-domain features for MIEA. 
+
+5.6. Further Analysis Impact of the Size of Editing Areas To investigate whether large-area editing operations at the later steps impact the performance, we analyze the performance on the samples with editing lengths of 4 and 5. Based on whether the total editing area in the first/last two steps exceeds 50% of the face region, we categorize them into three groups ( i.e. , large-to-small, large-to-large, and small-to-large) and calculate the respective tool attribution performance. 6 From Table 7, we see that when the large-area editing operation appears in 
+
+> 6Due to tool use limitations, there are no small-to-small samples.
+> 14 Multi-Tool Image Editing Attribution in Facial Forgery
+
+later steps, identifying tools used earlier becomes harder. This is intuitive, as large-area editing operations are more likely to overwrite or obscure the traces left by previous editing tools, making the attribution more challenging. Despite this, our method still outperforms the best baseline F 3-Net with Acc-S = 81.32% on small-to-large samples. 
+
+Table 7: Performance on different subsets. The last row shows the largest performance drop in each column. 
+
+Size of Edited Area Acc-S Acc-T Recall 
+
+First 2 Steps Last 2 Steps Step 1 / 2 Large Small 0.9563 0.9781 0.9970 / 0.9593 Large Large 0.9437 0.9713 0.9834 / 0.9592 Small Large 0.8512 0.9256 0.9107 / 0.9404 
+
+∆(↓) 0.1051 0.0525 0.0873 / 0.0189 
+
+Decisive ROI Visualization To discover which facial regions play a decisive role when attributing different editing tools, we employ Grad-CAM (Selvaraju et al., 2017) to visualize the regions that DPEC focuses on when identifying each editing tool. The visualizations reveal that DPEC effectively attends to relevant facial areas corresponding to the specific edits made by each tool. Also, the ROIs are distinct for different tools, showing the effectiveness of the designed PFE module, selecting the most tool-relevant representative image patches to attribute for each editing tool. However, an interesting observation is that, for some tools like OpenCV, the model probably focuses on non-facial regions such as the neck and hair. The reason could be that the same facial skin regions are also affected by other editing tools, making it challenging to isolate the effect of a single tool solely based on facial areas. Thus, the model may leverage cues from adjacent non-facial regions to enhance attribution accuracy. a) Original b) Edited c) CSD-MT d) SHMT e) OpenCV f) FLUX.1 g) Deepfake    
+
+> Less Acne Less Wrinkle Makeup Makeup Widen Nose Add Lipstick Smooth Skin Even out Tone Slim Face
+> Narrow Eyes Smooth Skin Makeup
+
+Figure 8: Decisive ROI Visualization for Different Editing Tools. The red-highlighted regions indicate the areas that DPEC focuses on when attributing each tool. a) Original images; b) Multi-tool edited images; c)-g) Grad-CAM heatmaps for different editing tools. Editing targets are marked with colored boxes for clarity. 
+
+> 15 Multi-Tool Image Editing Attribution in Facial Forgery
+
+## 6. Conclusion 
+
+In this study, we introduced a new task, Multi-tool Image Editing Attribution, which identifies multiple editing tools involved in single-image editing, making the image editing process more transparent and supporting accountability for image authenticity. We first constructed a 500k-scale dataset, MultiEdit, which covers various combinations based on six editing tools. Motivated by the analysis of MultiEdit, we proposed DPEC, a multi-tool attribution method that consists of two branches that leverage Patchwise Feature Enhancement to effectively learn distinguishable features of individual tools in two domains. Also, we designed an Error-based Curriculum Learning strategy to progressively train the model from easy samples to hard samples to capture the unique and significant tool characteristics in a mixture of editing traces. Extensive experiments showed the superiority of DPEC in multi-tool attribution. In the future, we plan to further explore tool-use sequence prediction and test our method on general natural images. 
+
+## References 
+
+Belhassen Bayar and Matthew C Stamm. 2018. Constrained Convolutional Neural Networks: A New Approach Towards General Purpose Image Manipulation Detection. IEEE Transactions on Information Forensics and Security, 13(11):2691–2706. Stella Bounareli, Christos Tzelepis, Vasileios Argyriou, Ioannis Patras, and Georgios Tzimiropoulos. 2025. Dif-fusionAct: Controllable Diffusion Autoencoder for One-shot Face Reenactment. Preprint, arXiv:2403.17217. Tu Bui, Ning Yu, and John Collomosse. 2022. Repmix: Representation mixing for robust attribution of synthesized images. In European Conference on Computer Vision, pages 146–163. Springer. François Chollet. 2017. Xception: Deep Learning with Depthwise Separable Convolutions. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 1251–1258. Di Cooke, Abigail Edwards, Sophia Barkoff, and Kathryn Kelly. 2024. As Good As A Coin Toss: Human detection of AI-generated images, videos, audio, and audiovisual stimuli. Preprint, arXiv:2403.16760. I.J. Cox, J. Kilian, F.T. Leighton, and T. Shamoon. 1997. Secure spread spectrum watermarking for multimedia. IEEE Transactions on Image Processing, 6(12):1673–1687. Nadiia Davydiuk, Elisha Krieg, Jens Gaitzsch, Patrick M McCall, Günter K Auernhammer, Mu Yang, Joseph B Tracy, Sara Bals, Wolfgang J Parak, Nicholas A Kotov, et al. 2025. The rising danger of AI-generated images in nanomaterials science and what we can do about it. Nature Nanotechnology, pages 1–4. Nicholas Dufour, Arkanath Pathak, Pouya Samangouei, Nikki Hariri, Shashi Deshetti, Andrew Dudfield, Christopher Guess, Pablo Hernández Escayola, Bobby Tran, Mevan Babakar, and Christoph Bregler. 2024. AMMeBa: A Large-Scale Survey and Dataset of Media-Based Misinformation In-The-Wild. Preprint, arXiv:2405.11697. Shreyan Ganguly, Aditya Ganguly, Sk Mohiuddin, Samir Malakar, and Ram Sarkar. 2022. ViXNet: Vision Transformer with Xception Network for deepfakes based video and image forgery detection. Expert Systems with Applications, 210:118423. Maoguo Gong, Hao Li, Deyu Meng, Qiguang Miao, and Jia Liu. 2018. Decomposition-based evolutionary multiobjective optimization to self-paced learning. IEEE Transactions on Evolutionary Computation, 23(2):288–302. 
+
+> 16 Multi-Tool Image Editing Attribution in Facial Forgery
+
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. 2014. Generative Adversarial Nets. In Advances in Neural Information Processing Systems, pages 2672–2680. Sylvain Gugger, Lysandre Debut, Thomas Wolf, Philipp Schmid, Zachary Mueller, Sourab Mangrulkar, Marc Sun, and Benjamin Bossan. 2022. Accelerate: Training and inference at scale made simple, efficient and adaptable. https://github.com/huggingface/accelerate .Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. Deep Residual Learning for Image Recognition. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 770–778. Minji Heo and Simon S. Woo. 2025. FakeChain: Exposing Shallow Cues in Multi-Step Deepfake Detection. In Proceedings of the 34th ACM International Conference on Information and Knowledge Management, CIKM ’25, page 855–866. ACM. Jonathan Ho, Ajay Jain, and Pieter Abbeel. 2020. Denoising Diffusion Probabilistic Models. In Advances in Neural Information Processing Systems, volume 33, pages 6840–6851. Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, Weizhu Chen, et al. 2022. Lora: Low-rank adaptation of large language models. ICLR, 1(2):3. Ziqi Huang, Kelvin C.K. Chan, Yuming Jiang, and Ziwei Liu. 2023. Collaborative Diffusion for Multi-Modal Face Generation and Editing. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. Kaiwen Jiang, Shu-Yu Chen, Feng-Lin Liu, Hongbo Fu, and Lin Gao. 2025. Towards High-Quality and Disentangled Face Editing in a 3D GAN. IEEE Transactions on Pattern Analysis and Machine Intelligence. Lu Jiang, Deyu Meng, Qian Zhao, Shiguang Shan, and Alexander Hauptmann. 2015. Self-paced curriculum learning. In Proceedings of the AAAI Conference on Artificial Intelligence, volume 29. KJ Joseph, Prateksha Udhayanan, Tripti Shukla, Aishwarya Agarwal, Srikrishna Karanam, Koustava Goswami, and Balaji Vasan Srinivasan. 2024. Iterative multi-granular image editing using diffusion models. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision, pages 8107–8116. Black Forest Labs, Stephen Batifol, Andreas Blattmann, Frederic Boesel, Saksham Consul, Cyril Diagne, Tim Dockhorn, Jack English, Zion English, Patrick Esser, Sumith Kulal, Kyle Lacey, Yam Levi, Cheng Li, Dominik Lorenz, Jonas Müller, Dustin Podell, Robin Rombach, Harry Saini, Axel Sauer, and Luke Smith. 2025. FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space. Preprint, arXiv:2506.15742. Yuezun Li, Xin Yang, Pu Sun, Honggang Qi, and Siwei Lyu. 2020. Celeb-DF: A Large-Scale Challenging Dataset for DeepFake Forensics. In 2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 3204–3213. Huan Ling, Karsten Kreis, Daiqing Li, Seung Wook Kim, Antonio Torralba, and Sanja Fidler. 2021. EditGAN: High-Precision Semantic Image Editing. Advances in Neural Information Processing Systems, 34:16331– 16345. 
+
+> 17 Multi-Tool Image Editing Attribution in Facial Forgery
+
+Huan Liu, Zichang Tan, Chuangchuang Tan, Yunchao Wei, Jingdong Wang, and Yao Zhao. 2024. Forgery-aware adaptive transformer for generalizable synthetic image detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 10770–10780. Xuannan Liu, Zekun Li, Peipei Li, Huaibo Huang, Shuhan Xia, Xing Cui, Linzhi Huang, Weihong Deng, and Zhaofeng He. 2025. MMFakeBench: A Mixed-Source Multimodal Misinformation Detection Benchmark for LVLMs. Preprint, arXiv:2406.08772. Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng Zhang, Stephen Lin, and Baining Guo. 2021. Swin transformer: Hierarchical vision transformer using shifted windows. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 10012–10022. Gaël Mahfoudi, Badr Tajini, Florent Retraint, Frederic Morain-Nicolier, Jean Luc Dugelay, and Marc Pic. 2019. DEFACTO: Image and Face Manipulation Dataset. In 2019 27th European Signal Processing Conference, pages 1–5. Daniel Moreira, Aparna Bharati, Joel Brogan, Allan Pinto, Michael Parowski, Kevin W. Bowyer, Patrick J. Flynn, Anderson Rocha, and Walter J. Scheirer. 2018. Image Provenance Analysis at Scale. IEEE Transactions on Image Processing, 27(12):6109–6123. Yuyang Qian, Guojun Yin, Lu Sheng, Zixuan Chen, and Jing Shao. 2020. Thinking in frequency: Face forgery detection by mining frequency-aware clues. In European Conference on Computer Vision, pages 86–103. Springer. Qwen Team. 2025. Qwen3-VL: Sharper Vision, Deeper Thought, Broader Action. Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. 2022. High-resolution image synthesis with latent diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 10684–10695. Andreas Rössler, Davide Cozzolino, Luisa Verdoliva, Christian Riess, Justus Thies, and Matthias Nießner. 2019. FaceForensics++: Learning to Detect Manipulated Facial Images. In International Conference on Computer Vision. Ramprasaath R Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, and Dhruv Batra. 2017. Grad-cam: Visual explanations from deep networks via gradient-based localization. In Proceedings of the IEEE International Conference on Computer Vision, pages 618–626. Himanshu Kumar Singh and Amit Kumar Singh. 2024. Digital Image Watermarking Using Deep Learning. Multimedia Tools and Applications, 83(1):2979–2994. Chris Stokel-Walker. 2023. A Journalist Believes He Was Banned From Midjourney After His AI Images Of Donald Trump Getting Arrested Went Viral. Accessed: 2026-04-01. Zhaoyang Sun, Shengwu Xiong, Yaxiong Chen, Fei Du, Weihua Chen, Fang Wang, and Yi Rong. 2024a. SHMT: Self-supervised Hierarchical Makeup Transfer via Latent Diffusion Models. In Advances in Neural Information Processing Systems. Zhaoyang Sun, Shengwu Xiong, Yaxiong Chen, and Yi Rong. 2024b. Content-Style Decoupling for Unsu-pervised Makeup Transfer without Generating Pseudo Ground Truth. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 
+
+> 18 Multi-Tool Image Editing Attribution in Facial Forgery
+
+Chuangchuang Tan, Yao Zhao, Shikui Wei, Guanghua Gu, Ping Liu, and Yunchao Wei. 2024. Rethinking the Up-Sampling Operations in CNN-based Generative Network for Generalizable Deepfake Detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 28130– 28139. Zhiya Tan, Xin Zhang, and Joey Tianyi Zhou. 2025. Modelship Attribution: Tracing Multi-Stage Manipulations Across Generative Models. Preprint, arXiv:2506.02405. Junke Wang, Zhenxin Li, Chao Zhang, Jingjing Chen, Zuxuan Wu, Larry S Davis, and Yu-Gang Jiang. 2025. Fighting Malicious Media Data: A Survey on Tampering Detection and Deepfake Detection. Proceedings of the IEEE. Sheng-Yu Wang, Oliver Wang, Andrew Owens, Richard Zhang, and Alexei A Efros. 2019. Detecting Pho-toshopped Faces by Scripting Photoshop. In Proceedings of the IEEE/CVF International Conference on Computer Vision, pages 10072–10081. Zhou Wang, Alan C Bovik, Hamid R Sheikh, and Eero P Simoncelli. 2004. Image quality assessment: from error visibility to structural similarity. IEEE Transactions on Image Processing, 13(4):600–612. Mengting Wei, Tuomas Varanka, Yante Li, Xingxun Jiang, Huai-Qian Khor, and Guoying Zhao. 2025. Towards Consistent and Controllable Image Synthesis for Face Editing. Preprint, arXiv:2502.02465. Shiqian Yan, Yuanyuan Han, Xiaoya Fan, and Zhong Wang. 2022. Image Tamper Detection Based on Two-Stream Attention Faster R-CNN. In 2022 7th International Conference on Signal and Image Processing, pages 305–310. IEEE. Zhiyuan Yan, Junyan Ye, Weijia Li, Zilong Huang, Shenghai Yuan, Xiangyang He, Kaiqing Lin, Jun He, Conghui He, and Li Yuan. 2025. GPT-ImgEval: A Comprehensive Benchmark for Diagnosing GPT4o in Image Generation. Preprint, arXiv:2504.02782. Chao Yang and Ser-Nam Lim. 2019. Unconstrained Facial Expression Transfer using Style-based Generator. Preprint, arXiv:1912.06253. Tianyun Yang, Juan Cao, Danding Wang, and Chang Xu. 2025. Model Synthesis for Zero-Shot Model Attribution. IEEE Transactions on Multimedia, pages 1–13. Tianyun Yang, Ziyao Huang, Juan Cao, Lei Li, and Xirong Li. 2022. Deepfake Network Architecture Attribution. In Proceedings of the 36th AAAI Conference on Artificial Intelligence. Tianyun Yang, Danding Wang, Fan Tang, Xinying Zhao, Juan Cao, and Sheng Tang. 2023. Progressive Open Space Expansion for Open-Set Model Attribution. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 15856–15865. Xin Yang, Yuezun Li, Honggang Qi, and Siwei Lyu. 2019. Exposing GAN-synthesized Faces Using Landmark Locations. In Proceedings of the ACM Workshop on Information Hiding and Multimedia Security, page 113–118, New York, NY, USA. Association for Computing Machinery. Yang Ye, Xianyi He, Zongjian Li, Bin Lin, Shenghai Yuan, Zhiyuan Yan, Bohan Hou, and Li Yuan. 2025. ImgEdit: A Unified Image Editing Dataset and Benchmark. In The Thirty-ninth Annual Conference on Neural Information Processing Systems Datasets and Benchmarks Track. 
+
+> 19 Multi-Tool Image Editing Attribution in Facial Forgery
+
+Jialong Zhang, Zhongshu Gu, Jiyong Jang, Hui Wu, Marc Ph Stoecklin, Heqing Huang, and Ian Molloy. 2018a. Protecting Intellectual Property of Deep Neural Networks with Watermarking. In Proceedings of the 2018 Asia Conference on Computer and Communications Security, pages 159–172. Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman, and Oliver Wang. 2018b. The unreasonable effectiveness of deep features as a perceptual metric. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 586–595. Yushu Zhang, Zhibin Fu, Shuren Qi, Mingfu Xue, Xiaochun Cao, and Yong Xiang. 2023. PS-net: A learning strategy for accurately exposing the professional photoshop inpainting. IEEE Transactions on Neural Networks and Learning Systems, 35(10):13874–13886. Wenliang Zhao, Yongming Rao, Weikang Shi, Zuyan Liu, Jie Zhou, and Jiwen Lu. 2023. DiffSwap: High-Fidelity and Controllable Face Swapping via 3D-Aware Masked Diffusion. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 8568–8577. Zijun Zhou, Yingying Deng, Xiangyu He, Weiming Dong, and Fan Tang. 2025. Multi-turn consistent image editing. In Proceedings of the IEEE/CVF International Conference on Computer Vision, pages 15792– 15801. 
+
+> 20 Multi-Tool Image Editing Attribution in Facial Forgery
+
+## Supplementary Material 
+
+We organize our supplementary material as follows: Sec. A Limitations and Future Work Sec. B Implementation Details: 
+
+• Sec. B.1 Details of using Qwen3-VL as an edit judge • Sec. B.2 Details of the DPEC design • Sec. B.3 Details of the training process 
+
+Sec. C Edited Image Cases Sec. D Additional Analysis: 
+
+• Sec. D.1 Key hyperparameter sensitivity • Sec. D.2 Failure case analysis • Sec. D.3 Attempt at sequence recovery 
+
+## A. Discussion on Limitations and Future Work 
+
+To address the potential attribution issue brought by the recent transition from single-tool image generation or editing using GANs and diffusion to multi-tool image editing, we constructed the infrastructure for multi-tool image editing attribution in this paper by formulating the task, building a large-scale multi-tool-edited image dataset, implementing nine baselines, and providing a new method. Our work could be regarded as an extension of deepfake detection and attribution to catch up with the recent progress on generative AI, and also a type of sister work of the conventional image provenance analysis that finds images that provide materials for a manipulated one (Moreira et al., 2018). Despite this, as a preliminary study, we identify the following limitations: 
+
+1) The dataset does not consider general-purpose image editing. Although the latest image editing tools are capable of general editing, the MultiEdit dataset only considers human face editing. We focus on face samples because face editing is of high frequency, often related to multiple edits, and has been used to fabricate fake news about celebrities multiple times. This would make our dataset more aligned with real-world cases. We also admit that this could bring some convenience to our analysis due to the constraints of human facial structure. We plan to extend the dataset to edited images in general domains. 
+
+2) We did not perform tool-use order-level predictions. We formulate the task as a multi-label classification task regardless of the tool-use order. During our research, we made an initial attempt but finally put this aside as no reasonable results were observed (will show in Sec. D.3). We speculate that the effects of each editing tool may partially follow commutativity and thus be indistinguishable in terms of the order. Further experiments on the feasibility of order prediction and its impact on set-level prediction are worth deeper exploration, and we leave it to future work. 
+
+3) We mainly follow a closed-set setting that limits the attribution models’ extensibility. Following the research line of deepfake attribution (Yang et al., 2022, 2023, 2025), we start with a fundamental closed-set setting, i.e., the attribution model can only attribute the editing of an image to pre-set editing tool candidates. For an image edited by an unseen tool, the model cannot provide a reliable prediction. After validating the attribution possibility through this work, we plan to extend the closed-set setting to an open-set one, making it more applicable to complex real-world scenarios. 
+
+> 21 Multi-Tool Image Editing Attribution in Facial Forgery
+
+## B. Implementation Details 
+
+B.1. Qwen3-VL Evaluation Instructions 
+
+To determine whether a specific editing operation has been successfully applied to an image, we use Qwen3-VL to assess the success of the editing, as stated in Section 3.2. The instruction template employed is shown in Figure S1 below. We further conducted manual sampling verification to assess Qwen3-VL’s competence for this task. Results indicate over 90% consistency between Qwen3-VL’s judgments and human evaluations, confirming its suitability as a reliable identifier. Now, you are an image editing effect evaluation expert, and please help me complete the following task: You will be given: 1. Original image (Image 1) 2. Edited image (Image 2) 3. Description of the editing target. e.g., Add blush to the man, enlarge the eyes of the person, etc.] Please compare Image 1 and Image 2, focusing on checking whether the above-mentioned editing operation has been successfully and accurately applied to the image. The criteria for your judgment are: whether the changes described in the editing target are clearly and completely presented in Image 2 and conform to the core target of the operation ( if the editing target is partially implemented, incorrectly implemented, or not implemented at all, it shall be deemed as a failure ). PLEASE OUTPUT A SINGLE KEY:VALUE PAIR IN STRICT JSON FORMAT, DO NOT OUTPUT ANY OTHER INFORMATION!!!! The key is result , value is Success or Fail. Two output examples are given below: {result: "Success" }{result: "Fail" } 
+
+> Figure S1: Prompt template for Qwen3-VL-based image editing effect evaluation
+
+B.2. Details of DPEC Design 
+
+DPEC mainly incorporates two modules: Patchwise feature enhancement (PFE) and Error-based Curriculum Learning (ECL) training strategy, shown in Section 4 of the main text. For the PFE module, we apply Slide-Window Cosine Discrete Transform (SWDCT) to transform the input image from the spatial to frequency domain. And a window size of 16 ×16 and a step size of 2 were employed in the sliding window process. In the cross attention process, the number of heads is set to 8, and the hidden size in cross attention dk is set to 768. For ECL, we set the order t of the polynomial in Equation (9) to 3 and the age parameter in Equation (10) is initially set to 0.5, and is incremented by 1 after each training epoch. 
+
+B.3. Details of Training Process 
+
+In all training processes, we use the Accelerate library (Gugger et al., 2022) for distributed training, and the learning rate is initialized to 3e-4. And we apply a hybrid learning rate scheduling strategy that combines linear warmup and cosine annealing. During the warmup phase (when the current step is less than the warmup steps), the learning rate increases linearly with the number of steps. The scaling factor is calculated as (T+1) 
+
+> T0
+
+, where T and T0 denote current epoch and warmup epochs, respectively. After the warmup phase, the learning rate decays following a cosine annealing pattern. First, the progress is calculated as the ratio of 
+
+> 22 Multi-Tool Image Editing Attribution in Facial Forgery
+
+the steps elapsed since warmup to the total remaining steps after warmup (ranging from 0 to 1). Then, a cosine-based decay curve is generated using the formula W = 0.5 ∗ (1 + cos (π ∗ T − T0)/( Tall − T0)) , where 
+
+Tall refers to total training epochs. Finally, the decay factor W ∗ 0.99 + 0.01 is applied multiplicatively to the optimizer’s initial learning rates. For Qwen3-VL and Qwen3-VL-CLS models, we select the Qwen3-VL-30B (Qwen Team, 2025) as the base model and use the instruction in Figure S2 for zero-shot inference and training. In the training process of Qwen3-VL-CLS, we apply the low-rank approximation (LoRA) (Hu et al., 2022) to train both text and image encoders and use binary cross-entropy loss for the multi-label classification loss. Now, you are an expert forensic image analysis assistant. For each user image you must assess evidence that any of the following digital image generation or editing tools contributed to the final image: The CANDIDATE TOOLS are Deepfake, GAN, SD, OpenCV, and DiT Definitions: Deepfake=face swap/manipulation pipeline; GAN=generative adversarial network based synthesis/refinement; SD=Stable Diffusion text2image/image2image; OPENCV=classical image processing (filters, geometric, color ops); DIT=Diffusion transformer based synthesis/refinement. Decision rule: Evaluate each tool independently; output 1 only if there are concrete visual cues strongly suggesting that tool’s involvement (artifacts, blending seams, texture patterns, lighting inconsistencies, diffusion noise fingerprints, classical filter traces). If uncertain, output 0. Output MUST be a single compact JSON object with keys exactly: detected-tools (array of strings with positive tools in canonical order); binary (object mapping each tool to 0/1); confidence (object mapping each tool to float in [0,1]); reason (short concise English explanation referencing visual cues). " All 5 tools must appear in binary and confidence. Confidence must have at most 3 decimals. NO EXTRA COMMENTARY OUTSIDE JSON!!!!  
+
+> Figure S2: Prompt template for Qwen3-VL-based attribution
+
+## C. Edited Image Cases 
+
+Figures S3 and S4 exhibit samples in MultiEdit. During image editing, we select 40 images in total as reference images for the tools CSD-MT and SHMT. More edited samples are provided in the supplementary material. In some cases, the image edited with multiple tools may feature relatively heavy makeup, resembling stage makeup rather than everyday looks. Because the task evaluation should consider more diverse scenarios, not limited to daily natural looks, we retained these samples for the sake of data diversity. 
+
+> 23 Multi-Tool Image Editing Attribution in Facial Forgery
+
+a) Original b) Step1 c) Step2 d) Step3 e) Step4 
+
+Figure S3: Multi-tool edited examples on real faces. 
+
+## D. Additional Analysis 
+
+D.1. Results on Hyperparameter Sensitivity 
+
+We conducted ablation studies on the key operation and hyperparameters of PFE and ECL, and the results are shown in Table S1. It illustrates that our method exhibits a certain degree of hyperparameter insensitivity. Models deviating from the optimal hyperparameter still maintain high performance on images edited by more than two tools. 
+
+D.2. Failure Case Analysis 
+
+Figure S5 depicts a group of sequentially edited images that DPEC failed to detect some of the editing tools. In this sequential editing process, the traces of the preceding small-area editing tools are obfuscated by later 
+
+> 24 Multi-Tool Image Editing Attribution in Facial Forgery
+
+a) Original c) Step2 d) Step3 g) Step5 e) Step4 b) Step1:DF  
+
+> Figure S4: Multi-tool edited examples on deepfake faces.
+
+large-area edits, resulting in missed detection on preceding editing tools. This is somewhat aligned with the results in Table 6 of the main text that the size of the pixel-level differences between two consecutive edited images would influence the detectability of the traces left by previous tools. 
+
+D.3. An Attempt at Tool-Use Sequence Recovery 
+
+As we stated in the main text, we formulate multi-tool image attribution as a multi-label classification task regardless of the tool-use order. That is, we perform a set-level attribution rather than a sequence-level one. In this section, we made a preliminary attempt at sequence-level attribution ( i.e. , tool-use sequence recovery for an edited image) to know whether the editing order is predictable (or whether the tool-use does not hold commutativity). Unlike previous work modeling this task as an autoregressive prediction task, since images 
+
+> 25 Multi-Tool Image Editing Attribution in Facial Forgery
+
+Table S1: Ablation on hyperparameters selection in DPEC. Slide Window Step = Size × Ratio. The row in red means the best hyperparameters and corresponding performances. 
+
+Module Params. # Editing Steps 
+
+3 4 5SWDCT Size;Ratio 8×8;1/8 0.8832 0.7832 0.7256 8×8;1/4 0.8798 0.7796 0.7185 8×8;1/2 0.8837 0.8012 0.7115 16 ×16;1/8 0.9309 0.8918 0.8740 16 ×16;1/4 0.9387 0.8848 0.8675 16 ×16;1/2 0.9247 0.8564 0.8703 32 ×32;1/8 0.9198 0.8756 0.8564 32 ×32;1/4 0.9227 0.8530 0.8501 32 ×32;1/2 0.9017 0.8534 0.8567 64 ×64;1/8 0.8917 0.8321 0.8032 64 ×64;1/4 0.8546 0.8062 0.8042 64 ×64;1/2 0.8347 0.7865 0.7564 ECL Increase rate of λ
+
+0.5 0.9423 0.8716 0.8392 1.0 0.9309 0.8918 0.8740 1.5 0.9323 0.8716 0.8692 2.0 0.9218 0.8567 0.8548 2.5 0.9134 0.8874 0.8632 CSD-MT 
+
+Whiten Face 
+
+OpenCV 
+
+Enlarge Nose 
+
+SHMT 
+
+Makeup 
+
+FLUX.1 
+
+Makeup 
+
+Deepfake 
+
+Swap Face 
+
+Original 
+
+Mask Difference Detected Tools Deepfake Deepfake CSD-MT Deepfake OpenCV CSD-MT Deepfake CSD-MT SHMT CSD-MT SHMT FLUX.1 
+
+Missing Tools -- -- -- OpenCV OpenCV Deepfake 
+
+Figure S5: A failure case where some tools are in editing process but not detected. The missed tools are in red. 
+
+> 26 Multi-Tool Image Editing Attribution in Facial Forgery
+
+are exhibited as static media and thus non-sequential inherently, we change the output of the model DPEC to 
+
+M =
+
+⎡⎢⎢⎢⎢⎢⎢⎢⎣[0 0 ⋯ 1 0]
+
+⋮ ⋮ ⋱ ⋮ ⋮
+
+[1 0 ⋯ 0 0]⎤⎥⎥⎥⎥⎥⎥⎥⎦N×T
+
+, (S1) where N denotes the maximum editing steps and T denotes the total number of used editing tools. M[i, j] = 1
+
+means that the model predicts Tool j is used at the i-th editing step. For evaluation, we apply a sequence-level exact match score (EM) that requires both the tool set and order to be correct. The model achieves 1.67% in EM on the images edited by 5 tools and 12.64% in EM on average among all test samples. These results show that the tool-use sequence recovery is difficult for the current model, and further exploration is expected.

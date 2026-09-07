@@ -1,0 +1,498 @@
+Title: Few-Shot Video Recognition via Hierarchical Metric Learning
+
+URL Source: https://arxiv.org/pdf/2609.05242v1
+
+Published Time: Mon, 07 Sep 2026 01:07:34 GMT
+
+Number of Pages: 11
+
+Markdown Content:
+# Few-Shot Video Recognition via Hierarchical Metric Learning 
+
+Jiaxin Zhang, Haoran Gao, Xizhan Gao*, Zihao Dong, Tingwei Wang, Sijie Niu 
+
+School of Information Science and Engineering, University of Jinan, Shandong, China Corresponding Author: Xizhan Gao. Email: ise gaoxz@ujn.edu.cn 
+
+Abstract —Few-shot action recognition (FSAR) aims to rec-ognize unseen action categories with only a small number of annotated video samples. Recent works typically apply single-prototype supervision at the network output and fail to suffi-ciently exploit rich cross-frame global spatial information in videos. Even existing multi-level metric schemes only impose parallel prototype constraints on intermediate layers, without progressive supervision along the full feature pipeline, which results in limited generalization ability of the learned class prototypes. Inspired by this, we present a novel method, hierarchical metric learning for few-shot action recognition (HML-FSAR). First, a spatial-enhanced module is developed to capture cross-frame global spatial representations. Com-bined with temporal MHA, heterogeneous alignment, spatial-temporal feature fusion and dictionary learning modules, it constructs the complete feature processing pipeline. Second, a hierarchical metric learning (HML) strategy is embedded into HML-FSAR. Composed of center metric, alignment metric, contrastive metric, dictionary metric and prototype metric, HML imposes progressive multi-stage complemen-tary constraints from frame-level representations to final class prototypes, so as to jointly optimize feature compact-ness, heterogeneous spatial-temporal alignment, inter-class discriminability and anti-noise robustness. The proposed HML-FSAR method is validated on five widely-used FSAR datasets, and experimental results fully demonstrate its effectiveness. 
+
+Index Terms —Few-shot learning; Action recognition; Hier-archical metric learning; Spatial-enhanced feature learning. 
+
+I. I NTRODUCTION 
+
+Action recognition aims to automatically identify hu-man actions from video sequences. It has attracted exten-sive attention due to its wide applications in intelligent surveillance, human–computer interaction, autonomous driving, video retrieval, and healthcare [1], [2]. Compared with image recognition, video action recognition requires models to simultaneously understand spatial appearance and temporal dynamics, making it considerably more challenging. Although recent deep learning methods have achieved remarkable success with large-scale annotated datasets [2]–[4], collecting sufficient labeled videos is expensive and time-consuming. Therefore, few-shot action recognition (FSAR) has become an important research topic [5], [6]. Spatial enhanced 
+
+> Query Set
+> Support Set Spatial-temporal feature extractor query Class prototypes
+> Wrong Match
+> Feature fusion Dictionary Learning Prototype metric
+> Right Match
+> Prototype Learning
+> Hierarchical Metric Learning
+> (a) Existing methods (b) Ours
+> Spatial-temporal feature extractor Prototype Learning Prototype metric
+
+Fig. 1: Comparison between existing FSAR methods and our HML-FSAR. (a) Existing methods employ only a single prototype metric at the top layer of the network and fail to fully exploit the rich spatial information contained in videos, resulting in poor separability between class prototypes and further leading to misclassification. (b) In contrast, our method introduces a spatial-enhanced branch to boost the discriminative ability of spatial-temporal features, and leverages hierarchical metric learning to optimize the prototype feature learning process in mul-tiple stages for obtaining class prototypes with stronger separability, thus achieving more accurate FSAR. FSAR mostly adopts the metric-based meta-learning paradigm. Through episodic training, videos from the support set and query set are mapped into a unified fea-ture embedding space, and predictions for novel-category samples are made according to feature similarity (see Fig. 1 (a)). Within this framework, the discriminability and generalization ability of class prototypes play a critical role in recognition performance. To obtain prototype features with superior discriminability and generalization perfor-mance, existing studies are mainly conducted along two research lines: spatial-temporal feature learning and metric learning. Spatial-temporal feature learning methods focus on designing high-performance spatial-temporal feature extraction networks, such as TARN [7], ProtoGAN [8], arXiv:2609.05242v1 [cs.CV] 4 Sep 2026 GgHM [9], TSAM [10], SFAR [11] and DiST [12]. They cover diverse implementations built upon CNN, Trans-former, and pre-trained vision-language models. Although these methods have achieved promising progress, most of them mine temporal information upon frame-level local spatial features, or adopt two-branch networks to learn spatial and temporal features separately. The spatial rep-resentations they capture are restricted to local informa-tion within individual frames and ignore the benefits of cross-frame global spatial features for action recognition. In contrast, metric learning based methods tend to devise diverse metric losses to regularize the learning of spatial-temporal features, such as OTAM [5], MbFSL [13], PEAG [14], HCL [15], and MML-FSAR [16]. However, some of these methods [5], [13] adopt only a single prototype metric at the network output to guide model parameter updates. Since supervision signals are imposed merely on the final output, intermediate-layer features can only be updated indirectly via back-propagation. Such a paradigm tends to drive the network to overemphasize the discriminability of high-level representations, while early intermediate features lack explicit constraints. Con-sequently, high-level features acquire certain discrimina-tive power yet suffer from limited generalization perfor-mance. To tackle this issue, several studies have introduced multi-level metric learning [14]–[16], which relocates pro-totype losses to multiple intermediate layers of the net-work. Nevertheless, such schemes are essentially variants of mutually-independent multi-layer prototype metrics that only apply parallel prototype constraints to outputs at different layers. They not only introduce extra compu-tational overhead but also lack progressive relationships among different layers. Hence they cannot fundamentally optimize the evolution of the feature pipeline and merely supplement high-level representations with middle- and low-level features, which hardly improves the general-ization ability of prototypes. We argue that ideal class prototype features should possess both discriminability and generalization capacity. Therefore, supervision should not be limited to the final network output. Instead, explicit progressive constraints should be imposed on the entire feature pipeline from frame-level to video-level early stage feature learning. To address the above limitations, a novel end-to-end model named hierarchical metric learning for few-shot action recognition (HML-FSAR) is proposed. On the one hand, a spatial-enhanced (SE) module is designed to exploit cross-frame global spatial representations, com-pensating for the deficiency of frame-local spatial rep-resentations. This module, together with temporal MHA (TMHA), heterogeneous alignment (HA), spatial-temporal feature fusion (STFF) and dictionary learning (DL) mod-ules, forms the network architecture of HML-FSAR. On the other hand, the hierarchical metric learning (HML) strategy is embedded in HML-FSAR. It consists of center metric, alignment metric, contrastive metric, dic-tionary metric, and prototype metric, which progres-sively supervise feature learning along the whole fea-ture propagation pipeline from frame-level representations to final class prototypes. Specifically, the center metric constrains intra-video frame-level feature compactness, the alignment metric eliminates heterogeneity gaps be-tween spatial-enhanced and temporal features, the con-trastive metric improves inter-class discriminability of fused spatial-temporal representations, and the dictionary metric suppresses feature noise and mitigates prototype drift under limited labeled samples. Extensive experiments demonstrate the superiority of our proposed method. The main contributions of this paper are summarized as follows:  
+
+> •
+
+A spatial-enhanced module is proposed to mine cross-frame global spatial representations for videos. It alleviates the limitation that existing approaches only exploit local spatial information within individ-ual frames, and enriches spatial representations for few-shot action recognition.  
+
+> •
+
+A novel hierarchical metric learning (HML) strat-egy is proposed. Unlike existing parallel multi-layer prototype metrics, it applies progressive complemen-tary constraints (center, alignment, contrastive, and dictionary metrics) across the full feature pipeline to improve feature compactness, alignment, discrim-inability and robustness.  
+
+> •
+
+An end-to-end model termed HML-FSAR is con-structed, which integrates the above-mentioned HML strategy, along with our newly-designed SE, TMHA, HA, STFF and DL modules. Extensive experiments demonstrate its overall effectiveness on five standard benchmarks. The rest of this paper is organized as follows. Section II reviews related work. Section III elaborates the details of our proposed HML-FSAR method. Section IV presents experimental results and analysis. Finally, Section V con-cludes this work. II. R ELATED WORK 
+
+A. Few-shot Image Classification 
+
+Few-shot image classification aims to recognize novel categories with only a small number of labeled images. Existing few-shot image classification methods can be divided into three categories: data augmentation based methods, meta-learning based methods, and metric learn-ing based methods. Data augmentation based methods gen-erate additional training samples to alleviate the problem of data scarcity. For example, Wu et al. proposed the MPA [17] method, which leverages large language models to generate diverse paraphrased category descriptions and enriches the support set with supplementary semantic cues. Pintelas et al. proposed the AdaptAugment [18] frame-work, which adaptively expands few-shot training samples by performing targeted image augmentation on the most hard-to-recognize samples. Meta-learning based methods focus on learning transferable prior knowledge from meta-training episodes. MAML [19] is one of the most representative meta-learning based methods. It learns a well-suited parameter initialization, enabling the model to rapidly adapt to new tasks with only a few gradient-update steps on the support set. To tackle the training-instability drawback of MAML, Antoniou et al. [20] proposed the MAML++ model, which mitigates instability in MAML’s optimization phase by improving the gradient propagation process. Metric learning based methods map samples into an embedding space and perform recognition according to feature similarity. The prototypical network [21] serves as one of the most classic baselines in this field. It learns a prototype for each category in the embedding space and obtains category predictions based on the minimum dis-tance between query samples and these prototypes. Cheng et al. [22] proposed the LPN method, which leverages the complementarity between visual and language modalities through two parallel branches to realize few-shot image classification. Although these approaches achieve promising perfor-mance on image tasks, they cannot be directly applied to video-based action recognition, since videos contain complex temporal dynamics and cross-frame spatial de-pendencies. 
+
+B. Few-shot Action Recognition 
+
+Different from the aforementioned few-shot image classification methods, few-shot action recognition deals with more complex 3-dimensional video data instead of 2-dimensional images. Most existing FSAR methods adopt the metric based meta-learning paradigm. They first learn spatial-temporal feature vectors from action videos and project them into an embedding space. Afterwards, prototype learning is conducted within this embedding space to construct class prototypes for classification. These methods can be further divided into spatial-temporal fea-ture learning methods and metric learning based methods. Spatial-temporal feature learning methods focus on de-signing high-performance spatial-temporal feature extrac-tion networks. For instance, TARN [7] employs the C3D network to extract spatial features and utilizes bidirectional GRU to capture temporal features for obtaining videos’ spatial-temporal representations. TSAM [10] introduces a sequence-aware adapter to fuse spatial information and temporal dynamics into feature embeddings, aiming to produce more discriminative feature representations for video actions. DiST [12] aligns frame-level spatial features with spatial descriptive texts and cross-frame temporal features with temporal descriptive texts, so as to construct feature representations with rich spatial-temporal seman-tics. The metric learning based FSAR methods tend to devise diverse metric losses to regularize the learning of spatial-temporal features. For example, to alleviate match-ing errors caused by video temporal misalignment, OTAM [5] introduces a temporal alignment loss at the top of the network to replace the original prototype loss. To address the problem that high-level features possess strong dis-criminability yet poor generalization performance, Zheng et al. [16] proposed the MML-FSAR method. It extracts features from multiple stages of CLIP and learns dedicated similarity metrics for features at each level, leveraging the complementary properties of features across different abstraction levels to optimize few-shot matching. Although the above methods have achieved promising progress, there is still room for further improvement in spatial-temporal feature modeling and feature metric learn-ing. Motivated by this observation, this paper proposes the HML-FSAR method. III. M ETHOD 
+
+Few-shot action recognition aims to classify video samples from novel action categories using only a few annotated support samples. Following the standard episode learning paradigm, a dataset is divided into a meta-training set Dtrain and a meta-testing set Dtest with disjoint action classes, i.e. , Dtrain ∩D test = ∅. In each training iteration, an 
+
+N -way K-shot episode is sampled from Dtrain , consisting of a support set S = {(Si, y i)}N ·Ki=1 with K labeled videos per class across N categories, and a query set 
+
+Q = {Qj }Mj=1 for evaluation, where Si = [ s1 
+
+> i
+
+, · · · , s Ti ]
+
+denotes the i-th support video, which contains T frames; 
+
+Qj = [ q1 
+
+> j
+
+, · · · , q Tj ] represents the j-th query video. The objective is to construct a generalizable feature represen-tation space where intra-class samples cluster tightly while inter-class boundaries remain clear and separable. 
+
+A. Overall Framework of HML-FSAR 
+
+As shown in Fig. 2, to learn more accurate proto-type features, we first designed a novel HML-FSAR model, which consists of a feature extractor (FE) mod-ule, a spatial-enhanced (SE) module, a temporal MHA (TMHA) module, a heterogeneous alignment (HA) mod-ule, a spatial-temporal feature fusion (STFF) module, and a dictionary learning (DL) module. More specifically, the FE module is built upon apre-trained MAE network to extract frame-level features from videos. The SE module contains two SPDNet layers [23] to learn video-level spatial representations. Stacked with three temporal Transformer blocks, the TMHA mod-ule captures preliminary spatial-temporal (PST) features. The HA module employs two parallel MLP layers to project heterogeneous spatial-temporal features into ashared feature space. As a two-layer Transformer block, the STFF module achieves feature fusion through the self-attention mechanism. The DL module utilizes two successive MLP layers to eliminate interfering components Spatial-enhanced  
+
+> : Fused video features : Class prototypes
+
+Hierarchical Metric Learning 
+
+> Spatial-temporal Fusion
+
+Temporal MHA 
+
+> Query Set
+> Support Set
+
+Feature Extractor  
+
+> shared Frame-level
+> features
+> Video-level Spatial-temporal Feature Learning
+> SPDNet
+> Heterogeneous
+> Alignment
+
+Dictionary 
+
+Learning 
+
+> shared
+
+Dictionary Learning 
+
+> Prototype Learning Query Vector Prototype Loss
+
+Feature Extractor        
+
+> Center loss
+> Center Metric Alignment Metric Contrastive Metric Dictionary Metric Prototype Metric
+> Contrastive loss Align loss Dictionary loss
+> Prototypes
+> Query : Frame features : Spatial/Temporal features : Pull/Push
+
+Fig. 2: Overview of the proposed HML-FSAR method. Top : Given input support/query videos, the feature extractor first outputs frame-level features, and SE and TMHA modules are then adopted in parallel to learn video-level global spatial features and preliminary spatial-temporal features, respectively. Highly discriminative video-level features are obtained via HA, STFF and DL modules, followed by prototype learning to generate class prototypes for FSAR. Bottom :Hierarchical metric learning, composed of center metric, alignment metric, contrastive metric, dictionary metric and prototype metric, imposes multi-level metric constraints to progressively refine feature representations throughout the above pipeline. in fused features and enhance the discriminability and generalization performance of features. The input support/query video is first fed into the FE, SE and TMHA modules to extract spatial-temporal representations, followed by heterogeneous alignment and self-attention based feature fusion. After that, the dictio-nary learning module further refines the fused features for subsequent prototype generation. Nevertheless, relying solely on the prototype metric constraint applied merely to final embeddings will limit the model’s ability to learn well-separated action prototypes under few-shot settings. To alleviate the above issues, this paper introduces a hier-archical metric learning strategy consisting of the center metric, alignment metric, contrastive metric, dictionary metric and prototype metric, which imposes complemen-tary metric constraints at multiple intermediate stages of feature propagation. Specifically, the center metric is ap-plied to frame-level features to pull sample frames within the same video close to each other, mitigate intra-video diversity, and reduce the learning difficulty of subsequent video-level features. The alignment metric constrains en-hanced spatial features and preliminary spatial-temporal features to eliminate feature discrepancies between them, laying a foundation for discriminative fused features. The contrastive metric acts on fused spatial-temporal features to guarantee their discriminative power. The dictionary metric imposes constraints on features after contrastive metric supervision to suppress outliers and noise, improve model robustness, and alleviate over-fitting. Finally, the prototype metric ensures the discriminative capability of class prototypes. 
+
+B. Hierarchical Metric Learning 1) Center Metric: The input support video Si and query video Qj are first fed into the FE module to extract frame-level video features: 
+
+F si = [ f s, 1 
+
+> i
+
+, · · · , f s,T i ] = MAE( Si),F qj = [ f q, 1 
+
+> j
+
+, · · · , f q,T j ] = MAE( Qj ), (1) where MAE denotes the pre-trained FE module, f s,k i ∈
+
+Rd, (k = 1 , · · · , T ) denotes the frame-level feature, i.e., the [cls ] token, of the k-th frame from the i-th support video, d means the dimension of the feature. f q,k j ∈ Rd
+
+has a similar definition. It is worth noting that to avoid redundant descriptions, all subsequent modules and metric constraints adopt identical network parameters and com-putation pipelines for both support and query samples. In what follows, we do not distinguish between support and query samples, and the subscript i denotes any input video. Due to temporal redundancy and cluttered backgrounds, features of different frames within the same video fluctuate under the influence of shooting viewpoints, motion ampli-tudes and background noise, thereby triggering remarkable intra-video diversity. Without constraints on this issue, the discriminative capability of subsequent video-level features will be degraded. To address this issue, we adopt the following center loss to enhance the compactness of frame-level features within each video after obtaining frame-wise representations, which facilitates the subse-quent learning of video-level features: 
+
+Lcenter = 1
+
+T
+
+> T
+
+X
+
+> k=1
+
+f ki − μi 
+
+> 22
+
+, (2) where normalized f ki = f ki   
+
+> ∥fki∥2
+
+denotes the k-th frame-level feature of the i-th video (either support or query video), and μi denotes the feature center of the i-th video, which is formulated as follows: 
+
+μi = 1
+
+T
+
+> T
+
+X
+
+> k=1
+
+f ki . (3) As illustrated in the bottom-left of Fig. 2, the center metric encourages features from frames within the same video to cluster closely, which indirectly enlarges the feature distance between different videos. 
+
+2) Alignment Metric: After obtaining frame-level fea-tures, conventional methods generally adopt temporal Transformers to extract spatial-temporal features of videos. However, the spatial features yielded in this way are only local representations within individual frames and cannot capture video-level global spatial characteristics. To address this limitation, we design a parallel SE module to mine cross-frame video-level spatial information and generate spatial-enhanced features, which compensates for the deficiency of the temporal branch in global spatial modeling. Specifically, we adopt the covariance matrix 
+
+Ci ∈ Rd×d of each frame-level feature to construct video-level spatial representations: 
+
+Ci = 1
+
+T − 1
+
+> T
+
+X
+
+> k=1
+
+(f ki − μi)( f ki − μi)T + ϵI d, (4) where ϵI d is a perturbation term to ensure that Ci is a strictly symmetric positive definite (SPD) matrix. Because an SPD matrix resides on a Riemannian manifold, a two-layer SPDNet architecture [23] is employed to project Ci
+
+into a compact spatial feature matrix ¯Ci = SPDNet (Ci) ∈
+
+Rd2×d2 , where d2 × d2 denotes the spatial embedding dimension. To obtain PST feature, we introduce a learnable se-quence token [Seq ] and construct the input sequence of the TMHA module as [Seq, F si ]. Then TMHA outputs: 
+
+Vi = TMHA([ Seq, F si ]) , (5) and the PST feature can be obtained as vi = ( Vi)0 ∈ Rd3 .Since the enhanced-spatial feature ¯Ci ∈ Rd2×d2 (de-rived from a Riemannian manifold) and PST feature vi ∈
+
+Rd3 (derived from Euclidean space) lie in heterogeneous embedding spaces, they cannot be fused directly. To solve this problem, we design the HA module, which can be regarded as a pair of kernel functions ϕs(·) and ϕt(·), to project them into a shared Euclidean space Rd4 . That is 
+
+¯ci = ϕs( ¯Ci) ∈ Rd4 ,
+
+¯vi = ϕt(vi) ∈ Rd4 . (6) Then, ¯ci and ¯vi are normalized via ¯ci = ¯ci 
+
+> ∥¯ci∥2
+
+, ¯vi = ¯vi 
+
+> ∥¯vi∥2
+
+.To guarantee the alignment performance of the HA module and narrow the representation gap between spa-tial features ¯Ci and PST features vi, we design an alignment metric, which consists of two components: an instance-level alignment term and a distribution-level [24] alignment term: 
+
+Lalign = 1
+
+B
+
+> B
+
+X
+
+> i=1
+
+(1 − ¯cTi ¯vi) + λ
+
+4d24
+
+∥Cspa − Ctem ∥2 
+
+> F
+
+,
+
+(7) where B denotes the batch size, Cspa =
+
+> 1
+> B−1
+
+PBi=1 ¯ci ¯cTi ∈ Rd4×d4 and Ctem =
+
+> 1
+> B−1
+
+PBi=1 ¯vi ¯vTi ∈ Rd4×d4 represent the mini-batch second-order moment matrices, respectively, and λ is a balancing hyperparameter. The first term in Eq. (7) is the instance-level alignment term, which constrains the two types of features corresponding to the same video to be as close as possible in the shared space. The second term is the distribution-level alignment term, which is used to align the global distributions of spatial and temporal features under the mini-batch samples. 
+
+3) Contrastive Metric: Once aligned in the shared latent space Rd4 , the projected enhanced-spatial feature 
+
+¯ci and PST feature ¯vi are concatenated with a learn-able fusion token rfusion ∈ Rd4 to construct a sequence 
+
+[rfusion , ¯ci, ¯vi]. This sequence is fed into the STFF module to yield the fused spatial-temporal feature: 
+
+ri = STFF([ rfusion , ¯ci, ¯vi]) ∈ Rd4 . (8) Under the few-shot action recognition setting, training samples are scarce. The fused features obtained merely through spatial-temporal feature alignment and fusion are prone to inter-class feature confusion. To this end, we introduce the contrastive metric to reduce the feature distance between samples of the same action and enlarge the feature distance among samples from different actions, thereby enhancing the discriminative performance of fused representations. The contrastive metric is formulated as: 
+
+Lcontrast = yij ∥ri − rj ∥22 + (1 − yij ) max(0 , h − ∥ ri − rj ∥22),
+
+(9) where rj ∈ Rd4 denotes the fused feature of the j-th video 
+
+j, yij ∈ { 0, 1} is a binary indicator denoting whether video i and video j belong to the same category ( yij = 1 if yi =
+
+yj and 0 otherwise), and h > 0 represents a predefined distance threshold. 
+
+4) Dictionary Metric: In FSAR scenarios, each action class contains only a small number of samples. Mean-while, affected by background interference, viewpoint variations and other factors, the videos’ fused features often contain redundant noise. If class prototypes are directly generated by averaging these limited samples, estimation bias is very likely to be introduced, which causes prototype drift and ultimately degrades the accuracy of metric matching. To address this issue, this section designs a DL module together with a dictionary metric constraint. Within this module, sample reconstruction is employed to filter out noisy feature components, so as to provide high-quality features with less noise and stronger robustness for subsequent prototype learning. More specifically, for the fused video-level feature ri,an analysis dictionary matrix P ∈ RD×d4 and a synthesis dictionary matrix U ∈ Rd4×D (parameterized as bias-free linear layers, where D denotes number of dictionary atoms) are used to compute a dictionary code αi ∈ RD
+
+and a purified reconstructed feature ˆri ∈ Rd4 :
+
+αi = ReLU (P r i) ∈ RD ,
+
+ˆri = U α i = U · ReLU (P r i) ∈ Rd4 , (10) where ReLU (·) denotes the rectified linear unit activation function. To guarantee reconstruction quality and enhance the dis-criminative capability of dictionary codes, the dictionary metric constraint is formulated as follows: 
+
+Ldict = Lrecon + λ1G1 + λ2G2, (11) where λ1, λ 2 are hyperparameter weights balancing differ-ent constraints. The three loss terms are defined as follows. 
+
+Reconstruction Loss Lrecon :
+
+Lrecon = 1
+
+Bd 4
+
+> B
+
+X
+
+> i=1
+
+∥ˆri − sg [ri]∥22, (12) where sg [·] denotes the stop-gradient operation to stabilize dictionary parameter learning, ensuring that gradient only goes through ˆri during back-propagation. 
+
+Discriminative Code Constraint G1:
+
+G1 = 1
+
+|C| 
+
+X
+
+> c∈C
+
+1
+
+|Ωc|
+
+X
+
+> i∈Ωc
+
+∥αi − μc∥22
+
+!
+
+− 0.1
+
+|C| 2
+
+X
+
+> c,c ′∈C
+
+∥μc − μc′ ∥2,
+
+(13) where C denotes the set of action categories in the episode, 
+
+|C| = N is the total number of categories, Ωc is the set of sample indices belonging to class c, |Ωc| is the number of samples in class c, and μc = 1
+
+> |Ωc|
+
+P 
+
+> i∈Ωc
+
+αi ∈ RD
+
+represents the mean dictionary code for class c.
+
+Dictionary Orthogonality Constraint G2:
+
+G2 = ∥P P T − ID ∥2 
+
+> F
+
+, (14) where ID ∈ RD×D is the identity matrix, and ∥ · ∥ F
+
+denotes the Frobenius norm. 
+
+5) Prototype Metric: Finally, the prototype metric is adopted to generate class prototypes and perform few-shot video action classification. Specifically, using the purified feature representations ˆri, class prototypes gc ∈ Rd4
+
+for the c-th class are generated by averaging support embeddings in the support subset Sc:
+
+gc = 1
+
+K
+
+X
+
+> i∈S c
+
+ˆri, (15) where Sc denotes the subset of support samples belonging to class c, and K denotes the number of support videos per class. For the j-th query video Qj ∈ Q with ground-truth class label yqj , the video is fed into the proposed feature extraction and dictionary learning pipeline to obtain the purified reconstructed feature qj = ˆ rqj ∈ Rd4 . Then the prototype metric is formulated as: 
+
+Lprot = − 1
+
+M
+
+> M
+
+X
+
+> j=1
+
+"
+
+τ · cos( qj , g yqj )−
+
+log 
+
+> N
+
+X
+
+> c=1
+
+exp( τ · cos( qj , g c)) 
+
+#
+
+,
+
+(16) where M denotes the total number of query samples in the episode and τ > 0 is a learnable temperature scaling parameter. 
+
+C. Network Optimization 
+
+The proposed HML-FSAR method is trained in an end-to-end manner. The overall multi-objective loss func-tion Ltotal combines the main prototype loss with auxiliary losses, including center, alignment, contrastive, and dictio-nary losses: 
+
+Ltotal = Lprot + β1Lcenter + β2Lalign 
+
++ β3Lcontrast + β4Ldict , (17) where β1, β 2, β 3, and β4 are balancing hyperparameters controlling the relative trade-offs among the auxiliary loss constraints. IV. E XPERIMENTS 
+
+A. Experimental Settings 
+
+Datasets. We evaluate the proposed method on five widely used few-shot action recognition benchmarks, in-cluding HMDB51 [25], UCF101 [26], Kinetics [2], SSv2-Full and SSv2-Small, both of which are constructed from the Something-Something V2 dataset [27]. Among them, HMDB51, UCF101, and Kinetics primarily emphasize scene-level semantic understanding, whereas SSv2 re-quires stronger temporal modeling capability because the recognition of many actions mainly depends on motion cues rather than object appearance. For HMDB51 and UCF101, we follow the few-shot split protocol adopted in literature [5], where the numbers of training, validation, and test classes are 31/10/10 and 70/10/21, respectively. For Kinetics, we adopt the subset split strategy following literature [28], which divides the classes into 64/12/24 for training, validation, and test-ing. For SSv2-Full and SSv2-Small, both benchmarks are constructed by selecting 100 classes from the origi-nal Something-Something V2 dataset [27], with 64/12/24 classes used for training, validation, and testing, respec-tively. Compared with SSv2-Small, SSv2-Full contains more than ten times more training videos per class. 
+
+Implementation Details. All experiments are con-ducted on an NVIDIA RTX 3090 GPU. During training, the model is trained for 10,000 episodes on HMDB51, UCF101, and Kinetics, while 60,000 episodes are used for SSv2-Full and SSv2-Small because these datasets require stronger temporal modeling. The learning rate is uniformly set to 1 × 10 −5 for all experiments. During testing, 10,000 episodes are sampled on every dataset to ensure stable and reliable evaluation. 
+
+B. Comparison with Various Methods 
+
+To verify the effectiveness of the proposed method, we compare its performance with state-of-the-art approaches on five datasets, and the results are reported in Table I. As can be seen from the table, the proposed method achieves superior performance under the vast majority of evaluation settings. Notably, consistent and prominent performance improvements are obtained under the 5-shot setting on all five datasets, which fully demonstrates the effectiveness of our approach for few-shot action recogni-tion. Specifically, our method achieves 71 .2% /86 .1% on HMDB51, 93 .5% /99 .2% on UCF101, and 86 .0% /96 .5% 
+
+on Kinetics under the 1-shot/5-shot settings, respectively, outperforming previous state-of-the-art methods in most cases. These results indicate that the proposed method is capable of learning discriminative action representations and exhibits strong generalization ability across datasets with different scales and visual characteristics. On the more temporally challenging SSv2 benchmarks, our method also achieves the best overall performance, ob-taining 52 .0% /66 .7% on SSv2-Small and 58 .3% /73 .2% 
+
+on SSv2-Full under the 1-shot/5-shot settings. Compared with the previous state-of-the-art method TEAM, our method improves the performance by 4.8% and 3.6% 
+
+on SSv2-Small. Compared with MVP-Shot, our method improves the accuracy by 9.1% under 5-shot settings on SSv2-Full dataset, demonstrating its superior capability in modeling fine-grained temporal dynamics. The perfor-mance gains mainly stem from our proposed hierarchical metric learning strategy. It imposes multi-layer metric constraints on video features to optimize intra-class com-pactness and inter-class separability in the feature space. Faced with limited training samples, these hierarchical constraints can guide the network to learn more dis-criminative video representations and effectively improve the generalization ability of the model, thus achieving excellent performance for few-shot action recognition. In addition, compared with methods based on the pre-trained vision-language model CLIP (CLIP-FSAR, MVP-Shot), our method still achieves performance advan-tages. Under the 5-shot setting, the proposed model obtains higher recognition accuracy across all five datasets; under the 1-shot setting, our method is also highly competitive. This result demonstrates that for the few-shot action recog-nition task, the hierarchical metric learning strategy can mine more discriminative spatial-temporal features, thus effectively improving the generalization performance of the model and achieving recognition capability comparable to or even better than those cross-modal image-text-based competitors. 
+
+C. Ablation Study 
+
+To dissect the working mechanism of each design in our HML-FSAR method, we conduct a set of ablation experiments for quantitative analysis. First, we verify the effectiveness of key components and metric strategies via module ablation and comparisons among different metric schemes. Then, we explore the performance variations caused by different input frame numbers and various few-shot settings. Finally, we carry out hyperparameter sensitivity experiments to analyze the robustness of the model with respect to key hyperparameters. 
+
+1) Influence of Different Metric Learning Strategies :
+
+To verify the effectiveness of our hierarchical metric learning strategy, we conduct ablation comparisons over different metric schemes while keeping the backbone network unchanged. In this group of experiments, we incrementally add each metric constraint, and the results are reported in Table II. When only the prototype metric is employed, features lack explicit constraints for the internal frame distribu-tion within each video. Performance improves notably after adding the center metric, which demonstrates that the center metric can effectively reduce the dispersion of frame-wise features inside a single video and pro-mote feature aggregation. On this basis, the alignment metric further narrows the distribution offset between spatial and temporal features and achieves better fusion of spatial-temporal representations. The introduction of the contrastive metric enhances inter-class discrimination. Finally, the dictionary metric improves feature robustness under limited training samples, and our full hierarchical multi-metric scheme achieves the best performance. TABLE I: Performance comparison against state-of-the-art methods on five FSAR benchmarks.                                                                                                                                                                                                                      
+
+> Method Reference HMDB51 UCF101 Kinetics SSv2-Small SSv2-Full 1-shot 5-shot 1-shot 5-shot 1-shot 5-shot 1-shot 5-shot 1-shot 5-shot ProtoNet [21] NeurIPS’17 54.2 68.4 74.0 89.6 64.5 77.9 ––––CMN [29] ECCV’18 ––57.3 76.0 34.4 43.8 36.2 48.9 ––OTAM [5] CVPR’20 54.5 68.0 79.9 88.9 73.0 85.8 ––42.8 52.3 AMeFu-Net [30] MM’20 60.2 75.5 85.1 95.5 74.1 86.8 ––––TARN [7] ECCV’20 45.5 60.6 66.3 83.1 63.7 82.4 ––––TRX [31] CVPR’21 –75.6 –96.1 63.6 85.9 –59.1 –64.6 SRPN [32] MM’21 61.6 76.2 86.5 95.8 75.2 87.1 ––––HyRSM [28] CVPR’22 60.3 76.0 83.9 94.7 73.7 86.1 40.6 56.1 54.3 69.0 MTFAN [33] CVPR’22 59.0 74.6 84.8 95.1 74.6 87.4 ––45.8 60.4 TA2N+Sampler [34] AAAI’22 59.9 73.5 83.5 96.0 73.6 86.2 ––47.1 61.6 MoLo [35] CVPR’23 60.8 77.4 86.0 95.5 74.0 85.6 41.9 56.2 55.0 69.6 MGCSM [36] MM’23 61.3 79.3 86.5 97.1 74.2 88.2 ––––SA-CT [37] MM’23 60.4 78.3 85.4 96.4 71.9 87.1 ––48.9 69.1 CLIP-FSAR [38] IJCV’24 69.2 80.3 91.3 97.0 87.6 91.9 51.5 57.1 58.1 62.8 CCLN [39] TIP’24 65.1 78.8 86.9 96.1 75.8 87.5 46.0 61.3 ––MVP-Shot [40] TMM’25 72.5 82.5 92.2 97.6 90.0 93.2 51.2 57.0 59.9 64.1 TEAM [41] CVPR’25 70.9 85.5 94.5 98.8 83.3 92.9 47.2 63.1 ––
+> Ours –71.2 86.1 93.5 99.2 86.0 96.5 52.0 66.7 58.3 73.2
+
+TABLE II: Ablation study on different metric learning strategies.                               
+
+> Setting Prototype Center Alignment Contrastive Dictionary Kinetics Metric Metric Metric Metric Metric (a) ✓83.7 (b) ✓✓83.9 (c) ✓✓✓84.1 (d) ✓✓✓✓85.3 (e) ✓✓✓✓✓86.0
+
+TABLE III: Ablation study on different components. S, T, F, and D denote the SE module, TMHA module, HA+STFF module, and DL module, respectively.                             
+
+> Setting STFDKinetics SSv2-small (a) 80.0 43.1 (b) ✓81.8 45.3 (c) ✓83.6 48.9 (d) ✓✓✓83.9 50.3 (e) ✓80.7 44.2 (f) ✓✓✓✓86.0 52.0
+
+TABLE IV: Effect of the number of selected frames.                  
+
+> Selected Frames Kinetics SSv2-small 1-shot 5-shot 1-shot 5-shot 482.8 91.3 47.3 62.7 885.1 93.7 51.2 64.3 16 86.0 96.5 52.0 66.7
+
+These results indicate that each metric constraint plays its own complementary role and is not redundant. The cen-ter metric optimizes intra-sample feature aggregation, the alignment metric calibrates heterogeneous spatio-temporal features, the contrastive metric enlarges inter-class mar-gins, and the dictionary metric stabilizes feature repre-sentations in few-shot scenarios. Continuous performance improvements are obtained by stacking these metrics layer-by-layer, which verifies the rationality and necessity of the proposed hierarchical multi-metric method. 
+
+2) Ablation on Key Components : Table III reports the contribution of each proposed module. Without intro-ducing any additional modules (Setting (a)), the baseline achieves 80 .0% and 43 .1% accuracy on Kinetics and SSv2-small datasets, respectively. Incorporating the SE module (Setting (b)) improves the performance to 81 .8% 
+
+and 45 .3% , demonstrating that the cross-frame global spatial features can provide complementary discriminative information for local frame-level spatial features. Using only the TMHA module (Setting (c)) further improves the accuracy to 83 .6% on Kinetics and 48 .9% on SSv2-small, indicating the importance of temporal dynamics for few-shot action recognition. When the SE, TMHA, HA and STFF modules are jointly employed (Setting (d)), the accuracy is further improved to 83 .9% and 50 .3% , confirming that spatial and temporal representations provide complementary informa-tion. Although the DL module alone (Setting (e)) achieves only limited improvement, incorporating it into the com-plete method (Setting (f)) further boosts the performance to 86 .0% on Kinetics and 52 .0% on SSv2-small. These results demonstrate that all proposed modules complement each other and jointly contribute to more discriminative and robust video representations. 
+
+3) Effect of the Number of Selected Frames : Table IV presents the influence of the number of sampled frames on model performance. As the number of sampled frames in-creases from 4 to 16, the recognition accuracy consistently improves on both Kinetics and SSv2-small. Specifically, on Kinetics, the performance increases from 82 .8% /91 .3% 
+
+to 86 .0% /96 .5% under the 1-shot/5-shot settings, while on SSv2-small, the corresponding accuracy improves from 
+
+47 .3% /62 .7% to 52 .0% /66 .7% . These results indicate that richer temporal observations enable the proposed method to capture more complete motion patterns and long-range (a) Different shot settings (b) Different way settings 
+
+Fig. 3: Performance under different few-shot settings on the Kinetics dataset: (a) 5-way with varying-shot settings, (b) 1-shot with varying-way settings. 0.01 0.05 0.1 0.5 185.90 85.95 86.00 86.05 86.10 86.15 86.20 86.25 86.30 86.35 1-shot Accuracy (%) 
+
+> 86.02 86.11 86.00 86.13 86.22
+> Kinetics
+> 1-shot 5-shot 96.48 96.50 96.52 96.54 96.56 96.58 96.60 96.62 96.64 5-shot Accuracy (%)
+> 96.58 96.56 96.51 96.55 96.59
+
+(a) Varying λ0.01 0.05 0.1 0.5 1.0      
+
+> 10.01 0.05 0.1 0.5 1.0
+> 2
+> 84.0 84.5 85.0 85.5 86.0 86.5 87.0
+> Accuracy (%)
+> Sensitivity analysis of hyper parameters 1and 2
+
+(b) Varying ( λ1, λ2)
+
+Fig. 4: Parameter sensitivity analysis on the Kinetics dataset: (a) Varying parameter λ; (b) Varying combinations of (λ1, λ 2).0.01 0.05 0.1 0.5 1.0     
+
+> 10.01 0.05 0.1 0.5 1.0
+> 2
+> 79 80 81 82 83 84 85 86 87
+> Accuracy (%)
+> Sensitivity analysis of hyper parameters 1and 2
+
+(a) Varying ( β1, β2)0.01 0.05 0.1 0.5 1.0      
+
+> 30.01 0.05 0.1 0.5 1.0
+> 4
+> 79 80 81 82 83 84 85 86 87
+> Accuracy (%)
+> Sensitivity analysis of hyper parameters 3and 4
+
+(b) Varying ( β3, β4)
+
+Fig. 5: Parameter sensitivity analysis on the Kinetics dataset: (a) Varying combinations of (β1, β 2); (b) Varying combinations of (β3, β 4).temporal dependencies. Therefore, a default setting of 16 
+
+sampled frames is adopted in all subsequent experiments. 
+
+4) Effect of Different Few-shot Settings : To evaluate the robustness of the proposed method under different few-shot task configurations, we further investigate the influence of the number of support samples and the number of action categories on recognition performance. The corresponding results are illustrated in Fig. 3, where Fig. 3a reports the performance under different shot set-tings with the number of classes fixed to 5-way, while Fig. 3b presents the results under different way settings with the number of support samples fixed to 1-shot. As shown in Fig. 3a, the recognition accuracy steadily increases from 86.0% to 96.5% as the number of support samples grows from 1-shot to 5-shot, demonstrating that additional support samples provide more reliable class prototypes and reduce the adverse effects of intra-class variations. Conversely, Fig. 3b shows that the recognition accuracy gradually decreases from 86.0% to 77.2% as the number of categories increases from 5-way to 10-way under the fixed 1-shot setting. This performance degradation is expected because distinguishing among more candidate classes becomes increasingly difficult with extremely limited supervision. Nevertheless, the proposed method maintains relatively stable performance across different task settings, demonstrating its strong robustness and generalization ability in few-shot action recognition. 
+
+5) Hyperparameter Sensitivity Analysis : In Eqs. (7), (11) and (17), we introduce seven hyper-parameters, i.e., 
+
+λ, λ1, λ2, β1, β2, β3, and β4, whose values affect the performance of the proposed method. To investigate their impact, we conduct parameter-sensitivity analysis experi-ments in this section. As shown in Fig. 4a, the proposed method is insensitive to the hyper-parameter λ. Although the recognition accu-racy under both 1-shot and 5-shot settings exhibits slight fluctuations with the increase of λ, the overall perfor-mance remains stable. As shown in Fig. 4b, the accuracy fluctuates slightly within the search range of [0 .01 , 1] ,which demonstrates that our model is insensitive to the two hyper-parameters. Specifically, the best performance is achieved at λ1 = 0.1 and λ2 = 0.01 , while the lowest accuracy occurs under the extreme combination 
+
+(λ1 = 0.01 , λ 2 = 1.0) . This indicates that these two hyper-parameters exert limited influence on the final per-formance as long as extreme values are avoided. As shown in Fig. 5, we further investigate the influence of different loss weighting coefficients on the proposed method. Overall, the proposed method exhibits stable performance over a relatively wide range of parameter values. The highest recognition accuracy is consistently achieved when all loss weights are set to 0.1, indicating that a balanced optimization among center loss, alignment loss, contrastive loss, and dictionary loss is beneficial for learning discriminative video representations. When the loss weights are excessively small, the corresponding supervision signals become insufficient, whereas overly large weights tend to dominate the optimization process and slightly reduce the recognition accuracy. 
+
+D. Visualization 
+
+To further evaluate the discriminative capability of the learned video representations, we visualize the feature dis-tributions of five action classes from the UCF101 dataset using t-SNE, as shown in Fig. 6. Fig. 6a illustrates the initial feature distribution extracted by the MAE backbone. Although samples from several classes exhibit coarse grouping patterns, significant overlap and dispersion still exist among different categories, indicating that the back-bone features alone are insufficient to distinguish visually similar actions under the few-shot setting. (a) FE module (b) SE module (c) TMHA module (d) STFF module (e) Ours 
+
+Fig. 6: t-SNE visualization of feature representations learned by different modules on UCF101. Fig. 6b presents the feature distribution after the SE module. Compared with the initial representations, sam-ples belonging to the same class become noticeably more compact, while the inter-class boundaries become clearer. This improvement demonstrates that the SE module ef-fectively captures video-level global spatial information across frames and enhances the discriminability of spatial representations. Fig. 6c shows the representations learned by the TMHA module, the temporal features further improve the separa-tion between action categories, especially for actions with similar appearance but different motion patterns. However, slight overlap between several neighboring classes can still be observed. After heterogeneous spatial-temporal alignment and fea-ture fusion, the learned representations shown in Fig. 6d exhibit significantly improved intra-class compactness and inter-class separability, demonstrating that the proposed feature fusion strategy effectively integrates complemen-tary spatial and temporal information into a unified repre-sentation. Finally, Fig. 6e presents the feature distribution pro-duced by the complete model. Samples from the same class form compact clusters, while different classes are separated by larger margins with minimal overlap. This ob-servation indicates that our proposed modules complement one another, and the hierarchical metric learning strategy helps produce more discriminative feature representations. V. C ONCLUSION 
+
+In this work, we have proposed a hierarchical met-ric learning framework named HML-FSAR for few-shot action recognition. Firstly, we design a spatial-enhanced module to capture cross-frame global spatial representa-tions. On this basis, we specially develop heterogeneous alignment and spatial-temporal feature fusion modules to obtain more discriminative video-level spatial-temporal features, followed by a dictionary learning module to suppress feature noise. Secondly, built upon the learned feature representations, we propose a hierarchical met-ric learning strategy to impose multi-stage complemen-tary constraints for jointly optimizing feature compact-ness, heterogeneous spatial-temporal alignment capabil-ity, inter-class discriminability and anti-noise robustness, which explicitly guides feature learning via elaborate metric constraints. Experimental results demonstrate that our HML-FSAR achieves competitive or state-of-the-art performance on five standard benchmarks. ACKNOWLEDGEMENT 
+
+The work was supported in part by the Shandong Provincial Natural Science Foundation under Grant Nos. ZR2025MS1004, ZR2025QC647; in part by the National Natural Science Foundation of China under Grants Nos. 62101213, 62471202. REFERENCES [1] K. Simonyan and A. Zisserman, “Two-stream convolutional net-works for action recognition in videos,” in Proceedings of the 28th International Conference on Neural Information Processing Systems - Volume 1 , ser. NIPS’14. Cambridge, MA, USA: MIT Press, 2014, p. 568–576. [2] J. Carreira and A. Zisserman, “Quo vadis, action recognition? a new model and the kinetics dataset,” in 2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2017, pp. 4724–4733. [3] G. Bertasius, H. Wang, and L. Torresani, “Is space-time attention all you need for video understanding?” in Proceedings of the 38th International Conference on Machine Learning , vol. 139, 2021, pp. 813–824. [4] Y. Li, C.-Y. Wu, H. Fan, K. Mangalam, B. Xiong, J. Malik, and C. Feichtenhofer, “Mvitv2: Improved multiscale vision transform-ers for classification and detection,” in 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2022, pp. 4794–4804. [5] K. Cao, J. Ji, Z. Cao, C.-Y. Chang, and J. C. Niebles, “Few-shot video classification via temporal alignment,” in 2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,2020, pp. 10 615–10 624. [6] T. Perrett, A. Masullo, T. Burghardt, M. Mirmehdi, and D. Damen, “Temporal-relational crosstransformers for few-shot action recog-nition,” in 2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2021, pp. 475–484. [7] M. Bishay, G. Zoumpourlis, and I. Patras, “Tarn: Temporal attentive relation network for few-shot and zero-shot action recognition,” in       
+
+> BMVC , 2019, p. 154. [8] S. K. Dwivedi, V. Gupta, R. Mitra, S. Ahmed, and A. Jain, “Protogan: Towards few shot learning for action recognition,” 2019 IEEE/CVF International Conference on Computer Vision Workshop (ICCVW) , pp. 1308–1316, 2019. [9] J. Xing, M. Wang, Y. Ruan, B. Chen, Y. Guo, B. Mu, G. Dai, J. Wang, and Y. Liu, “Boosting Few-Shot Action Recognition with Graph-Guided Hybrid Matching,” in International Conference on Computer Vision , 2023, pp. 1740–1750. [10] B. Li, M. Liu, G. Wang, and Y. Yu, “Frame Order Matters: A Tem-poral Sequence-Aware Model for Few-Shot Action Recognition,” in AAAI Conference on Artificial Intelligence , 2025, pp. 18 218– 18 226.
+
+[11] E. Liu, L. Pan, Y. Yang, Y. Zhong, Z. Wu, X. Wu, and L. Liu, “Storyboard-guided alignment for fine-grained video action recog-nition,” in The Thirty-ninth Annual Conference on Neural Informa-tion Processing Systems , 2025. [12] H. Qu, X. Shu, R. Yan, H. Gao, W. Wang, and J. Tang, “Spatio-temporal decoupled knowledge compensator for few-shot action recognition,” IEEE Transactions on Pattern Analysis and Machine Intelligence , vol. 48, pp. 7954–7968, 2026. [13] C. Careaga, B. Hutchinson, N. Hodas, and L. Phillips, “Metric-based few-shot learning for video action recognition,” arXiv: 1909.09602 , 2019. [14] H. Chen, H. Li, Y. Li, and C. Chen, “Multi-level metric learning for few-shot image recognition,” in Artificial Neural Networks and Machine Learning – ICANN 2022: 31st International Conference on Artificial Neural Networks, Bristol, UK, September 6–9, 2022, Proceedings, Part I . Berlin, Heidelberg: Springer-Verlag, 2022, p. 243–254. [15] S. Zheng, S. Chen, and Q. Jin, “Few-shot action recognition with hierarchical matching and contrastive learning,” in Computer Vision – ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23–27, 2022, Proceedings, Part IV . Berlin, Heidelberg: Springer-Verlag, 2022, p. 297–313. [16] S. Zheng, Y. Dang, P. Chen, R. Huan, D. Zhao, R. Liang, and Q. Ke, “Multi-stage metric learning with clip-based adaptation for few-shot action recognition,” IEEE Transactions on Multimedia ,pp. 1–15, 2026. [17] L. Wu, W. Wang, L. Zhao, Z. Gao, Q. Lin, S. Yao, Z. Liu, and B. Pu, “Mpa: Multimodal prototype augmentation for few-shot learning,” in AAAI Conference on Artificial Intelligence , 2026. [18] E. Pintelas, I. E. Livieris, and P. Pintelas, “Adaptive augmentation framework for domain independent few shot learning,” Knowledge-Based Systems , vol. 299, p. 112047, 2024. [19] C. Finn, P. Abbeel, and S. Levine, “Model-agnostic meta-learning for fast adaptation of deep networks,” in Proceedings of the 34th International Conference on Machine Learning - Volume 70 , ser. ICML’17. JMLR.org, 2017, p. 1126–1135. [20] A. Antoniou, H. Edwards, and A. Storkey, “How to train your MAML,” in International Conference on Learning Representations ,2019. [21] J. Snell, K. Swersky, and R. Zemel, “Prototypical networks for few-shot learning,” in Proceedings of the 31st International Conference on Neural Information Processing Systems , ser. NIPS’17. Red Hook, NY, USA: Curran Associates Inc., 2017, p. 4080–4090. [22] K. Cheng, C. Yang, X. Liu, N. Guan, and Z. Wang, “Lpn: Language-guided prototypical network for few-shot classification,” 
+
+IEEE Transactions on Circuits and Systems for Video Technology ,vol. 35, no. 1, pp. 632–642, 2025. [23] Z. Huang and L. V. Gool, “A riemannian network for spd matrix learning,” in Proceedings of the Thirty-First AAAI Conference on Artificial Intelligence , ser. AAAI’17. AAAI Press, 2017, p. 2036–2042. [24] B. Sun, J. Feng, and K. Saenko, “Return of frustratingly easy do-main adaptation,” in Proceedings of the Thirtieth AAAI Conference on Artificial Intelligence , ser. AAAI’16, 2016, p. 2058–2065. [25] H. Kuehne, H. Jhuang, E. Garrote, T. Poggio, and T. Serre, “Hmdb: A large video database for human motion recognition,” in 2011 International Conference on Computer Vision , 2011, pp. 2556– 2563. [26] K. Soomro et al. , “Ucf101: A dataset of 101 human actions classes,” 
+
+CRCV-TR-12-01 , 2012. [27] R. Goyal, S. E. Kahou, V. Michalski, J. Materzynska, S. Westphal, H. Kim, V. Haenel, I. Fruend, P. Yianilos, M. Mueller-Freitag, F. Hoppe, C. Thurau, I. Bax, and R. Memisevic, “The “something something” video database for learning and evaluating visual com-mon sense,” in 2017 IEEE International Conference on Computer Vision (ICCV) , 2017, pp. 5843–5851. [28] X. Wang, S. Zhang, Z. Qing, M. Tang, Z. Zuo, C. Gao, R. Jin, and N. Sang, “Hybrid relation guided set matching for few-shot action recognition,” in 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2022, pp. 19 916–19 925. [29] L. Zhu and Y. Yang, “Compound memory networks for few-shot video classification,” in Computer Vision – ECCV 2018: 15th European Conference, Munich, Germany, September 8–14, 2018, Proceedings, Part VII , 2018, p. 782–797. [30] Y. Fu, L. Zhang, J. Wang, Y. Fu, and Y.-G. Jiang, “Depth guided adaptive meta-fusion network for few-shot video recognition,” in 
+
+Proceedings of the 28th ACM International Conference on Multi-media , 2020, p. 1142–1151. [31] T. Perrett, A. Masullo, T. Burghardt, M. Mirmehdi, and D. Damen, “Temporal-relational crosstransformers for few-shot action recog-nition,” in 2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2021, pp. 475–484. [32] X. Wang, W. Ye, Z. Qi, X. Zhao, G. Wang, Y. Shan, and H. Wang, “Semantic-guided relation propagation network for few-shot action recognition,” in Proceedings of the 29th ACM International Con-ference on Multimedia , 2021, p. 816–825. [33] J. Wu, T. Zhang, Z. Zhang, F. Wu, and Y. Zhang, “Motion-modulated temporal fragment alignment network for few-shot ac-tion recognition,” in 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2022, pp. 9141–9150. [34] S. Li, H. Liu, R. Qian, Y. Li, J. See, M. Fei, X. Yu, and W. Lin, “Ta2n: Two-stage action alignment network for few-shot action recognition,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 36, no. 2, 2022, pp. 1404–1411. [35] X. Wang, S. Zhang, Z. Qing, C. Gao, Y. Zhang, D. Zhao, and N. Sang, “Molo: Motion-augmented long-short contrastive learning for few-shot action recognition,” in 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2023, pp. 18 011–18 021. [36] T. Yu, P. Chen, Y. Dang, R. Huan, and R. Liang, “Multi-speed global contextual subspace matching for few-shot action recogni-tion,” in Proceedings of the 31st ACM International Conference on Multimedia , 2023, p. 2344–2352. [37] Y. Zhang, Y. Fu, X. Ma, L. Qi, J. Chen, Z. Wu, and Y.-G. Jiang, “On the importance of spatial relations for few-shot action recog-nition,” in Proceedings of the 31st ACM international conference on multimedia , 2023, pp. 2243–2251. [38] X. Wang, S. Zhang, J. Cen, C. Gao, Y. Zhang, D. Zhao, and N. Sang, “Clip-guided prototype modulating for few-shot action recognition,” International Journal of Computer Vision , vol. 132, no. 6, pp. 1899–1912, 2024. [39] X. Wang, Y. Yan, H.-M. Hu, B. Li, and H. Wang, “Cross-modal contrastive learning network for few-shot action recognition,” IEEE Transactions on Image Processing , vol. 33, pp. 1257–1271, 2024. [40] H. Qu, R. Yan, X. Shu, H. Gao, P. Huang, and G. Xie, “Mvp-shot: Multi-velocity progressive-alignment framework for few-shot action recognition,” IEEE Transactions on Multimedia , vol. 27, pp. 6593–6605, 2025. [41] S. Lee, W. Moon, H. S. Seong, and J.-P. Heo, “Temporal alignment-free video matching for few-shot action recognition,” in 2025 IEEE/CVF Conference on Computer Vision and Pattern Recogni-tion (CVPR) , 2025, pp. 5412–5421.

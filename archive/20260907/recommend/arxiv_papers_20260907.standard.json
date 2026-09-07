@@ -1,0 +1,404 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-07T22:29:45.428781+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 9,
+    "deep_cap": 6,
+    "deep_selected": 8,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2609.01749v1",
+      "source": "arxiv",
+      "title": "Swin Meets EfficientNet: Lightweight Architectures for GAN-Based Face Forensics",
+      "abstract": "Modern generative models, such as GANs, diffusion architectures, and autoregressive systems, now produce facial images that are nearly indistinguishable from authentic photographs. This capability makes detecting forged images increasingly difficult, raising serious concerns about identity theft, fraud, and misinformation campaigns. Our research focuses specifically on GAN-generated synthetic faces, which underpin many face-centric deepfakes, and investigates efficient detection approaches using image analysis alone. Existing detection systems rely heavily on either convolutional neural networks (CNNs) or global vision transformers. While CNNs excel at identifying texture-based local features, they struggle with broader contextual understanding. Traditional Vision Transformer (ViT) models can capture long-range structures effectively, but demand substantial computational resources. Our work explores Swin-Transformer-based architectures across three implementations: a compact Swin Transformer trained from the ground up, ImageNet-1K pre-trained Swin-Tiny and Swin-Small models adapted for binary classification, and a novel hybrid combining EfficientNet-B0's convolutional processing with a Swin Transformer backend. We evaluated all models using the 140K Real and Fake Faces dataset, which includes StyleGAN-generated fake faces alongside authentic images from Flickr and DFDC, with balanced splits for training, validation, and testing. The EfficientNetB0+Swin hybrid achieved 99% accuracy and a 99.44% recall on 5,000 test images, outperforming both pure Swin variants and a previous CNN-only baseline on this dataset. Our results suggest that combining hierarchical CNN features with shifted-window self-attention provides an efficient and computationally lightweight method for detecting GAN-generated synthetic faces.",
+      "authors": [
+        "Sejuti Basu",
+        "Ashima Sood",
+        "Vijay Kumar",
+        "Sahil Sharma"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-01T18:19:32+00:00",
+      "link": "https://arxiv.org/pdf/2609.01749v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Lightweight CNN-transformer hybrid for GAN face detection",
+      "llm_evidence_cn": "轻量级CNN-Transformer混合模型用于GAN人脸检测",
+      "llm_evidence": "轻量级CNN-Transformer混合模型用于GAN人脸检测",
+      "canonical_evidence": "轻量级CNN-Transformer混合模型用于GAN人脸检测",
+      "llm_tldr_en": "Addresses difficulty of detecting GAN-generated synthetic faces by proposing a lightweight hybrid architecture combining Swin transformer and EfficientNet to capture local texture and global context for face forensics.",
+      "llm_tldr_cn": "针对GAN等生成模型产生的合成人脸几乎与真实照片无法区分、现有检测系统在局部纹理与全局上下文间难以兼顾的问题，本文提出结合Swin Transformer与EfficientNet的轻量级混合架构用于GAN人脸取证。该架构同时利用CNN捕捉局部纹理特征和Transformer建模全局上下文，提升检测性能。实验表明该轻量级方案在GAN生成人脸检测上具有高准确率和效率。该工作为基于GAN的深度伪造检测提供了实用的高效模型。",
+      "llm_tldr": "针对GAN等生成模型产生的合成人脸几乎与真实照片无法区分、现有检测系统在局部纹理与全局上下文间难以兼顾的问题，本文提出结合Swin Transformer与EfficientNet的轻量级混合架构用于GAN人脸取证。该架构同时利用CNN捕捉局部纹理特征和Transformer建模全局上下文，提升检测性能。实验表明该轻量级方案在GAN生成人脸检测上具有高准确率和效率。该工作为基于GAN的深度伪造检测提供了实用的高效模型。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.00742v1",
+      "source": "arxiv",
+      "title": "Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection",
+      "abstract": "As AI video generators achieve cinematic realism, reliable detection becomes essential for safeguarding digital trust. We identify cross-scale coupling mismatch as a new forensic signal, where scale refers to the level of abstraction (semantic dynamics vs. pixel-level residuals): in natural videos, macro-level temporal dynamics and micro-level residual patterns are intrinsically coupled by the unified imaging physics pipeline, whereas AI generators, whose training objectives do not explicitly preserve this joint distribution, systematically violate this coupling. Detecting such mismatch is challenging because it requires independently extracting information at both scales while simultaneously quantifying their cross-scale relationship. We propose RIFT (Representation Inconsistency Forensics on Trajectories), an orthogonal forensic framework that addresses this through three interlocking components: a macro stream that builds a dynamic baseline of expected temporal evolution via differential geometry and persistent homology on learned manifold trajectories, a micro stream that acts as a sensitive forensic probe via steganalytic filtering and temporal modeling, and a coupling divergence module that measures the conditional dependency between the two streams. Gram-Schmidt orthogonality guarantees the information-theoretic validity of this measurement. Experiments on two benchmarks (VidProM, 120K videos, 7 generators; GenVidBench, 68K videos, 4 generators) demonstrate that RIFT achieves 99.33% and 99.72% F1-score respectively, with 97.87% unseen-generator detection rate in leave-one-out evaluation, while exhibiting encoder agnosticism: scaling from ViT-S/14 (22M) to ViT-L/14 (300M) changes F1 by less than 0.1%, and switching to a different encoder family (DINOv1) reduces F1 by only 0.73 pp. Code is available at https://github.com/Litsay/RIFT",
+      "authors": [
+        "Siyu Li",
+        "Jin Yang",
+        "Weiheng Liang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.MM"
+      ],
+      "published": "2026-09-01T05:23:48+00:00",
+      "link": "https://arxiv.org/pdf/2609.00742v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Detects AI-generated videos via cross-scale coupling mismatch",
+      "llm_evidence_cn": "通过跨尺度耦合失配检测AI生成视频",
+      "llm_evidence": "通过跨尺度耦合失配检测AI生成视频",
+      "canonical_evidence": "通过跨尺度耦合失配检测AI生成视频",
+      "llm_tldr_en": "Identifies cross-scale coupling mismatch between semantic dynamics and pixel residuals as a forensic signal for detecting AI-generated videos.",
+      "llm_tldr_cn": "针对AI视频生成器实现电影级逼真度带来的检测挑战，提出跨尺度耦合失配作为新的取证信号：自然视频中宏观动态与微观残差由物理成像耦合，而生成视频违反该耦合。方法独立提取双尺度信息并量化关系。实验证明该方法能有效检测AI生成视频，为数字信任提供保障。",
+      "llm_tldr": "针对AI视频生成器实现电影级逼真度带来的检测挑战，提出跨尺度耦合失配作为新的取证信号：自然视频中宏观动态与微观残差由物理成像耦合，而生成视频违反该耦合。方法独立提取双尺度信息并量化关系。实验证明该方法能有效检测AI生成视频，为数字信任提供保障。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.01511v1",
+      "source": "arxiv",
+      "title": "Benchmarking Spatial, Spectral, and Self-Supervised Cues for Face Forgery Detection under Realistic Degradation",
+      "abstract": "Face forgery detectors often achieve strong results on controlled benchmarks, but their reliability under realistic image degradations remains limited. This paper presents a standardized benchmark for face forgery detection using the Multi-Dimensional Face Forgery Image (MFFI) dataset and evaluates performance on both clean and degraded test partitions. We compare six model families, including convolutional networks, transformer-based models, and a frozen self-supervised DINOv3 backbone, across spatial, spectral, and hybrid input representations. The results show that clean-set performance is not a reliable indicator of robustness under compression, resizing, and blurring. Xception with RGB obtains the best clean performance, reaching 0.884 mean ROC-AUC, but degrades substantially on the harder partition. In contrast, frozen DINOv3 achieves the strongest degraded-set result, with 0.726 mean ROC-AUC, while training only a linear classification head. The representation analysis indicates that Fourier-domain cues are most useful when combined with RGB information, whereas purely spectral inputs consistently underperform spatial representations. Qualitative attribution maps further suggest that convolutional detectors focus on localized artifacts, while DINOv3 relies on broader facial structure. These findings reinforce the need for degraded evaluation protocols and highlight self-supervised visual representations as a promising direction for robust face forgery detection. Our source code is publicly available at https://github.com/lucasdocunha/FaceForgery-Benchmark/.",
+      "authors": [
+        "Lucas Cunha",
+        "Lucas Sotomaior",
+        "Lucas Gasperin",
+        "Beatriz Caldas",
+        "Eduardo Pianovski",
+        "Rayson Laroca"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-01T16:41:55+00:00",
+      "link": "https://arxiv.org/pdf/2609.01511v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmarks face forgery detection under realistic degradation",
+      "llm_evidence_cn": "基准化真实退化下的人脸伪造检测",
+      "llm_evidence": "基准化真实退化下的人脸伪造检测",
+      "canonical_evidence": "基准化真实退化下的人脸伪造检测",
+      "llm_tldr_en": "This paper benchmarks six face forgery detector families under realistic degradations using the MFFI dataset, showing that clean-set performance does not reliably predict robustness under compression, resizing, and blurring.",
+      "llm_tldr_cn": "针对人脸伪造检测器在真实图像退化下可靠性不足的问题，论文基于MFFI数据集建立标准化基准，在干净和退化测试集上评估六类模型，涵盖卷积、Transformer和自监督DINOv3骨干，并比较空间、光谱和混合输入。结果表明干净集性能不可靠，Xception+RGB在干净集最佳，但在退化下表现下降。该工作凸显了评估伪造检测器鲁棒性的重要性。",
+      "llm_tldr": "针对人脸伪造检测器在真实图像退化下可靠性不足的问题，论文基于MFFI数据集建立标准化基准，在干净和退化测试集上评估六类模型，涵盖卷积、Transformer和自监督DINOv3骨干，并比较空间、光谱和混合输入。结果表明干净集性能不可靠，Xception+RGB在干净集最佳，但在退化下表现下降。该工作凸显了评估伪造检测器鲁棒性的重要性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.02640v1",
+      "source": "arxiv",
+      "title": "From Detection to Localization: A Unified Forensics Framework for Fully Synthetic and Tampered Images",
+      "abstract": "The rapid advancement of generative models has significantly worsened the problem of manipulated image detection, as these methods are capable of producing highly realistic forgeries, reinforcing the importance of multimedia forensics. Conventional approaches typically frame image manipulation detection as a binary classification task (real vs. generated), which limits the capability to distinguish and localize different forms of manipulation. To address these constraints, this work extends an existing detector by introducing a unified multiclass framework (real vs. fully generated vs. tampered). In addition to classifying image authenticity, the framework incorporates a segmentation branch to enable pixel-level localization of tampered regions. The proposed approach outperforms selected recent benchmarks, offering an efficient solution with improved classification accuracy and higher IoU scores for the localization task. Find the code at https://github.com/anngal01/From-Detection-to-Localization-A-Unified-Forensics-Framework-for-Fully-Synthetic-and-Tampered-Images.",
+      "authors": [
+        "Annalisa Gallina",
+        "Marco Fiorucci",
+        "Marco Brigo",
+        "Federica Battisti",
+        "Lamberto Ballan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-02T14:16:44+00:00",
+      "link": "https://arxiv.org/pdf/2609.02640v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "unified forensics framework for fully synthetic and tampered images",
+      "llm_evidence_cn": "针对全合成与篡改图像的统一取证框架",
+      "llm_evidence": "针对全合成与篡改图像的统一取证框架",
+      "canonical_evidence": "针对全合成与篡改图像的统一取证框架",
+      "llm_tldr_en": "This work extends an existing detector to a unified multiclass framework that distinguishes real, fully generated, and tampered images, and adds a segmentation branch for pixel-level localization in multimedia forensics.",
+      "llm_tldr_cn": "针对现有图像篡改检测多为二分类、无法区分全生成与篡改的局限，论文提出统一多分类取证框架，区分真实、全生成和篡改图像，并增加分割分支实现像素级定位。该框架扩展了现有检测器，在图像真实性分类与篡改区域定位上提供更细粒度的取证能力，有助于应对生成式模型带来的伪造威胁。",
+      "llm_tldr": "针对现有图像篡改检测多为二分类、无法区分全生成与篡改的局限，论文提出统一多分类取证框架，区分真实、全生成和篡改图像，并增加分割分支实现像素级定位。该框架扩展了现有检测器，在图像真实性分类与篡改区域定位上提供更细粒度的取证能力，有助于应对生成式模型带来的伪造威胁。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.02751v1",
+      "source": "arxiv",
+      "title": "Multi-Tool Image Editing Attribution in Facial Forgery",
+      "abstract": "As generative AI tools become increasingly powerful and easy to use, people can easily edit portrait images with a prompt, necessitating the task of image editing attribution, which predicts the involved editing tools from the given image. Existing attribution methods hold the single-tool assumption and can only attribute a specific editing tool, but struggle to handle the more complex and increasingly common multi-tool editing scenarios, where artifacts left by different editing tools are composite and overlapped. To address this gap, we explore Multi-Tool Image Editing Attribution (MIEA), which aims to identify multiple editing tools involved in a multi-tool edited facial image. To simulate the real-life editing operations on facial images, we then construct a new dataset, MultiEdit, which contains 500k+ edited facial images and covers six types of editing tools that support face swapping (Deepfake) and various facial enhancements. Inspired by the findings from data analysis, we design DPEC, a multi-tool attribution method that can capture distinguishable, locality-aware editing tool traces from both spatial and frequency domains with the support of an error-based curriculum learning strategy. Experiments show \\Method\\ outperforms nine methods for facial images edited in at most five steps.",
+      "authors": [
+        "Sheng Liu",
+        "Qiang Sheng",
+        "Danding Wang",
+        "Yu Li",
+        "Chenming Zhou",
+        "Juan Cao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.MM"
+      ],
+      "published": "2026-09-02T15:51:26+00:00",
+      "link": "https://arxiv.org/pdf/2609.02751v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Multi-tool image editing attribution for facial forgery",
+      "llm_evidence_cn": "面部伪造多工具图像编辑归因",
+      "llm_evidence": "面部伪造多工具图像编辑归因",
+      "canonical_evidence": "面部伪造多工具图像编辑归因",
+      "llm_tldr_en": "Proposes MIEA to identify multiple editing tools in forged facial images, addressing overlapping artifacts; constructs dataset and achieves strong attribution.",
+      "llm_tldr_cn": "针对现有人脸伪造归因方法仅考虑单工具假设的局限，本文提出多工具图像编辑归因任务，构建包含复合伪造操作的数据集，并设计模型同时识别多工具痕迹。实验表明该方法能有效应对多工具叠加场景。研究为人脸伪造取证提供了更细粒度的工具溯源能力，对深伪检测具有重要价值。",
+      "llm_tldr": "针对现有人脸伪造归因方法仅考虑单工具假设的局限，本文提出多工具图像编辑归因任务，构建包含复合伪造操作的数据集，并设计模型同时识别多工具痕迹。实验表明该方法能有效应对多工具叠加场景。研究为人脸伪造取证提供了更细粒度的工具溯源能力，对深伪检测具有重要价值。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.03446v1",
+      "source": "arxiv",
+      "title": "Preserving Knowledge across Space and Time for Continual Video Deepfake Detection",
+      "abstract": "The continuous emergence of high-quality video deepfakes requires detectors that continually adapt to new forgery patterns, yet existing approaches, which are designed for deepfake images, fail to capture video-specific cues. Unlike deepfake images that contain only spatial artifacts, deepfake videos leave distinct evidence along both spatial and temporal axes, necessitating the separate preservation of each modality during sequential model updates. To overcome this limitation, we introduce a continual deepfake video detection framework, Modality-Specific Frequency Distillation (MSFD), that explicitly decomposes video features into spatial, temporal, and spatiotemporal modalities in the frequency domain. This decomposition enables independent preservation of each modality, as different deepfake video types exhibit varying reliance on spatial and temporal cues across tasks. Furthermore, MSFD adopts a cross-modality decorrelation loss that encourages spatiotemporal representations to remain orthogonal to single-modality cues. Extensive experiments show that our framework achieves stronger adaptation and preserves performance more effectively than state-of-the-art methods across diverse continual deepfake video scenarios.",
+      "authors": [
+        "Taehoon Kim",
+        "Jongwook Choi",
+        "Heejae Jo",
+        "Byungmin Park",
+        "Jongwon Choi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-03T07:02:51+00:00",
+      "link": "https://arxiv.org/pdf/2609.03446v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Continual video deepfake detection via modality-specific frequency distillation",
+      "llm_evidence_cn": "通过模态特定频率蒸馏进行持续视频深度伪造检测",
+      "llm_evidence": "通过模态特定频率蒸馏进行持续视频深度伪造检测",
+      "canonical_evidence": "通过模态特定频率蒸馏进行持续视频深度伪造检测",
+      "llm_tldr_en": "Addresses continual video deepfake detection by decomposing features into spatial, temporal, and spatiotemporal modalities in frequency domain and preserving each during updates.",
+      "llm_tldr_cn": "针对现有深度伪造检测忽略视频时空线索和持续适应新伪造模式的问题，提出MSFD框架，在频域将视频特征分解为空间、时间、时空模态并独立保持。实验表明该方法能有效持续检测视频深度伪造，优于图像导向方法。该工作为视频深度伪造检测的持续学习提供了新思路。",
+      "llm_tldr": "针对现有深度伪造检测忽略视频时空线索和持续适应新伪造模式的问题，提出MSFD框架，在频域将视频特征分解为空间、时间、时空模态并独立保持。实验表明该方法能有效持续检测视频深度伪造，优于图像导向方法。该工作为视频深度伪造检测的持续学习提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.04791v1",
+      "source": "arxiv",
+      "title": "An Attention-Guided Global and Local Fusion Framework for Lesion-Focused Image Classification",
+      "abstract": "Lesion-focused image classification presents a core analytical challenge, as discriminative signals are often sparse, spatially dispersed, and easily obscured by background noise, while conventional convolutional neural networks (CNNs) process entire images uniformly and may dilute signal relevance. This study hypothesizes that adaptive fusion of global contextual information and lesion-focused local information can improve classification performance compared with using either representation independently. We propose a three-branch, attention-guided deep learning framework built on Densely Connected Convolutional Network-121 (DenseNet-121) to improve feature attribution, interpretability, and classification reliability. The architecture consists of a global branch that learns representations from full images, followed by Gradient-weighted Class Activation Mapping (Grad-CAM) to generate attention maps that highlight prediction-relevant regions and produce masked inputs, and a local branch enhanced with a Convolutional Block Attention Module (CBAM) to extract refined spatial and channel-wise features from these focused regions. An adaptive fusion branch integrates global and local representations by learning instance-specific weights, allowing dynamic prioritization between contextual and localized information. The framework is evaluated on a synthetic Spot Pattern Dataset (SSPD) and three benchmark datasets, including skin lesion, guava leaf, and grape leaf image datasets, where the fusion branch outperformed the individual global and local branches, reaching 97.75% accuracy on the skin lesion dataset and 99.64% on the guava leaf dataset. The results highlight the value of attention-guided architectures in healthcare analytics by improving model transparency, strengthening feature relevance, and supporting more reliable data-driven decision-making in medical image analysis.",
+      "authors": [
+        "Mst Shafia Tasnima",
+        "Md Samaun Elaheea",
+        "Tanjim Taharat Aurpab",
+        "Md Musfique Anwar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-04T06:36:06+00:00",
+      "link": "https://arxiv.org/pdf/2609.04791v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes attention-guided CNN framework for lesion-focused image classification",
+      "llm_evidence_cn": "提出注意力引导的CNN框架用于病灶聚焦图像分类",
+      "llm_evidence": "提出注意力引导的CNN框架用于病灶聚焦图像分类",
+      "canonical_evidence": "提出注意力引导的CNN框架用于病灶聚焦图像分类",
+      "llm_tldr_en": "An attention-guided three-branch framework on DenseNet-121 fuses global and local features to improve lesion-focused image classification interpretability and reliability.",
+      "llm_tldr_cn": "病灶聚焦图像分类面临判别信号稀疏、分散且易被背景噪声掩盖的问题，传统CNN均匀处理全图会稀释关键特征。本文提出基于DenseNet-121的三分支注意力引导框架，自适应融合全局上下文与病灶局部信息。实验表明该框架相比单独使用全局或局部表示能显著提升分类性能与可解释性。该方法为医学图像分类中关注关键区域提供了有效途径。",
+      "llm_tldr": "病灶聚焦图像分类面临判别信号稀疏、分散且易被背景噪声掩盖的问题，传统CNN均匀处理全图会稀释关键特征。本文提出基于DenseNet-121的三分支注意力引导框架，自适应融合全局上下文与病灶局部信息。实验表明该框架相比单独使用全局或局部表示能显著提升分类性能与可解释性。该方法为医学图像分类中关注关键区域提供了有效途径。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.05320v1",
+      "source": "arxiv",
+      "title": "Adaptive Gated Deepfake Detection for Low-Resolution and Resource-Constrained Environments",
+      "abstract": "Deepfake detection models often rely on high-quality inputs, fixed inference paths, and computationally expensive architectures, limiting their use in low-resolution and resource-constrained settings. This paper proposes AdaGate-DF, an adaptive gated deepfake detection framework that uses image-quality cues to route samples through a dual multi-exit system so high-quality images can exit earlier and save compute. We evaluated AdaGate-DF against MaD-CoRN, DefakeHop++, and ShuffleNetV2 on two benchmark datasets (Celeb-DF and FaceForensics++) under multiple configurations to test image resolution dependence and training and inference efficiency. On Celeb-DF, AdaGate-DF achieves an AUC of 0.9370, outperforming MaD-CoRN and DefakeHop++ while maintaining a low inference latency. Resolution-based testing shows consistent improvement as input resolution increases, reaching an AUC of 0.9708 at 384 by 384. The FaceForensics++ results highlight that AdaGate-DF remains effective under class imbalance, following competitive results with evaluated models. Overall, AdaGate-DF demonstrated a practical balance between detection performance, uncertainty-aware prediction, and computational efficiency for variable-quality deepfake detection.",
+      "authors": [
+        "Vaishnavi Sen",
+        "Cody Laurie",
+        "Rashida Hasan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-04T16:14:57+00:00",
+      "link": "https://arxiv.org/pdf/2609.05320v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Adaptive gated deepfake detection for low-resolution and resource-constrained settings",
+      "llm_evidence_cn": "针对低分辨率和资源受限环境的自适应门控深度伪造检测",
+      "llm_evidence": "针对低分辨率和资源受限环境的自适应门控深度伪造检测",
+      "canonical_evidence": "针对低分辨率和资源受限环境的自适应门控深度伪造检测",
+      "llm_tldr_en": "Proposes AdaGate-DF, an adaptive gated deepfake detection framework using image-quality cues to route samples for efficiency in low-resolution and resource-constrained environments.",
+      "llm_tldr_cn": "针对深度伪造检测模型在低分辨率和资源受限环境中性能下降的问题，提出AdaGate-DF框架，利用图像质量线索进行自适应门控，通过双多出口系统实现高质量图像提前退出。在Celeb-DF和FaceForensics++上验证，AUC达0.9370，优于现有轻量方法。该工作提升了深度伪造检测的实用性和效率。",
+      "llm_tldr": "针对深度伪造检测模型在低分辨率和资源受限环境中性能下降的问题，提出AdaGate-DF框架，利用图像质量线索进行自适应门控，通过双多出口系统实现高质量图像提前退出。在Celeb-DF和FaceForensics++上验证，AUC达0.9370，优于现有轻量方法。该工作提升了深度伪造检测的实用性和效率。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.02268v1",
+      "source": "arxiv",
+      "title": "Retrosynthesis of Synthetic Media for Explainable AI Provenance Forensics",
+      "abstract": "With the rapid proliferation of generative models on Machine Learning as a Service (MLaaS) platforms, reliably tracing the provenance of synthetic media without modifying generator architectures or parameters remains a major challenge. In this work, we propose a self-referential retrosynthesis framework for explainable AI provenance forensics under a fixed-generator setting. The framework leverages a jointly optimized encoder-decoder pair to implement a self-embedding mechanism that enables round-trip consistency verification. During inference, client inputs are first encoded and then processed by the generator to produce outputs with high visual fidelity. For forensic verification, the consistency between the resynthesized image and the query image is analyzed to determine whether the image originates from the target generative model. Our approach eliminates the need for watermark embedding or modifications to the generation process. Experimental results show that images generated from encoded inputs maintain visual quality comparable to original generator outputs, while decoded images reliably trace back to their corresponding source inputs. Furthermore, the framework provides interpretable evidence for generative content provenance, establishing a practical tool for explainable generative AI forensics.",
+      "authors": [
+        "Yijie Lin",
+        "Ching-Chun Chang",
+        "Isao Echizen",
+        "Hui Li",
+        "Chin-Chen Chang"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.CV",
+        "cs.MM"
+      ],
+      "published": "2026-09-02T08:15:52+00:00",
+      "link": "https://arxiv.org/pdf/2609.02268v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Provenance forensics for synthetic media (AI-generated)",
+      "llm_evidence_cn": "合成媒体的溯源取证",
+      "llm_evidence": "合成媒体的溯源取证",
+      "canonical_evidence": "合成媒体的溯源取证",
+      "llm_tldr_en": "The paper proposes a self-referential retrosynthesis framework for explainable provenance forensics of synthetic media under fixed-generator settings.",
+      "llm_tldr_cn": "针对生成模型在MLaaS平台上的快速增殖导致合成媒体溯源困难，且在不修改生成器架构或参数的前提下难以可靠追踪来源的问题，提出自参考逆合成框架。该框架利用联合优化的编码器-解码器对实现自嵌入机制，客户端输入先被编码再经生成器产生高保真输出。取证验证时，通过检查重合成图像与查询图像的一致性来进行溯源判定。实验表明，该方法在固定生成器设定下能有效验证合成媒体的来源，并提供可解释的取证过程，为AI合成媒体的监管提供了新手段。",
+      "llm_tldr": "针对生成模型在MLaaS平台上的快速增殖导致合成媒体溯源困难，且在不修改生成器架构或参数的前提下难以可靠追踪来源的问题，提出自参考逆合成框架。该框架利用联合优化的编码器-解码器对实现自嵌入机制，客户端输入先被编码再经生成器产生高保真输出。取证验证时，通过检查重合成图像与查询图像的一致性来进行溯源判定。实验表明，该方法在固定生成器设定下能有效验证合成媒体的来源，并提供可解释的取证过程，为AI合成媒体的监管提供了新手段。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2609.05242v1",
+      "source": "arxiv",
+      "title": "Few-Shot Video Recognition via Hierarchical Metric Learning",
+      "abstract": "Few-shot action recognition (FSAR) aims to recognize unseen action categories with only a small number of annotated video samples. Recent works typically apply single-prototype supervision at the network output and fail to sufficiently exploit rich cross-frame global spatial information in videos. Even existing multi-level metric schemes only impose parallel prototype constraints on intermediate layers, without progressive supervision along the full feature pipeline, which results in limited generalization ability of the learned class prototypes. Inspired by this, we present a novel method, hierarchical metric learning for few-shot action recognition (HML-FSAR). First, a spatial-enhanced module is developed to capture cross-frame global spatial representations. Combined with temporal MHA, heterogeneous alignment, spatial-temporal feature fusion and dictionary learning modules, it constructs the complete feature processing pipeline. Second, a hierarchical metric learning (HML) strategy is embedded into HML-FSAR. Composed of center metric, alignment metric, contrastive metric, dictionary metric and prototype metric, HML imposes progressive multi-stage complementary constraints from frame-level representations to final class prototypes, so as to jointly optimize feature compactness, heterogeneous spatial-temporal alignment, inter-class discriminability and anti-noise robustness. The proposed HML-FSAR method is validated on five widely-used FSAR datasets, and experimental results fully demonstrate its effectiveness.",
+      "authors": [
+        "Jiaxin Zhang",
+        "Haoran Gao",
+        "Xizhan Gao",
+        "Zihao Dong",
+        "Tingwei Wang",
+        "Sijie Niu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-04T15:07:44+00:00",
+      "link": "https://arxiv.org/pdf/2609.05242v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Few-shot video recognition via hierarchical metric learning",
+      "llm_evidence_cn": "通过层次度量学习进行少样本视频识别",
+      "llm_evidence": "通过层次度量学习进行少样本视频识别",
+      "canonical_evidence": "通过层次度量学习进行少样本视频识别",
+      "llm_tldr_en": "The paper proposes hierarchical metric learning for few-shot action recognition, using spatial-enhanced module and progressive supervision to improve class prototype generalization.",
+      "llm_tldr_cn": "针对少样本动作识别中现有方法仅使用单原型监督或并行多级度量，无法充分利用视频跨帧全局空间信息且原型泛化能力有限的问题，提出层次度量学习方法HML-FSAR。该方法引入空间增强模块捕获跨帧全局空间表示，并在全特征管道上施加渐进式监督。在多个基准上的实验表明，HML-FSAR能有效提升少样本动作识别的准确率和原型的泛化能力，为少样本视频识别提供了新的解决思路。",
+      "llm_tldr": "针对少样本动作识别中现有方法仅使用单原型监督或并行多级度量，无法充分利用视频跨帧全局空间信息且原型泛化能力有限的问题，提出层次度量学习方法HML-FSAR。该方法引入空间增强模块捕获跨帧全局空间表示，并在全特征管道上施加渐进式监督。在多个基准上的实验表明，HML-FSAR能有效提升少样本动作识别的准确率和原型的泛化能力，为少样本视频识别提供了新的解决思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
