@@ -1,0 +1,133 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-08T21:30:52.057559+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.03655v1",
+      "source": "arxiv",
+      "title": "PL-SCEA: Reconfiguring Pretrained Attention for Few-Shot Industrial Anomaly Detection",
+      "abstract": "Vision Foundation Models (VFMs) provide transferable patch representations for few-shot industrial anomaly detection, but their attention computation is typically inherited from pretraining objectives centered on semantic aggregation. This creates a potential mismatch: token relations that support semantic recognition may not adequately expose the localized texture and structural deviations required for anomaly localization. We therefore investigate the hypothesis that the attention computation of a frozen VFM can be reconfigured as a task-relevant component of anomaly detection. We instantiate this idea with Power-Law Self-Correlation Enhanced Attention (PL-SCEA), which retains the semantic context of pretrained query-key attention while constructing token-adaptive self-correlations over contextualized value features. Positive-correlation filtering and power-law reweighting then emphasize relations that are salient relative to each token's relational background, without introducing additional trainable attention projections. The resulting features are modeled by a lightweight variational autoencoder that provides a fixed-size reconstruction-based representation of category-specific normality. The two stages serve complementary roles: attention reconfiguration shapes how local relational deviations are represented, while reconstruction-based modeling converts deviations from learned normality into anomaly scores. Across MVTec AD and VisA, the complete framework achieves competitive image-level detection and consistently strong pixel-level localization across the evaluated few-shot settings. Ablations further show that PL-SCEA improves localization with either the VAE or a memory bank under the tested setting. These results support the view that task-aligned attention reconfiguration can improve the anomaly-localization capability of frozen pretrained representations.",
+      "authors": [
+        "Xiaoyu Yang",
+        "Qixing Wu",
+        "Huixian Zhao",
+        "Changlong Jin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-03T10:54:05+00:00",
+      "link": "https://arxiv.org/pdf/2609.03655v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "few-shot anomaly detection by reconfiguring pretrained attention",
+      "llm_evidence_cn": "通过重构预训练注意力进行少样本异常检测",
+      "llm_evidence": "通过重构预训练注意力进行少样本异常检测",
+      "canonical_evidence": "通过重构预训练注意力进行少样本异常检测",
+      "llm_tldr_en": "Proposes PL-SCEA to reconfigure pretrained attention in vision foundation models for few-shot anomaly detection, addressing mismatch between semantic aggregation and anomaly localization.",
+      "llm_tldr_cn": "针对视觉基础模型预训练注意力偏向语义聚合、不适合异常定位的问题，本文提出PL-SCEA方法，通过幂律自相关增强注意力重构预训练注意力，保留语义上下文的同时突出局部纹理和结构偏差。该方法在少样本工业异常检测中表现优异，验证了注意力重构作为任务相关组件的有效性。",
+      "llm_tldr": "针对视觉基础模型预训练注意力偏向语义聚合、不适合异常定位的问题，本文提出PL-SCEA方法，通过幂律自相关增强注意力重构预训练注意力，保留语义上下文的同时突出局部纹理和结构偏差。该方法在少样本工业异常检测中表现优异，验证了注意力重构作为任务相关组件的有效性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.31107v1",
+      "source": "arxiv",
+      "title": "VeriCam: A Verification Baseline for the Classification of Unknown Data",
+      "abstract": "The advent of foundation models have enabled a new era in zero-shot classification. Yet, key challenges persist. Despite their impressive generalization power that leverages the immense pre-training knowledge, both foundation models for image and text as well as vision-text hybrids lack the representational power needed for fine-grained, minutiae-based class separation that some real-world tasks require. To address the current gaps in the literature, we propose VeriCam, a pipeline designed to learn highly specialized features that enable classification of unknown classes in unseen data. VeriCam works by leveraging the representation power of image models trained for the verification task, where the model develops an intricate feature space that incorporates fine-grained details. By training a model to discriminate between pairs of images from the same and different classes, a relational graph is constructed, representing the class relationships between data points. We then present two approaches for graph clustering: a naive algorithm and a specific setup for the Leiden graph clustering algorithm. The pipeline is validated on the LPLCv2 dataset, which comprises real-world traffic surveillance images. We show that the dataset carries an inherent capture device bias that is posed as a generalization challenge for downstream License Plate recognition tasks such as OCR. As such, we dynamically identify capture devices with a label-agnostic approach, enabling the construction of a fair and unbiased benchmark. In the cross-device scenario, our pipeline reaches an F1-Score of 93.45 in the verification baseline and a V-Measure score of 80.13 in the clustering step. All code is publicly available at https://github.com/lmlwojcik/VeriCam",
+      "authors": [
+        "Lucas Wojcik",
+        "Gabriel E. Lima",
+        "Sergio M. Silva",
+        "Eduil Nascimento",
+        "David Menotti"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T17:12:59+00:00",
+      "link": "https://arxiv.org/pdf/2608.31107v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Leverages verification models for fine-grained classification of unknown classes, relevant to few-shot learning",
+      "llm_evidence_cn": "利用验证模型进行细粒度未知类别分类，与少样本学习相关",
+      "llm_evidence": "利用验证模型进行细粒度未知类别分类，与少样本学习相关",
+      "canonical_evidence": "利用验证模型进行细粒度未知类别分类，与少样本学习相关",
+      "llm_tldr_en": "Proposes VeriCam, a pipeline that leverages verification models to learn specialized features for classifying unknown classes, addressing fine-grained classification with limited labeled data.",
+      "llm_tldr_cn": "本文针对基础模型在细粒度、未知类别分类上的表示能力不足问题，提出VeriCam流程。该流程利用图像验证模型学习高度特化的特征，以实现对未见数据的未知类别分类。实验表明该方法能有效进行细粒度分类，对少样本学习任务具有参考价值。其贡献在于提供了一种基于验证特征的分类基线。",
+      "llm_tldr": "本文针对基础模型在细粒度、未知类别分类上的表示能力不足问题，提出VeriCam流程。该流程利用图像验证模型学习高度特化的特征，以实现对未见数据的未知类别分类。实验表明该方法能有效进行细粒度分类，对少样本学习任务具有参考价值。其贡献在于提供了一种基于验证特征的分类基线。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.31107v2",
+      "source": "arxiv",
+      "title": "VeriCam: A Verification Baseline for the Classification of Unknown Data",
+      "abstract": "The advent of foundation models have enabled a new era in zero-shot classification. Yet, key challenges persist. Despite their impressive generalization power that leverages the immense pre-training knowledge, both foundation models for image and text as well as vision-text hybrids lack the representational power needed for fine-grained, minutiae-based class separation that some real-world tasks require. To address the current gaps in the literature, we propose VeriCam, a pipeline designed to learn highly specialized features that enable classification of unknown classes in unseen data. VeriCam works by leveraging the representation power of image models trained for the verification task, where the model develops an intricate feature space that incorporates fine-grained details. By training a model to discriminate between pairs of images from the same and different classes, a relational graph is constructed, representing the class relationships between data points. We then present two approaches for graph clustering: a naive algorithm and a specific setup for the Leiden graph clustering algorithm. The pipeline is validated on the LPLCv2 dataset, which comprises real-world traffic surveillance images. We show that the dataset carries an inherent capture device bias that is posed as a generalization challenge for downstream License Plate recognition tasks such as OCR. As such, we dynamically identify capture devices with a label-agnostic approach, enabling the construction of a fair and unbiased benchmark. In the cross-device scenario, our pipeline reaches an F1-Score of 93.45 in the verification baseline and a V-Measure score of 80.13 in the clustering step. All code is publicly available at https://github.com/lmlwojcik/VeriCam",
+      "authors": [
+        "Lucas Wojcik",
+        "Gabriel E. Lima",
+        "Sergio M. Silva",
+        "Eduil Nascimento",
+        "David Menotti"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T17:12:59+00:00",
+      "link": "https://arxiv.org/pdf/2608.31107v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "zero-shot classification with verification-based specialized features",
+      "llm_evidence_cn": "基于验证的专家特征进行零样本分类",
+      "llm_evidence": "基于验证的专家特征进行零样本分类",
+      "canonical_evidence": "基于验证的专家特征进行零样本分类",
+      "llm_tldr_en": "Proposes VeriCam, a pipeline using image verification models to learn specialized features for classifying unknown classes in unseen data, addressing limitations of foundation models in fine-grained class separation.",
+      "llm_tldr_cn": "针对基础模型在细粒度类别分离上的表示能力不足，本文提出VeriCam管线，利用为验证任务训练的图像模型学习高度专业化的特征，以实现对未知类别的分类。实验表明该管线能在未见数据上有效分类未知类，为少样本和零样本分类提供了新思路。",
+      "llm_tldr": "针对基础模型在细粒度类别分离上的表示能力不足，本文提出VeriCam管线，利用为验证任务训练的图像模型学习高度专业化的特征，以实现对未知类别的分类。实验表明该管线能在未见数据上有效分类未知类，为少样本和零样本分类提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

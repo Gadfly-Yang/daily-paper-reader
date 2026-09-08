@@ -1,0 +1,54 @@
+{
+  "label": "2026-09-08",
+  "date": "2026-09-08",
+  "generated_at": "2026-09-08T21:32:48",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202609/08/2609.03655v1-pl-scea-reconfiguring-pretrained-attention-for-few-shot-industrial-anomaly-detection",
+      "section": "quick",
+      "title_en": "PL-SCEA: Reconfiguring Pretrained Attention for Few-Shot Industrial Anomaly Detection",
+      "authors": "Xiaoyu Yang, Qixing Wu, Huixian Zhao, Changlong Jin",
+      "date": "2026-09-03",
+      "pdf": "https://arxiv.org/pdf/2609.03655v1",
+      "score": "7.0",
+      "evidence": "通过重构预训练注意力进行少样本异常检测",
+      "tldr": "视觉基础模型的预训练注意力偏向语义聚合，难以充分暴露工业异常检测所需的局部纹理与结构偏差。本文提出 PL-SCEA，通过幂律自相关增强注意力重新配置冻结模型的注意力计算，无需引入额外可训练投影。该方法结合轻量 VAE 重构正常性表示，在 MVTec AD 和 VisA 上实现竞争性图像级检测与强像素级定位。研究表明任务对齐的注意力重配置可提升冻结预训练特征的异常定位能力。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "Vision Foundation Models (VFMs) provide transferable patch representations for few-shot industrial anomaly detection, but their attention computation is typically inherited from pretraining objectives centered on semantic aggregation. This creates a potential mismatch: token relations that support semantic recognition may not adequately expose the localized texture and structural deviations required for anomaly localization. We therefore investigate the hypothesis that the attention computation of a frozen VFM can be reconfigured as a task-relevant component of anomaly detection. We instantiate this idea with Power-Law Self-Correlation Enhanced Attention (PL-SCEA), which retains the semantic context of pretrained query-key attention while constructing token-adaptive self-correlations over contextualized value features. Positive-correlation filtering and power-law reweighting then emphasize relations that are salient relative to each token's relational background, without introducing additional trainable attention projections. The resulting features are modeled by a lightweight variational autoencoder that provides a fixed-size reconstruction-based representation of category-specific normality. The two stages serve complementary roles: attention reconfiguration shapes how local relational deviations are represented, while reconstruction-based modeling converts deviations from learned normality into anomaly scores. Across MVTec AD and VisA, the complete framework achieves competitive image-level detection and consistently strong pixel-level localization across the evaluated few-shot settings. Ablations further show that PL-SCEA improves localization with either the VAE or a memory bank under the tested setting. These results support the view that task-aligned attention reconfiguration can improve the anomaly-localization capability of frozen pretrained representations.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/08/2608.31107v1-vericam-a-verification-baseline-for-the-classification-of-unknown-data",
+      "section": "quick",
+      "title_en": "VeriCam: A Verification Baseline for the Classification of Unknown Data",
+      "authors": "Lucas Wojcik, Gabriel E. Lima, Sergio M. Silva, Eduil Nascimento, David Menotti",
+      "date": "2026-08-31",
+      "pdf": "https://arxiv.org/pdf/2608.31107v1",
+      "score": "6.0",
+      "evidence": "利用验证模型进行细粒度未知类别分类，与少样本学习相关",
+      "tldr": "基础模型虽具备强大泛化能力，但在零样本分类中缺乏细粒度特征区分能力，难以应对真实细粒度任务。VeriCam利用验证任务训练图像模型学习精细特征，构建关系图并通过图聚类实现未知类分类。在LPLCv2交通监控数据上，该方法跨设备场景验证F1达93.45，聚类V-Measure达80.13。该工作提供可复现基准，缓解采集设备偏差问题，为下游车牌识别等任务构建公平评测环境。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "The advent of foundation models have enabled a new era in zero-shot classification. Yet, key challenges persist. Despite their impressive generalization power that leverages the immense pre-training knowledge, both foundation models for image and text as well as vision-text hybrids lack the representational power needed for fine-grained, minutiae-based class separation that some real-world tasks require. To address the current gaps in the literature, we propose VeriCam, a pipeline designed to learn highly specialized features that enable classification of unknown classes in unseen data. VeriCam works by leveraging the representation power of image models trained for the verification task, where the model develops an intricate feature space that incorporates fine-grained details. By training a model to discriminate between pairs of images from the same and different classes, a relational graph is constructed, representing the class relationships between data points. We then present two approaches for graph clustering: a naive algorithm and a specific setup for the Leiden graph clustering algorithm. The pipeline is validated on the LPLCv2 dataset, which comprises real-world traffic surveillance images. We show that the dataset carries an inherent capture device bias that is posed as a generalization challenge for downstream License Plate recognition tasks such as OCR. As such, we dynamically identify capture devices with a label-agnostic approach, enabling the construction of a fair and unbiased benchmark. In the cross-device scenario, our pipeline reaches an F1-Score of 93.45 in the verification baseline and a V-Measure score of 80.13 in the clustering step. All code is publicly available at https://github.com/lmlwojcik/VeriCam",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/08/2608.31107v2-vericam-a-verification-baseline-for-the-classification-of-unknown-data",
+      "section": "quick",
+      "title_en": "VeriCam: A Verification Baseline for the Classification of Unknown Data",
+      "authors": "Lucas Wojcik, Gabriel E. Lima, Sergio M. Silva, Eduil Nascimento, David Menotti",
+      "date": "2026-08-31",
+      "pdf": "https://arxiv.org/pdf/2608.31107v2",
+      "score": "6.0",
+      "evidence": "基于验证的专家特征进行零样本分类",
+      "tldr": "基础模型虽有强大零样本分类能力，但缺乏细粒度、基于细节的类别分离能力。VeriCam通过验证任务训练图像模型以学习高度专业化特征，构建类别关系图并用两种图聚类算法进行分类。在LPLCv2交通监控数据集上，跨设备场景验证F1达93.45，聚类V-Measure达80.13。该方法为未知数据分类提供基线，并动态识别采集设备以构建公平基准。",
+      "tags": "query:deepfake-fsl",
+      "abstract_en": "The advent of foundation models have enabled a new era in zero-shot classification. Yet, key challenges persist. Despite their impressive generalization power that leverages the immense pre-training knowledge, both foundation models for image and text as well as vision-text hybrids lack the representational power needed for fine-grained, minutiae-based class separation that some real-world tasks require. To address the current gaps in the literature, we propose VeriCam, a pipeline designed to learn highly specialized features that enable classification of unknown classes in unseen data. VeriCam works by leveraging the representation power of image models trained for the verification task, where the model develops an intricate feature space that incorporates fine-grained details. By training a model to discriminate between pairs of images from the same and different classes, a relational graph is constructed, representing the class relationships between data points. We then present two approaches for graph clustering: a naive algorithm and a specific setup for the Leiden graph clustering algorithm. The pipeline is validated on the LPLCv2 dataset, which comprises real-world traffic surveillance images. We show that the dataset carries an inherent capture device bias that is posed as a generalization challenge for downstream License Plate recognition tasks such as OCR. As such, we dynamically identify capture devices with a label-agnostic approach, enabling the construction of a fair and unbiased benchmark. In the cross-device scenario, our pipeline reaches an F1-Score of 93.45 in the verification baseline and a V-Measure score of 80.13 in the clustering step. All code is publicly available at https://github.com/lmlwojcik/VeriCam",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
