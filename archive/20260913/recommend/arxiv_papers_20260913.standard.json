@@ -1,0 +1,285 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-13T21:55:06.628803+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2609.11188v1",
+      "source": "arxiv",
+      "title": "A Multi-View and Confusion-Guided Ensemble Framework for Robust Synthetic Image Attribution",
+      "abstract": "Synthetic image attribution (SIA) has become increasingly important with the rapid advancement of text-to-image generation models. However, accurately identifying the source model of a generated image remains challenging due to the growing similarity among modern diffusion-based generators and the presence of diverse post-processing operations. In this report, we present a multi-view and confusion-guided ensemble framework for the Synthetic Image Attribution Challenge of the DLMMDD Workshop at ICANN 2026. Our approach integrates multiple complementary architectures, including FFT-ConvNeXt, DINOv2, CLIP, and Xception, to capture diverse attribution cues from frequency, semantic, and forensic perspectives. To improve robustness against unknown degradations and image manipulations, extensive data augmentation strategies are employed during training, simulating realistic post-processing operations such as compression, resizing, grayscale conversion, and blur. Furthermore, we analyze the confusion patterns of the ensemble model and observe severe ambiguity between Stable Diffusion 3 and Stable Diffusion 3.5. To address this issue, we introduce a dedicated binary expert classifier that is selectively activated under low-confidence conditions. We additionally apply class-adaptive confidence calibration to improve the discrimination of challenging classes such as Tencent Hunyuan. The proposed framework achieved 99.53% on the public leaderboard and 99.20% on the private leaderboard. The source code and implementation details are publicly available at https://github.com/ZOMIN28/SIA.",
+      "authors": [
+        "Zuomin Qu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-10T07:54:25+00:00",
+      "link": "https://arxiv.org/pdf/2609.11188v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-view confusion-guided ensemble for synthetic image attribution",
+      "llm_evidence_cn": "多视图混淆引导集成用于合成图像来源归属",
+      "llm_evidence": "多视图混淆引导集成用于合成图像来源归属",
+      "canonical_evidence": "多视图混淆引导集成用于合成图像来源归属",
+      "llm_tldr_en": "Proposes a multi-view ensemble framework integrating FFT-ConvNeXt, DINOv2, CLIP, and Xception with confusion-guided training for robust synthetic image attribution, addressing challenges from similar diffusion models and post-processing.",
+      "llm_tldr_cn": "针对现代扩散生成模型相似度高且后处理多样导致合成图像来源归属困难的问题，提出多视图混淆引导集成框架，融合FFT-ConvNeXt、DINOv2、CLIP和Xception等架构，从频率、语义和取证视角提取特征，提高对合成图像来源识别的鲁棒性。",
+      "llm_tldr": "针对现代扩散生成模型相似度高且后处理多样导致合成图像来源归属困难的问题，提出多视图混淆引导集成框架，融合FFT-ConvNeXt、DINOv2、CLIP和Xception等架构，从频率、语义和取证视角提取特征，提高对合成图像来源识别的鲁棒性。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.09462v1",
+      "source": "arxiv",
+      "title": "Low-Rank Prompt Learning for Vision-Language Models with Fixed-Token Bases",
+      "abstract": "Prompt learning adapts CLIP to downstream recognition by replacing hand-written templates with learned continuous context vectors, which in Context Optimization (CoOp) form a dense prompt matrix $\\mathbf{P}\\in\\mathbb{R}^{m\\times d}$ trained from only a few examples per class. We study whether this matrix is over-parameterized by factorizing it as $\\mathbf{P}=\\mathbf{B}\\mathbf{A}$, which cuts the trainable prompt parameters from $md$ to $r(m+d)$, and to $rd$ once the token-side factor $\\mathbf{B}$ is fixed. Across seven few-shot benchmarks and two CLIP backbones, low-rank prompts match or improve dense CoOp at far fewer parameters, with the clearest gains on low-shot base-to-new generalization. We then find that the token-side factor need not be learned at all: fixing $\\mathbf{B}$ to a Gaussian, orthogonal, SVD-derived, or even random basis and training only the embedding-side factor $\\mathbf{A}$ stays on par with the fully trainable factorization, and a source-trained $\\mathbf{B}$ offers no advantage over a random one. A prompt-factor asymmetry and a local update-space dimension gap show why fixing $\\mathbf{B}$ is far less restrictive than fixing $\\mathbf{A}$, and a smoothness-only guarantee certifies that optimizing $\\mathbf{A}$ over a fixed $\\mathbf{B}$ converges. In the CLIP prompt setting, the embedding-side coefficients carry the adaptation while the token basis can simply be fixed.",
+      "authors": [
+        "Tanvir Muntakim Tonoy",
+        "Sajjad Ghiasvand",
+        "Mahnoosh Alizadeh",
+        "Ramtin Pedarsani"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-08T21:26:37+00:00",
+      "link": "https://arxiv.org/pdf/2609.09462v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Low-rank factorization of prompt matrix trained from few examples per class in CLIP",
+      "llm_evidence_cn": "在CLIP中对提示矩阵低秩分解，仅用少量样本训练",
+      "llm_evidence": "在CLIP中对提示矩阵低秩分解，仅用少量样本训练",
+      "canonical_evidence": "在CLIP中对提示矩阵低秩分解，仅用少量样本训练",
+      "llm_tldr_en": "This paper proposes low-rank factorization of prompt matrices in CLIP to reduce trainable parameters while maintaining or improving few-shot recognition performance across benchmarks.",
+      "llm_tldr_cn": "针对提示学习在少样本适配视觉-语言模型时密集提示矩阵可能过参数化的问题，提出将提示矩阵分解为低秩因子，并固定令牌侧因子以大幅减少可训练参数。在多个少样本基准和两种CLIP骨干上的实验表明，低秩提示在参数更少的情况下达到或超过密集CoOp，尤其在低样本基类到新类泛化上增益明显。该方法为高效少样本提示学习提供了简洁有效的方案。",
+      "llm_tldr": "针对提示学习在少样本适配视觉-语言模型时密集提示矩阵可能过参数化的问题，提出将提示矩阵分解为低秩因子，并固定令牌侧因子以大幅减少可训练参数。在多个少样本基准和两种CLIP骨干上的实验表明，低秩提示在参数更少的情况下达到或超过密集CoOp，尤其在低样本基类到新类泛化上增益明显。该方法为高效少样本提示学习提供了简洁有效的方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.10851v1",
+      "source": "arxiv",
+      "title": "Are We Really Doing Few-Shot Learning? A Critical Examination of Pre-Training Assumptions",
+      "abstract": "Few-shot learning is commonly evaluated under protocols that pre-train a model on a large auxiliary set whose classes are disjoint from the target episodes yet drawn from the same visual domain. This paper examines whether such protocols truly reflect low-data learning. We systematically compare no pre-training, class-disjoint in-domain pre-training, supervised out-of-domain pre-training, and label-free out-of-domain pre-training across eight datasets, three few-shot architectures, and multiple way-shot settings. Our results show that class disjointness alone is insufficient to remove the influence of target-domain data. In-domain pre-training improves over no pre-training by 33.41 percentage points on average, whereas supervised out-of-domain pre-training yields 23.75 percentage points, revealing a 9.66-point optimistic bias associated with domain overlap. Although out-of-domain pre-training is more realistic in applications where target-domain data are scarce, its effectiveness depends strongly on the compatibility between source and target domains. We further show that labeled source data are not strictly required, with an augmentation-based label-free strategy reaching an average gain of 27.71 percentage points and closely matching supervised out-of-domain pre-training at 27.97 percentage points. Finally, we introduce a descriptor-based source-selection strategy that estimates source-domain suitability before pre-training, reaching a median gap of only 1.37 percentage points to oracle selection. These findings highlight the need to move beyond in-domain pre-training as the default few-shot evaluation protocol, since it can overestimate performance in realistic scenarios where target-domain data are scarce.",
+      "authors": [
+        "Alejandro Galan-Cuenca",
+        "Marcelo Saval-Calvo",
+        "Antonio Javier Gallego"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-09-09T21:40:16+00:00",
+      "link": "https://arxiv.org/pdf/2609.10851v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Critical examination of few-shot learning pre-training assumptions",
+      "llm_evidence_cn": "对少样本学习预训练假设的批判性审视",
+      "llm_evidence": "对少样本学习预训练假设的批判性审视",
+      "canonical_evidence": "对少样本学习预训练假设的批判性审视",
+      "llm_tldr_en": "This paper questions whether standard few-shot learning protocols truly reflect low-data learning by comparing different pre-training strategies across eight datasets, finding that in-domain pre-training gives a large advantage and class-disjointness is insufficient.",
+      "llm_tldr_cn": "本文针对少样本学习中预训练假设是否真实反映低数据学习的问题，系统比较了无预训练、类不相交域内预训练、监督域外预训练和无标签域外预训练四种策略。实验在八个数据集、三种少样本架构和多种way-shot设置上进行，结果表明类不相交性不足以消除目标域数据的影响，域内预训练平均提升33.41个百分点。该研究对少样本学习评估协议的设计具有重要指导意义，尤其对少样本深度伪造检测等任务的方法选择有启示。",
+      "llm_tldr": "本文针对少样本学习中预训练假设是否真实反映低数据学习的问题，系统比较了无预训练、类不相交域内预训练、监督域外预训练和无标签域外预训练四种策略。实验在八个数据集、三种少样本架构和多种way-shot设置上进行，结果表明类不相交性不足以消除目标域数据的影响，域内预训练平均提升33.41个百分点。该研究对少样本学习评估协议的设计具有重要指导意义，尤其对少样本深度伪造检测等任务的方法选择有启示。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.05953v1",
+      "source": "arxiv",
+      "title": "ProtoRAG: Prototype-Based Retrieval Augmentation for Few-Shot Fine-Grained Remote Sensing Object Detection",
+      "abstract": "Few-shot fine-grained object detection (FGOD) in remote sensing imagery is challenging because limited annotations must support both object localization and discrimination among visually similar subcategories. Although multimodal large language models (MLLMs) provide strong coarse object localization, they lack explicit visual evidence for reliable fine-grained recognition. To address this limitation, we propose ProtoRAG, a prototype-based retrieval-augmented framework that decouples coarse localization from fine-grained recognition by equipping MLLMs with an external object-level visual memory. To construct a reliable visual memory from limited support samples, we introduce Discriminative Prototype Space Learning (DPSL), which encourages discriminative and prototype-stable representations through supervised contrastive learning and prototype-consistency regularization. We further develop an uncertainty-guided candidate-constrained reasoning strategy that augments MLLMs with retrieved candidate-specific visual references and invokes multimodal reasoning only for ambiguous instances. Extensive experiments show that ProtoRAG consistently surpasses representative baselines in nine few-shot settings, outperforming the strongest baselines by 14.80, 2.27, and 4.04 mAP$_{50}$ on MAR20, HRSC2016, and FAIR1M-2.0, respectively.",
+      "authors": [
+        "Jian Wang",
+        "Yuxiang Hong",
+        "Chufeng Zhou",
+        "Chao Pang",
+        "Xiaokang Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-05T07:40:19+00:00",
+      "link": "https://arxiv.org/pdf/2609.05953v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Few-shot fine-grained object detection with prototype retrieval augmentation",
+      "llm_evidence_cn": "少样本细粒度目标检测，利用原型检索增强",
+      "llm_evidence": "少样本细粒度目标检测，利用原型检索增强",
+      "canonical_evidence": "少样本细粒度目标检测，利用原型检索增强",
+      "llm_tldr_en": "ProtoRAG addresses few-shot fine-grained object detection in remote sensing by decoupling coarse localization and fine-grained recognition with a prototype-based retrieval-augmented framework and external visual memory. It achieves strong performance with limited support samples.",
+      "llm_tldr_cn": "针对遥感图像少样本细粒度目标检测中有限标注难以支持定位与子类别区分的问题，提出ProtoRAG框架，将粗定位与细粒度识别解耦，通过原型检索增强为多模态大语言模型提供外部对象级视觉记忆，并设计判别性原型空间学习构建可靠视觉记忆。实验表明该方法在少样本条件下显著提升细粒度检测性能，为遥感图像少样本目标检测提供了有效方案。",
+      "llm_tldr": "针对遥感图像少样本细粒度目标检测中有限标注难以支持定位与子类别区分的问题，提出ProtoRAG框架，将粗定位与细粒度识别解耦，通过原型检索增强为多模态大语言模型提供外部对象级视觉记忆，并设计判别性原型空间学习构建可靠视觉记忆。实验表明该方法在少样本条件下显著提升细粒度检测性能，为遥感图像少样本目标检测提供了有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.07229v1",
+      "source": "arxiv",
+      "title": "Proximity-CLIP: Text-Guided Semantic Proximity Learning for Zero-Shot Anomaly Detection",
+      "abstract": "Vision-language models offer a promising approach for zero-shot anomaly detection (ZSAD). However, due to object-centric bias, normal and anomalous text prototypes exhibit a high semantic overlap. While enforcing strict orthogonality between them improves discriminability, mapping highly contiguous visual inputs onto drastically orthogonal prototypes introduces a geometric dilemma, disrupting the pre-trained structural continuity. To address this problem, we propose Proximity-CLIP, a framework that visually calibrates the semantic margin to guide visual adaptation. First, we introduce a visually-calibrated semantic proximity learning mechanism that uses a bounded dynamic regularization to learn an appropriate semantic margin, ensuring discriminative separation while preserving structural alignment. Second, we design an Anomaly Query Module (AQM) driven by these text priors. Using the calibrated anomalous prototype as a semantic query, the AQM actively retrieves localized defect cues from contextual visual patches, mitigating the dilution of subtle anomalies during global pooling. Extensive experiments demonstrate that Proximity-CLIP outperforms current state-of-the-art methods across multiple ZSAD benchmarks with minimal architectural modifications.",
+      "authors": [
+        "Manwen Yang",
+        "Leqian Ding",
+        "Yu Guo",
+        "Fei Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-07T08:48:27+00:00",
+      "link": "https://arxiv.org/pdf/2609.07229v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Zero-shot anomaly detection via CLIP with visual calibration; applicable to synthetic image detection without labeled data",
+      "llm_evidence_cn": "通过视觉校准的CLIP进行零样本异常检测，可应用于无标注数据的合成图像检测",
+      "llm_evidence": "通过视觉校准的CLIP进行零样本异常检测，可应用于无标注数据的合成图像检测",
+      "canonical_evidence": "通过视觉校准的CLIP进行零样本异常检测，可应用于无标注数据的合成图像检测",
+      "llm_tldr_en": "Proximity-CLIP addresses the semantic overlap between normal and anomalous prototypes in CLIP for zero-shot anomaly detection by introducing visually-calibrated semantic proximity learning, improving discriminability while preserving continuity, making it applicable for detecting anomalies like AI-generated images with no training data.",
+      "llm_tldr_cn": "针对CLIP零样本异常检测中正常与异常原型语义重叠过高的问题，本文提出Proximity-CLIP，引入视觉校准的语义邻近学习机制，通过有界动态正则化学习合适的语义间隔，既提高判别性又保持预训练结构连续性。实验表明该方法在不使用任何标注数据的情况下提升了异常检测性能，为少样本或零样本的合成图像检测提供了可迁移的思路。",
+      "llm_tldr": "针对CLIP零样本异常检测中正常与异常原型语义重叠过高的问题，本文提出Proximity-CLIP，引入视觉校准的语义邻近学习机制，通过有界动态正则化学习合适的语义间隔，既提高判别性又保持预训练结构连续性。实验表明该方法在不使用任何标注数据的情况下提升了异常检测性能，为少样本或零样本的合成图像检测提供了可迁移的思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "identifying AI generated or synthetic images with limited training data",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.09860v1",
+      "source": "arxiv",
+      "title": "Exact Degeneracy Under Balanced k-Shot Sampling:Consequences for Small-Sample Discriminant Analysis on LLM Embeddings",
+      "abstract": "Balanced k-shot sampling draws exactly k labeled examples per class. We show that it induces an exact, provable degeneracy in a family of small-sample discriminant estimators. Under balanced sampling, the within-class scatter operator of Kernelized Linear Principal Component Discriminant Analysis (KLPCDA) is not merely rank-deficient but exactly a scaled orthogonal projector. We derive the consequences in closed form: two of KLPCDA's seven variants have every signal eigenvalue exactly equal, so their eigenvector selection criterion is provably indifferent rather than ill-conditioned, and a third has a provably void objective. This follows from the estimators' construction, not any dataset; we confirm it on frozen sentence embeddings and, separately, on residual-stream activations from a decoder-only generative model. An in-formula tie-break repairs the two repairable variants, with recovery gated by class count: the residual subspace constraint costs 5x more on few-class than many-class datasets (p=0.000001).   We then evaluate the repaired framework on few-shot text classification on frozen LLM embeddings (n much smaller than d, up to 4096), across four datasets, three embedding sizes, and three trained baselines (SetFit, LoRA, in-context learning). A properly cross-validated logistic-regression probe still beats every KLPCDA variant on three of four datasets, at every embedding size; guidance carried from pixel, vibration-signal, and gene-expression data does not directly generalize to this feature space. Three independent geometric separability metrics fail to explain why one high-dimensional decoder-based embedding model underperforms smaller bidirectional encoders, ruling out anisotropy; the gap is substantially an estimation-efficiency effect, not a permanent ceiling, closing by more than 80% when the support set grows from k<=10 to k=30-50 (p=0.00195, both many-class datasets).",
+      "authors": [
+        "Lingxiao Qu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-09-09T08:13:54+00:00",
+      "link": "https://arxiv.org/pdf/2609.09860v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "balanced k-shot sampling, small-sample discriminant analysis on LLM embeddings",
+      "llm_evidence_cn": "平衡k-shot采样与LLM嵌入上的小样本判别分析",
+      "llm_evidence": "平衡k-shot采样与LLM嵌入上的小样本判别分析",
+      "canonical_evidence": "平衡k-shot采样与LLM嵌入上的小样本判别分析",
+      "llm_tldr_en": "Analyzes exact degeneracy in small-sample discriminant estimators under balanced k-shot sampling, proving consequences for KLPCDA variants on LLM embeddings.",
+      "llm_tldr_cn": "针对平衡k-shot采样下小样本判别估计器的退化问题，本文证明了KLPCDA的类内散布算子成为缩放正交投影，导致两个变体的特征值相等、特征向量选择标准无效，第三个变体目标函数为空。该结果源于估计器构造本身，与数据集无关，并在LLM嵌入上得到验证。这为小样本判别分析提供了理论警示。",
+      "llm_tldr": "针对平衡k-shot采样下小样本判别估计器的退化问题，本文证明了KLPCDA的类内散布算子成为缩放正交投影，导致两个变体的特征值相等、特征向量选择标准无效，第三个变体目标函数为空。该结果源于估计器构造本身，与数据集无关，并在LLM嵌入上得到验证。这为小样本判别分析提供了理论警示。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.11310v1",
+      "source": "arxiv",
+      "title": "Your Model Already Knows Don't Teach It, Learn to Ask It: Soft Prompting for Few-Shot Adaptation of Vision-Language Models",
+      "abstract": "We address few-shot object detection with vision-language models (VLMs) in out-of-domain settings such as aerial, industrial, and medical imagery, using only ten annotated images for supervision. Existing adaptation methods are discrete prompt optimization and LoRA fine-tuning. We revisit a third option: soft prompting, where a small number of continuous prompt tokens are optimized while the pretrained backbone remains frozen.   We identify two key design choices. First, placing prompt tokens at the cross-modal boundary between visual and text tokens outperforms other placements (10.0 vs. 8.4 mAP). Second, initializing prompts from the empty space token outperforms semantic and random initialization.   With these choices, one to three learned tokens (7,168 parameters on average) match the best LoRA configuration on Roboflow20-VL (14.2 mAP, 10-shot) while training over 20,000x fewer parameters. Soft prompting remains harder to optimize, exhibiting higher variance across random seeds. Unlike LoRA, however, it causes no forgetting: the LoRA rank matching our accuracy reduces NaturalBench VQA accuracy by 35% relative, rising to 56% at the largest rank, whereas soft prompting leaves pretrained performance unchanged.   The learned tokens behave like prompts rather than weights. They transfer to a newer model without retraining (+0.8 mAP on Qwen3.5-9B) and can be verbalized into readable prompts competitive with prompt-search methods (matching DetPO and outperforming GEPA).   The approach also extends beyond detection. On RoboCasa manipulation tasks, the frozen $π_{0.5}$ vision-language-action policy benefits from soft prompting, matching the LoRA baseline on two of three tasks when tokens are placed at the gradient bottleneck. These results suggest modern VLMs already encode much of what is needed for specialized domains; the challenge is learning how to ask.",
+      "authors": [
+        "Gautam Rajendrakumar Gare",
+        "Siyi Li",
+        "Hewei Wang",
+        "Cesar Daniel Hernandez",
+        "Wei Zhao",
+        "Wolfgang M. Pauli",
+        "John Galeotti",
+        "Deva Ramanan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "eess.IV",
+        "stat.ML"
+      ],
+      "published": "2026-09-10T09:38:11+00:00",
+      "link": "https://arxiv.org/pdf/2609.11310v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "few-shot adaptation of vision-language models via soft prompting",
+      "llm_evidence_cn": "通过软提示进行视觉语言模型的少样本适应",
+      "llm_evidence": "通过软提示进行视觉语言模型的少样本适应",
+      "canonical_evidence": "通过软提示进行视觉语言模型的少样本适应",
+      "llm_tldr_en": "Addresses few-shot object detection in out-of-domain settings with VLMs using only ten annotations, showing that soft prompting with prompt tokens placed at the visual-text boundary and initialized from empty space token outperforms other adaptation methods.",
+      "llm_tldr_cn": "针对航空、工业、医学等域外场景下少样本目标检测问题，仅用十张标注图像，重新审视软提示方法：在视觉和文本token之间的跨模态边界放置提示token，并用空空间token初始化，优于离散提示优化和LoRA微调，为少样本视觉语言模型适应提供有效方案。",
+      "llm_tldr": "针对航空、工业、医学等域外场景下少样本目标检测问题，仅用十张标注图像，重新审视软提示方法：在视觉和文本token之间的跨模态边界放置提示token，并用空空间token初始化，优于离散提示优化和LoRA微调，为少样本视觉语言模型适应提供有效方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
