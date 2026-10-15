@@ -1,16 +1,700 @@
 {
   "mode": "standard",
-  "generated_at": "2026-10-15T04:17:59.253556+00:00",
+  "generated_at": "2026-10-15T07:08:23.842438+00:00",
   "stats": {
     "mode": "standard",
     "tag_count": 1,
-    "deep_divecandidates": 0,
-    "deep_cap": null,
-    "deep_selected": 0,
-    "quick_candidates": 0,
+    "deep_divecandidates": 9,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 13,
     "quick_skim_target": 11,
-    "quick_selected": 0
+    "quick_selected": 11
   },
-  "deep_dive": [],
-  "quick_skim": []
+  "deep_dive": [
+    {
+      "id": "2610.07939v1",
+      "source": "arxiv",
+      "title": "CCDF: A Benchmark Dataset for Deepfake Detection in Real-World Surveillance Footage",
+      "abstract": "Due to rapid advances in Generative AI, commercial video generation tools can be used to produce fabricated surveillance footage that can fool both human viewers and automated synthetic video detectors. Since these tools are so widely accessible, a malicious user can create a harmful video clip at minimal cost. The production and dissemination of such videos in high-stakes settings, such as crime reporting and elections, can misdirect emergency response efforts or distort political discourse. Existing deepfake video datasets, used by the research community to develop deepfake detection algorithms, exhibit two limitations: (1) they emphasize benign web content rather than footage of possibly malicious activity, and (2) they rely on older or open-source generators that do not represent recent advances in generative systems. We assemble CCtv DeepFakes (CCDF), a video deepfake dataset, to address both gaps. CCDF contains 1840 videos (460 real and 1380 generated) spanning 16 crime and accident categories, with generated content produced using three leading commercial systems: Grok Imagine, Google VEO 3.1, and OpenAI Sora 2. CCDF is a highly realistic, small-scale, manually annotated dataset targeting evaluation of detection models. We release three versions of the dataset: the raw generated data, a cleaned version in which video metadata are standardized between real and synthetic samples to prevent detectors from exploiting trivial cues, and an altered version simulating low-effort post-processing attacks. We evaluate CCDF with ten recent state-of-the-art detectors covering different detection approaches. Our results suggest that these approaches do not reliably distinguish CCDF's generated videos from real ones, despite their strong reported performance on existing datasets. These results further confirm that existing datasets are not well-suited to evaluating certain threats.",
+      "authors": [
+        "Baptiste Chopin",
+        "Thomas Swearingen",
+        "Arun Ross",
+        "Antitza Dantcheva",
+        "Christian Rathgeb"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-06T08:13:10+00:00",
+      "link": "https://arxiv.org/pdf/2610.07939v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark dataset for deepfake detection in surveillance footage",
+      "llm_evidence_cn": "面向监控视频的深度伪造检测基准数据集",
+      "llm_evidence": "面向监控视频的深度伪造检测基准数据集",
+      "canonical_evidence": "面向监控视频的深度伪造检测基准数据集",
+      "llm_tldr_en": "The paper introduces CCDF, a benchmark dataset for deepfake detection in real-world surveillance footage, addressing that existing datasets emphasize benign web content and rely on older generators.",
+      "llm_tldr_cn": "针对商用视频生成工具可低成本伪造监控画面、而现有深度伪造视频数据集偏重良性网络内容且依赖过时生成器的问题，本文构建CCDF基准数据集，聚焦真实世界监控场景中可能具恶意活动的伪造视频。该数据集为深度伪造视频检测算法提供更具挑战性的训练与评测基础，弥补了监控场景与新颖生成工具方面的不足，推动真实世界深度伪造检测研究。",
+      "llm_tldr": "针对商用视频生成工具可低成本伪造监控画面、而现有深度伪造视频数据集偏重良性网络内容且依赖过时生成器的问题，本文构建CCDF基准数据集，聚焦真实世界监控场景中可能具恶意活动的伪造视频。该数据集为深度伪造视频检测算法提供更具挑战性的训练与评测基础，弥补了监控场景与新颖生成工具方面的不足，推动真实世界深度伪造检测研究。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.09952v1",
+      "source": "arxiv",
+      "title": "MSU Team at the Explainable Deepfake Detection Challenge 2026: Grounded Artifact Evidence for Deepfake Detection",
+      "abstract": "Recent advances in generative image models have made many manipulated images highly realistic, raising the need for detectors that are not only accurate but also able to provide visual evidence for their decisions. In this paper, we present our solution to the Explainable Deepfake Detection Challenge [2] on the XPlainVerse dataset [1], where systems are required to predict whether an image is real or fake and generate both complex and simple explanations grounded in visible forensic cues. Our method follows a modular detection-and-explanation design. For the real/fake decision, we build a multi-backbone detector that combines several DINOv3 models with Mesorch manipulation-localization features, bringing together pretrained visual representations, DCT-aware cues, and multi-scale forensic information. To inject explanation evidence into the detector, we use a Grounding-DINO-based pseudo-mask generation pipeline that converts local artifact descriptions from training explanations into weak patch- level supervision for an Artifact Evidence Map. We further introduce a local patch-level contrastive objective that separates artifact and authenticity evidence in the detector feature space without requiring paired images or pixel-level manipulation masks. For language output, we use class-conditional Qwen3-VL models to generate complex explanations for fake and real predictions, followed by a GRPO-optimized text simplification model. The proposed methods were trained and evaluated on the challenge subset of XPlainVerse. On the full test split, our submission achieves 0.9349 detection accuracy, 0.5571 explanation score, and a 0.7456 final challenge score.",
+      "authors": [
+        "Artem Filippov",
+        "Aleksandr Gushchin",
+        "Kirill Koltsov",
+        "Dmitriy Vatolin",
+        "Anastasia Antsiferova"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-07T12:30:04+00:00",
+      "link": "https://arxiv.org/pdf/2610.09952v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "deepfake detection, real/fake decision with multi-backbone detector",
+      "llm_evidence_cn": "深度伪造检测，多骨干检测器进行真假判别",
+      "llm_evidence": "深度伪造检测，多骨干检测器进行真假判别",
+      "canonical_evidence": "深度伪造检测，多骨干检测器进行真假判别",
+      "llm_tldr_en": "Proposes a modular detection-and-explanation system for the Explainable Deepfake Detection Challenge, combining DINOv3 backbones with manipulation-localization features to predict real or fake images.",
+      "llm_tldr_cn": "生成模型的进步使伪造图像愈发逼真，检测器不仅要准确，还需给出可见的取证依据，这正是可解释深度伪造检测挑战所要求的。作者提出一种模块化的检测与解释框架，将多个DINOv3骨干与Mesorch篡改定位特征结合，形成多骨干检测器完成真假判别，并生成复杂与简明的解释。该系统在XPlainVerse数据集上兼顾了准确性与可解释性。其贡献在于把深度伪造检测与接地气的人工可读证据结合起来，提升了检测结果的可信度。",
+      "llm_tldr": "生成模型的进步使伪造图像愈发逼真，检测器不仅要准确，还需给出可见的取证依据，这正是可解释深度伪造检测挑战所要求的。作者提出一种模块化的检测与解释框架，将多个DINOv3骨干与Mesorch篡改定位特征结合，形成多骨干检测器完成真假判别，并生成复杂与简明的解释。该系统在XPlainVerse数据集上兼顾了准确性与可解释性。其贡献在于把深度伪造检测与接地气的人工可读证据结合起来，提升了检测结果的可信度。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.11876v1",
+      "source": "arxiv",
+      "title": "Relative Patch Response Learning for Generalizable AI-Generated Image Detection",
+      "abstract": "Generative models can now synthesize highly realistic images, simultaneously increasing the risks of misinformation and visual forgery. Therefore, detecting AI-generated images becomes more essential, and a reliable detector must generalize to unseen generators and stay robust to unseen perturbations in the wild. Existing detectors are typically trained on either independently collected real and generated images or aligned real-generated pairs designed to mitigate content bias. Building on aligned pairs, recent methods form a mixed view by replacing some patches of the real image with their generated counterparts. However, we find that self-attention lets real and generated patches interact, so the feature of each patch no longer reflects its own source alone. This contextual shift makes a per-patch source label an imprecise target. To this end, we propose Relative Patch Response Learning (PRL). Instead of labeling each patch, PRL compares the same patch across two mixed views of an aligned pair and learns from its patch response, the change of its score between the views. (i) To give precise supervision under the contextual shift, a relative response objective measures the responses of source-changed patches against those of source-unchanged patches, which respond to the shift alone. (ii) To provide a reliable reference for the shift, a reference coherence objective keeps each group of source-unchanged patches moving as a whole. (iii) Since the two views contain different amounts of generated content, an area ranking objective asks the view with the larger generated area to have a higher mean patch score. Extensive experiments demonstrate the superior performance of PRL, which surpasses the best prior methods by 4.3% and 5.9% in average balanced accuracy across eight standard and three in-the-wild benchmarks, respectively.",
+      "authors": [
+        "Tianyu Wang",
+        "Ouxiang Li",
+        "Yanbin Hao",
+        "Zhenhua Tang",
+        "Shuo Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-08T12:49:54+00:00",
+      "link": "https://arxiv.org/pdf/2610.11876v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generalizable AI-generated image detection robust to unseen generators",
+      "llm_evidence_cn": "可泛化的AI生成图像检测，泛化至未见生成器",
+      "llm_evidence": "可泛化的AI生成图像检测，泛化至未见生成器",
+      "canonical_evidence": "可泛化的AI生成图像检测，泛化至未见生成器",
+      "llm_tldr_en": "Existing AI-generated image detectors struggle to generalize to unseen generators due to content bias and patch interaction. This work proposes Relative Patch Response Learning that suppresses real-generated patch interaction, improving cross-generator generalization and robustness.",
+      "llm_tldr_cn": "现有AI生成图像检测器在泛化到未见生成器时表现不佳，且内容偏置与真实-生成图像块间的自注意力交互会削弱判别特征。本文提出相对图像块响应学习方法，通过构造对齐的真实-生成混合视图并抑制图像块间的相互干扰，使每个图像块的特征真实反映其来源。实验表明该方法在跨生成器泛化与野外扰动鲁棒性上均有提升，为可泛化的AI生成图像取证提供了新思路。",
+      "llm_tldr": "现有AI生成图像检测器在泛化到未见生成器时表现不佳，且内容偏置与真实-生成图像块间的自注意力交互会削弱判别特征。本文提出相对图像块响应学习方法，通过构造对齐的真实-生成混合视图并抑制图像块间的相互干扰，使每个图像块的特征真实反映其来源。实验表明该方法在跨生成器泛化与野外扰动鲁棒性上均有提升，为可泛化的AI生成图像取证提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.16417v1",
+      "source": "arxiv",
+      "title": "Not All Challenges Are Equal: Evaluating Interactive Liveness Detection Against Real-Time Face Swaps",
+      "abstract": "Remote identity verification assumes that a camera stream shows a live person, yet public real-time face-swap tools can replace that person before the stream reaches the verifier. Passive deepfake detectors generalize poorly to new generators, while interactive challenges are often selected without evidence of which gestures expose current attacks. We evaluate randomized gesture challenges in 108 live sessions with six subjects, 24 impersonated identities, and two face-swap tools, DeepFaceLive and FaceFusion, injected through a virtual camera. The static calibration segment reaches a session-level AUC of 0.878 with a frozen UCF spatial detector, while the mean across the active-gesture windows reaches 0.988. Pose and combined gestures have the highest point estimates, whereas expressions show no clear improvement. Hand occlusion against FaceFusion, configured with an occlusion mask, scores below the static baseline. The end-to-end time required to satisfy the validator also distinguishes attacks from genuine sessions, achieving a session-level AUC of 0.732, although this signal includes synthesis and transport delays. These results show that challenge sets should be tested against current attack configurations and that response time can provide an additional, deployment-specific signal.",
+      "authors": [
+        "Anton Firc",
+        "David Drtil",
+        "Martin Perešíni",
+        "Milan Šalko",
+        "Vojtěch Staněk",
+        "Kamil Malinka"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CR"
+      ],
+      "published": "2026-10-12T08:51:07+00:00",
+      "link": "https://arxiv.org/pdf/2610.16417v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "evaluating interactive liveness detection against real-time face swaps",
+      "llm_evidence_cn": "针对实时换脸的交互式活体检测评估",
+      "llm_evidence": "针对实时换脸的交互式活体检测评估",
+      "canonical_evidence": "针对实时换脸的交互式活体检测评估",
+      "llm_tldr_en": "The paper evaluates randomized gesture challenges for interactive liveness detection against real-time face swaps, finding static calibration reaches AUC 0.878 while active-gesture windows reach 0.988, guiding which gestures expose current attacks.",
+      "llm_tldr_cn": "针对远程身份验证中实时换脸工具可在验证前替换真人、且被动深度伪造检测器泛化差的问题，本文在108场真实会话中评估随机手势挑战，使用DeepFaceLive与FaceFusion两种换脸工具经虚拟摄像头注入，并用冻结的UCF空间检测器评测。结果显示静态校准段会话级AUC为0.878，主动手势窗口均值达0.988，说明特定手势能有效暴露换脸攻击，为交互式活体检测设计提供依据。",
+      "llm_tldr": "针对远程身份验证中实时换脸工具可在验证前替换真人、且被动深度伪造检测器泛化差的问题，本文在108场真实会话中评估随机手势挑战，使用DeepFaceLive与FaceFusion两种换脸工具经虚拟摄像头注入，并用冻结的UCF空间检测器评测。结果显示静态校准段会话级AUC为0.878，主动手势窗口均值达0.988，说明特定手势能有效暴露换脸攻击，为交互式活体检测设计提供依据。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.16879v1",
+      "source": "arxiv",
+      "title": "EviStress: Evidence Stress Learning for Generalizable Face Forgery Detection with Textual Explanations",
+      "abstract": "The rapid spread of face forgeries on the Web challenges the credibility of visual content. In practical Web environments, manipulated media originate from evolving generation pipelines and undergo diverse processing during dissemination, making reliable authenticity assessment under unseen manipulations and visual changes a critical challenge. We observe that a standard LoRA-adapted CLIP detector exhibits uneven patch-level decision dependence, concen trating a disproportionate share of class-specific relevance on a small fraction of visual patches. To improve robustness to variations in such highly dependent evidence, we propose EviStress, a two-stage framework for generalizable face forgery detection with textual explanations. In the first stage, Evidence-Targeted Patch Perturbation (ETPP) estimates patch dependence from global, relational, and semantic cues and assigns positively correlated perturbation probabilities, explicitly stress-testing highly dependent visual evidence during training. We further introduce Discriminative Variation Preservation (DVP), which constrains the residual between clean and perturbed representations to retain authenticity discriminative information. In the second stage, Intrinsic Evidence Instruction Tuning (IEIT) transfers the adapted CLIP encoder into LLaVA as its vision tower and performs parameter-efficient multimodal instruction tuning, enabling authenticity prediction and textual explanation directly from the learned forgery-sensitive representation without an external detector. Experiments demonstrate improved cross-dataset and cross-method generalization and corruption robustness, with the multimodal model providing authenticity predictions and human-readable explanations.",
+      "authors": [
+        "Jiuyao Jing",
+        "Xuanyu Yi",
+        "Yu Zheng",
+        "Chunlei Peng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-12T14:41:54+00:00",
+      "link": "https://arxiv.org/pdf/2610.16879v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generalizable face forgery detection under unseen manipulations",
+      "llm_evidence_cn": "面向未知篡改的人脸伪造检测",
+      "llm_evidence": "面向未知篡改的人脸伪造检测",
+      "canonical_evidence": "面向未知篡改的人脸伪造检测",
+      "llm_tldr_en": "Proposes EviStress, a two-stage framework for generalizable face forgery detection, addressing uneven patch-level decision dependence in LoRA-adapted CLIP detectors to improve robustness under unseen manipulations.",
+      "llm_tldr_cn": "网络环境中的人脸伪造源自不断演化的生成流程并经历多种传播处理，导致在未知篡改与视觉变化下可靠判别真假十分困难。作者观察到经LoRA适配的CLIP检测器在patch级决策依赖上分布不均，少数视觉patch承担了过多类别相关证据。为此提出EviStress两阶段框架，通过证据压力学习提升对这类高依赖证据变化的鲁棒性，并给出文本解释。实验表明该方法在未知篡改条件下具备更强的泛化能力，推动了可解释且稳健的人脸伪造检测。",
+      "llm_tldr": "网络环境中的人脸伪造源自不断演化的生成流程并经历多种传播处理，导致在未知篡改与视觉变化下可靠判别真假十分困难。作者观察到经LoRA适配的CLIP检测器在patch级决策依赖上分布不均，少数视觉patch承担了过多类别相关证据。为此提出EviStress两阶段框架，通过证据压力学习提升对这类高依赖证据变化的鲁棒性，并给出文本解释。实验表明该方法在未知篡改条件下具备更强的泛化能力，推动了可解释且稳健的人脸伪造检测。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.18034v1",
+      "source": "arxiv",
+      "title": "COMPASS: Contextual Moment Prior Alignment for Generalizable AIGI Detection",
+      "abstract": "Generalizable AI-generated image (AIGI) and deepfake detection remain challenging due to the asymmetry phenomenon, where adaptation to limited training distributions can degrade the transferable representations of Vision Foundation Models (VFMs). Recent subspace adaptation methods mitigate this issue by freezing high-magnitude principal components while adapting the residual subspace. However, such magnitude-based decomposition is data-agnostic and does not explicitly account for target-relevant semantics, potentially leading to semantic misalignment. We propose COMPASS (COntextual Moment Prior Alignment for Subspace Separation), a data-aware subspace adaptation framework that uses a small unlabeled Semantic Proxy Set to estimate target activation statistics. COMPASS incorporates activation covariance into the decomposition of pre-trained weights, preserving target-relevant representations as a stable semantic reference while the residual adapter learns forgery-related variations. The proxy calibration requires no gradient-based optimization. Extensive experiments demonstrate strong generalization across cross-dataset, cross-method, joint cross-dataset-method, and open-world cross-generator evaluations, achieving state-of-the-art performance on both Deepfake and AIGI detection benchmarks.",
+      "authors": [
+        "Zhan Yang",
+        "Tiancheng Shen",
+        "Weijie Lyu",
+        "Shuo Chen",
+        "Bernard Ghanem",
+        "Yibo Yang",
+        "Ming-Hsuan Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-13T09:23:12+00:00",
+      "link": "https://arxiv.org/pdf/2610.18034v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Generalizable AI-generated image and deepfake detection via subspace adaptation",
+      "llm_evidence_cn": "可泛化的AI生成图像与深度伪造检测",
+      "llm_evidence": "可泛化的AI生成图像与深度伪造检测",
+      "canonical_evidence": "可泛化的AI生成图像与深度伪造检测",
+      "llm_tldr_en": "Generalizable AIGI and deepfake detection suffers from asymmetry that degrades vision foundation model representations. COMPASS proposes a data-aware subspace adaptation using a small unlabeled semantic proxy set to estimate target activation, reducing semantic misalignment. It improves cross-domain transfer, advancing robust AI-generated image detection.",
+      "llm_tldr_cn": "现有可泛化AI生成图像与深度伪造检测受不对称现象困扰，面向有限训练分布的适配会破坏视觉基础模型的可迁移表征。本文提出COMPASS，一种数据感知的子空间适配框架，利用小型无标注语义代理集估计目标激活，实现语义对齐的子空间分离。方法缓解了基于幅度分解的数据无关问题，提升了跨域检测的鲁棒性与泛化能力，为AI生成图像检测提供了新思路。",
+      "llm_tldr": "现有可泛化AI生成图像与深度伪造检测受不对称现象困扰，面向有限训练分布的适配会破坏视觉基础模型的可迁移表征。本文提出COMPASS，一种数据感知的子空间适配框架，利用小型无标注语义代理集估计目标激活，实现语义对齐的子空间分离。方法缓解了基于幅度分解的数据无关问题，提升了跨域检测的鲁棒性与泛化能力，为AI生成图像检测提供了新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2610.08137v1",
+      "source": "arxiv",
+      "title": "Rethinking Visual Provenance: Detection and Watermarking Across Direct Visual Generation and LLM-Driven Code Rendering",
+      "abstract": "AI systems create images and videos with image/video generation models or by writing code and graphics descriptions that are then rendered. These routes can produce similar visible artifacts but expose different representations, intervention points, and provenance evidence. We develop a production-centered framework that compares detection and watermarking across both routes. An explicit verification specification distinguishes passive inference, message recovery, and authenticated provenance. We organize image, video, source-code, and rendering-aware watermarks by production stage. We examine the different requirements of generated images and video, plots and SVG, programmable video, and agent-composed workflows. Documented Claude, OpenAI, and rendering-tool interfaces connect the framework to concrete systems. We pose ten scoped research questions on identifiability, observability, fair comparison across stages, recoverable payload, reconstruction, synchronization, composition, hybrid local contribution, and private production-event authentication. The result is a conceptual research agenda grounded in published methods, inspected interfaces, and elementary boundary examples. It reports no experiments and claims no new theorems; its appendix results are elementary calculations, and documentation and source inspection establish interfaces, not empirical robustness.",
+      "authors": [
+        "Zheng Gao",
+        "Xiaoyu Li",
+        "Zhicheng Bao",
+        "Yang Song",
+        "Jiaojiao Jiang"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.CV"
+      ],
+      "published": "2026-10-06T10:53:19+00:00",
+      "link": "https://arxiv.org/pdf/2610.08137v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "detection and watermarking of AI-generated images and video",
+      "llm_evidence_cn": "AI生成图像与视频的检测与水印",
+      "llm_evidence": "AI生成图像与视频的检测与水印",
+      "canonical_evidence": "AI生成图像与视频的检测与水印",
+      "llm_tldr_en": "Develops a production-centered framework comparing detection and watermarking across direct visual generation and LLM-driven code rendering, with a verification spec distinguishing inference, recovery and provenance.",
+      "llm_tldr_cn": "AI系统既可用图像视频生成模型产出内容，也可通过写代码渲染生成，两条路径留下相似可见痕迹却暴露不同的表征与溯源证据，现有方法缺乏统一比较。作者提出以生产流程为中心的框架，在直接视觉生成与LLM代码渲染两条路径上比较检测与水印，并用显式验证规范区分被动推断、消息恢复与认证溯源。该工作按生产阶段组织图像、视频、源码与渲染感知水印，并讨论各类生成内容的差异化需求。其贡献在于为AI生成内容的检测与溯源提供了系统的比较与规范视角。",
+      "llm_tldr": "AI系统既可用图像视频生成模型产出内容，也可通过写代码渲染生成，两条路径留下相似可见痕迹却暴露不同的表征与溯源证据，现有方法缺乏统一比较。作者提出以生产流程为中心的框架，在直接视觉生成与LLM代码渲染两条路径上比较检测与水印，并用显式验证规范区分被动推断、消息恢复与认证溯源。该工作按生产阶段组织图像、视频、源码与渲染感知水印，并讨论各类生成内容的差异化需求。其贡献在于为AI生成内容的检测与溯源提供了系统的比较与规范视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.08137v2",
+      "source": "arxiv",
+      "title": "Rethinking Visual Provenance: Detection and Watermarking Across Direct Visual Generation and LLM-Driven Code Rendering",
+      "abstract": "AI systems create images and videos with image/video generation models or by writing code and graphics descriptions that are then rendered. These routes can produce similar visible artifacts but expose different representations, intervention points, and provenance evidence. We develop a production-centered framework that compares detection and watermarking across both routes. An explicit verification specification distinguishes passive inference, message recovery, and authenticated provenance. We organize image, video, source-code, and rendering-aware watermarks by production stage. We examine the different requirements of generated images and video, plots and SVG, programmable video, and agent-composed workflows. Documented Claude, OpenAI, and rendering-tool interfaces connect the framework to concrete systems. We pose ten scoped research questions on identifiability, observability, fair comparison across stages, recoverable payload, reconstruction, synchronization, composition, hybrid local contribution, and private production-event authentication. The result is a conceptual research agenda grounded in published methods, inspected interfaces, and elementary boundary examples. It reports no experiments and claims no new theorems; its appendix results are elementary calculations, and documentation and source inspection establish interfaces, not empirical robustness.",
+      "authors": [
+        "Zheng Gao",
+        "Xiaoyu Li",
+        "Zhicheng Bao",
+        "Jiaojiao Jiang"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.CV"
+      ],
+      "published": "2026-10-06T10:53:19+00:00",
+      "link": "https://arxiv.org/pdf/2610.08137v2",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "detection and watermarking of AI-generated images and video",
+      "llm_evidence_cn": "AI生成图像与视频的检测和水印",
+      "llm_evidence": "AI生成图像与视频的检测和水印",
+      "canonical_evidence": "AI生成图像与视频的检测和水印",
+      "llm_tldr_en": "This paper builds a production-centered framework comparing detection and watermarking for AI-generated content across direct generation and LLM-driven code rendering, distinguishing passive inference, message recovery, and authenticated provenance by production stage.",
+      "llm_tldr_cn": "AI生成图像与视频既可由生成模型直接产出，也可由大模型写代码渲染得到，两条路径产生相似可见痕迹却暴露不同的表征与溯源证据。本文提出以生产流程为中心的框架，系统比较两类路径下的检测与水印方法。作者以显式验证规范区分被动推断、信息恢复与可认证溯源，并按生产阶段组织图像、视频、代码与渲染感知水印，为AI生成内容溯源提供了统一的分析视角。",
+      "llm_tldr": "AI生成图像与视频既可由生成模型直接产出，也可由大模型写代码渲染得到，两条路径产生相似可见痕迹却暴露不同的表征与溯源证据。本文提出以生产流程为中心的框架，系统比较两类路径下的检测与水印方法。作者以显式验证规范区分被动推断、信息恢复与可认证溯源，并按生产阶段组织图像、视频、代码与渲染感知水印，为AI生成内容溯源提供了统一的分析视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.07916v1",
+      "source": "arxiv",
+      "title": "Can We Model the Artifacts Explicitly? Disentangle Artifacts via Pairwise Edit Relations for Image Manipulation Localization",
+      "abstract": "Image Manipulation Localization (IML) is commonly formulated as a fully supervised learning task that estimates the optimal manipulation mask $y$ for a given image $x$. In this work, we first reveal the latent nature of artifacts and thus reinterpret IML as a latent-variable problem, $P(y|x)=\\int P(y|z)\\,P(z|x)\\,dz$, where $z$ denotes the artifacts. Following this interpretation, we pinpoint the cause for the current IML models' insufficiency as their implicit artifacts modeling strategy, highlighting the necessity of modeling $z$ in an explicit manner. Without direct labels, feature disentanglement is the most appropriate solution for this explicit modeling. Accordingly, we propose a two-stage learning paradigm with the Pairwise Artifacts Learning (PAL) and Standard Localization (SL) phases to estimate $P(z|x)$ and $P(y|z)$ via edit relations. To support our edit-relation-based learning, we further curate EditGroup-45K, a source-anchored dataset organized into edit groups for pair construction. Extensive experiments show that our PAL paradigm yields consistent improvements across diverse IML architectures, and empirical analyses further verify that PAL does capture artifacts explicitly through feature disentanglement. Code and dataset are available at https://github.com/venus-guangjian/PAL",
+      "authors": [
+        "Xuekang Zhu",
+        "Kaiwen Feng",
+        "Ruifeng Wang",
+        "Xiwen Wang",
+        "Xiaochen Ma",
+        "Bo Du",
+        "Changjiang Jiang",
+        "Chenfan Qu",
+        "Songyu Ye",
+        "Xia Du",
+        "Wentao Feng",
+        "Jian Liu",
+        "Ji-Zhe Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-06T07:58:40+00:00",
+      "link": "https://arxiv.org/pdf/2610.07916v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "image manipulation localization, explicit artifact disentanglement",
+      "llm_evidence_cn": "图像篡改定位与显式伪影解耦",
+      "llm_evidence": "图像篡改定位与显式伪影解耦",
+      "canonical_evidence": "图像篡改定位与显式伪影解耦",
+      "llm_tldr_en": "This paper reinterprets image manipulation localization as a latent-variable problem where artifacts are latent, and proposes a two-stage feature-disentanglement method to explicitly model manipulation artifacts for better localization.",
+      "llm_tldr_cn": "图像篡改定位通常被当作全监督掩码预测任务，但伪造伪影本身具有潜在性，现有模型隐式建模伪影导致性能受限。本文将篡改定位重新表述为含潜在伪影变量的积分问题，指出必须显式建模伪影。作者提出两阶段学习方法，借助特征解耦在缺乏伪影直接标签的情况下实现显式伪影建模，从而提升篡改区域定位精度，为多媒体取证中的图像篡改检测提供了新视角。",
+      "llm_tldr": "图像篡改定位通常被当作全监督掩码预测任务，但伪造伪影本身具有潜在性，现有模型隐式建模伪影导致性能受限。本文将篡改定位重新表述为含潜在伪影变量的积分问题，指出必须显式建模伪影。作者提出两阶段学习方法，借助特征解耦在缺乏伪影直接标签的情况下实现显式伪影建模，从而提升篡改区域定位精度，为多媒体取证中的图像篡改检测提供了新视角。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.08639v1",
+      "source": "arxiv",
+      "title": "Forensic Reserve: Eliciting Latent Knowledge for Image Forgery Detection",
+      "abstract": "As generated images become increasingly realistic, reliable forgery detection is essential for maintaining trust in visual information. However, existing methods primarily rely on task-specific supervision to adapt vision foundation model representations, without fully exploiting internal forensic knowledge to guide detection. To address this limitation, we propose Reserve-Guided Elicitation (RGE), a framework that treats sparse, origin-sensitive internal components in pretrained models as a forensic reserve and translates their localization into structural constraints for lightweight adaptation. Specifically, we first use the Forensic Lens (F-lens) to decompose activations across layers and token groups into independent components and globally screen them by their response differences between real and generated images, identifying reserve sites and directions. Next, we map the selected directions back to hidden-state space to construct fixed reserve subspaces and insert Forensic Reserve Adapters (FRA) only at the identified sites. Finally, with the backbone parameters, previously fitted reference classifier, and subspace bases fixed, we train only the FRA coefficient maps to generate input-dependent residual updates constrained to the corresponding subspaces, strengthening existing forensic responses. Using only 500 labeled training images and a trainable parameter budget below 0.2% of the backbone, RGE achieves competitive performance across three detection benchmarks without target-benchmark adaptation. Furthermore, RGE consistently improves over the corresponding frozen detectors across eight encoders spanning self-supervised and vision-language pretraining, eliciting a latent forensic capacity broadly shared across pretrained vision models.",
+      "authors": [
+        "Jiahua Li",
+        "Zixu John",
+        "Tom Zhong",
+        "Fuping Wu",
+        "Tianhao Xu",
+        "Jianqing Zheng",
+        "Yuanhan Mo",
+        "Fei Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-06T16:33:00+00:00",
+      "link": "https://arxiv.org/pdf/2610.08639v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "image forgery detection leveraging pretrained model internal knowledge",
+      "llm_evidence_cn": "利用预训练模型内部知识的图像伪造检测",
+      "llm_evidence": "利用预训练模型内部知识的图像伪造检测",
+      "canonical_evidence": "利用预训练模型内部知识的图像伪造检测",
+      "llm_tldr_en": "Proposes Reserve-Guided Elicitation, which treats sparse origin-sensitive internal components of pretrained models as a forensic reserve and uses their localization as structural constraints for lightweight adaptation in image forgery detection.",
+      "llm_tldr_cn": "生成图像日益逼真，可靠检测对维护视觉信息信任至关重要，但现有方法多依赖任务特定监督来适配视觉基础模型，未充分利用其内部取证知识。作者提出Reserve-Guided Elicitation框架，用Forensic Lens将各层与token组的激活分解为独立成分，把对来源敏感的内部组件视为取证储备，并将其定位转化为结构约束以指导轻量适配。该方案在图像伪造检测任务上更充分地挖掘了预训练表征中的取证信号。其贡献在于为生成图像检测提供了一种利用模型内在知识的高效范式。",
+      "llm_tldr": "生成图像日益逼真，可靠检测对维护视觉信息信任至关重要，但现有方法多依赖任务特定监督来适配视觉基础模型，未充分利用其内部取证知识。作者提出Reserve-Guided Elicitation框架，用Forensic Lens将各层与token组的激活分解为独立成分，把对来源敏感的内部组件视为取证储备，并将其定位转化为结构约束以指导轻量适配。该方案在图像伪造检测任务上更充分地挖掘了预训练表征中的取证信号。其贡献在于为生成图像检测提供了一种利用模型内在知识的高效范式。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.11683v1",
+      "source": "arxiv",
+      "title": "Camera-Noise Residuals for Face-Swap Detection: Redundant, Not Complementary, and Why",
+      "abstract": "Fusing a learned camera-noise fingerprint with an RGB appearance backbone is an appealing route to generator-independent deepfake detection, because the noise residual is grounded in image-formation physics rather than in the texture statistics of a particular generator. We test, on FaceForensics++, whether a Noiseprint++ residual channel carries information \\emph{complementary} to an RGB Xception backbone for face-swap detection. A three-model ablation (RGB-only, residual-only, late-fusion) shows that fusion does not improve over RGB alone and that the residual branch alone is near chance. A seven-level bottleneck diagnostic localizes the cause: the noise maps do carry a discriminative signal, but it is statistical---carried by the per-sample first and second moments (mean, variance, energy) of the residual---and the per-sample \\texttt{InstanceNorm} layer placed at the noise-branch input, following the TruFor template, standardizes exactly those moments away (five-fold cross-validated AUC drops from $0.747$ to $0.554$). A context-crop control rules out cropping geometry, and two fixed-fusion variants that remove the bottleneck recover the statistical signal yet still fail to beat RGB on every dataset. We conclude that, on this manipulation distribution, the noise residual is redundant with RGB rather than complementary, and we give concrete guidance for practitioners adopting noise-residual fusion for face-swap detection.",
+      "authors": [
+        "Danil Davydov",
+        "Bader Rasheed",
+        "Dmitriy Vatolin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-10-08T10:55:41+00:00",
+      "link": "https://arxiv.org/pdf/2610.11683v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "face-swap deepfake detection with camera-noise residuals",
+      "llm_evidence_cn": "基于相机噪声残差的换脸深度伪造检测",
+      "llm_evidence": "基于相机噪声残差的换脸深度伪造检测",
+      "canonical_evidence": "基于相机噪声残差的换脸深度伪造检测",
+      "llm_tldr_en": "This paper tests whether learned camera-noise residuals add complementary information to RGB backbones for face-swap detection, finding via ablations on FaceForensics++ that fusion does not help and the residual signal is statistical rather than complementary.",
+      "llm_tldr_cn": "将学习到的相机噪声指纹与RGB外观骨干融合，被视为实现生成器无关深度伪造检测的诱人途径，因为噪声残差根植于成像物理。本文在FaceForensics++上检验Noiseprint++残差通道能否为RGB Xception骨干提供互补信息。三模型消融表明融合并未优于纯RGB，残差分支单独接近随机水平，七级瓶颈诊断进一步指出噪声图虽含判别信号但属统计性而非互补。该研究澄清了噪声残差在换脸检测中的真实作用。",
+      "llm_tldr": "将学习到的相机噪声指纹与RGB外观骨干融合，被视为实现生成器无关深度伪造检测的诱人途径，因为噪声残差根植于成像物理。本文在FaceForensics++上检验Noiseprint++残差通道能否为RGB Xception骨干提供互补信息。三模型消融表明融合并未优于纯RGB，残差分支单独接近随机水平，七级瓶颈诊断进一步指出噪声图虽含判别信号但属统计性而非互补。该研究澄清了噪声残差在换脸检测中的真实作用。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detection of deepfake images and videos using machine learning models",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.09907v1",
+      "source": "arxiv",
+      "title": "FedSSMCoOp: SSM Encoders for light-weight Federated Prompt Learning for Few-shot Classification",
+      "abstract": "Vision-Language Models (VLMs) have shown strong performance across a wide range of downstream vision tasks, thanks to the complementary information contained in the respective domains. Despite the performance gains, most of these approaches rely on aligning these domains using the cosine similarity metric, which fails to capture token-level structure and cross-modal interactions prior to the classification stage. This is especially critical in biomedical applications under federated constraints, where data sharing is restricted, labeled data is scarce at each site, and it differs widely across institutions, leading to substantial statistical heterogeneity. To overcome this issue, we propose FedSSMCoOp, a federated few-shot image classification framework that enables multimodal learning while preserving data privacy. With the help of the SSM-based Vision Mamba and Cross Mamba blocks, and by optimizing only the soft-prompt and communication-prompt updates in the federated setting, the framework prioritizes both computation and performance. Importantly, this eliminates the need to use an external Large Language Model (LLM) for feature alignment. The framework is further trained and evaluated on various biomedical image datasets, and its performance is assessed. The proposed framework delivers stable performance relative to the baselines and is, on average, 1.96 times lighter. The corresponding script will be made available soon.",
+      "authors": [
+        "Ankita Das",
+        "Ambarish Parthasarathy",
+        "Sumohana S. Channappayya",
+        "C. Krishna Mohan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-07T12:00:59+00:00",
+      "link": "https://arxiv.org/pdf/2610.09907v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "few-shot image classification with cross-modal feature alignment",
+      "llm_evidence_cn": "少样本图像分类与跨模态特征对齐",
+      "llm_evidence": "少样本图像分类与跨模态特征对齐",
+      "canonical_evidence": "少样本图像分类与跨模态特征对齐",
+      "llm_tldr_en": "FedSSMCoOp proposes SSM encoders for lightweight federated prompt learning, improving few-shot image classification under scarce and heterogeneous labelled data.",
+      "llm_tldr_cn": "视觉语言模型在少样本任务中表现优异，但多数方法仅用余弦相似度对齐两模态，难以在分类前捕捉词元级结构与跨模态交互，在数据稀缺且异质的联邦场景中尤为关键。作者提出FedSSMCoOp，用状态空间模型编码器进行轻量级联邦提示学习，实现更细致的跨模态对齐。方法面向各站点标注数据稀缺、分布差异大的联邦少样本图像分类。该工作为受限数据下的少样本图像分类提供了有效的对齐方案。",
+      "llm_tldr": "视觉语言模型在少样本任务中表现优异，但多数方法仅用余弦相似度对齐两模态，难以在分类前捕捉词元级结构与跨模态交互，在数据稀缺且异质的联邦场景中尤为关键。作者提出FedSSMCoOp，用状态空间模型编码器进行轻量级联邦提示学习，实现更细致的跨模态对齐。方法面向各站点标注数据稀缺、分布差异大的联邦少样本图像分类。该工作为受限数据下的少样本图像分类提供了有效的对齐方案。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "few shot learning approaches for face forgery detection and image classification",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.11381v1",
+      "source": "arxiv",
+      "title": "EvoKnow: Continual Knowledge Evolution for AI-Generated Image Detection",
+      "abstract": "AI-generated image detectors are commonly trained on fixed generator domains and become difficult to maintain as new generative models emerge. Continual adaptation is challenging because replaying historical generated images is costly, whereas updating shared parameters with limited current-domain data can overwrite prior forensic knowledge. We propose EvoKnow, a replay-free framework that formulates continual AI-generated image detection as forensic knowledge evolution. EvoKnow preserves a shared forensic basis learned from base domains, incrementally adds isolated residual experts for complementary generator-relevant evidence, and retrieves expertise through an Analytical Incremental Router (AIR) updated in closed form from current-stage generated images and accumulated sufficient statistics. Experiments demonstrate effective cross-generator generalization, few-shot expansion, and long-horizon continual adaptation. With ten generated images per arriving generator, EvoKnow achieves 96.70% average accuracy on non-base GenImage generators and 94.48% accuracy on Chameleon without target-benchmark adaptation. Under a strict replay-free continual learning protocol, EvoKnow achieves state-of-the-art continual learning performance, attaining 96.32% mean stage-wise accuracy and 4.32% average forgetting.",
+      "authors": [
+        "Zhiheng Peng",
+        "Wenwei Jin",
+        "Yangshi Ge",
+        "Siyu Xia",
+        "Jiawei Li",
+        "Xu Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-08T07:12:47+00:00",
+      "link": "https://arxiv.org/pdf/2610.11381v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "continual AI-generated image detection across emerging generators",
+      "llm_evidence_cn": "面向新兴生成器的持续AI生成图像检测",
+      "llm_evidence": "面向新兴生成器的持续AI生成图像检测",
+      "canonical_evidence": "面向新兴生成器的持续AI生成图像检测",
+      "llm_tldr_en": "This paper proposes EvoKnow, a replay-free continual learning framework for AI-generated image detection that preserves a shared forensic basis and adds isolated residual experts routed by a closed-form incremental router to adapt to new generators.",
+      "llm_tldr_cn": "AI生成图像检测器通常在固定生成器域上训练，难以随新生成模型涌现而维护，而回放历史图像成本高昂，用有限新域数据更新共享参数又会覆盖既有取证知识。本文提出EvoKnow，将持续AI生成图像检测建模为取证知识演化。该方法保留从基域学得的共享取证基底，增量加入隔离的残差专家以补充生成器相关证据，并通过闭式更新的分析增量路由器检索专家。实验表明该框架能持续适应新生成器而不回放历史数据。",
+      "llm_tldr": "AI生成图像检测器通常在固定生成器域上训练，难以随新生成模型涌现而维护，而回放历史图像成本高昂，用有限新域数据更新共享参数又会覆盖既有取证知识。本文提出EvoKnow，将持续AI生成图像检测建模为取证知识演化。该方法保留从基域学得的共享取证基底，增量加入隔离的残差专家以补充生成器相关证据，并通过闭式更新的分析增量路由器检索专家。实验表明该框架能持续适应新生成器而不回放历史数据。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting images created by generative AI models such as GANs and diffusion models",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.12095v1",
+      "source": "arxiv",
+      "title": "DVLA-RL++: Dual-Level Vision-Language Alignment with Reinforcement Learning Gating for Few-Shot Learning",
+      "abstract": "Few-shot learning aims to recognize novel categories from limited labeled examples. Recent studies incorporate textual semantics to compensate for limited visual observations and improve class representations. However, high image-text agreement may reflect both intrinsic object properties and incidental context, making support prototypes susceptible to contextual contamination. To address this problem, we propose DVLA-RL++, which extends DVLA-RL with complementary semantic purification (CSP) and counterfactual reinforcement-learning gating (CRG). Specifically, CSP generates intrinsic and nuisance descriptions from labeled supports and compares their agreement with each support token. An ambiguity-dependent rejection margin guides sparse evidence allocation, while an intrinsic semantic anchor fills the unassigned mass to provide a fallback when visual evidence is unreliable. CRG learns layer-wise semantic fusion strengths using a reward that balances recognition performance and nuisance exposure. An independently executed reference trajectory on the same episode provides a paired learning signal. Theoretical analysis relates retained evidence and anchor quality to prototype stability and establishes conditions for unbiased on-policy gradient estimation. Experiments on standard, fine-grained, and cross-domain benchmarks show state-of-the-art accuracy, with an average gain of 1.4% over DVLA-RL. The project page is available at https://peacelwh.github.io/TPAMI27-DVLA-RLpp/.",
+      "authors": [
+        "Wenhao Li",
+        "Xianjing Meng",
+        "Qiangchang Wang",
+        "Zhongyi Han",
+        "Yilong Yin",
+        "Liqiang Nie"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-10-08T15:01:47+00:00",
+      "link": "https://arxiv.org/pdf/2610.12095v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Few-shot learning with vision-language alignment for limited labeled examples",
+      "llm_evidence_cn": "面向少样本的视觉语言对齐学习",
+      "llm_evidence": "面向少样本的视觉语言对齐学习",
+      "canonical_evidence": "面向少样本的视觉语言对齐学习",
+      "llm_tldr_en": "Few-shot learning recognizes novel categories from few labeled examples, but textual semantics can contaminate support prototypes with incidental context. DVLA-RL++ adds complementary semantic purification and counterfactual reinforcement-learning gating to reject nuisance semantics. It improves few-shot classification robustness.",
+      "llm_tldr_cn": "少样本学习旨在从少量标注样本中识别新类别，近期方法引入文本语义弥补视觉信息不足，但图像文本高一致可能混入偶然上下文，使支撑原型受污染。本文提出DVLA-RL++，在原有框架上加入互补语义净化与反事实强化学习门控，生成内在与干扰描述并比较一致性。方法有效抑制上下文污染，提升了少样本分类的鲁棒性与类别表征质量。",
+      "llm_tldr": "少样本学习旨在从少量标注样本中识别新类别，近期方法引入文本语义弥补视觉信息不足，但图像文本高一致可能混入偶然上下文，使支撑原型受污染。本文提出DVLA-RL++，在原有框架上加入互补语义净化与反事实强化学习门控，生成内在与干扰描述并比较一致性。方法有效抑制上下文污染，提升了少样本分类的鲁棒性与类别表征质量。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "training models with only a small number of labeled examples per class",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.11153v1",
+      "source": "arxiv",
+      "title": "CARE: Constrained Attention Refinement for Fine-Grained Visual Classification via Teacher-Student Distillation",
+      "abstract": "Fine-grained visual classification requires models to recognize subtle local traits while exposing the visual evidence behind their predictions. Class-specific attention pathways provide a natural basis for interpretable recognition, but their constrained prediction structure limits discriminative capacity and underuses intermediate representations from strong pretrained backbones. To address this problem, we propose CARE, a constrained attention refinement framework for interpretable fine-grained recognition via teacher-student distillation. CARE keeps the final prediction and explanation within a class-specific attention student, while introducing a training-only auxiliary query teacher that reads selected intermediate DINOv2 layers with learnable queries. The teacher fuses multi-level representations and transfers logit-standardized class-discriminative knowledge to the student. To further refine the explanation pathway, we design diversity and sparsity terms to regularize student attention heads, reducing redundancy and encouraging compact trait localization. Experiments on CUB, Oxford-IIIT Pet, Stanford Dogs, and Stanford Cars show that CARE achieves strong classification performance under an interpretable frozen-backbone setting, reaching 78.5% Top-1 accuracy on CUB. Faithfulness analysis with insertion and deletion metrics further indicates that the top-ranked attention regions retain class-relevant evidence for explanation.",
+      "authors": [
+        "Ruibo Wen",
+        "Hang Shao",
+        "Yiming Lei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-08T03:15:12+00:00",
+      "link": "https://arxiv.org/pdf/2610.11153v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Fine-grained visual classification via attention refinement and distillation",
+      "llm_evidence_cn": "基于注意力细化与蒸馏的细粒度视觉分类",
+      "llm_evidence": "基于注意力细化与蒸馏的细粒度视觉分类",
+      "canonical_evidence": "基于注意力细化与蒸馏的细粒度视觉分类",
+      "llm_tldr_en": "Fine-grained visual classification must recognize subtle local traits while exposing visual evidence, but constrained class-specific attention limits discriminative power. CARE introduces a constrained attention refinement framework with a training-only query teacher via distillation. It improves interpretable fine-grained recognition.",
+      "llm_tldr_cn": "细粒度视觉分类要求模型识别细微局部特征并给出可视化证据，但类别专属注意力路径的受限预测结构削弱了判别力，且未充分利用强预训练骨干的中间表征。本文提出CARE框架，通过师生蒸馏引入仅训练期使用的辅助查询教师，读取选中中间特征来细化学生注意力。方法在保持可解释性的同时提升细粒度分类精度，为可解释细粒度识别提供新思路。",
+      "llm_tldr": "细粒度视觉分类要求模型识别细微局部特征并给出可视化证据，但类别专属注意力路径的受限预测结构削弱了判别力，且未充分利用强预训练骨干的中间表征。本文提出CARE框架，通过师生蒸馏引入仅训练期使用的辅助查询教师，读取选中中间特征来细化学生注意力。方法在保持可解释性的同时提升细粒度分类精度，为可解释细粒度识别提供新思路。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "classifying images into categories using convolutional neural networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.16452v1",
+      "source": "arxiv",
+      "title": "Not Every Cue Is Evidence: Cue Supportability for Forensic Distillation in Face Forgery Detection",
+      "abstract": "Explainable face forgery detection requires not only correct judgments but also forensic evidence supported by the input image. However, training cues are typically derived from the forgery generation pipeline. Since images available to the model are of limited quality and resolution, it is difficult to observe the fine-grained traces these cues refer to. Training methods that further supply such cues as privileged supervision exacerbate the problem, as the student is taught to articulate evidence it cannot perceive. The student consequently resorts to templated or over-generalized expressions, giving rise to the correct-answer, wrong-evidence (CAWE) failure. We propose a dual supportability audit that filters privileged cues before distillation. Each candidate cue must be predictable from the remaining privileged context and causally tied to high-attribution visual regions in the current image. Only cues satisfying both conditions receive substantial distillation weight, preventing unsupported details from leaking into the student. Experiments across eight benchmarks show that our method maintains or improves detection accuracy while significantly raising explanation faithfulness compared to existing paradigms.",
+      "authors": [
+        "Binjia Zhou",
+        "Dawei Luo",
+        "Shuai Chen",
+        "Feng Xu",
+        "Haoyuan Li",
+        "Jia wen Seow",
+        "Jiachi Wang",
+        "Jie Lei",
+        "Zunlei Feng",
+        "Yijun Bei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-12T09:16:39+00:00",
+      "link": "https://arxiv.org/pdf/2610.16452v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Explainable face forgery detection with forensic evidence supportability",
+      "llm_evidence_cn": "可解释人脸伪造检测与取证证据支撑性",
+      "llm_evidence": "可解释人脸伪造检测与取证证据支撑性",
+      "canonical_evidence": "可解释人脸伪造检测与取证证据支撑性",
+      "llm_tldr_en": "Explainable face forgery detection needs judgments backed by image-supported evidence, but privileged cues cause the correct-answer-wrong-evidence failure. This work proposes a dual supportability audit that filters cues the student cannot perceive. It improves forensic explanation fidelity in manipulated face image detection.",
+      "llm_tldr_cn": "可解释人脸伪造检测不仅要求判断正确，还要求取证证据能被输入图像支撑。然而现有方法从伪造生成流程推导线索，受限于图像质量与分辨率，学生模型被迫表达无法感知的证据，导致答案正确但证据错误的CAWE失败。本文提出双重支撑性审计来过滤特权线索，提升多媒体取证中人脸伪造检测的可解释性与证据可信度。",
+      "llm_tldr": "可解释人脸伪造检测不仅要求判断正确，还要求取证证据能被输入图像支撑。然而现有方法从伪造生成流程推导线索，受限于图像质量与分辨率，学生模型被迫表达无法感知的证据，导致答案正确但证据错误的CAWE失败。本文提出双重支撑性审计来过滤特权线索，提升多媒体取证中人脸伪造检测的可解释性与证据可信度。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "detecting manipulated face images in multimedia forensics",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.11184v1",
+      "source": "arxiv",
+      "title": "WorldFact-Bench: Beyond Image-Internal Plausibility to Image-World Consistency",
+      "abstract": "Advances in image generation have made visual authenticity increasingly difficult to assess. Although image forensics now examines both generation artifacts and higher-level visual inconsistencies, a plausible image can still contradict real-world facts or rules. We introduce WorldFact-Bench to evaluate image-world consistency from a single image, without a predefined claim or verification target. The benchmark contains 1,274 source-aligned real-fake pairs across four verification regimes and ten semantic domains. Each pair introduces a specific, evidence-supported factual conflict while seeking to preserve non-target content and visual plausibility. Images are evaluated independently, and pair accuracy requires both members of a pair to be classified correctly. We further propose PERSIST-Agent, which organizes iterative verification around a persistent state linking candidate facts, visual observations, evidence, and verification statuses. This state guides subsequent inspection and retrieval while retaining unresolved candidates. With backbone weights fixed, harness self-optimization refines the agent's prompts and execution rules through validation feedback. Experiments reveal strong label biases in several detectors and uneven gains from retrieval. On the evaluated 8B backbones, PERSIST-Agent improves pair accuracy over both direct judgment and retrieval-augmented baselines, while ablations support the role of persistent verification state. These findings highlight the value of state-guided verification and the remaining gap between visual plausibility and factual correctness.",
+      "authors": [
+        "Zhuohong Chen",
+        "Zhengxian Wu",
+        "Yunyao Yu",
+        "Hangrui Xu",
+        "Zijian Yu",
+        "Hao Tan",
+        "Zhifang Liu",
+        "Peng Jiao",
+        "Jun Lan",
+        "Haoqian Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-08T03:42:02+00:00",
+      "link": "https://arxiv.org/pdf/2610.11184v1",
+      "tags": [
+        "keyword:deepfake-fsl",
+        "query:deepfake-fsl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "real-fake image pairs for image forensics",
+      "llm_evidence_cn": "用于图像取证的真假图像对",
+      "llm_evidence": "用于图像取证的真假图像对",
+      "canonical_evidence": "用于图像取证的真假图像对",
+      "llm_tldr_en": "Introduces WorldFact-Bench, a benchmark of 1,274 source-aligned real-fake image pairs across four verification regimes and ten domains, evaluating whether generated images contradict real-world facts beyond internal plausibility.",
+      "llm_tldr_cn": "图像生成技术的进步使视觉真实性愈发难以评估，现有取证多关注生成伪影或图像内部一致性，却忽略了图像可能与真实世界事实相矛盾。本文提出WorldFact-Bench基准，从单张图像出发评估图像与世界的一致性，包含1,274对源对齐的真假图像对，覆盖四种验证机制与十个语义域。每对图像引入有证据支持的事实冲突，同时尽量保持非目标内容与视觉合理性，需同时正确判定一对中的两张图像。该基准将图像取证从内部合理性推进到与外部世界知识的对齐。",
+      "llm_tldr": "图像生成技术的进步使视觉真实性愈发难以评估，现有取证多关注生成伪影或图像内部一致性，却忽略了图像可能与真实世界事实相矛盾。本文提出WorldFact-Bench基准，从单张图像出发评估图像与世界的一致性，包含1,274对源对齐的真假图像对，覆盖四种验证机制与十个语义域。每对图像引入有证据支持的事实冲突，同时尽量保持非目标内容与视觉合理性，需同时正确判定一对中的两张图像。该基准将图像取证从内部合理性推进到与外部世界知识的对齐。",
+      "llm_tags": [
+        "query:deepfake-fsl"
+      ],
+      "matched_query_tag": "query:deepfake-fsl",
+      "matched_query_text": "distinguishing computer-generated images from real photographs",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
 }

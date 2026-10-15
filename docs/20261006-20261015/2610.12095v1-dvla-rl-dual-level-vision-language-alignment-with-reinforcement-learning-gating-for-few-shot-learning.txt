@@ -1,0 +1,2502 @@
+1
+DVLA-RL++: Dual-Level Vision-Language
+Alignment with Reinforcement Learning Gating for
+Few-Shot Learning
+Wenhao Li , Xianjing Meng , Qiangchang Wang , Zhongyi Han , Yilong Yin , and Liqiang Nie ,
+Senior Member, IEEE
+Abstract—Few-shot learning aims to recognize novel categories
+from limited labeled examples. Recent studies incorporate textual
+semantics to compensate for limited visual observations and im-
+prove class representations. However, high image-text agreement
+may reflect both intrinsic object properties and incidental context,
+making support prototypes susceptible to contextual contamina-
+tion. To address this problem, we propose DVLA-RL++, which
+extends DVLA-RL with complementary semantic purification
+(CSP) and counterfactual reinforcement-learning gating (CRG).
+Specifically, CSP generates intrinsic and nuisance descriptions
+from labeled supports and compares their agreement with each
+support token. An ambiguity-dependent rejection margin guides
+sparse evidence allocation, while an intrinsic semantic anchor fills
+the unassigned mass to provide a fallback when visual evidence is
+unreliable. CRG learns layer-wise semantic fusion strengths using
+a reward that balances recognition performance and nuisance
+exposure. An independently executed reference trajectory on
+the same episode provides a paired learning signal. Theoretical
+analysis relates retained evidence and anchor quality to proto-
+type stability and establishes conditions for unbiased on-policy
+gradient estimation. Experiments on standard, fine-grained, and
+cross-domain benchmarks show state-of-the-art accuracy, with
+an average gain of 1.4% over DVLA-RL. The project page is
+available at https://peacelwh.github.io/TPAMI27-DVLA-RLpp/.
+Index Terms—Few-shot learning, Vision-language alignment,
+Support prototype, Reinforcement learning.
+I. INTRODUCTION
+Few-shot learning (FSL) aims to recognize novel categories
+from limited labeled examples by transferring knowledge ac-
+quired on base categories [1, 2]. It addresses settings in which
+collecting representative annotations for every new category
+is expensive or impractical. In episodic recognition, a learner
+uses a small labeled support set to classify separate query
+images. Metric-based methods construct a prototype for each
+class by aggregating its support features. With only a few
+observations, recognition depends not only on the quality of
+Wenhao Li, Qiangchang Wang, Zhongyi Han and Yilong Yin are
+with
+the
+School
+of
+Software,
+Shandong
+University,
+Jinan
+250101,
+China (E-mail: wenhao.li@mail.sdu.edu.cn; qiangchang.wang@gmail.com;
+zhongyi.han@sdu.edu.cn; ylyin@sdu.edu.cn).
+Wenhao Li is with Shenzhen Loop Area Institute, Shenzhen 518038, China.
+Xianjing Meng is with the School of Computer and Artificial Intelligence,
+Shandong University of Finance and Economics, Jinan 250014, China (E-
+mail:rongmengyuan@gmail.com).
+Liqiang Nie is with the School of Computer Science and Technol-
+ogy, Harbin Institute of Technology (Shenzhen), 518055, China (E-mail:
+nieliqiang@gmail.com).
+the learned embedding but also on which support evidence is
+included in the prototype.
+Existing approaches improve either visual representations
+or the semantic information available to the learner. Visual
+methods strengthen local matching, embedding adaptation,
+and feature transfer [3, 4, 5]. Semantic methods introduce
+class names, prompts, attributes, or descriptions to supplement
+limited visual observations [6, 7, 8, 9]. These directions are
+complementary. Visual features capture the appearance of ob-
+served instances, whereas language supplies class knowledge
+that a few images cannot reliably establish. Our earlier frame-
+work DVLA-RL [10] combines local attributes and global
+descriptions with reinforcement-learning gates for hierarchical
+vision-language alignment. This alignment enriches visual fea-
+tures at multiple semantic granularities. However, it does not
+explicitly determine which local support features should define
+a class. A description may accurately characterize an image
+while matching both intrinsic object properties and incidental
+context. Therefore, reliable prototypes require distinguishing
+class-defining evidence from contextual cues, even when both
+are well explained by language.
+Fig. 1(a) illustrates this ambiguity with a bird among reeds.
+Striped plumage and vertical reeds share visual patterns, and
+both intrinsic and contextual descriptions can be factually
+correct. However, contextual cues become unreliable when
+the background changes. Averaging support features allows
+these cues to enter the class prototype, a problem we call
+support-evidence contamination. Fig. 1(b) shows that com-
+peting semantic explanations help distinguish the evidence.
+Feathers favor the intrinsic descriptions, whereas reeds favor
+the nuisance descriptions. The reed plume is a subtler case,
+since its high intrinsic agreement is accompanied by a small
+advantage over nuisance agreement, motivating an explicit
+rejection margin. Unlike spatial foreground suppression [11],
+semantic evidence selection concerns incidental cues that may
+occur within or alongside the target object. It must also handle
+supports whose visual tokens are all unreliable without forcing
+prototype mass onto poor evidence. Furthermore, selective
+aggregation alone does not control whether semantic fusion
+reinforces contextual cues across visual layers. The fusion
+policy should therefore account for support-evidence reliability
+while preserving useful class semantics.
+Motivated by these observations, we propose DVLA-RL++
+with complementary semantic purification (CSP) and counter-
+arXiv:2610.12095v1  [cs.CV]  8 Oct 2026
+
+
+2
+(a) Shared visual cues
+Support image
+Class: bird
+Intrinsic
+Nuisance
+striped plumage
+vertical reeds
+pointed beak
+reed plume
+(b) High agreement can still reflect context
+Visual token
+Text agreement
+Relative evidence
+Intrinsic
+Nuisance
+Margin 0.15
+Feathers
+0.84
+0.28
++0.56
+Keep
+Reeds
+0.78
+0.86
+-0.08
+Reject
+Plume
+0.74
+0.68
++0.06
+Reject
+Fig. 1.
+Illustration of support-evidence contamination. (a) Intrinsic bird
+cues and incidental reed patterns coexist in a support image. (b) Comparing
+intrinsic and nuisance agreement keeps the feathers and rejects the reeds. The
+reed plume has positive relative evidence but falls below the rejection margin
+of 0.15, illustrating the need for explicit rejection.
+factual reinforcement-learning gating (CRG). CSP compares
+each support token against intrinsic and nuisance descriptions
+generated from labeled supports. Its rejection margin increases
+with the semantic overlap between the two description banks,
+demanding stronger relative evidence when the explanations
+are ambiguous. Sparse allocation retains selected visual evi-
+dence, while an intrinsic semantic anchor fills the unassigned
+prototype mass and provides a defined fallback when no token
+is retained. CRG learns layer-wise semantic fusion strengths
+using a nuisance-aware recognition reward. A sampled gate
+policy and a frozen reference gate run on the same episode
+with the same representation but propagate their own support
+states. Their paired utilities guide policy learning toward
+gate choices that improve recognition while limiting nuisance
+exposure. At inference, the semantic banks, gate schedule, and
+prototypes are constructed from labeled supports and reused
+for independently processed queries.
+This article extends our ICLR 2026 conference paper,
+DVLA-RL [10], in three respects. (1) We introduce comple-
+mentary semantic purification to replace uniform averaging
+of support tokens with selective evidence aggregation and
+theoretically analyze the stability of the resulting prototypes.
+(2) We develop counterfactual reinforcement-learning gating
+using a nuisance-aware reward and a paired learning signal
+from an independently executed reference policy, and establish
+conditions for unbiased on-policy gradient estimation. (3) We
+expand the evaluation with context interventions, evidence
+audits, and policy diagnostics to examine the role of support-
+evidence reliability in the observed performance gains. Our
+main contributions are summarized as follows.
+• DVLA-RL++ is proposed to purify support evidence
+against contextual contamination, combining selective
+prototype construction with adaptive semantic fusion.
+• A CSP module is proposed to separate intrinsic evidence
+from contextual cues with competing descriptions and
+ambiguity-dependent rejection, backed by an intrinsic
+anchor and prototype stability bounds.
+• A CRG module is proposed to limit nuisance exposure
+during semantic fusion with an independent reference tra-
+jectory, yielding unbiased on-policy gradient estimation.
+• The proposed method achieves state-of-the-art results on
+nine FSL benchmarks across diverse scenarios with an
+average accuracy gain of 1.4% over DVLA-RL.
+II. RELATED WORK
+A. Visual and Semantic Few-Shot Learning
+Visual few-shot learning transfers representations learned
+from base categories to novel classes with limited labeled
+examples. Matching Networks [1] and Prototypical Net-
+works [2] establish embedding-based recognition through
+support-query matching and class prototypes, respectively.
+Subsequent methods improve local correspondence, episodic
+adaptation, and transferable representations. DeepEMD [3]
+models local feature correspondence through differentiable
+matching, FEAT [4] adapts embeddings using relationships
+within an episode, and Tian et al. [5] demonstrate the effective-
+ness of strong pretrained embeddings. These approaches im-
+prove visual recognition, while prototype estimation remains
+dependent on the limited evidence available in the support set.
+Semantic methods supplement visual observations with
+class knowledge conveyed by names, prompts, attributes,
+and descriptions. AM3 [6] adaptively combines visual and
+semantic representations, Semantic Prompt [7] introduces tex-
+tual knowledge for image recognition, and KTPP [12] incor-
+porates hierarchical cross-modal prompts. SemFew [8] and
+ECER [9] further enrich the semantic information available
+for novel classes. Vision-language pretraining [13], prompt
+learning [14], and support-cache adaptation [15] provide addi-
+tional mechanisms for transferring textual knowledge to few-
+shot recognition. Our earlier DVLA-RL [10] integrates local
+attributes and global descriptions through adaptive layer-wise
+fusion. Building on this framework, the present work examines
+the reliability of the support evidence used to construct pro-
+totypes. High image-text agreement may reflect both intrinsic
+object properties and incidental context, motivating explicit
+evidence selection beyond semantic enrichment.
+B. Complementary Evidence and Selective Aggregation
+Context suppression offers a related perspective on improv-
+ing support representations. Zha et al. [11] combine back-
+ground suppression and foreground alignment for few-shot
+fine-grained recognition. Such spatial separation is relevant
+to contextual interference, although incidental cues may also
+
+
+3
+Training only
+Frozen text encoder
+Intrinsic
+Nuisance
+LOCAL
+LOCAL
+corded coat
+rope-like fur
+wooden fence
+grassy ground
+GLOBAL
+GLOBAL
+A dog with a
+corded white coat
+A grassy yard
+beside a fence
+Description generator
+Supports
+Class: Komondor
+Transformer layers
+Global alignment
+Transformer layers
+Local alignment
+Patch embedding
+Same episode
+Fixed representation
+Sampled policy
+Frozen reference
+Separate state trajectories
+Paired utilities
+Update gate policy
+Local and global
+alignment gates
+D  Counterfactual gate learning
+B  Dual-level visual alignment
+C  Evidence purification and prototypes
+A  Support-conditioned semantics
+Competing descriptions
+Intrinsic
+Nuisance
+Retained
+Suppressed
+Ambiguity-aware selection
+Prototype recognition
+Intrinsic anchor
+corded coat
+rope-like fur
+Anchor mixing
+Visual
+Anchor fill
+Aggregate supports
+Class prototypes
+Query features
+Nearest match
+Prediction
+Komondor
+Both semantic banks
+Fig. 2. Overview of the proposed DVLA-RL++ framework. (A) A description generator produces intrinsic and nuisance semantic banks from the labeled
+supports of each class, and a frozen text encoder embeds them. (B) The intrinsic semantics guide local and global alignment inside the visual backbone through
+RL-gated attention. (C) Support tokens compete against the two banks, the retained evidence is mixed with an intrinsic anchor, and class-wise aggregation
+yields the prototypes used for nearest-prototype recognition. (D) During training only, a sampled gate policy and a frozen reference gate follow separate state
+trajectories on the same episode, and their paired utilities update the gate policy. Query labels enter only the training objectives and the evaluation metrics.
+occur within the foreground. Complementary information can
+additionally be expressed through negative semantic signals.
+For example, TDA [16] incorporates negative pseudo-labels
+into dynamic test-time caches for vision-language models.
+These signals concern class assignments, whereas our nuisance
+descriptions characterize incidental visual cues within labeled
+support images. Intrinsic and nuisance evidence can therefore
+coexist in the same image without changing its class label.
+Sparse aggregation provides a mechanism for selecting
+informative features. Sparsemax [17] produces exact zero
+weights by projecting scores onto the probability simplex. CSP
+adopts a related projection principle but allows the total visual
+allocation mass to remain below one. This enables unreliable
+tokens to be rejected without redistributing all available mass
+among the remaining visual candidates. An intrinsic semantic
+anchor supplies the unassigned mass, including a fallback
+when no visual token is retained. The resulting formulation
+connects complementary semantic evidence, explicit rejection,
+and prototype construction, with theoretical analysis relating
+retained nuisance mass and anchor quality to prototype.
+C. Adaptive Fusion and Policy Learning
+Adaptive fusion determines how semantic information con-
+tributes to visual representations. AM3 [6] learns adaptive
+combinations of visual and semantic representations, while
+DVLA-RL [10] uses reinforcement-learning gates to regulate
+semantic fusion across network layers. Policy-gradient meth-
+ods provide the optimization foundation for such decisions:
+REINFORCE [18] estimates gradients through the score-
+function identity, and PPO [19] optimizes a clipped surrogate
+using sampled trajectories. The present extension incorporates
+support-evidence reliability into policy learning through a
+reward that accounts for both recognition performance and
+nuisance exposure.
+Reference-based learning signals have also been explored
+in reinforcement learning. Self-critical sequence training [20]
+uses the reward of a decoded output as a baseline for sampled
+outputs, and COMA [21] constructs a counterfactual baseline
+by marginalizing an agent’s action. CRG applies reference-
+based learning to nuisance-aware semantic fusion through
+paired policy and reference rollouts on the same episode. The
+two rollouts share the representation but propagate their own
+states, allowing their utilities to reflect the gate consequences.
+Our analysis specifies the conditions under which the reference
+utility can serve as an action-independent baseline for unbiased
+on-policy gradient estimation.
+III. METHOD
+DVLA-RL++ combines selective prototype construction
+with adaptive semantic fusion. As illustrated in Fig. 2, the
+dual-level alignment inherited from DVLA-RL produces se-
+mantically enriched visual features, complementary seman-
+tic purification (CSP) selects support evidence for prototype
+construction, and counterfactual reinforcement-learning gating
+(CRG) learns fusion strengths using recognition and evidence-
+reliability signals. We first define the episodic setting and the
+alignment module, then describe CSP and CRG, and finally
+analyze prototype stability and the inference procedure.
+
+
+4
+A. Problem Formulation
+An N-way K-shot episode consists of a labeled support set
+and a separate query set,
+S = {(xc,k, c)}N,K
+c=1,k=1,
+Q = {(xj, yj)}nq
+j=1,
+(1)
+where N denotes the number of classes, K the number
+of supports per class, and nq the number of queries. The
+base, validation, and test categories are disjoint. Class names
+are available as semantic supervision, while query labels are
+used only for training objectives and evaluation. The learner
+constructs a prototype pc for each class and classifies each
+query independently of the other queries. Support-evidence
+contamination refers to the inclusion of incidental contextual
+cues in these prototypes, even when support labels are correct.
+The visual backbone produces image tokens at L selected
+layers, and a frozen text encoder embeds the descriptions
+generated from labeled supports. We retain the dual-level
+alignment and scalar attention gate of DVLA-RL [10], while
+introducing selective support aggregation and a nuisance-
+aware gate-learning objective. CSP determines which support
+tokens contribute to a prototype, and CRG determines the
+strength of semantic fusion at each selected layer. Semantic
+banks, gate decisions, and prototypes are constructed from
+labeled supports before a test query is processed.
+B. Dual-Level Semantic Alignment
+a) Support-conditioned semantics: For each class, the
+generator receives its labeled supports and constructs local
+intrinsic and nuisance phrases together with global descrip-
+tions for the two roles. Intrinsic descriptions characterize
+class-defining object properties, whereas nuisance descriptions
+characterize incidental context. Both use affirmative state-
+ments; a nuisance description is neither a negated sentence
+nor a competing class label. Generation is performed once
+per episode and cached. When no reliable intrinsic phrase is
+returned, the class name provides the intrinsic fallback. An
+empty nuisance bank yields a zero nuisance response and a
+zero rejection margin.
+b) Gated attention: At each selected layer, projected
+intrinsic semantic tokens from all candidate classes are con-
+catenated according to a fixed local-to-global layer schedule.
+The same episode-level semantic tokens guide every support
+and query image, so description selection requires no query
+class information. Nuisance descriptions are used for evidence
+scoring and policy-state construction. Let Zℓ
+∈RMℓ×dℓ
+denote the image tokens and Tℓ∈Rnt
+ℓ×dℓthe projected
+intrinsic semantic tokens at layer ℓ, where Mℓand nt
+ℓare
+their respective token counts. As shown in Fig. 3, semantic
+queries produce image-guided and text-guided responses,
+Vℓ= Attn(TℓWq, ZℓW v
+k , ZℓW v
+v ),
+Sℓ= Attn(TℓWq, TℓW t
+k, TℓW t
+v),
+Bℓ(gℓ) = gℓVℓ+ (1 −gℓ)Sℓ,
+(2)
+where Attn denotes scaled dot-product attention, Wq is the
+shared query projection, and (W v
+k , W v
+v ) and (W t
+k, W t
+v) are the
+key and value projections of the two branches. The gate action
+gℓ∈(0, 1) is shared across images within an episode. Larger
+Image tokens
+Intrinsic semantics
+corded white coat
+large, shaggy dog
+Shared 
+semantic queries
+Image-guided
+attention
+Text-guided
+attention
+Adaptive fusion
+Gate policy
+from supports
+Context injection
+Broadcast
+Append
+Joint sequence
+Transformer
+Keep image
+tokens
+Fig. 3. Illustration of the RL-gated attention block. A support-derived gate
+combines image-guided and text-guided semantic responses. The fused context
+enriches image tokens through joint transformer processing, after which only
+image tokens are propagated.
+gate values emphasize image-conditioned semantic responses,
+while smaller values emphasize text-conditioned responses.
+The pooled fused context is broadcast to image tokens, and
+the fused semantic tokens are appended before the transformer
+block,
+Zℓ+1 =
+h
+Fϕ,ℓ
+ [Zℓ+ 1 mean(Bℓ); Bℓ]
+i
+img,
+(3)
+where Fϕ,ℓdenotes the transformer block, 1 is a column of
+ones, the brackets concatenate token rows, and [·]img retains
+the image positions. Semantic tokens are discarded after each
+block, preventing their accumulation across layers.
+c) Cross-modal projections: Scoring projections Pℓmap
+image tokens into the text embedding space. They are cal-
+ibrated on labeled base supports before policy training and
+subsequently frozen, keeping the scoring geometry fixed dur-
+ing gate optimization. An anchor projection G maps pooled
+intrinsic semantics into the final visual feature space and is
+trained jointly with the visual encoder through the classifica-
+tion loss.
+d) Classification objective: For a normalized query fea-
+ture qj and normalized class prototypes {pc}N
+c=1, classification
+uses cosine logits with a shared temperature τcls > 0,
+Pϕ(yj = c | xj, S) =
+exp(q⊤
+j pc/τcls)
+PN
+d=1 exp(q⊤
+j pd/τcls)
+,
+Lcls = −1
+nq
+X
+j
+log Pϕ(yj | xj, S).
+(4)
+The representation is optimized through Lcls, while the gate
+policy also accounts for evidence reliability. The conference
+model is evaluated separately as a baseline. The reference gate
+used by CRG operates on the representation and prototype
+constructor of DVLA-RL++.
+
+
+5
+Intrinsic bank
+corded coat
+Nuisance bank
+wooden fence
+Sparse selection
+Retained features
+Intrinsic anchor
+Projected bank
+Fill unused mass
+Average
+and normalize
+Class prototype
+Fig. 4.
+Illustration of complementary semantic purification. Competing
+intrinsic and nuisance descriptions guide sparse support-token allocation.
+An intrinsic semantic anchor fills the unallocated mass before class-wise
+aggregation and normalization.
+C. Complementary Semantic Purification
+CSP constructs prototypes through complementary evidence
+scoring, sparse allocation, semantic anchoring, and support
+aggregation, as illustrated in Fig. 4. Scoring uses image tokens
+only; appended semantic tokens are excluded. At the final
+layer, normalized visual tokens zc,k,i provide the prototype
+features, while their normalized projected counterparts vc,k,i
+provide the semantic scores.
+a) Complementary evidence scoring: Let e+,h
+c,r and e−,h
+c,r
+denote the normalized embeddings of the r-th intrinsic and
+nuisance descriptions of class c at semantic level h
+∈
+{loc, glob}. Let R±,h
+c
+denote the corresponding bank sizes.
+For a nonempty bank, the response is computed through size-
+normalized log-sum-exp aggregation,
+u±,h
+c,k,i = τb log
+
+
+1
+R±,h
+c
+R±,h
+cX
+r=1
+exp(v⊤
+c,k,ie±,h
+c,r /τb)
+
+,
+u±
+c,k,i =
+X
+h
+ωhu±,h
+c,k,i,
+dc,k,i = u+
+c,k,i −u−
+c,k,i,
+(5)
+where τb > 0 is the bank temperature and ωh ≥0 are
+fixed weights satisfying P
+h ωh = 1. The same level weights
+are used for both semantic roles. Size normalization removes
+the direct dependence on bank cardinality introduced by an
+unnormalized sum, while the fixed level weights prevent
+phrase counts from determining the relative contribution of
+local and global semantics. A positive signed score indicates
+stronger agreement with the intrinsic bank. An entirely empty
+nuisance bank has u−
+c,k,i = 0.
+b) Ambiguity-dependent rejection: Let E±
+c
+= {e±,h
+c,r
+:
+h ∈{loc, glob}, 1 ≤r ≤R±,h
+c
+} denote the union of the
+available embeddings for each semantic role. When both banks
+are nonempty, their maximum cross-bank similarity defines the
+overlap,
+oc =
+1 + maxe∈E+
+c , f∈E−
+c e⊤f
+2
+,
+ξc =
+(
+ξ0 + κooc,
+E−
+c̸ = ∅,
+0,
+E−
+c = ∅,
+(6)
+where ξ0 ≥0 and κo ≥0 are selected on validation episodes.
+The intrinsic fallback ensures that E+
+c
+is nonempty. Greater
+overlap increases the required intrinsic advantage because
+semantically similar explanations are harder to distinguish.
+The overlap is evaluated only for nonempty nuisance banks.
+c) Sparse evidence allocation: CSP allocates at most unit
+visual mass to each support image by projecting the margin-
+adjusted scores onto the nonnegative mass ball,
+ac,k =
+arg min
+a≥0, 1⊤a≤1
+1
+2
+a −dc,k −ξc1
+τs
+
+2
+2
+,
+ρc,k = 1⊤ac,k,
+(7)
+where τs > 0 is the allocation temperature and ρc,k ∈[0, 1]
+is the retained visual mass. The projection is unique. As in
+simplex-based sparse projection [17], it admits a sorting-based
+threshold solution,
+ac,k,i = [(dc,k,i −ξc)/τs −δc,k]+ ,
+δc,k ≥0,
+(8)
+where [t]+ = max(t, 0). The threshold is zero when the
+positive margin-adjusted scores already sum to at most one;
+otherwise, it enforces unit total allocation. Consequently,
+ac,k,i > 0 requires dc,k,i > ξc, although this condition alone
+does not guarantee retention. The unallocated mass 1 −ρc,k
+is neutral and is not redistributed to rejected tokens.
+d) Semantic anchoring and prototype construction: The
+prototype uses the visual features zc,k,i rather than their
+scoring projections. Let rc be the unit anchor obtained by
+projecting the pooled intrinsic bank into the visual feature
+space. For λ ∈[0, 1], each raw support representation and
+its class-wise average are
+wc,k = λ
+X
+i
+ac,k,izc,k,i + (1 −λρc,k)rc,
+¯wc = 1
+K
+X
+k
+wc,k.
+(9)
+The anchor coefficient consists of the prescribed semantic
+share 1−λ and the unallocated visual mass λ(1−ρc,k). Thus,
+visual evidence and the anchor form a convex combination,
+and a support with no retained token contributes exactly rc.
+The class prototype is normalized with a numerical safeguard,
+pc =
+(
+¯wc/∥¯wc∥2,
+∥¯wc∥2 > εn,
+rc,
+otherwise,
+(10)
+where εn > 0 is a numerical threshold.
+For policy learning, we also compute the pre-allocation
+evidence deficit,
+Dc,k = 1
+M
+X
+i
+[ξc −dc,k,i]+,
+(11)
+where M is the final-layer image-token count. This quantity
+penalizes tokens whose intrinsic advantage falls below the
+rejection margin. It serves as a surrogate for nuisance expo-
+sure and can also reflect ambiguous or insufficient intrinsic
+evidence.
+
+
+6
+D. Counterfactual Reinforcement-Learning Gating
+CRG learns fusion strengths that improve recognition while
+limiting contextual interference. As shown in Fig. 5, a sampled
+gate trajectory is evaluated alongside an independently exe-
+cuted reference trajectory on the same episode. Their paired
+utilities provide a learning signal for the gate policy.
+a) Policy state and actions: Before the action at layer
+ℓ, the policy observes a history Hℓcontaining pooled incom-
+ing support features, intrinsic and nuisance bank summaries,
+rejection statistics, the layer index, and previous gate actions.
+These previous actions determine the current support state.
+The scalar action retains the Beta parameterization of the
+conference model,
+gℓ∼πθ(· | Hℓ) = Beta(κgpθ(Hℓ), κg[1 −pθ(Hℓ)]) ,
+(12)
+where pθ(Hℓ) ∈(0, 1) is the predicted mean, bounded away
+from zero and one, and κg > 0 is a fixed concentration.
+b) Independent reference rollout: The frozen DVLA-RL
+gate π0 supplies a reference schedule using its own support-
+pooled state H0
+ℓ,
+g0
+ℓ= Eπ0[g | H0
+ℓ].
+(13)
+The sampled and reference branches share the episode, aug-
+mentation, semantic banks, representation, and prototype rule.
+Each branch propagates its own support states, and the refer-
+ence never receives states generated by sampled policy actions.
+Conditional on the episode and shared exogenous randomness,
+the reference rollout therefore does not depend on those
+actions.
+c) Nuisance-aware utility: For a gate sequence g =
+(g1, . . . , gL), we evaluate the evidence deficit on post-action
+support tokens at every selected layer,
+C(g) =
+1
+LNK
+X
+ℓ,c,k
+1
+Mℓ
+X
+i
+[ξc −dpost
+ℓ,c,k,i(g)]+,
+(14)
+where dpost
+ℓ,c,k,i(g) is the signed evidence from Eq. (5), evaluated
+on the post-action tokens using the frozen scoring projection.
+Averaging within each layer and across supports makes the
+cost comparable across layers with different token counts.
+This pre-selection cost prevents the policy from concealing
+unreliable candidate evidence by assigning it zero allocation
+weight.
+For nonnegative coefficients γ and η, the sampled reward,
+reference reward, and centered advantage are
+R(g) = −Lcls(g) −γC(g) −η
+L
+X
+ℓ
+(gℓ−g0
+ℓ)2,
+R0 = −Lcls(g0) −γC(g0),
+Aℓ= sg[R(g) −R0 −bω(Hℓ)] ,
+(15)
+where bω is a history-dependent value baseline and sg stops
+gradients. The sampled reward balances recognition, the
+evidence-deficit surrogate for nuisance exposure, and deviation
+from the reference schedule. The reference has zero deviation
+cost. The policy state uses incoming tokens, whereas the cost
+uses post-action tokens, allowing an action to affect its utility
+without accessing information available only after execution.
+Shared episode
+Same banks and augmentation
+Sampled rollout
+State
+Policy
+Sample
+Encoder
+Attention
+Next layer
+Utility
+Frozen reference
+State
+Policy
+Mean
+Encoder
+Attention
+Next layer
+Utility
+Counterfactual advantage
+CF-PPO update
+Fig. 5.
+Illustration of counterfactual reinforcement-learning gating.
+Sampled and frozen reference policies propagate their own states on the
+same episode. Their paired utilities guide gate-policy updates while the
+representation remains fixed.
+d) Alternating optimization: Training alternates repre-
+sentation and policy updates after a warm-up using the ref-
+erence gate. During policy-data collection and the associated
+policy updates, the representation, scoring projections, text
+encoder, reference policy, and value baseline are fixed. The
+rewards are computed from the final prototypes and query
+predictions, and policy optimization updates only θ. A separate
+classification step updates the representation using stopped
+gate actions, after which the value baseline is refitted. Its
+parameters are separate from the policy and representation,
+and its regression objective is
+Lvalue = E
+h
+(bω(Hℓ) −sg(R −R0))2i
+.
+(16)
+Query labels enter only through the classification utility.
+The baseline is held fixed for the next policy batch and its
+associated updates.
+e) On-policy gradient estimation: With the environment
+parameters fixed, the policy maximizes expected trajectory
+reward. Its score-function estimator is
+J(θ) = EπθR(g),
+bg =
+L
+X
+ℓ=1
+Aℓ∇θ log πθ(gℓ| Hℓ).
+(17)
+Sampled actions and histories are treated as fixed inputs
+when evaluating the score functions. The cosine logits and
+semantic responses are bounded, and the Beta policy has finite
+logarithmic moments; the analysis assumes integrability of the
+score-weighted rewards.
+Proposition 1. Suppose that trajectories are sampled on-
+policy, the environment and baseline parameters are fixed,
+policy densities are positive and differentiable with the reg-
+ularity required to interchange differentiation and expectation,
+and score-weighted rewards are integrable. If, conditional on
+the episode and shared exogenous randomness, the reference
+rollout is independent of the sampled policy actions, then
+
+
+7
+the estimator in Eq. (17) is unbiased for ∇θJ(θ). Condi-
+tioning on the pre-action history and shared randomness, the
+policy score has zero expectation, so subtracting the action-
+independent reference utility and history-dependent baseline
+leaves the expected gradient unchanged. The paired reward
+difference may reduce reward variance, but this alone does
+not establish reduced gradient variance; Section IV evaluates
+gradient variance directly.
+f) Clipped policy optimization: For repeated minibatch
+updates, we use the PPO surrogate [19],
+rℓ=
+πθ(gℓ| Hℓ)
+πθold(gℓ| Hℓ),
+¯rℓ= clip(rℓ, 1 −ϵp, 1 + ϵp),
+LCF-PPO = −Eold
+X
+ℓ
+min(rℓAℓ, ¯rℓAℓ),
+(18)
+where θold denotes the behavior-policy parameters and ϵp > 0
+is the clipping radius. Advantages and sampled histories
+remain fixed during these updates. At the behavior parameters,
+the surrogate gradient agrees with the negative on-policy
+reward gradient. After the policy changes, the clipped sur-
+rogate is not generally an unbiased estimator of that gradient.
+Validation evaluates the deterministic mean policy used at
+inference.
+Overall, the representation minimizes Lcls, the gate pol-
+icy minimizes LCF-PPO, and the baseline minimizes Lvalue
+through separate alternating updates.
+E. Prototype Stability and Inference
+a) Prototype error: For the analysis, let the intrinsic and
+nuisance token sets Ic,k and Nc,k form a disjoint partition
+of the support tokens. Their retained masses are κc,k =
+P
+i∈Ic,k ac,k,i and νc,k = P
+i∈Nc,k ac,k,i, so κc,k+νc,k = ρc,k.
+Let µc be a unit ideal class direction, and suppose intrinsic
+tokens, nuisance tokens, and the anchor have distances from
+µc bounded by BI, BN, and BA, respectively. Applying the
+triangle inequality to the convex combination in Eq. (9) yields
+∥¯wc −µc∥2 ≤Ec,
+Ec = 1
+K
+X
+k
+h
+λ(κc,kBI + νc,kBN)
++ (1 −λρc,k)BA
+i
+.
+(19)
+The bound separates the contributions of retained intrinsic
+evidence, retained nuisance evidence, and the semantic an-
+chor. Reducing nuisance mass improves this bound when the
+replacement anchor is more reliable than the rejected nuisance
+evidence.
+b) Retained nuisance mass: Proposition 2. Suppose that,
+conditional on the semantic banks and fixed model parameters,
+each nuisance signed score has mean at most −∆< 0 and
+a centered sub-Gaussian error with scale σ > 0. For MN
+nuisance tokens, the conditional expected retained nuisance
+mass satisfies
+Eνc,k ≤min
+
+1,
+MNσ2
+τs(∆+ ξc) exp
+
+−(∆+ ξc)2
+2σ2
+
+,
+(20)
+where the conditioning is suppressed for readability. The
+bound follows from the positive-part allocation bound and the
+sub-Gaussian tail inequality, without requiring independence
+among tokens. It decreases exponentially with the squared
+combined separation ∆+ ξc. Increasing the rejection margin
+suppresses nuisance allocation while increasing reliance on the
+anchor, making anchor quality central to the resulting stability
+guarantee.
+c) Prediction preservation:
+If Ec
+<
+1 −εn, then
+∥¯wc∥2 > εn and normalization gives ∥pc −µc∥2 ≤2Ec.
+For a fixed unit query representation with ideal predicted
+class y, the prediction is preserved whenever its ideal cosine
+margin exceeds 2(Ey + maxc̸=y Ec). This guarantee concerns
+prototype perturbations for a fixed query representation.
+d) Inference: At inference, the support-conditioned se-
+mantic banks, deterministic mean gate schedule, and class
+prototypes are computed and cached once per episode. Every
+query reuses the same semantic tokens and gate schedule,
+keeping its representation compatible with the support pro-
+totypes. Each query is processed independently through one
+forward pass followed by prototype comparison, with no
+reference rollout or parameter update.
+IV. EXPERIMENTS
+We evaluate DVLA-RL++ in standard, fine-grained, and
+cross-domain few-shot recognition, followed by component
+ablations and diagnostics of evidence reliability and policy
+learning.
+A. Experimental Settings
+a) Datasets: We consider three evaluation scenarios.
+Standard FSL uses miniImageNet [1], tieredImageNet [22],
+and CIFAR-FS [23]. Fine-grained FSL uses CUB-200-
+2011 [24], Stanford Cars [25], and Stanford Dogs [26]. Cross-
+domain FSL trains on miniImageNet and evaluates on CUB,
+Places [27], and ChestX [28]. These protocols cover nine
+benchmark settings across eight distinct datasets. We follow
+the standard class splits, with disjoint training, validation, and
+test categories.
+b) Implementation Details: Following recent semantic
+FSL studies [12, 7, 9], we use Visformer-Tiny [29] as the vi-
+sual backbone, the frozen ViT-B/16 CLIP text encoder [13] for
+512-dimensional text embeddings, and Qwen2.5-VL-32B [30]
+for semantic generation. Inputs are resized to 224×224. Train-
+ing consists of pre-training and episodic meta-tuning [31]. The
+representation uses AdamW [32] with an initial learning rate
+of 5 × 10−4 and a cosine schedule [33]. Pre-training runs for
+300 epochs on tieredImageNet and 800 epochs on the other
+training datasets with a batch size of 512, followed by 100
+epochs of meta-tuning.
+We set κg = 10, τcls = 0.2, τb = 0.1, τs = 0.2, ξ0 =
+0.05, and κo = 0.1. The remaining defaults are λ = 0.7,
+γ = 0.5, η = 0.1, and R = 8 local phrases per class and
+semantic role. Scoring projections are calibrated on labeled
+base supports with τa = 0.1 and frozen during policy learning.
+Hyperparameters are selected by base-validation accuracy.
+
+
+8
+TABLE I
+RESULTS (%) ON MINIIMAGENET, TIEREDIMAGENET, AND CIFAR-FS UNDER THE 5-WAY 1-SHOT AND 5-SHOT SETTINGS. MEAN ACCURACY AND 95%
+CONFIDENCE INTERVALS ARE REPORTED. BOLD INDICATES THE HIGHEST MEAN ACCURACY.
+Method
+Venue
+miniImageNet
+tieredImageNet
+CIFAR-FS
+1-shot
+5-shot
+1-shot
+5-shot
+1-shot
+5-shot
+ProtoNet [2]
+NeurIPS 2017
+62.39±0.21
+80.53±0.14
+68.23±0.23
+84.03±0.16
+72.20±0.70
+83.50±0.50
+AM3 [6]
+NeurIPS 2019
+65.30±0.49
+78.10±0.36
+69.08±0.47
+82.58±0.31
+-
+-
+DeepEMD [3]
+CVPR 2020
+65.91±0.82
+82.41±0.56
+71.16±0.87
+86.03±0.58
+-
+-
+SUN [31]
+ECCV 2022
+67.80±0.45
+83.25±0.30
+72.99±0.50
+86.74±0.33
+-
+-
+FewTURE [37]
+NeurIPS 2022
+68.02±0.88
+84.51±0.53
+72.96±0.92
+86.43±0.67
+72.80±0.88
+86.14±0.64
+SVAE [35]
+CVPR 2022
+74.84±0.23
+83.28±0.40
+76.98±0.65
+85.77±0.50
+-
+-
+Meta-AdaM [38]
+NeurIPS 2023
+59.89±0.49
+77.92±0.43
+65.31±0.48
+85.24±0.35
+-
+-
+ProtoDiff [39]
+NeurIPS 2023
+66.63±0.21
+83.48±0.15
+72.95±0.24
+85.15±0.18
+-
+-
+CPEA [40]
+ICCV 2023
+71.97±0.65
+87.06±0.38
+76.93±0.70
+90.12±0.45
+77.82±0.66
+88.98±0.45
+SP [7]
+CVPR 2023
+72.31±0.40
+83.42±0.30
+78.03±0.46
+88.55±0.32
+82.18±0.40
+88.24±0.32
+ALFA [41]
+TPAMI 2024
+66.61±0.28
+81.43±0.25
+70.29±0.40
+86.17±0.35
+76.32±0.43
+86.73±0.31
+LastShot [42]
+TPAMI 2024
+67.35±0.20
+82.58±0.14
+72.43±0.23
+85.82±0.16
+76.76±0.21
+87.49±0.12
+MetaKernel [43]
+TPAMI 2024
+66.9±0.3
+81.3±0.2
+-
+-
+76.1±0.4
+86.9±0.5
+SIFT [44]
+IJCV 2024
+77.31±0.67
+86.95±0.53
+77.86±0.77
+89.89±0.52
+-
+-
+KTPP [12]
+ACM MM 2024
+76.71±0.37
+86.46±0.27
+80.80±0.43
+90.01±0.29
+83.63±0.57
+90.19±0.30
+SemFew [8]
+CVPR 2024
+78.94±0.66
+86.49±0.50
+82.37±0.77
+89.89±0.52
+84.34±0.67
+89.11±0.54
+ECER [9]
+AAAI 2025
+81.14±0.15
+-
+81.81±0.51
+-
+86.01±0.35
+-
+CPL [45]
+TPAMI 2025
+72.82±0.61
+87.93±0.37
+78.05±0.70
+90.89±0.44
+78.82±0.65
+89.98±0.44
+FRN+IAM [46]
+TPAMI 2025
+66.96±0.19
+83.19±0.13
+71.85±0.22
+86.55±0.15
+-
+-
+FKFRN [47]
+TIP 2026
+66.78±0.20
+83.26±0.19
+71.30±0.22
+86.35±0.14
+-
+-
+LE-ProtoPNet [48]
+TIP 2026
+81.34±0.32
+87.17±0.26
+-
+-
+79.69±0.42
+86.40±0.33
+DVLA-RL [10]
+ICLR 2026
+81.69±0.36
+88.25±0.28
+83.02±0.43
+91.71±0.29
+87.18±0.40
+90.59±0.31
+DVLA-RL++
+Ours
+83.41±0.34
+89.63±0.26
+84.57±0.41
+92.89±0.27
+88.70±0.38
+91.75±0.29
+After a five-epoch warm-up with the reference gate, policy
+and representation updates alternate using 32 episodes per
+batch. PPO uses four optimization epochs per policy batch,
+minibatches of 16 episodes, and ϵp = 0.2. The policy and
+value baseline use Adam with learning rates of 10−4 and 10−3,
+respectively; policy gradients are clipped to a norm of 1.0. All
+experiments run on an NVIDIA RTX 6000 Ada GPU.
+c) Evaluation Protocol: We follow the episodic FSL
+protocol [7, 12, 6, 34, 35, 36]. Main comparisons use 5-way 1-
+shot and 5-shot episodes. Each setting includes 2,000 episodes
+sampled uniformly from novel classes, with 15 queries per
+class sampled separately from the supports. We report mean
+episode accuracy and its 95% confidence interval. At test time,
+queries are processed independently using cached support-
+derived semantics, gates, and prototypes. Component ablations
+share episode lists, training seeds, and semantic caches. Pub-
+lished competitor results are taken from their original reports.
+DVLA-RL [10] is the direct conference baseline and uses the
+same backbone, semantic generator, and evaluation protocol.
+A dash denotes an unreported setting.
+B. Main Results
+a) Standard Few-Shot Recognition: Table I compares
+performance on the three standard benchmarks. DVLA-RL++
+achieves the highest mean accuracy in all six settings and
+improves on DVLA-RL by 1.2%–1.7%. Since both models
+share the backbone, semantic generator, and protocol, this
+gain reflects the benefit of CSP and CRG. The strongest
+other methods are LE-ProtoPNet, SemFew, or ECER in 1-
+shot recognition and CPL or KTPP in 5-shot recognition.
+DVLA-RL++ exceeds these results by 2.1%–2.7% and 1.6%–
+2.0%, respectively. These results highlight the effectiveness of
+purifying support evidence and adaptively fusing it through
+counterfactual gating.
+b) Fine-Grained Recognition: Table II reports results
+on CUB, Stanford Cars, and Stanford Dogs. DVLA-RL++
+achieves the highest mean accuracy in all six settings. Rel-
+ative to DVLA-RL, the gains are 2.18%–2.41% in 1-shot
+recognition and 0.55%–1.25% in 5-shot recognition. DVLA-
+RL++ improves on the strongest other methods, SUITED and
+FKFRN, by 5.2%–12.2% in 1-shot recognition and by up to
+2.3% in 5-shot recognition. The larger 1-shot gains reflect the
+sensitivity of prototype estimation to limited support evidence.
+This shows that DVLA-RL++ captures subtle inter-class dif-
+ferences and preserves intra-class consistency by suppressing
+incidental context.
+c) Cross-Domain Recognition: Table III evaluates trans-
+fer from miniImageNet to CUB, Places, and ChestX. DVLA-
+RL++ obtains the highest reported mean accuracy in all six
+settings and improves on DVLA-RL by 1.0% on average. On
+CUB and Places, the gains over DVLA-RL are 1.22%–1.68%.
+Relative to other published methods, DVLA-RL++ exceeds the
+strongest 1-shot results of CSC by 10.3% on CUB and 7.1% on
+Places. In 5-shot recognition, it exceeds STL DeepBDC+IAM
+by 3.9% on CUB and SVasP by 4.1% on Places. These results
+demonstrate that DVLA-RL++ learns more transferable repre-
+sentations by retaining intrinsic object evidence, generalizing
+well to novel categories under distribution shifts.
+
+
+9
+TABLE II
+RESULTS (%) ON CUB, STANFORD CARS, AND STANFORD DOGS UNDER THE 5-WAY 1-SHOT AND 5-SHOT SETTINGS. MEAN ACCURACY AND 95%
+CONFIDENCE INTERVALS ARE REPORTED. BOLD INDICATES THE HIGHEST MEAN ACCURACY.
+Method
+Venue
+CUB
+Stanford Cars
+Stanford Dogs
+1-shot
+5-shot
+1-shot
+5-shot
+1-shot
+5-shot
+ProtoNet [2]
+NeurIPS 2017
+63.44±0.56
+83.17±0.35
+45.01±0.49
+87.19±0.31
+41.61±0.50
+76.78±0.36
+FRN [49]
+CVPR 2021
+83.55±0.19
+92.92±0.10
+58.90±0.22
+79.65±0.15
+49.37±0.20
+67.13±0.17
+DAN [50]
+AAAI 2022
+72.89±0.50
+86.60±0.31
+70.21±0.50
+85.55±0.31
+59.81±0.50
+77.19±0.35
+MFGN [51]
+IJCAI 2022
+84.01±0.39
+91.85±0.21
+-
+-
+74.81±0.44
+86.52±0.26
+TDM [52]
+CVPR 2022
+84.36±0.19
+93.37±0.10
+68.36±0.22
+86.14±0.13
+57.64±0.22
+75.03±0.16
+BSFA [11]
+TCSVT 2023
+86.00±0.41
+92.53±0.23
+88.93±0.38
+95.20±0.20
+69.58±0.50
+82.59±0.33
+MLI [53]
+TIP 2024
+85.94±0.42
+93.50±0.29
+-
+-
+76.32±0.47
+88.25±0.27
+C2-Net [54]
+AAAI 2024
+83.31±0.41
+92.18±0.23
+88.96±0.37
+95.16±0.20
+75.50±0.49
+87.65±0.28
+SUITED [55]
+AAAI 2025
+86.02±0.47
+94.13±0.24
+89.97±0.36
+96.53±0.16
+76.55±0.47
+88.86±0.27
+FRN+TDM+IAM [46]
+TPAMI 2025
+84.84±0.18
+93.60±0.10
+-
+-
+-
+-
+FKFRN [47]
+TIP 2026
+84.70±0.19
+94.11±0.13
+89.60±0.17
+97.10±0.08
+79.88±0.20
+90.41±0.12
+LE-ProtoPNet [48]
+TIP 2026
+83.43±0.28
+92.07±0.18
+85.38±0.30
+92.20±0.16
+-
+-
+DVLA-RL [10]
+ICLR 2026
+91.93±0.28
+95.06±0.19
+92.95±0.24
+96.59±0.15
+89.64±0.30
+91.42±0.25
+DVLA-RL++
+Ours
+94.31±0.26
+96.28±0.17
+95.13±0.22
+97.14±0.14
+92.05±0.28
+92.67±0.23
+TABLE III
+CROSS-DOMAIN RESULTS (%) WITH TRAINING ON MINIIMAGENET AND EVALUATION ON CUB, PLACES, AND CHESTX. MEAN ACCURACY AND 95%
+CONFIDENCE INTERVALS ARE REPORTED. BOLD INDICATES THE HIGHEST MEAN ACCURACY.
+Method
+Venue
+CUB
+Places
+ChestX
+1-shot
+5-shot
+1-shot
+5-shot
+1-shot
+5-shot
+GNN [56]
+ICLR 2018
+44.40±0.68
+62.87±0.65
+52.42±0.80
+70.91±0.65
+22.00±0.46
+25.27±0.59
+FWT [57]
+ICLR 2020
+45.50±0.46
+64.97±0.68
+53.44±0.79
+70.70±0.67
+22.04±0.44
+25.18±0.45
+AFA [58]
+ECCV 2022
+46.86±0.70
+68.25±0.65
+54.04±0.75
+76.21±0.60
+22.92±0.20
+25.02±0.20
+UCD [59]
+NeurIPS 2022
+40.65±0.68
+58.54±0.70
+51.84±0.72
+72.19±0.60
+22.64±0.40
+26.26±0.45
+ATA [60]
+AIJ 2023
+45.00±0.50
+66.22±0.50
+53.57±0.50
+75.48±0.40
+22.10±0.20
+24.32±0.40
+LDP-Net [61]
+CVPR 2023
+49.82±0.70
+70.39±0.66
+53.82±0.71
+72.90±0.63
+23.01±0.45
+26.67±0.40
+StyleAdv [62]
+CVPR 2023
+48.49±0.72
+68.72±0.67
+58.58±0.83
+77.73±0.62
+22.64±0.35
+26.07±0.37
+FAP [63]
+IJCAI 2024
+50.56±0.73
+64.17±0.69
+57.34±0.72
+72.05±0.60
+21.56±0.20
+24.15±0.20
+FLoR [64]
+CVPR 2024
+49.99±0.68
+70.39±0.67
+53.18±0.70
+72.31±0.62
+23.11±0.45
+26.70±0.40
+MEFP [65]
+NeurIPS 2024
+51.55±0.70
+73.61±0.66
+52.06±0.69
+73.78±0.61
+22.82±0.45
+26.53±0.40
+SVasP [66]
+AAAI 2025
+49.49±0.72
+68.95±0.66
+59.07±0.81
+77.78±0.62
+23.23±0.35
+26.87±0.38
+STL DeepBDC+IAM [46]
+TPAMI 2025
+55.92±0.20
+76.43±0.16
+-
+-
+-
+-
+CSC [67]
+TIP 2026
+58.86±0.58
+76.17±0.44
+63.74±0.56
+77.28±0.61
+22.72±0.44
+26.28±0.45
+DVLA-RL [10]
+ICLR 2026
+67.46±0.47
+78.99±0.35
+69.26±0.45
+80.70±0.36
+23.47±0.20
+26.94±0.22
+DVLA-RL++
+Ours
+69.14±0.45
+80.30±0.33
+70.87±0.43
+81.92±0.34
+23.65±0.19
+27.10±0.21
+C. Model Analysis
+Component ablations use the 5-way 1-shot setting with
+matched semantic caches and training budgets. Each variant
+is trained with five seeds and evaluated on 2,000 episodes per
+seed. Clean accuracy is measured on the original queries, while
+Shift accuracy is measured on matched queries after replacing
+the background or an incidental co-occurring object while
+preserving the foreground object and its label. The paired
+evaluation uses the same supports and trained model, isolating
+the effect of the query-context intervention.
+a) Component Ablations: We conduct component abla-
+tions on miniImageNet and CUB to evaluate CSP and CRG,
+as shown in Table IV. The CSP-only variant retains the
+conference gate, and the CRG-only variant retains uniform
+visual support prototypes. It is to be noted that (1) CSP
+alone improves Shift accuracy over DVLA-RL by 3.6% and
+4.4%, showing that selecting support tokens with complemen-
+tary semantics suppresses incidental context. (2) CRG alone
+TABLE IV
+COMPONENT ABLATIONS (%) ON MINIIMAGENET AND CUB UNDER THE
+5-WAY 1-SHOT SETTING. CLEAN AND SHIFT DENOTE ACCURACY BEFORE
+AND AFTER THE MATCHED CONTEXT INTERVENTION.
+Variant
+CSP
+CRG
+miniImageNet
+CUB
+Clean
+Shift
+Clean
+Shift
+DVLA-RL
+×
+×
+81.7
+75.8
+91.9
+85.0
++ CSP
+✓
+×
+82.6
+79.4
+93.4
+89.4
++ CRG
+×
+✓
+82.4
+78.4
+93.0
+88.1
+DVLA-RL++
+✓
+✓
+83.4
+81.2
+94.3
+92.0
+improves Shift accuracy by 2.6% and 3.1%, indicating that
+reliability-aware gating reduces the influence of unreliable
+semantics during fusion. (3) The best performance is achieved
+when both are used. The full model improves Shift accuracy
+by 5.4% and 7.0% and Clean accuracy by 1.7% and 2.4%.
+Its Clean-to-Shift drop decreases from 5.9% to 2.2% on
+
+
+10
+0.02
+0.05
+0.1
+0.2
+0.5
+1
+τs
+−5
+−4
+−3
+−2
+−1
+0
+Accuracy change (pp)
+(a) Allocation temperature
+0
+0.3
+0.5
+0.7
+0.9
+1
+λ
+(b) Visual--anchor balance
+0
+0.1
+0.25
+0.5
+0.75
+1
+γ
+(c) Nuisance-cost weight
+miniImageNet
+CUB
+Fig. 6. Parameter sensitivity on miniImageNet (blue solid) and CUB (orange dashed) under the 5-way 1-shot setting. Panels vary (a) τs, (b) λ, and (c) γ.
+Accuracy changes are relative to each dataset’s default setting.
+0
+1
+2
+3
+DVLA-RL
+Density
+OVL 0.74
+miniImageNet
+OVL 0.75
+CUB
+−1
+0
+1
+Signed margin d −ξc
+0
+1
+2
+3
+DVLA-RL++
+Density
+OVL 0.16
+−1
+0
+1
+Signed margin d −ξc
+OVL 0.12
+Intrinsic evidence
+Nuisance evidence
+Fig. 7. Signed-margin distributions of intrinsic (blue) and nuisance (orange)
+evidence on miniImageNet and CUB. Rows compare DVLA-RL and DVLA-
+RL++. OVL denotes histogram overlap; the dotted line marks the rejection
+boundary d −ξc = 0.
+miniImageNet and from 6.9% to 2.3% on CUB. These results
+demonstrate the complementary roles of selective support
+aggregation and reliability-aware semantic fusion.
+b) Internal Design Choices: Table V replaces or removes
+individual design elements from the complete model using
+the same Clean and Shift protocol. Uniform allocation pre-
+serves the anchor mixture but sets token weights to 1/M;
+positive-only semantics removes the nuisance bank; and the
+no-neutral control forces unit allocation mass. Other controls
+use a support-independent gate, a fixed rejection margin, mean
+visual evidence in place of the intrinsic fallback, a state
+baseline without the paired reference, or a zero nuisance-cost
+weight.
+Every individual control reduces Shift accuracy more than
+Clean accuracy. Uniform allocation produces the largest Shift
+degradation among these design controls, at 3.6% on miniIm-
+ageNet and 4.8% on CUB. Removing nuisance descriptions
+costs 2.2% and 2.9%, while removing the neutral option
+or intrinsic fallback costs 1.5%–2.2%. The static gate costs
+TABLE V
+INTERNAL DESIGN CONTROLS (%) ON MINIIMAGENET AND CUB UNDER
+THE 5-WAY 1-SHOT SETTING. CLEAN AND SHIFT FOLLOW THE SAME
+PROTOCOL AS TABLE IV.
+Variant
+miniImageNet
+CUB
+Clean
+Shift
+Clean
+Shift
+DVLA-RL
+81.7
+75.8
+91.9
+85.0
+Uniform allocation
+82.2
+77.6
+92.8
+87.2
+Positive semantics only
+82.7
+79.0
+93.5
+89.1
+No neutral option
+83.0
+79.7
+93.8
+90.0
+Static gate
+82.8
+79.8
+93.6
+90.0
+Fixed margin
+83.1
+80.1
+94.0
+90.6
+No intrinsic fallback
+82.9
+79.6
+93.7
+89.8
+State baseline only
+83.0
+80.4
+94.0
+90.9
+No nuisance cost
+83.1
+80.1
+94.0
+90.5
+DVLA-RL++
+83.4
+81.2
+94.3
+92.0
+1.4% and 2.0%, and using the state baseline alone costs
+0.8% and 1.1%. Fixing the margin or removing the nuisance
+cost also lowers Shift accuracy by 1.1%–1.5%. The pattern
+links contextual robustness to evidence selection, rejection and
+fallback handling, and the paired policy-learning signal.
+c) Parameter Sensitivity: Fig. 6 varies the allocation
+temperature τs, visual-evidence coefficient λ, and nuisance-
+cost weight γ one at a time under the 5-way 1-shot setting.
+The reference-deviation weight and local-bank budget remain
+fixed at η = 0.1 and R = 8. The temperature curve favors an
+intermediate allocation regime: very low temperatures concen-
+trate weight on fewer tokens, while higher temperatures spread
+it across more candidates. The default τs = 0.2 balances these
+effects. On miniImageNet, accuracy remains within 0.3% of
+the default for sampled λ values in [0.5, 0.9] and within 0.2%
+for sampled γ values in [0.1, 0.75]. Similar trends on CUB
+indicate a stable range around the selected settings.
+d) Context and Evidence Diagnostics: Fig. 7 compares
+the signed margins m = d −ξc of intrinsic and nuisance
+evidence, as defined by Eqs. (5) and (6). Intrinsic evidence
+corresponds to class-defining object cues, whereas nuisance
+evidence corresponds to incidental context. Both distributions
+use fixed common bins and unit-integral densities; histogram
+overlap is the area shared by the two densities. Overlap
+decreases from 0.74 to 0.16 on miniImageNet and from 0.75
+
+
+11
+Fig. 9. Attention maps of DVLA-RL, CSP alone, CRG alone, and DVLA-RL++ on nine miniImageNet images. Columns (a)–(i) cover object co-occurrence,
+occlusion, clutter, and camouflage.
+to 0.12 on CUB, indicating increased separation around the
+rejection boundary.
+We further audit evidence independently on 600 matched
+5-way 1-shot test episodes per dataset on miniImageNet
+and CUB, comprising 3,000 support-image occurrences per
+dataset. Intrinsic and nuisance tokens are identified using
+independently annotated class-defining object regions and in-
+cidental context. Annotators are blinded to semantic scores,
+signed margins, and allocation weights. For each support
+image, we compute the fraction of tokens with positive alloca-
+tion weights, intrinsic precision over unambiguously annotated
+retained tokens, and neutral mass 1 −P
+i ai. Metrics are
+averaged within and across episodes. At the default setting, the
+audit reports 24% token retention, 94% intrinsic precision over
+unambiguously annotated retained tokens, and 0.08 neutral
+mass.
+e) Policy Diagnostics and Inference: Fig. 8(a) evaluates
+the gradient estimator using 200 independent fresh mini-
+batches per frozen checkpoint. The representation, scorer,
+objective, and behavior policy are fixed; estimators share
+the reward and differ only in their control variates. We
+measure the trace of the on-policy gradient covariance and
+normalize it by that of the state-baseline estimator. The raw-
+return estimator has a normalized covariance trace of 1.25,
+while the paired estimator with the state baseline has a value
+of 0.60, corresponding to a 40% reduction relative to the
+state baseline. This empirical comparison complements the
+unbiasedness conditions in Proposition 1 by directly measuring
+gradient variance.
+Fig. 8(b) compares policy diagnostics for the state-baseline
+Raw
+State
+Paired
+0.0
+0.5
+1.0
+1.5
+Variance ratio
+1.25
+1.00
+0.60
+(a) Gradient estimator
+Nuisance
+increase
+Active
+PPO clip
+0
+10
+20
+30
+Frequency (%)
+24
+22
+9
+15
+(b) Policy diagnostics
+State baseline
+Paired + state
+Fig. 8.
+Policy diagnostics on miniImageNet. (a) Gradient-covariance trace
+normalized by the state-baseline estimator. (b) Frequencies of nuisance-cost
+increase and active PPO clipping for the state baseline (blue) and paired
+estimator (green).
+and paired estimators. The frequency of C(g) > C(g0) de-
+creases from 24% to 9%, where C is the evidence-deficit sur-
+rogate for nuisance exposure. Active PPO clipping is recorded
+after updates when Aℓ> 0 and rℓ> 1 + ϵp, or when Aℓ< 0
+and rℓ< 1−ϵp; its frequency decreases from 22% to 15%. At
+inference, semantic banks, prototypes, and the support-derived
+mean gate schedule are cached once per episode. Each query
+requires one forward pass and prototype comparison, without
+a reference rollout or value-network evaluation.
+f) Qualitative Analysis: The baseline is constructed by
+removing CSP and CRG while retaining the same backbone
+and the same sampled support images to ensure a fair com-
+parison. Fig. 9 compares the baseline, CSP alone, CRG alone,
+and DVLA-RL++ on nine miniImageNet images containing
+
+
+12
+Baseline
+miniImageNet
+CIFAR-FS
+Dogs
+Places
+DVLA-RL++
+Class 1
+Class 2
+Class 3
+Class 4
+Class 5
+Fig. 10. T-SNE visualization on novel classes from four datasets.
+co-occurring objects, occlusion, clutter, or camouflage. The
+baseline attention frequently includes competing objects and
+contextual regions, such as the cat beside the dog in (a),
+branches around the bird in (c), and snow around the fox
+in (e). CSP alone concentrates more on object details but
+provides incomplete coverage, while CRG alone covers the
+object more broadly with residual contextual responses. The
+combined model shows broader object coverage and weaker
+contextual responses in the displayed examples, consistent
+with the complementary behavior observed in the component
+ablations.
+Fig. 10 visualizes query features with t-SNE [68] on mini-
+ImageNet, CIFAR-FS, Stanford Dogs, and Places. Each dataset
+includes five novel classes and 100 queries per class. DVLA-
+RL++ exhibits more compact class neighborhoods and clearer
+separation in the displayed projections.
+V. CONCLUSION
+We presented DVLA-RL++, an extension of DVLA-RL that
+addresses support-evidence contamination in few-shot recogni-
+tion. Complementary semantic purification contrasts intrinsic
+and nuisance semantics to select reliable support tokens, while
+an intrinsic semantic anchor stabilizes prototype construction.
+Counterfactual reinforcement-learning gating adapts semantic
+fusion using a nuisance-aware reward and independently ex-
+ecuted policy and reference trajectories. Theoretical analysis
+relates retained nuisance mass to prototype error and classifica-
+tion margins, and establishes conditions for unbiased on-policy
+gradient estimation. Experiments on standard, fine-grained,
+and cross-domain benchmarks show consistent improvements
+over DVLA-RL, with an average accuracy gain of 1.4%.
+Matched context interventions, independent evidence audits,
+and policy diagnostics further support the effectiveness of
+evidence purification and counterfactual gating in improving
+contextual robustness and reducing gradient variance. Future
+work will strengthen semantic grounding under larger domain
+shifts and reduce the cost of support-conditioned generation.
+REFERENCES
+[1] O. Vinyals, C. Blundell, T. Lillicrap, D. Wierstra et al.,
+“Matching networks for one shot learning,” in NeurIPS,
+2016, pp. 3630–3638.
+[2] J. Snell, K. Swersky, and R. Zemel, “Prototypical net-
+works for few-shot learning,” in NeurIPS, 2017, pp.
+4077–4087.
+[3] C. Zhang, Y. Cai, G. Lin et al., “Deepemd: Few-shot
+image classification with differentiable earth mover’s
+distance and structured classifiers,” in CVPR, 2020, pp.
+12 203–12 213.
+[4] H.-J. Ye, H. Hu, D.-C. Zhan, and F. Sha, “Few-shot learn-
+ing via embedding adaptation with set-to-set functions,”
+in CVPR, 2020, pp. 8808–8817.
+[5] Y. Tian, Y. Wang, D. Krishnan, J. B. Tenenbaum, and
+P. Isola, “Rethinking few-shot image classification: a
+good embedding is all you need?” in ECCV.
+Springer,
+2020, pp. 266–282.
+[6] C. Xing, N. Rostamzadeh, B. Oreshkin, and P. O.
+O Pinheiro, “Adaptive cross-modal few-shot learning,”
+in NeurIPS, vol. 32, 2019.
+[7] W. Chen, C. Si, Z. Zhang, L. Wang, Z. Wang, and T. Tan,
+“Semantic prompt for few-shot image recognition,” in
+CVPR, 2023, pp. 23 581–23 591.
+[8] H. Zhang, J. Xu, S. Jiang, and Z. He, “Simple semantic-
+aided few-shot learning,” in CVPR, 2024, pp. 28 588–
+28 597.
+[9] M. Liu, F. Wu, B. Li, Z. Lu et al., “Envisioning class
+entity reasoning by large language models for few-shot
+learning,” in AAAI, vol. 39, no. 18, 2025, pp. 18 906–
+18 914.
+[10] W. Li, X. Meng, Q. Wang, Z. Han, Z. Wu, and Y. Yin,
+“DVLA-RL: Dual-level vision-language alignment with
+reinforcement learning gating for few-shot learning,” in
+ICLR, 2026.
+[11] Z. Zha, H. Tang, Y. Sun, and J. Tang, “Boosting few-shot
+fine-grained recognition with background suppression
+and foreground alignment,” TCSVT, vol. 33, no. 8, pp.
+3947–3961, 2023.
+[12] W. Li, Q. Wang, P. Zhao, and Y. Yin, “Knn transformer
+with pyramid prompts for few-shot learning,” in ACM
+MM, 2024, pp. 1082–1091.
+[13] A. Radford, J. W. Kim, C. Hallacy et al., “Learning trans-
+ferable visual models from natural language supervision,”
+in ICML.
+PMLR, 2021, pp. 8748–8763.
+[14] K. Zhou, J. Yang, C. C. Loy, and Z. Liu, “Learning
+to prompt for vision-language models,” IJCV, vol. 130,
+no. 9, pp. 2337–2348, 2022.
+[15] R. Zhang, W. Zhang, R. Fang, P. Gao, K. Li, J. Dai,
+Y. Qiao, and H. Li, “Tip-adapter: Training-free adaption
+of clip for few-shot classification,” in ECCV.
+Springer,
+2022, pp. 493–510.
+[16] A. Karmanov, D. Guan, S. Lu, A. El Saddik, and E. Xing,
+“Efficient test-time adaptation of vision-language mod-
+els,” in CVPR, 2024, pp. 14 162–14 171.
+[17] A. Martins and R. Astudillo, “From softmax to sparse-
+max: A sparse model of attention and multi-label classi-
+fication,” in ICML, 2016, pp. 1614–1623.
+[18] R. J. Williams, “Simple statistical gradient-following
+algorithms for connectionist reinforcement learning,”
+Mach. Learn., vol. 8, pp. 229–256, 1992.
+[19] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and
+
+
+13
+O. Klimov, “Proximal policy optimization algorithms,”
+arXiv:1707.06347, 2017.
+[20] S. J. Rennie, E. Marcheret, Y. Mroueh, J. Ross, and
+V. Goel, “Self-critical sequence training for image cap-
+tioning,” in CVPR, 2017.
+[21] J. Foerster, G. Farquhar, T. Afouras, N. Nardelli, and
+S. Whiteson, “Counterfactual multi-agent policy gradi-
+ents,” in AAAI, vol. 32, no. 1, 2018.
+[22] M. Ren, E. Triantafillou, S. Ravi, J. Snell, K. Swersky
+et al., “Meta-learning for semi-supervised few-shot clas-
+sification,” arXiv:1803.00676, 2018.
+[23] K. Lee, S. Maji et al., “Meta-learning with differentiable
+convex optimization,” in CVPR, 2019, pp. 10 657–10 665.
+[24] C. Wah, S. Branson, P. Welinder, P. Perona, and S. Be-
+longie, “The caltech-ucsd birds-200-2011 dataset,” Cali-
+fornia Institute of Technology, Tech. Rep., 2011.
+[25] J. Krause, M. Stark, J. Deng, and L. Fei-Fei, “3d ob-
+ject representations for fine-grained categorization,” in
+ICCVW, 2013, pp. 554–561.
+[26] A. Khosla, N. Jayadevaprakash, B. Yao, and F.-F. Li,
+“Novel dataset for fine-grained image categorization:
+Stanford dogs,” in CVPRW, vol. 2, no. 1, 2011.
+[27] B. Zhou, A. Lapedriza et al., “Places: A 10 million image
+database for scene recognition,” TPAMI, vol. 40, no. 6,
+pp. 1452–1464, 2017.
+[28] X. Wang, Y. Peng, L. Lu et al., “Chestx-ray8: Hospital-
+scale chest x-ray database and benchmarks on weakly-
+supervised classification and localization of common
+thorax diseases,” in CVPR, 2017, pp. 2097–2106.
+[29] Z. Chen, L. Xie, J. Niu, X. Liu et al., “Visformer: The
+vision-friendly transformer,” in ICCV, 2021, pp. 589–
+598.
+[30] S. Bai, K. Chen, X. Liu, J. Wang, W. Ge, S. Song,
+K. Dang, P. Wang, S. Wang et al., “Qwen2.5-vl technical
+report,” arXiv:2502.13923, 2025.
+[31] B. Dong, P. Zhou, S. Yan, and W. Zuo, “Self-
+promoted supervision for few-shot transformer,” in
+ECCV.
+Springer, 2022, pp. 329–347.
+[32] I. Loshchilov and F. Hutter, “Decoupled weight decay
+regularization,” arXiv:1711.05101, 2017.
+[33] ——, “Sgdr: Stochastic gradient descent with warm
+restarts,” arXiv:1608.03983, 2016.
+[34] A. Li, W. Huang, X. Lan, J. Feng, Z. Li, and L. Wang,
+“Boosting few-shot learning with adaptive margin loss,”
+in CVPR, 2020, pp. 12 576–12 584.
+[35] J. Xu and H. Le, “Generating representative samples for
+few-shot classification,” in CVPR, 2022, pp. 9003–9013.
+[36] R. Zhang, X. Hu, B. Li, S. Huang, H. Deng, Y. Qiao,
+P. Gao, and H. Li, “Prompt, generate, then cache:
+Cascade of foundation models makes strong few-shot
+learners,” in CVPR, 2023, pp. 15 211–15 222.
+[37] M. Hiller, R. Ma et al., “Rethinking generalization in
+few-shot classification,” NeurIPS, vol. 35, pp. 3582–
+3595, 2022.
+[38] S. Sun and H. Gao, “Meta-adam: An meta-learned adap-
+tive optimizer with momentum for few-shot learning,”
+NeurIPS, vol. 36, pp. 65 441–65 455, 2023.
+[39] Y. Du, Z. Xiao, S. Liao, and C. G. M. Snoek, “Protodiff:
+Learning to learn prototypical networks by task-guided
+diffusion,” in NeurIPS, vol. 36, 2023, pp. 46 304–46 322.
+[40] F. Hao et al., “Class-aware patch embedding adaptation
+for few-shot image classification,” in ICCV, 2023, pp.
+18 905–18 915.
+[41] S. Baik et al., “Learning to learn task-adaptive hyperpa-
+rameters for few-shot learning,” TPAMI, vol. 46, no. 3,
+pp. 1441–1454, 2024.
+[42] H.-J. Ye, L. Ming, D.-C. Zhan, and W.-L. Chao, “Few-
+shot learning with a strong teacher,” TPAMI, vol. 46,
+no. 3, pp. 1425–1440, 2024.
+[43] Y. Du, H. Sun, X. Zhen, J. Xu, Y. Yin, L. Shao,
+and C. G. M. Snoek, “MetaKernel: Learning variational
+random features with limited labels,” TPAMI, vol. 46,
+no. 3, pp. 1464–1478, 2024.
+[44] M.-H. Pan, H.-Y. Xin, and H.-B. Shen, “Semantic-based
+implicit feature transform for few-shot classification,”
+IJCV, vol. 132, no. 11, pp. 5014–5029, 2024.
+[45] Y. Guo, R. Du, A. Sain, K. Liang et al., “Understanding
+episode hardness in few-shot learning,” TPAMI, vol. 47,
+no. 1, pp. 616–633, 2025.
+[46] S. Lee, W. Moon, H. S. Seong, and J.-P. Heo, “Task-
+oriented channel attention for fine-grained few-shot clas-
+sification,” TPAMI, vol. 47, no. 3, pp. 1448–1463, 2025.
+[47] Y. Li and W. Li, “Few-shot fine-grained classification
+with foreground-aware kernelized feature reconstruction
+network,” TIP, vol. 35, pp. 150–165, 2026.
+[48] Z. Ji, R. Wei, J. Liu, Y. Pang, and J. Han, “Interpretable
+few-shot image classification via prototypical concept-
+guided mixture of LoRA experts,” TIP, vol. 35, pp. 930–
+942, 2026.
+[49] D. Wertheimer, L. Tang, and B. Hariharan, “Few-shot
+classification with feature map reconstruction networks,”
+in CVPR, 2021, pp. 8012–8021.
+[50] S.-L. Xu, F. Zhang, X.-S. Wei, and J. Wang, “Dual
+attention networks for few-shot fine-grained recognition,”
+in AAAI, vol. 36, no. 3, 2022, pp. 2911–2919.
+[51] Y. Yu, D. Zhang, and Z. Ji, “Masked feature generation
+network for few-shot learning.” in IJCAI, 2022, pp.
+3695–3701.
+[52] S. Lee, W. Moon, and J.-P. Heo, “Task discrepancy
+maximization for fine-grained few-shot classification,” in
+CVPR, 2022, pp. 5331–5340.
+[53] L.-J. Zhao, Z.-D. Chen, Z.-X. Ma, X. Luo, and X.-S. Xu,
+“Angular isotonic loss guided multi-layer integration for
+few-shot fine-grained image classification,” TIP, vol. 33,
+pp. 3778–3792, 2024.
+[54] Z.-X. Ma, Z.-D. Chen et al., “Cross-layer and cross-
+sample feature optimization network for few-shot fine-
+grained image classification,” in AAAI, vol. 38, no. 5,
+2024, pp. 4136–4144.
+[55] Z.-X. Ma et al., “Few-shot fine-grained image classifica-
+tion with progressively feature refinement and continuous
+relationship modeling,” in AAAI, vol. 39, no. 6, 2025, pp.
+6036–6044.
+[56] V. Garcia and J. Bruna, “Few-shot learning with graph
+neural networks,” in ICLR, 2018.
+[57] H.-Y.
+Tseng,
+H.-Y.
+Lee,
+J.-B.
+Huang,
+and
+M.-H.
+
+
+14
+Yang, “Cross-domain few-shot classification via learned
+feature-wise transformation,” in ICLR, 2020.
+[58] Y. Hu and A. J. Ma, “Adversarial feature augmenta-
+tion for cross-domain few-shot classification,” in ECCV.
+Springer, 2022, pp. 20–37.
+[59] J. Oh, S. Kim, N. Ho, J.-H. Kim, H. Song, and S.-Y. Yun,
+“Understanding cross-domain few-shot learning based
+on domain similarity and few-shot difficulty,” NeurIPS,
+vol. 35, pp. 2622–2636, 2022.
+[60] H. Wang, H. Mai, Y. Gong, and Z.-H. Deng, “Towards
+well-generalizing meta-learning via adversarial task aug-
+mentation,” AIJ, vol. 317, p. 103875, 2023.
+[61] F. Zhou, P. Wang, L. Zhang, W. Wei, and Y. Zhang,
+“Revisiting prototypical network for cross domain few-
+shot learning,” in CVPR, 2023, pp. 20 061–20 070.
+[62] Y. Fu, Y. Xie, Y. Fu, and Y.-G. Jiang, “Styleadv:
+Meta style adversarial training for cross-domain few-shot
+learning,” in CVPR, 2023, pp. 24 575–24 584.
+[63] T. Zhang, Q. Cai, F. Gao, L. Qi, and J. Dong, “Exploring
+cross-domain few-shot classification via frequency-aware
+prompting,” IJCAI, 2024.
+[64] Y. Zou, Y. Liu et al., “Flatten long-range loss landscapes
+for cross-domain few-shot learning,” in CVPR, 2024, pp.
+23 575–23 584.
+[65] F. Zhou, P. Wang, L. Zhang, Z. Chen, W. Wei, C. Ding,
+G. Lin, and Y. Zhang, “Meta-exploiting frequency prior
+for cross-domain few-shot learning,” NeurIPS, vol. 37,
+pp. 116 783–116 814, 2024.
+[66] W. Li, P. Fang, and H. Xue, “Svasp: Self-versatility
+adversarial style perturbation for cross-domain few-shot
+learning,” in AAAI, vol. 39, no. 15, 2025, pp. 15 275–
+15 283.
+[67] F. Zhou, P. Wang, L. Zhang, W. Wei, C. Ding, G. Lin,
+and Y. Zhang, “Meta-exploiting complementary semantic
+consistency for cross-domain few-shot learning promo-
+tion,” TIP, vol. 35, pp. 8543–8557, 2026.
+[68] L. v. d. Maaten and G. Hinton, “Visualizing data using
+t-sne,” JMLR, vol. 9, no. Nov, pp. 2579–2605, 2008.
+APPENDIX A
+COMPUTATIONAL DETAILS AND THEORETICAL ANALYSIS
+This appendix specifies the implementation interfaces and
+proves the results used in the main text. The analysis concerns
+the defined estimator and policy objective, and statistical
+assumptions about semantic score quality are stated separately
+from algebraic properties of the allocator.
+A. Feature, Semantic, and Policy Interfaces
+At layer ℓ, image tokens belong to Rdℓand text embed-
+dings belong to Rdt. The image-position count Mℓexcludes
+temporarily injected semantic tokens. Let Pℓ: Rdℓ→Rdt be
+a scoring projection and G : Rdt →Rdf the anchor projection
+into the final feature space. Define
+vℓ,c,k,i = unit(PℓZℓ,c,k,i),
+zc,k,i = unit(Zf,c,k,i),
+rc = unit
+ 
+G
+X
+h
+ωf,h
+1
+R+,h
+c
+X
+r
+e+,h,r
+c
+!
+.
+(A1)
+Here h ∈{loc, glob}, the nonnegative level weights sum to
+one, and unit(v) = v/∥v∥2 for nonzero v. An exactly zero
+vector is mapped to a fixed unit coordinate vector of the
+appropriate dimension. This deterministic numerical fallback
+is counted in the diagnostics. The query feature is the unit-
+normalized mean of its final image tokens, in the same df-
+dimensional space as z and r.
+The local-to-global weight schedule is fixed using validation
+categories. At layer ℓ, the nonnegative weights ωℓ,h sum to
+one. In the main text, ωh denotes the weights of the layer being
+scored. The overlap maximum ranges over the unions of local
+and global phrases in each role, so the flattened indices r, t in
+Eq. (6) include both levels. We use τb, τs, τc > 0, 0 ≤λ ≤1,
+0 < εn < 1, and 0 < ϵp < 1. For an explicit attention input,
+concatenate the positive embedding rows across classes within
+each level as E+
+h ∈RRh×dt. A learned map Aℓ∈Rdt×dℓ
+gives
+Tℓ= [ωℓ,locE+
+locAℓ; ωℓ,globE+
+globAℓ].
+(A2)
+The attention projections in Eq. (2) map dℓdimensions to dℓ
+dimensions, and attention logits are divided by √dℓ. These
+projections and Aℓare representation parameters, which clas-
+sification updates train and policy updates freeze. The scorer
+maps Pℓremain separate and frozen after calibration.
+Scoring uses the same weights for the two evidence roles.
+Missing positive phrases are replaced by the encoded class-
+name template in that level, and the response of a missing
+nuisance level is zero. If both nuisance levels are missing, set
+the overlap and rejection margin to zero. These conventions
+make every formula well defined.
+The generator is prompted to return concise visible object
+properties in the intrinsic field and visible scene context, co-
+occurring objects, occlusions, or acquisition cues in the nui-
+sance field. It is allowed to leave a nuisance field empty. Each
+role’s global description summarizes its own local phrases,
+and phrases are never reassigned on the basis of a query
+prediction. Exact duplicate phrases are removed within each
+field. A cache entry is identified by the support identifiers,
+class names, generation seed, prompt, generator version, and
+text-encoder version. Neither query images nor query labels
+are part of its construction.
+During warm-up, the scoring maps are calibrated using
+base-support labels. Warm-up fits the visual and anchor pa-
+rameters with classification loss and calibrates Pℓ. After warm-
+up, the scoring maps are frozen. Subsequent representation
+updates affect the encoder and anchor map through classifi-
+cation, and policy updates freeze all of them. A fixed scoring
+map prevents direct optimization of the probe to lower its own
+cost, and independent audits evaluate the final representations
+and policies used for prediction.
+The gate state uses permutation-invariant pooling over la-
+beled supports and candidate classes. It contains the pooled
+visual state, positive and nuisance semantic summaries, mean
+signed evidence, mean retained and neutral masses, and a layer
+indicator. A finite-dimensional policy consumes this summary,
+whereas the history Hℓin the proofs includes the complete
+support history and preceding actions, without assuming that
+
+
+15
+the summary itself is Markov. For 0 < ϵg < 1/2, a smooth
+mean parameterization is
+pθ = ϵg + (1 −2ϵg) sigmoid(fθ).
+(A3)
+The concentration κg is positive and fixed. The frozen ref-
+erence gate receives the support-pooled visual and intrinsic
+semantic state in the base policy’s original input dimensions.
+Its added nuisance-state coordinates are not used. The full con-
+ference model remains a separate experimental baseline, and
+this reference is its gate embedded in the current recognition
+pipeline.
+For every selected layer, incoming supports determine the
+action, followed by the image-token transition in Eq. (3).
+The cost in Eq. (14) is evaluated on the resulting post-action
+tokens using the scoring map for that output space. A query
+subsequently replays the support-derived action schedule and
+uses all candidate classes’ intrinsic tokens. Thus an unknown
+query class is never needed as an input, and processing one
+query cannot alter another query’s prediction.
+B. Projection, Rejection, and Sensitivity
+Set b = (d −ξ1)/τs and A = {a ∈RM : a ≥0, 1⊤a ≤
+1}. This is a nonempty closed convex set, so its Euclidean
+projection is unique. The Lagrangian of Eq. (7) is
+F(a, δ, ζ) = 1
+2∥a−b∥2
+2+δ(1⊤a−1)−ζ⊤a,
+δ ≥0,
+ζ ≥0.
+(A4)
+Stationarity and complementary slackness give ai = [bi −δ]+
+and δ(P
+i ai −1) = 0. If P
+i[bi]+ ≤1, the multiplier is zero.
+Otherwise it is the unique threshold yielding unit mass, found
+by sorting bi. Consequently,
+ai > 0 =⇒di > ξ,
+ai[ξ −di]+ = 0.
+(A5)
+Zero-score ties have zero allocation. If all scores are below the
+margin, a = 0, and Eq. (9) gives w = r exactly. No division
+by the retained mass is required, even when it approaches zero.
+The candidate deficit is distinct from retained contamina-
+tion. Its value can be positive when all nuisance tokens have
+been rejected, and it can be small when a misgrounded bank
+assigns nuisance tokens large intrinsic scores. Thus candidate
+deficit, neutral mass, and externally audited nuisance retention
+address different questions, and the last equality above shows
+that selection-weighted deficits cannot serve as an independent
+audit.
+Projection also gives a deterministic sensitivity statement.
+For two score vectors and margins,
+∥a −a′∥2 ≤1
+τs
+∥(d −d′) −(ξ −ξ′)1∥2.
+(A6)
+This follows from nonexpansiveness of Euclidean projection.
+For fixed visual tokens, write Z = [z1, . . . , zM]. Allowing the
+anchor to change as well,
+∥w −w′∥2 ≤λ∥Z −r1⊤∥op∥a −a′∥2 + ∥r −r′∥2.
+(A7)
+Indeed, subtract the two definitions and write the difference as
+λ(Z −r1⊤)(a −a′) + (1 −λρ′)(r −r′). Its second coefficient
+lies in [0, 1]. This statement concerns perturbations of scoring
+and anchoring for fixed image tokens.
+C. Retained Nuisance Mass and Prototype Error
+Fix a class and condition on its semantic banks. Let the final
+support token indices be partitioned into intrinsic indices I and
+nuisance indices N, with MN = |N|. This partition is used for
+analysis and independent audits, not provided to the selector.
+Define κ = P
+i∈I ai and ν = P
+i∈N ai, so ρ = κ+ν ≤1. For
+a nuisance token, assume its final signed score can be written
+as di = mi + ϵi with mi ≤−∆< 0 and
+E[exp(tϵi) | T , i ∈N] ≤exp(t2σ2/2),
+t ∈R.
+(A8)
+The conditioning includes everything determining the rejec-
+tion margin. The assumption concerns final scores under
+the evaluated policy, not scores from a different warm-up
+representation. No independence among tokens is assumed.
+Proof of the retained-mass bound. Writing h = ∆+ξ > 0,
+the KKT solution implies ai ≤[di−ξ]+/τs. Hence, for σ > 0,
+Eai ≤1
+τs
+Z ∞
+0
+Pr(di −ξ > t) dt
+≤1
+τs
+Z ∞
+h
+exp[−u2/(2σ2)] du
+≤σ2
+τsh exp[−h2/(2σ2)].
+(A9)
+The last inequality uses 1 ≤u/h on the integration interval.
+Summing over nuisance indices and using ν ≤1 proves
+Eq. (20). If σ = 0, every nuisance score is below the margin
+and ν = 0. A related familywise bound is
+Pr(ν > 0 | T ) ≤min{1, MN exp[−h2/(2σ2)]}.
+(A10)
+This follows by a union bound. The retained-mass result
+additionally controls the amount allocated to erroneous tokens,
+which the familywise probability alone does not quantify. □
+Proof of the prototype bound. Let µc be a unit ideal class
+direction. Suppose intrinsic token errors, nuisance token errors,
+and anchor errors are bounded by BI, BN, BA, respectively.
+The coefficients in the raw support estimator are nonnegative
+and sum to one. Subtracting µc therefore yields
+wc,k −µc = λ
+X
+i
+ac,k,i(zc,k,i −µc) + (1 −λρc,k)(rc −µc).
+(A11)
+The triangle inequality and averaging over supports prove
+Eq. (19). The bound is tighter than the anchor-only upper
+bound BA if
+1
+K
+X
+k
+(κc,kBI + νc,kBN) < 1
+K
+X
+k
+ρc,kBA,
+(A12)
+provided λ > 0. Comparing upper bounds does not establish
+that every realized prototype improves on its realized anchor.
+If Ec < 1 −εn, the reverse triangle inequality implies
+∥¯wc∥2 ≥1 −Ec > εn, so the fallback is inactive. Using
+∥µc∥2 = 1 gives
+∥pc −µc∥2 ≤∥pc −¯wc∥2 + ∥¯wc −µc∥2
+= |1 −∥¯wc∥2| + ∥¯wc −µc∥2 ≤2Ec.
+(A13)
+If the fallback is active, pc = rc and its error is instead
+bounded by BA. Both cases are well defined, including
+
+
+16
+complete rejection. For a fixed unit query q, comparison with
+any competing class gives
+q⊤(py −pc) ≥q⊤(µy −µc) −2(Ey + Ec).
+(A14)
+When the normalization condition holds for every class, the
+margin condition in the main text preserves the ideal label.
+This establishes the effect of prototype estimation for the
+representation actually used, and changes in q under a different
+gate schedule are treated separately.
+□
+These results identify where empirical grounding is needed.
+An inaccurate intrinsic anchor increases BA, and incorrectly
+assigned nuisance phrases can violate the score-gap assump-
+tion. Larger rejection margins reduce the nuisance tail bound
+but can increase anchor reliance. The method’s evaluation
+therefore reports these quantities together rather than using
+rejection rate alone as evidence of improved recognition.
+D. Paired Policy Gradients and Clipping
+Let ζ contain the episode, frozen semantic banks, and
+exogenous augmentation randomness. During a policy update,
+the encoder, scoring maps, anchor map, reference gate, and
+value baseline are fixed. The current policy parameters appear
+only in the action densities, not directly in the reward or
+feature transition at a fixed action sequence. The deterministic
+reference trajectory is a function of ζ and its own previous
+states, so R0 and a0 are independent of sampled policy actions
+conditional on ζ.
+Proof of Proposition 1. The conditional trajectory density
+is
+pθ(a | ζ) =
+L
+Y
+ℓ=1
+πθ(aℓ| Hℓ).
+(A15)
+Assume differentiation can be interchanged with integration,
+for example under a locally dominating integrable score-
+weighted reward. The score-function identity gives
+∇θJ = E
+"
+R
+X
+ℓ
+∇θ log πθ(aℓ| Hℓ)
+#
+.
+(A16)
+Conditioned on the complete history and ζ, the expectation of
+each policy score is zero. Since R0 is already fixed under this
+conditioning, and bω(Hℓ) is independent of the current action,
+E[(R0 + bω(Hℓ))∇θ log πθ(aℓ| Hℓ)] = 0.
+(A17)
+Subtracting these terms proves Ebg = ∇θJ. Dependence of
+later states on earlier sampled actions is represented by the
+trajectory density. It is not an additional pathwise derivative
+through the frozen environment. The action-deviation cost is
+part of R and is therefore included in the same identity.
+□
+Detaching a tensor is an implementation operation, whereas
+conditional action independence is a statistical condition. For
+example, if a Bernoulli action has reward R = a, choosing
+a detached but action-dependent baseline R0 = a makes
+every advantage zero although the expected reward has a
+nonzero policy gradient. The separate reference rollout avoids
+this issue. Updating shared encoder parameters through the
+policy surrogate would introduce further direct dependencies
+not covered by this proof, which is why the optimization
+schedule explicitly separates those parameters.
+Reward variance and gradient variance. For any paired
+returns,
+Var(R −R0) = Var(R) + Var(R0) −2 Cov(R, R0). (A18)
+Positive covariance improves this expression relative to an
+independently sampled reference with the same marginals. It
+does not automatically improve it relative to using R alone, or
+control score-weighted gradient variance. For a concrete exam-
+ple, take a ∼Bernoulli(0.1) and an independent equiprobable
+X ∈{−1, 1}. Let R = (1 −2a)X and R0 = X. Then
+Cov(R, R0) = 0.8 and the reward variance decreases from
+1 to 0.4, whereas the logit-score gradient variance increases
+from 0.09 to 0.324. Thus the diagnostics in Fig. 8 measure
+gradient variance directly rather than substituting paired re-
+ward variance for it. These values are computed analytically
+for this example.
+Clipped surrogate deviation. Define the unclipped im-
+portance surrogate on the fixed behavior batch as JIS =
+Eold
+P
+ℓrℓAℓand let Jclip = −LCF-PPO. Away from clipping
+boundaries, set
+Iℓ= 1{Aℓ> 0, rℓ> 1 + ϵp} + 1{Aℓ< 0, rℓ< 1 −ϵp}.
+(A19)
+The derivative of a likelihood ratio is rℓ∇log πθ, while the
+active clipped branch is locally constant. Consequently,
+∥∇JIS −∇Jclip∥2 ≤Eold
+X
+ℓ
+rℓ|Aℓ| ∥∇log πθ(aℓ| Hℓ)∥2Iℓ.
+(A20)
+The bound follows by subtracting derivatives and applying the
+triangle inequality, assuming integrability. It uses no uniform
+bound on Beta score gradients. At θ = θold, every ratio equals
+one and the surrogate gradient has the on-policy expectation
+proved above. After policy updates, the per-layer importance
+surrogate does not correct the changed state-visitation distri-
+bution and need not equal the gradient of J. Neither this result
+nor clipping alone establishes monotonic improvement.
+For an explicit clipping counterexample, consider one sam-
+pled contribution with A = 1, r = 1.21, clipping radius ϵp =
+0.2, and scalar score ∇θ log πθ = 1. The unclipped derivative
+is 1.21 and the active clipped derivative is zero. Their differ-
+ence is therefore 1.21, whereas |r −clip(r, 0.8, 1.2)| = 0.01.
+This local configuration can occur in a valid two-action policy.
+At θ = 0, let pθ(a = 1) = 0.242 exp(θ) in a sufficiently small
+neighborhood and let pold(a = 1) = 0.2. The other action
+has advantage zero. The expected gradient gap is then 0.242,
+while an excess-ratio bound weighted by the same behavior
+probability would give 0.002. Thus the excess-ratio expression
+cannot bound the clipping-gradient error.
+E. Training Algorithm
+We describe the entire training procedure of DVLA-RL++
+in detail in Algorithm 1. The training process follows an
+episodic paradigm and alternates between policy and repre-
+sentation updates after a warm-up with the reference gate. It
+incorporates two key modules: (1) Complementary Semantic
+
+
+17
+Algorithm 1: Training algorithm of the proposed
+DVLA-RL++.
+Input: Base classes Cbase, representation Fϕ with
+anchor map G, frozen text encoder and scoring
+projections Pℓ, frozen reference gate π0, gate
+policy πθ, and value baseline bω
+1. Warm up ϕ with the reference gate and calibrate Pℓ
+using base-support labels, then freeze Pℓ;
+while not converged do
+2. Sample an N-way K-shot episode {S, Q} from
+Cbase according to Eq. (1);
+3. Generate or retrieve the intrinsic and nuisance
+banks E±
+c using support identifiers only;
+4. Compute the reference schedule g0 from the
+support states of π0 according to Eq. (13), and
+obtain R0 according to Eq. (15);
+for each layer ℓ= 1, . . . , L do
+5. Sample gℓ∼πθ(· | Hℓ) according to
+Eq. (12), and fuse the visual and semantic
+branches according to Eqs. (2) and (3);
+6. Record the log density, the state summary,
+and the post-action evidence deficit;
+7. Compute the signed evidence, rejection margins,
+and token allocations according to Eqs. (5)–(7);
+8. Construct the purified prototypes pc according to
+Eqs. (9) and (10), and encode the queries with the
+recorded schedule;
+9. Compute the nuisance cost C(g), the reward
+R(g), and the stopped advantages Aℓaccording
+to Eqs. (14) and (15);
+10. Update θ with LCF-PPO according to Eq. (18),
+keeping the sampled actions and advantages fixed;
+11. Fit bω to the stopped paired returns according
+to Eq. (16) for subsequent policy batches;
+12. Draw a fresh episode, recompute the support
+states, gate actions, and prototypes with the
+current policy, and stop gradients through the
+actions;
+for each query image xj in Q do
+13. Compute the prediction Pϕ(yj | xj, S) and
+the cross-entropy loss according to Eq. (4);
+14. Update ϕ with Lcls and discard the stored
+policy trajectories;
+Output: The checkpoint selected by the sequential
+mean policy on base-validation episodes,
+together with the cached mean gate schedule
+and purified prototypes for testing.
+Purification (CSP), which contrasts intrinsic and nuisance
+semantics to allocate support tokens and anchors each support
+prototype with intrinsic class semantics; and (2) Counterfac-
+tual Reinforcement-Learning Gating (CRG), which samples
+layer-wise fusion gates and compares each sampled trajectory
+with an independent reference rollout under a nuisance-aware
+reward. During policy updates, the representation, scoring
+projections, text encoder, reference gate, and value baseline
+remain fixed. During representation updates, the gate actions
+are stopped and only ϕ is optimized with the classification loss.
+These modules jointly construct purified prototypes that retain
+intrinsic object evidence and suppress incidental context.
+At inference, only the current mean policy is executed,
+and the support state is updated after every mean action.
+The resulting gate schedule and class prototypes are cached
+once per episode, and queries are encoded individually. The
+reference gate and the value baseline are unnecessary at test
+time.

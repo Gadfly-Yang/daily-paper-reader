@@ -1,0 +1,2926 @@
+Not Every Cue Is Evidence: Cue Supportability for Forensic Distillation in
+Face Forgery Detection
+Binjia Zhou1, Dawei Luo3, Shuai Chen3†, Feng Xu3, Haoyuan Li2,
+Jia Wen Seow3, Jiachi Wang1, Jie Lei4, Zunlei Feng1, Yijun Bei1*
+1School of Software Technology, Zhejiang University
+2College of Computer Science and Technology, Zhejiang University
+3Ant Group
+4College of Computer Science and Technology, Zhejiang University of Technology
+†Project leader.
+*Corresponding author.
+Abstract
+Explainable face forgery detection requires not
+only correct judgments but also forensic ev-
+idence supported by the input image. How-
+ever, training cues are typically derived from
+the forgery generation pipeline. Since images
+available to the model are of limited quality
+and resolution, it is difficult to observe the fine-
+grained traces these cues refer to. Training
+methods that further supply such cues as priv-
+ileged supervision exacerbate the problem, as
+the student is taught to articulate evidence it
+cannot perceive. The student consequently re-
+sorts to templated or over-generalized expres-
+sions, giving rise to the correct-answer, wrong-
+evidence (CAWE) failure. We propose a dual
+supportability audit that filters privileged cues
+before distillation. Each candidate cue must
+be predictable from the remaining privileged
+context and causally tied to high-attribution vi-
+sual regions in the current image. Only cues
+satisfying both conditions receive substantial
+distillation weight, preventing unsupported de-
+tails from leaking into the student. Experiments
+across eight benchmarks show that our method
+maintains or improves detection accuracy while
+significantly raising explanation faithfulness
+compared to existing paradigms.
+1
+Introduction
+The rapid proliferation of face forgery techniques
+poses serious threats to privacy, public trust, and
+information security, making reliable face forgery
+detection an urgent necessity (Tolosana et al., 2020;
+Mirsky and Lee, 2021). Face forgery detection is
+now moving beyond binary classification (Rossler
+et al., 2019; Yan et al., 2024) toward explain-
+able paradigms that produce natural language ev-
+idence (Foteinopoulou et al., 2024; Huang et al.,
+2024; Sun et al., 2025; Liu et al., 2024; Wang et al.,
+2024). In these settings, a correct real/fake label
+alone is insufficient; the model must also cite visual
+anomalies present in the image. Yet a correct an-
+swer does not guarantee correct evidence. Recent
+Answer Accuracy 
+Cue Precision 
+CAWE 
+0
+20
+40
+60
+80
+100
+Rate (%)
+SFT
+GRPO
+RLSBI
+MARE
+OPD
+VRAG-DFD
+Random Drop
+Drop-only
+Ours
+Figure 1: Comparison of Answer Accuracy, Cue Pre-
+cision, and CAWE on FF++ across training paradigms
+and our ablation variants.
+work (Kuckreja et al., 2026) has noted the correct-
+answer, wrong-evidence phenomenon: models pre-
+dict correctly yet invoke cues unsupported by the
+current image. Why this failure persists across
+training paradigms and how to prevent it remain
+open questions, as illustrated in Fig. 2.
+We argue that the root cause lies in the supervi-
+sion itself. Existing FFD datasets (Rossler et al.,
+2019; He et al., 2021; Huang et al., 2024; Yan et al.,
+2024) derive their annotations from the forgery gen-
+eration pipeline: ground-truth labels, forgery types,
+manipulation regions, and modification masks all
+describe how a sample was manufactured. Yet the
+images available to the model are often of lim-
+ited quality and resolution, so many manufacturing
+traces are no longer discernible in the final pixels.
+Consider a sample annotated as having undergone
+face swapping in the lower face: the explanation
+accordingly states “jawline blending artifact”, yet
+the actual image may exhibit no visible jawline
+discontinuity at the given resolution. When such
+annotations are used as training targets, the model
+is taught to articulate evidence it cannot perceive,
+and the supervision reflects how the forgery was
+made rather than what can be observed.
+Several training strategies have been explored to
+align explanations with visual content. Supervised
+fine-tuning with label-conditioned rationales (Sun
+et al., 2025; Huang et al., 2024) degenerates into
+memorizing label-to-explanation templates, since
+arXiv:2610.16452v1  [cs.CV]  12 Oct 2026
+
+
+Figure 2: Comparison between conventional FFD supervision and our method. Conventional approaches train
+models with privileged cues that cannot be observed from the image, leading to template-like evidence. Our
+supportability audit filters unsupported cues, enabling image-specific faithful explanations.
+the label is visible during training.
+Reinforce-
+ment learning (Li et al., 2025; Huang et al., 2025b)
+may reward explanation format or keyword pres-
+ence, yet these response-level signals cannot verify
+whether each cue is supported by the current im-
+age. Privileged distillation (Agarwal et al., 2024)
+transfers annotation-conditioned knowledge to an
+image-only student, forcing it to imitate cues un-
+supported at inference time. Across paradigms, no
+mechanism checks whether each cue is supportable
+from the image alone, as shown in Figs. 1 and 4.
+We address this issue by introducing two veri-
+fication steps before distilling any cue to the stu-
+dent. The first step masks the target cue from the
+privileged annotation and checks whether the sur-
+rounding context alone can still make that cue pre-
+dictable. A cue that becomes unpredictable once
+masked was copied verbatim from the annotation
+and carries no information the student could learn
+from. The second step perturbs the image regions
+most relevant to the cue and measures whether the
+cue likelihood drops accordingly. A cue whose like-
+lihood remains unchanged under such perturbation
+is not grounded in the current image but instead
+reflects dataset-level patterns. Only cues that pass
+both checks receive substantial weight during dis-
+tillation. This filtering concentrates learning on
+evidence the student can genuinely perceive from
+the image alone. Our contributions are as follows.
+• We trace the correct-answer, wrong-evidence
+failure to the gap between pipeline annota-
+tions and observability, and show that existing
+training strategies do not close this gap.
+• We propose a dual supportability audit that
+verifies, for each cue, whether it is predictable
+from context and sensitive to image content,
+and distill only cues that pass both checks.
+• Experiments across eight benchmarks show
+that our method maintains or improves detec-
+tion accuracy while substantially improving
+explanation faithfulness.
+2
+Related Work
+Face Forgery Detection and Explanation. Early
+face forgery detection focuses on binary classifica-
+tion by exploiting spatial artifacts (Li et al., 2020a;
+Shiohara and Yamasaki, 2022), frequency-domain
+inconsistencies (Qian et al., 2020), or identity-
+aware cues (Dong et al., 2023). Cross-dataset gen-
+eralization has been studied through large-scale
+benchmarks (Rossler et al., 2019; He et al., 2021;
+Yan et al., 2024, 2023b) that expose distribution
+shifts across forgery methods.
+Advances make detection explainable. Foren-
+sic VQA (Foteinopoulou et al., 2024), multi-
+modal report generation (Huang et al., 2024),
+and vision-language reasoning (Liu et al., 2024;
+Wang et al., 2024) require articulating manipula-
+tion evidence; VLFFD (Sun et al., 2025) pairs de-
+tection with visual-linguistic descriptions; Kuck-
+reja et al. (Kuckreja et al., 2026) identify the
+correct-answer, wrong-evidence failure; PATE-
+Forensics (Li et al., 2026) leverages perception
+
+
+Figure 3: Overview of our framework. The transfer utility (TU) module (top) masks each candidate cue and
+measures the likelihood drop, down-weighting cues trivially copied from the annotation. The visual sensitivity (VS)
+module (bottom) perturbs high-attribution image regions and checks whether cue likelihood is sensitive to visual
+content. Cues that fail either check receive near-zero weight in the distillation loss.
+tools for grounded forensic reasoning. However,
+explanation supervision derives from manipulation
+labels, masks, or forgery categories, none of which
+guarantee instance-level visual observability.
+Evidence Faithfulness in Multimodal Models.
+Producing natural-language evidence does not guar-
+antee that it is faithful to visual content. Visual evi-
+dence prompting (Praharaj et al., 2025; Zhu et al.;
+Guo et al., 2026) injects structured forensic cues
+into vision-language models to spatially ground ex-
+planations in image regions. RL-based preference
+methods (Li et al., 2025; Huang et al., 2025b; Jiang
+et al., 2026; Xu et al., 2026b; Han et al., 2026) ap-
+ply GRPO or DPO to reward explanations aligned
+with manipulation traces, improving both detection
+accuracy and rationale quality. Evidence-assisted
+generation (Xu et al., 2026c) constructs chosen-
+rejected explanation pairs and optimizes the model
+to prefer complete, artifact-grounded evidence over
+hallucinated or omitted details. These approaches
+refine or reward evidence after the supervision sig-
+nal is formed. None examine whether each privi-
+leged cue is supportable by the image alone before
+it enters the training objective.
+Post-training and Privileged Distillation. Or-
+thogonal to what evidence to trust, the choice of
+training paradigm shapes explanation quality. Su-
+pervised fine-tuning with rationales (Sun et al.,
+2025; Huang et al., 2024; Wei et al., 2022) trains
+models to produce chain-of-thought or forensic
+explanations conditioned on ground-truth labels,
+but label visibility during training encourages tem-
+plate memorization rather than visual grounding.
+Policy optimization methods such as PPO (Schul-
+man et al., 2017), DPO (Rafailov et al., 2023), and
+GRPO (Shao et al., 2024) instead learn from re-
+ward or preference signals. In forensic settings (Li
+et al., 2025; Huang et al., 2025b), however, these
+rewards operate at the response level and do not
+verify whether cues are visually supported, leaving
+room for plausible but unfaithful evidence. Privi-
+leged knowledge distillation (Hinton et al., 2015;
+Vapnik and Izmailov, 2015) lets a teacher with priv-
+ileged information guide a student with restricted
+inputs, and on-policy distillation (Agarwal et al.,
+2024) trains the student on its own generations un-
+der teacher feedback. Concurrent work audits tool
+outputs (Anonymous, 2026b), verifies teacher fixes
+by answer recovery (Anonymous, 2026a), or can-
+cels generic edit effects with matched controls at
+decoding time (Anonymous, 2026c), all to improve
+reasoning correctness. Yet none of these methods
+test whether each distilled cue is supportable under
+the student’s image-only condition. A dual audit is
+needed: a context check against cues copied from
+the annotation and a visual sensitivity check against
+cues ungrounded in the image.
+3
+Method
+Existing explainable FFD methods distill privileged
+cues indiscriminately, yet many are unsupported
+because annotations describe how a forgery was
+
+
+manufactured rather than what remains visible. We
+propose a dual-audit framework that scores each
+candidate cue for contextual predictability and vi-
+sual sensitivity before distillation (Fig. 3).
+3.1
+Cue Supportability Criterion
+Task definition.
+We define the input as an image
+I paired with a task prompt q. The structured an-
+notation is g = (y, o, r, c), where y is the real/fake
+answer, o is the forgery operation type, r is the
+manipulation region, and c is the forensic cue. At
+inference, the student sees only I and q; the teacher
+also sees o, r, c, masks, or source images.
+Two failure modes.
+A privileged cue should not
+be distilled when it exhibits either (i) direct-cue
+dependence: the cue is predictable only when its
+own text is visible in the input, indicating mere
+copying; or (ii) image-independent prior: the cue
+likelihood remains unchanged regardless of which
+image is presented, indicating reliance on annota-
+tion frequency rather than visual content.
+Unified supportability criterion.
+A cue c is
+deemed supportable if and only if it exhibits low
+direct-cue dependence and high visual sensitivity:
+Supp(c) ⇐⇒TU(c) is low
+|
+{z
+}
+low dependence
+∧VS(c) is high
+|
+{z
+}
+visual grounding
+,
+where TU(c) denotes transfer utility and VS(c) de-
+notes visual sensitivity. A high TU score indicates
+the cue is copied from the annotation rather than
+inferred from context; a low VS score indicates
+the cue is not grounded in the current image. Both
+criteria are implemented as soft gates rather than
+hard thresholds, as detailed in Sec. 3.2 and 3.3.
+3.2
+Transfer Utility
+Given the supportability criterion, we operational-
+ize the text-side component. Transfer utility mea-
+sures how much the teacher relies on directly see-
+ing the cue text to predict it. A high TU indicates
+strong direct-cue dependence, meaning the cue is
+largely copied from the annotation rather than in-
+ferred from other context.
+Teacher distributions.
+For each annotated cue
+c, we teacher-force its tokens after the student-
+generated prefix. Let ˜y<t denote this combined
+prefix, where zt is the annotated token at position
+t ∈span(c). For the annotation g = (y, o, r, c)
+defined above, let g−c = (y, o, r) denote the con-
+text with the target cue removed. We define a full-
+context teacher that observes g:
+pbase,t
+c
+= pT (· | I, q, g, ˜y<t),
+and a cue-masked teacher that observes all annota-
+tion fields except the target cue:
+pmask,t
+c
+= pT (· | I, q, g−c, ˜y<t).
+Direct-cue dependence.
+For target cue c and to-
+ken position t ∈span(c), we instantiate TU(c) at
+position t as the positive log-likelihood drop caused
+by removing c:
+TUc,t =
+h
+log pbase,t
+c
+(zt) −log pmask,t
+c
+(zt)
+i
++ .
+A large TUc,t indicates the teacher can predict the
+cue only when the cue text is directly visible, i.e.,
+the cue is being copied rather than inferred from
+other fields. A zero value means masking the cue
+causes no prediction loss, suggesting the cue is
+predictable from the remaining context.
+Text-side soft weight.
+Since high TU signals di-
+rect copying, we assign lower weight to cues with
+high dependence:
+gtext
+c,t
+= exp
+
+−TUc,t
+τa
+
+,
+where τa is a temperature hyperparameter. This
+weight approaches one when TUc,t = 0, indicating
+minimal direct-cue dependence, and decays toward
+zero as dependence increases.
+The distillation target uses pmask,t
+c
+rather than
+the full-context teacher, preventing the literal cue
+text from leaking into the student.
+3.3
+Visual Sensitivity
+Low direct-cue dependence confirms that the cue is
+inferable from the surrounding annotation context,
+yet it does not guarantee that the cue is grounded
+in the current image. A cue may be predictable
+simply because it reflects a dataset-level annotation
+pattern. To filter such image-independent priors,
+we introduce a visual sensitivity test that checks
+whether the cue likelihood is causally tied to the
+relevant image regions.
+Canonical cue likelihood.
+For a given annota-
+tion cue c = (c1, . . . , c|c|), we compute its length-
+normalized teacher log-likelihood using I, q, and
+g−c:
+ℓc(I; q, g−c) = 1
+|c|
+|c|
+X
+j=1
+log pT (cj | I, q, g−c, c<j).
+
+
+Figure 4: CAWE on FF++ across training paradigms;
+higher means more unfaithful explanations. Most exist-
+ing methods see CAWE rise with training, while ours
+consistently reduces it.
+Attribution-guided
+controlled
+perturbation.
+Let V = (v1, . . . , v|V |) denote the visual token
+sequence produced by the vision encoder. For each
+visual token u, we compute the gradient × activa-
+tion attribution:
+Ac,u =
+
+∂ℓc(I; q, g−c)
+∂vu
+⊙vu
+
+1
+.
+We then select two equal-size subsets: a high-
+attribution set Mhigh
+c
+containing the top-k tokens
+by Ac,u, and a low-attribution set Mlow
+c
+containing
+the bottom-k tokens, with |Mhigh
+c
+| = |Mlow
+c
+| = k.
+Both sets undergo the same perturbation operator
+T , which zeros out the selected visual tokens:
+Ihigh = T (I, Mhigh
+c
+),
+Ilow = T (I, Mlow
+c
+).
+Differential sensitivity score.
+We instantiate
+VS(c) as the difference in cue likelihood between
+the low-attribution and high-attribution perturba-
+tions:
+VS(c) = [ℓc(Ilow; q, g−c) −ℓc(Ihigh; q, g−c)]+.
+This differential design cancels the generic likeli-
+hood drop of any image perturbation. A positive
+VS(c) indicates that the cue is sensitive to its at-
+tributed regions rather than to arbitrary content.
+We map the raw score to a soft visual weight:
+gvis
+c
+= σ
+VS(c) −mpert
+Tpert
+
+,
+where mpert is a margin and Tpert is a temperature.
+Cues with negligible differential sensitivity receive
+near-zero visual weight.
+3.4
+Selective Distillation
+With both the text-side weight gtext
+c,t
+from Sec. 3.2
+and the visual weight gvis
+c
+from Sec. 3.3, we com-
+bine them into a joint per-token distillation weight:
+wc,t = 1[t ∈span(c)] · gtext
+c,t
+· gvis
+c .
+A cue token receives substantial weight only when
+it exhibits both low direct-cue dependence and
+strong visual grounding. The selective distillation
+loss then takes the form:
+Lsup =
+P
+c, t∈span(c) wc,t DKL
+
+sg[pmask,t
+c
+]∥pt
+S
+
+P
+c,t wc,t + ϵ
+,
+where sg[·] denotes stop-gradient, pt
+S = pS(· |
+I, q, ˜y<t) is the student distribution under the same
+prefix, and ϵ is a small constant preventing division
+by zero. The distillation target is the cue-masked
+teacher pmask,t
+c
+, not the full-context teacher, pre-
+venting literal cue text from leaking into the student.
+The overall training objective combines answer su-
+pervision with this selective distillation:
+Ltotal = λans CE(y, pans
+S ) + λsup Lsup.
+The cross-entropy term between the ground-truth
+label y and the student answer distribution pans
+S
+su-
+pervises only the answer token. Rationale tokens
+receive no unweighted self-imitation signal; their
+learning is governed entirely by the supportability-
+weighted KL term. Both the teacher distribution
+and the audit weights are stop-gradiented with re-
+spect to the student.
+4
+Experiments
+Datasets.
+Across the main, paradigm, and ex-
+tended comparisons, we evaluate on eight unique
+face forgery detection benchmarks spanning di-
+verse forgery types and difficulty levels. For the
+main comparison (Table 1), we use four widely
+adopted datasets: FaceForensics++ (Rossler et al.,
+2019), which contains 1,000 original videos ma-
+nipulated by four methods; Celeb-DF v2 (Li et al.,
+2020b), featuring high-quality celebrity face swaps;
+DFDC (Dolhansky et al., 2020), a large-scale
+challenge dataset with diverse perturbations; and
+WildDF (Zi et al., 2020), which collects in-the-
+wild forgeries from online sources. The training
+paradigm comparison (Table 2) reuses Celeb-DF v2
+and additionally includes DeeperForensics (Jiang
+et al., 2020), ForgeryNet (He et al., 2021), and
+Celeb-DF++ (Li et al.); DF40 (Yan et al., 2024) is
+evaluated in Appendix G.
+
+
+FF++
+Celeb-DF v2
+DFDC
+WildDF
+Category
+Method
+ACC
+AUC
+EER↓
+CAWE↓
+ACC
+AUC
+EER↓
+CAWE↓
+ACC
+AUC
+EER↓
+CAWE↓
+ACC
+AUC
+EER↓
+CAWE↓
+Traditional
+Xception
+95.73
+96.30
+9.52
+–
+90.34
+89.75
+15.20
+–
+79.32
+81.58
+24.50
+–
+75.26
+80.89
+26.80
+–
+SBI
+97.80
+99.64
+2.40
+–
+92.45
+93.18
+11.60
+–
+82.50
+87.30
+19.80
+–
+78.40
+84.50
+22.50
+–
+Forensics Adapter
+98.35
+99.71
+1.82
+–
+94.20
+95.80
+9.40
+–
+85.10
+90.20
+16.50
+–
+80.60
+87.30
+19.80
+–
+Explainable
+FFAA
+94.80
+96.50
+8.75
+62.8
+88.50
+90.20
+16.80
+68.4
+76.30
+80.50
+26.20
+65.2
+72.40
+78.60
+28.50
+71.6
+VLFFD
+97.20
+99.23
+3.85
+56.3
+93.80
+95.40
+10.20
+60.1
+83.60
+88.50
+18.40
+62.4
+79.50
+85.80
+21.30
+65.8
+Identity-Aware VLM
+96.50
+98.40
+5.20
+53.6
+94.25
+96.10
+8.80
+55.4
+84.20
+89.60
+17.20
+61.7
+80.30
+86.50
+20.50
+59.2
+RLSBI
+97.60
+99.50
+3.10
+58.1
+95.10
+96.80
+7.60
+63.8
+85.80
+91.40
+15.20
+62.0
+81.50
+88.20
+18.60
+68.4
+SIDA
+97.82
+98.92
+4.80
+54.5
+94.60
+96.50
+8.20
+58.6
+85.40
+91.20
+15.60
+63.8
+81.20
+87.80
+19.40
+61.0
+FakeVLM
+98.20
+99.10
+3.65
+48.7
+96.80
+98.20
+5.80
+51.2
+90.40
+95.80
+8.60
+54.8
+84.30
+91.50
+13.80
+52.4
+M2F2-Det
+98.79
+99.34
+2.95
+50.4
+98.98
+99.92
+2.15
+52.1
+92.80
+97.50
+6.20
+58.6
+86.05
+93.14
+11.50
+55.3
+FakeShield
+98.35
+99.15
+3.60
+41.2
+97.50
+98.80
+4.50
+43.8
+92.10
+97.20
+6.80
+49.5
+85.80
+92.60
+12.40
+46.7
+EDD
+99.05
+99.52
+2.10
+38.5
+99.10
+99.78
+2.05
+40.2
+93.90
+98.20
+5.40
+42.6
+87.80
+94.20
+10.50
+39.8
+PATE-Forensics
+98.90
+99.60
+1.95
+36.4
+98.85
+99.85
+1.90
+35.6
+93.50
+98.10
+5.60
+38.2
+87.20
+93.80
+10.80
+36.5
+Ours
+99.12
+99.78
+1.65
+21.6
+99.35
+99.86
+1.72
+22.8
+94.60
+98.45
+5.10
+27.4
+88.50
+94.82
+9.85
+24.1
+Gain
++0.07
++0.07
++0.17
++14.8
++0.25
+−0.06
++0.18
++12.8
++0.70
++0.25
++0.30
++10.8
++0.70
++0.62
++0.65
++12.4
+Table 1: Main results on four benchmarks. Color intensity indicates SOTA ranking. The Gain row reports improve-
+ments over the strongest baseline (reductions for EER and CAWE); a negative value indicates underperformance.
+CAWE is reported only for methods that generate forensic evidence. Our method achieves competitive detection
+accuracy while substantially reducing CAWE over all explainable baselines.
+DeeperForensics
+Celeb-DF v2
+ForgeryNet
+Celeb-DF++
+Method
+Tok.↓
+Inf.↓
+ACC
+CAWE↓
+Tok.↓
+Inf.↓
+ACC
+CAWE↓
+Tok.↓
+Inf.↓
+ACC
+CAWE↓
+Tok.↓
+Inf.↓
+ACC
+CAWE↓
+Standard SFT
+6.8M
+842
+89.45
+74.2
+4.2M
+856
+91.20
+71.6
+12.4M
+810
+74.80
+79.8
+5.6M
+838
+90.65
+73.5
+Self-Correction SFT
+15.2M
+1,104
+90.80
+76.5
+9.4M
+1,126
+92.60
+73.4
+27.8M
+1,068
+76.20
+81.4
+12.5M
+1,092
+91.85
+75.8
+LLaVA-CoT
+32.1M
+1,158
+92.30
+66.8
+19.8M
+1,182
+94.80
+64.2
+58.6M
+1,120
+80.40
+74.5
+26.4M
+1,146
+94.10
+67.6
+Standard GRPO
+89.4M
+1,318
+93.80
+70.4
+55.2M
+1,346
+95.60
+68.2
+163.2M
+1,274
+82.40
+75.8
+73.6M
+1,302
+95.20
+72.6
+DAPO
+114.7M
+1,280
+94.10
+71.8
+70.8M
+1,304
+95.30
+69.4
+209.4M
+1,238
+81.90
+78.2
+94.4M
+1,266
+94.80
+73.0
+Dr.GRPO
+82.6M
+1,286
+94.20
+68.5
+51.0M
+1,310
+95.80
+66.8
+150.8M
+1,242
+83.10
+73.6
+68.0M
+1,268
+95.50
+70.2
+GSPO
+78.2M
+1,248
+94.65
+67.2
+48.3M
+1,272
+96.10
+65.4
+142.8M
+1,206
+83.80
+72.0
+64.4M
+1,230
+95.85
+68.8
+SRPO
+52.4M
+1,186
+94.85
+66.0
+32.4M
+1,208
+96.50
+64.2
+95.8M
+1,148
+84.60
+71.8
+43.2M
+1,172
+96.20
+67.4
+OPD
+12.4M
+876
+94.50
+63.5
+7.6M
+892
+96.20
+61.8
+22.6M
+848
+83.60
+72.4
+10.2M
+864
+95.80
+60.6
+Lightning OPD
+10.8M
+834
+95.10
+62.8
+6.6M
+850
+96.85
+60.4
+19.7M
+806
+85.20
+71.6
+8.9M
+822
+96.30
+63.2
+OPRD
+11.4M
+802
+95.60
+61.5
+7.0M
+818
+97.20
+59.8
+20.8M
+774
+86.40
+70.2
+9.4M
+790
+96.70
+60.4
+G-OPD
+13.2M
+862
+96.10
+60.8
+8.2M
+878
+97.60
+58.6
+24.2M
+836
+87.20
+69.4
+10.8M
+850
+97.10
+59.0
+SDPO
+10.2M
+788
+96.30
+58.6
+6.3M
+804
+97.85
+56.2
+18.6M
+762
+87.80
+66.8
+8.4M
+776
+97.40
+57.0
+Ours
+9.4M
+547
+97.25
+28.6
+5.8M
+562
+99.10
+24.2
+17.2M
+528
+90.80
+38.4
+7.7M
+540
+98.85
+30.8
+Table 2: Comparison across paradigms on four benchmarks. Tok. denotes student-side training tokens (rollouts and
+student forward passes) drawn from each benchmark’s training split; teacher and audit passes, which roughly double
+our per-step cost, are excluded. Inf. denotes average inference tokens per sample. Ours achieves the highest accuracy
+and lowest CAWE across datasets with fewer student-side tokens than all other distillation and RL alternatives and
+shorter responses. Shading follows Table 1; fewer tokens are better.
+Evaluation metrics.
+We report four metrics.
+ACC and AUC measure detection performance.
+EER, the Equal Error Rate, captures the operating
+point where false acceptance equals false rejection.
+CAWE, the Correct-Answer Wrong-Evidence rate,
+quantifies the proportion of correctly classified sam-
+ples whose forensic evidence is unsupported by the
+input image. For the paradigm comparison, we
+additionally report Tok., the student-side training
+tokens, and Inf., the average inference tokens per
+sample, to assess computational efficiency.
+Baselines.
+We compare against three categories
+of methods.
+(1) Traditional detectors: Xcep-
+tion (Chollet, 2017), SBI (Shiohara and Yamasaki,
+2022), and Forensics Adapter (Cui et al., 2025),
+which perform binary classification without gen-
+erating explanations. (2) Explainable detectors:
+FFAA (Huang et al., 2024), VLFFD (Sun et al.,
+2025), Identity-Aware VLM (Xu et al., 2026a),
+RLSBI (Jiang et al., 2026), SIDA (Huang et al.,
+2025a), FakeVLM (Wen et al., 2026), M2F2-
+Det (Guo et al., 2025), FakeShield (Xu et al.,
+2025b), EDD (Xu et al., 2026c), and PATE-
+Forensics (Li et al., 2026), which produce natu-
+ral language forensic evidence alongside detec-
+tion decisions. (3) Training paradigms (Table 2):
+Standard SFT, Self-Correction SFT (Yang et al.,
+2025), LLaVA-CoT (Xu et al., 2025a), Standard
+GRPO (Shao et al., 2024), DAPO (Yu et al., 2026),
+Dr.GRPO (Liu et al., 2025), GSPO (Zheng et al.,
+2025), SRPO (Liu et al., 2026), OPD (Agarwal
+et al., 2024), Lightning OPD (Wu et al., 2026),
+OPRD (Kim et al., 2026), G-OPD (Yang et al.,
+2026), and SDPO (Kong et al., 2025).
+Implementation details.
+We adopt Qwen3-VL-
+8B (Bai et al., 2025a) as the student backbone. The
+
+
+Figure 5: Qualitative comparison on two forged samples; purple text lists the annotated artifacts. Existing methods
+either predict the wrong answer or produce template-like evidence unrelated to the specific image. Our method
+generates precise, image-specific forensic cues that are visually grounded and support the decision.
+Figure 6: Human-judged support ratio (%) of forensic
+cues on six benchmarks (150 image-cue pairs per cue
+source and benchmark). Error bars: 95% bootstrap CIs.
+frozen teacher shares the same architecture and
+receives the full structured annotation as additional
+context. We set the TU temperature τa = 0.5, the
+visual sensitivity margin mpert = 3.0, temperature
+Tpert = 0.3, and the attribution subset size k = 32
+visual tokens. The loss weights are λans = 1.0 and
+λsup = 0.5. All models are trained for 3 epochs
+with a learning rate of 2 × 10−5 and a batch size of
+32 on 16 NVIDIA H20 GPUs.
+4.1
+Quantitative Results
+Main comparison.
+As shown in Table 1, our
+method achieves the best or second-best detec-
+tion performance across all four benchmarks in
+ACC, AUC, and EER, on par with the strongest
+explainable baselines EDD and PATE-Forensics.
+The key advantage lies in explanation faithfulness:
+our CAWE is reduced by 28 to 41% relative to the
+strongest competing method across all four bench-
+marks, showing that the audit removes visually un-
+supported cues without sacrificing accuracy. Tradi-
+tional detectors reach competitive AUC but cannot
+produce forensic evidence.
+Training paradigm comparison.
+Table 2 com-
+pares our method against 13 training paradigms
+across four benchmarks. Our method achieves the
+highest ACC on every dataset while attaining the
+lowest CAWE. RL methods such as GRPO, DAPO,
+and Dr.GRPO improve accuracy over SFT but con-
+sume 9 to 12× more training tokens than ours and
+produce substantially longer responses, yet their
+CAWE remains high, ranging from 67 to 78%. Our
+method achieves the strongest trade-off between ac-
+curacy and faithfulness with fewer student-side to-
+kens than all other distillation and RL alternatives,
+and generates the shortest inference responses, as
+down-weighting unsupported cues during training
+reduces computational cost and output verbosity.
+Human study.
+On six benchmarks, we sample
+150 image-cue pairs per cue source (GT, EDD,
+PATE-Forensics, ours), totaling 3,600 pairs. Each
+pair is evaluated by three of ten annotators ex-
+perienced in forgery detection, and majority vot-
+ing decides whether a cue is supported under the
+three criteria of App. C. As shown in Fig. 6, GT
+
+
+Figure 7: Ablation results on FF++, Celeb-DF v2, DFDC, and overall average. (a) Core component ablation. (b)
+Training paradigm comparison. (c) Distillation target variants. (d) Perturbation operator choices. (e) Attribution
+top-k sensitivity. (f) Answer accuracy under component removal.
+Percentile wc
+# Cues
+VLM Sup. ↑
+Human Sup. ↑
+0 – 15%
+150
+10.0
+14.7
+15 – 30%
+150
+24.0
+28.7
+30 – 45%
+150
+36.7
+42.0
+45 – 60%
+150
+50.7
+54.7
+60 – 75%
+150
+64.0
+68.0
+75 – 90%
+150
+76.7
+78.7
+90 – 100%
+100
+88.0
+86.0
+Table 3: Supportability score validation on FF++ (1,000
+cues). Higher wc bins yield monotonically higher VLM
+and human support rates (%).
+cues reach support rates of 21% to 51% across
+benchmarks, while ours achieves 80% to 90%, out-
+performing EDD and PATE-Forensics. We fur-
+ther verify that the cue-level supportability score
+wc =
+1
+| span(c)|
+P
+t∈span(c) wc,t correlates with hu-
+man judgment by sorting 1,000 FF++ cues into
+seven bins (Table 3). Each cue receives a binary
+supported/unsupported label from the VLM evalu-
+ator and three human annotators via majority vote.
+VLM and human support rates rise with wc, vali-
+dating it as a supportability proxy.
+4.2
+Qualitative results
+Fig. 5 compares evidence on two forged sam-
+ples. M2F2-Det and Identity-Aware VLM mis-
+classify the image as real, while FakeShield and
+VLFFD produce correct labels but resort to generic,
+template-like evidence that could apply to any
+forgery. Our method generates specific cues, such
+as the eyeglass-eye boundary inconsistency in the
+first sample and the skin-beard transition artifact
+in the second, both verifiable in the input image,
+while baseline cues stay vague and unlocalized.
+4.3
+Ablation Study
+Fig. 7 reports six ablation groups on FF++, Celeb-
+DF v2, and DFDC (FF++ summary in Fig. 1).
+Removing TU, VS, or the evidence-first format
+(App. B) raises CAWE, and dropping both au-
+dits degrades the method to standard OPD with
+nearly tripled unfaithfulness, confirming both au-
+dits are indispensable (a). The same backbone
+and data trained with SFT, DPO, GRPO, or OPD
+yield scores above 58%, so the gain stems from
+the audit rather than backbone or data (b). Among
+distillation targets, cue-masked distillation outper-
+forms full-context, base-only, random-drop, and no-
+distillation variants, as it blocks literal cue leakage
+while keeping privileged guidance (c). Zero-out
+masking is the best perturbation, since noise and
+replace retain residual information and blur is too
+mild (d). The attribution scope k=32 strikes the
+best balance: smaller k under-perturbs and larger k
+corrupts irrelevant content (e). The full model also
+attains the highest ACC among all variants (f).
+5
+Conclusion
+We trace the CAWE failure in forgery detection
+to pipeline-derived annotations, which introduce
+privileged cues unsupported by the image alone,
+and propose a dual supportability audit combining
+transfer utility and visual sensitivity that retains
+only visually supportable cues. Experiments across
+eight benchmarks show that our method substan-
+tially reduces CAWE while maintaining detection
+accuracy, and a human study confirms that the sup-
+portability score tracks human-judged support.
+
+
+6
+Limitations
+The audit evaluates cues independently and can
+only filter teacher-provided candidates, so it may
+miss interacting or unannotated evidence. It also
+increases training cost and remains untested be-
+yond facial forgeries and single-turn English ex-
+planations; broader modalities and settings require
+further study. The supportability scores depend
+on attribution quality and fixed hyperparameters,
+which may require recalibration across architec-
+tures or image resolutions.
+References
+Rishabh Agarwal, Nino Vieillard, Yongchao Zhou, Pi-
+otr Stanczyk, Sabela Ramos Garea, Matthieu Geist,
+and Olivier Bachem. 2024. On-policy distillation
+of language models: Learning from self-generated
+mistakes. In International Conference on Learning
+Representations, volume 2024, pages 21246–21263.
+Anonymous. 2026a. Fix only what matters: Learning
+visual reasoning from minimal verified interventions.
+Under review.
+Anonymous. 2026b. Learning to audit silent evidence
+corruption in visual reasoning. Under review.
+Anonymous. 2026c.
+Matched-corruption decoding:
+Tracing support in visual reasoning. Under review.
+Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen,
+Xionghui Chen, Zesen Cheng, Lianghao Deng,
+Wei Ding, Chang Gao, Chunjiang Ge, et al.
+2025a. Qwen3-vl technical report. arXiv preprint
+arXiv:2511.21631.
+Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wen-
+bin Ge, Sibo Song, Kai Dang, Peng Wang, Shi-
+jie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu,
+Mingkun Yang, Zhaohai Li, Jianqiang Wan, Pengfei
+Wang, Wei Ding, Zheren Fu, Yiheng Xu, and 8 oth-
+ers. 2025b. Qwen2.5-vl technical report. Preprint,
+arXiv:2502.13923.
+Junyi Cao, Chao Ma, Taiping Yao, Shen Chen,
+Shouhong Ding, and Xiaokang Yang. 2022. End-
+to-end reconstruction-classification learning for face
+forgery detection. In 2022 IEEE/CVF Conference on
+Computer Vision and Pattern Recognition (CVPR),
+pages 4103–4112. IEEE.
+François Chollet. 2017. Xception: Deep learning with
+depthwise separable convolutions. In 2017 IEEE con-
+ference on computer vision and pattern recognition
+(CVPR), pages 1800–1807. Ieee.
+Xinjie Cui, Yuezun Li, Ao Luo, Jiaran Zhou, and
+Junyu Dong. 2025.
+Forensics adapter: Adapting
+clip for generalizable face forgery detection.
+In
+2025 IEEE/CVF Conference on Computer Vision and
+Pattern Recognition (CVPR), pages 19207–19217.
+IEEE.
+Brian Dolhansky, Joanna Bitton, Ben Pflaum, Jikuo
+Lu, Russ Howes, Menglin Wang, and Cristian Can-
+ton Ferrer. 2020. The deepfake detection challenge
+(dfdc) dataset. arXiv preprint arXiv:2006.07397.
+Shichao Dong, Jin Wang, Renhe Ji, Jiajun Liang, Hao-
+qiang Fan, and Zheng Ge. 2023. Implicit identity
+leakage: The stumbling block to improving deepfake
+detection generalization. In 2023 IEEE/CVF Confer-
+ence on Computer Vision and Pattern Recognition
+(CVPR), pages 3994–4004. IEEE.
+Niki M Foteinopoulou, Enjie Ghorbel, and Djamila
+Aouada. 2024. A hitchhiker’s guide to fine-grained
+face forgery detection using common sense reasoning.
+Advances in Neural Information Processing Systems,
+37:2943–2976.
+Kun Guo, Yuzhou Yang, Haoyue Wang, Qichao Ying,
+Sheng Li, and Zhenxing Qian. 2026. Grounding and
+explaining visual evidence for ai-generated image
+detection in human-centric scenes. arXiv preprint
+arXiv:2608.01988.
+Xiao Guo, Xiufeng Song, Yue Zhang, Xiaohong
+Liu, and Xiaoming Liu. 2025. Rethinking vision-
+language model in face forensics: Multi-modal in-
+terpretable forged face detector. In 2025 IEEE/CVF
+Conference on Computer Vision and Pattern Recog-
+nition (CVPR), pages 105–116. IEEE.
+Hui Han, Shunli Wang, Yandan Zhao, Taiping Yao,
+and Shouhong Ding. 2026. VRAG-DFD: Verifiable
+retrieval-augmentation for MLLM-based deepfake
+detection. In Proceedings of the IEEE/CVF Confer-
+ence on Computer Vision and Pattern Recognition
+(CVPR) Findings, pages 9552–9562.
+Yinan He, Bei Gan, Siyu Chen, Yichun Zhou, Guojun
+Yin, Luchuan Song, Lu Sheng, Jing Shao, and Ziwei
+Liu. 2021. Forgerynet: A versatile benchmark for
+comprehensive forgery analysis. In 2021 IEEE/CVF
+Conference on Computer Vision and Pattern Recog-
+nition (CVPR), pages 4358–4367. IEEE.
+Geoffrey Hinton, Oriol Vinyals, and Jeff Dean. 2015.
+Distilling the knowledge in a neural network. arXiv
+preprint arXiv:1503.02531.
+Zhengchao Huang, Bin Xia, Zicheng Lin, Zhun Mou,
+Wenming Yang, and Jiaya Jia. 2024. Ffaa: Multi-
+modal large language model based explainable open-
+world face forgery analysis assistant. arXiv preprint
+arXiv:2408.10072.
+Zhenglin Huang, Jinwei Hu, Xiangtai Li, Yiwei He,
+Xingyu Zhao, Bei Peng, Baoyuan Wu, Xiaowei
+Huang, and Guangliang Cheng. 2025a. Sida: So-
+cial media image deepfake detection, localization
+and explanation with large multimodal model. In
+2025 IEEE/CVF Conference on Computer Vision and
+Pattern Recognition (CVPR), pages 28831–28841.
+IEEE.
+
+
+Zhenglin Huang, Tianxiao Li, Xiangtai Li, Haiquan
+Wen, Yiwei He, Jiangning Zhang, Hao Fei, Xi Yang,
+Xiaowei Huang, Bei Peng, et al. 2025b. So-fake:
+Benchmarking and explaining social media image
+forgery detection. arXiv preprint arXiv:2505.18660.
+Liming Jiang, Ren Li, Wayne Wu, Chen Qian, and
+Chen Change Loy. 2020. Deeperforensics-1.0: A
+large-scale dataset for real-world face forgery detec-
+tion. In 2020 IEEE/CVF Conference on Computer
+Vision and Pattern Recognition (CVPR), pages 2886–
+2895. IEEE.
+Ning Jiang, Dingheng Zeng, Yanhong Liu, Haiyang
+Yi, Shijie Yu, Minghe Weng, Haifeng Shen, and
+Ying Li. 2026.
+Explainable deepfake detection
+with rl enhanced self-blended images. In ICASSP
+2026-2026 IEEE International Conference on Acous-
+tics, Speech and Signal Processing (ICASSP), pages
+14212–14216. IEEE.
+Juno Kim, Jihun Yun, Jason D Lee, and Kwang-Sung
+Jun. 2026.
+Coverage improvement and fast con-
+vergence of on-policy preference learning. arXiv
+preprint arXiv:2601.08421.
+Aobo Kong, Wentao Ma, Shiwan Zhao, Yongbin Li,
+Yuchuan Wu, Ke Wang, Xiaoqian Liu, Qicheng Li,
+Yong Qin, and Fei Huang. 2025. Sdpo: Segment-
+level direct preference optimization for social agents.
+In Proceedings of the 63rd Annual Meeting of the
+Association for Computational Linguistics (Volume
+1: Long Papers), pages 12409–12423.
+Kartik Kuckreja, Parul Gupta, Muhammad Haris Khan,
+and Abhinav Dhall. 2026. Pixels don’t lie (but your
+detector might): Bootstrapping mllm-as-a-judge for
+trustworthy deepfake detection and reasoning super-
+vision. In Proceedings of the IEEE/CVF Confer-
+ence on Computer Vision and Pattern Recognition
+(CVPR).
+Lingzhi Li, Jianmin Bao, Ting Zhang, Hao Yang, Dong
+Chen, Fang Wen, and Baining Guo. 2020a. Face x-
+ray for more general face forgery detection. In 2020
+IEEE/CVF Conference on Computer Vision and Pat-
+tern Recognition (CVPR), pages 5000–5009. IEEE.
+Tianxiao Li, Zhenglin Huang, Haiquan Wen, Yiwei He,
+Shuchang Lyu, Baoyuan Wu, and Guangliang Cheng.
+2025. Raidx: A retrieval-augmented generation and
+grpo reinforcement learning framework for explain-
+able deepfake detection. In Proceedings of the 33rd
+ACM International Conference on Multimedia, pages
+11746–11755.
+Y Li, D Zhu, X Cui, and S Lyu.
+Celeb-df++:
+A large-scale challenging video deepfake bench-
+mark for generalizable forensics.
+arXiv preprint
+arXiv:2507.18015.
+Yaqi Li, Jielun Peng, Yabin Wang, Jincheng Liu, and
+Xiaopeng Hong. 2026. Pate-forensics: Perception-as-
+tool for explainable deepfake forensics with general-
+purpose mllms. arXiv preprint arXiv:2608.18573.
+Yuezun Li, Xin Yang, Pu Sun, Honggang Qi, and Si-
+wei Lyu. 2020b. Celeb-df: A large-scale challenging
+dataset for deepfake forensics. In 2020 IEEE/CVF
+Conference on Computer Vision and Pattern Recog-
+nition (CVPR), pages 3204–3213. IEEE.
+Honggu Liu, Xiaodan Li, Wenbo Zhou, Yuefeng Chen,
+Yuan He, Hui Xue, Weiming Zhang, and Nenghai
+Yu. 2021. Spatial-phase shallow learning: rethink-
+ing face forgery detection in frequency domain. In
+2021 IEEE/CVF Conference on Computer Vision and
+Pattern Recognition (CVPR), pages 772–781. IEEE.
+Jialong Liu, Yuling Shi, Ning Yang, Xiaodong Gu, and
+Zuchao Li. 2026. Srpo: Self-reflective policy opti-
+mization for long-horizon reasoning. arXiv preprint
+arXiv:2608.23493.
+Ping Liu, Qiqi Tao, and Joey Tianyi Zhou. 2024.
+Evolving from single-modal to multi-modal facial
+deepfake detection:
+A survey.
+arXiv preprint
+arXiv:2406.06965, 1.
+Zichen Liu, Changyu Chen, Wenjun Li, Penghui Qi,
+Tianyu Pang, Chao Du, Wee Sun Lee, and Min Lin.
+2025. Understanding r1-zero-like training: A critical
+perspective. arXiv preprint arXiv:2503.20783.
+Yisroel Mirsky and Wenke Lee. 2021. The creation and
+detection of deepfakes: A survey. ACM computing
+surveys (CSUR), 54(1):1–41.
+Ipsita Praharaj, Yukta Butala, Badrikanath Praharaj, and
+Yash Butala. 2025. Reveal–reasoning and evaluation
+of visual evidence through aligned language. arXiv
+preprint arXiv:2508.12543.
+Yuyang Qian, Guojun Yin, Lu Sheng, Zixuan Chen,
+and Jing Shao. 2020. Thinking in frequency: Face
+forgery detection by mining frequency-aware clues.
+In European conference on computer vision, pages
+86–103. Springer.
+Rafael Rafailov, Archit Sharma, Eric Mitchell, Christo-
+pher D Manning, Stefano Ermon, and Chelsea Finn.
+2023. Direct preference optimization: Your language
+model is secretly a reward model. Advances in neural
+information processing systems, 36:53728–53741.
+Andreas Rossler, Davide Cozzolino, Luisa Verdoliva,
+Christian Riess, Justus Thies, and Matthias Nießner.
+2019. Faceforensics++: Learning to detect manipu-
+lated facial images. In Proceedings of the IEEE/CVF
+international conference on computer vision, pages
+1–11.
+John Schulman, Filip Wolski, Prafulla Dhariwal,
+Alec Radford, and Oleg Klimov. 2017.
+Proxi-
+mal policy optimization algorithms. arXiv preprint
+arXiv:1707.06347.
+Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu,
+Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan
+Zhang, YK Li, Yang Wu, et al. 2024. Deepseekmath:
+Pushing the limits of mathematical reasoning in open
+language models. arXiv preprint arXiv:2402.03300.
+
+
+Kaede Shiohara and Toshihiko Yamasaki. 2022. De-
+tecting deepfakes with self-blended images.
+In
+2022 IEEE/CVF Conference on Computer Vision and
+Pattern Recognition (CVPR), pages 18699–18708.
+IEEE.
+Ke Sun, Shen Chen, Taiping Yao, Ziyin Zhou, Jiayi
+Ji, Xiaoshuai Sun, Chia-Wen Lin, and Rongrong Ji.
+2025. Towards general visual-linguistic face forgery
+detection. In 2025 IEEE/CVF Conference on Com-
+puter Vision and Pattern Recognition (CVPR), pages
+19576–19586. IEEE.
+Mingxing Tan and Quoc Le. 2019. Efficientnet: Re-
+thinking model scaling for convolutional neural net-
+works. In International conference on machine learn-
+ing, pages 6105–6114. PmLR.
+Ruben Tolosana, Ruben Vera-Rodriguez, Julian Fierrez,
+Aythami Morales, and Javier Ortega-Garcia. 2020.
+Deepfakes and beyond: A survey of face manipula-
+tion and fake detection. Information fusion, 64:131–
+148.
+Vladimir Vapnik and Rauf Izmailov. 2015. Learning
+using privileged information: similarity control and
+knowledge transfer. The Journal of Machine Learn-
+ing Research, 16(1):2023–2049.
+Tianyi Wang, Xin Liao, Kam Pui Chow, Xiaodong Lin,
+and Yinglong Wang. 2024. Deepfake detection: A
+comprehensive survey from the reliability perspec-
+tive. ACM Computing Surveys, 57(3):1–35.
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
+Bosma, Fei Xia, Ed Chi, Quoc V Le, Denny Zhou,
+et al. 2022. Chain-of-thought prompting elicits rea-
+soning in large language models. Advances in neural
+information processing systems, 35:24824–24837.
+Siwei Wen, Peilin Feng, Hengrui Kang, Zichen Wen,
+Yize Chen, Jiang Wu, Conghui He, Weijia Li, et al.
+2026. Spot the fake: Large multimodal model-based
+synthetic image detection with artifact explanation.
+Advances in Neural Information Processing Systems,
+38:58972–59005.
+Yecheng Wu, Song Han, and Hai Cai. 2026. Lightning
+opd: Efficient post-training for large reasoning mod-
+els with offline on-policy distillation. arXiv preprint
+arXiv:2604.13010.
+Guowei Xu, Peng Jin, Ziang Wu, Hao Li, Yibing Song,
+Lichao Sun, and Li Yuan. 2025a. Llava-cot: Let
+vision language models reason step-by-step. In 2025
+IEEE/CVF International Conference on Computer
+Vision (ICCV), pages 2087–2098. IEEE.
+Junhao Xu, Jingjing Chen, Yang Jiao, Jiacheng Zhang,
+Zhiyu Tan, Hao Li, and Yu-Gang Jiang. 2026a.
+Identity-aware vision-language model for explainable
+face forgery detection. In Proceedings of the AAAI
+Conference on Artificial Intelligence, volume 40,
+pages 11278–11286.
+Wenbo Xu, Wei Lu, and Xiangyang Luo. 2026b.
+MARE: Multimodal alignment and reinforcement for
+explainable deepfake detection via vision-language
+models. arXiv preprint arXiv:2601.20433.
+Yuting Xu, Jian Liang, Gengyun Jia, Ziming Yang,
+Yanhao Zhang, and Ran He. 2023. Tall: Thumb-
+nail layout for deepfake video detection. In 2023
+IEEE/CVF International Conference on Computer
+Vision (ICCV), pages 22601–22611. IEEE.
+Zhipei Xu, Xuanyu Zhang, Runyi Li, Zecheng Tang,
+Qing Huang, and Jian Zhang. 2025b. Fakeshield:
+Explainable image forgery detection and localization
+via multi-modal large language models. In Inter-
+national Conference on Learning Representations,
+volume 2025, pages 31186–31216.
+Zhu Xu, Jiaqi Tang, Pokai Chen, Yuxin Peng, and Yang
+Liu. 2026c. Explainable deepfake detection with
+feature-robust augmentation and evidence-grounded
+explanation optimization. In Proceedings of the ACM
+International Conference on Multimedia.
+Zhiyuan Yan, Taiping Yao, Shen Chen, Yandan Zhao,
+Xinghe Fu, Junwei Zhu, Donghao Luo, Chengjie
+Wang, Shouhong Ding, Yunsheng Wu, et al. 2024.
+Df40: Toward next-generation deepfake detection.
+Advances in Neural Information Processing Systems,
+37:29387–29434.
+Zhiyuan Yan, Yong Zhang, Yanbo Fan, and Baoyuan
+Wu. 2023a.
+Ucf: Uncovering common features
+for generalizable deepfake detection.
+In 2023
+IEEE/CVF International Conference on Computer
+Vision (ICCV), pages 22355–22366. IEEE.
+Zhiyuan Yan, Yong Zhang, Xinhang Yuan, Siwei Lyu,
+and Baoyuan Wu. 2023b. Deepfakebench: A com-
+prehensive benchmark of deepfake detection. arXiv
+preprint arXiv:2307.01426.
+Wenkai Yang, Weijie Liu, Ruobing Xie, Kai Yang,
+Saiyong Yang, and Yankai Lin. 2026.
+Learn-
+ing beyond teacher: Generalized on-policy distil-
+lation with reward extrapolation.
+arXiv preprint
+arXiv:2602.12125.
+Zhe Yang, Yichang Zhang, Yudong Wang, Ziyao Xu,
+Junyang Lin, and Zhifang Sui. 2025. Confidence vs
+critique: A decomposition of self-correction capa-
+bility for llms. In Proceedings of the 63rd Annual
+Meeting of the Association for Computational Lin-
+guistics (Volume 1: Long Papers), pages 3998–4014.
+Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan,
+Xiaochen Zuo, Yu Yue, Weinan Dai, Tiantian Fan,
+Gaohong Liu, Lingjun Liu, et al. 2026. Dapo: An
+open-source llm reinforcement learning system at
+scale. Advances in Neural Information Processing
+Systems, 38:113222–113244.
+Hanqing Zhao, Wenbo Zhou, Dongdong Chen, Tianyi
+Wei, Weiming Zhang, and Nenghai Yu. 2021. Multi-
+attentional deepfake detection. In Proceedings of
+the IEEE/CVF conference on computer vision and
+pattern recognition, pages 2185–2194.
+
+
+Chujie Zheng, Shixuan Liu, Mingze Li, Xiong-Hui
+Chen, Bowen Yu, Chang Gao, Kai Dang, Yuqiong
+Liu, Rui Men, An Yang, Jingren Zhou, and Jun-
+yang Lin. 2025. Group sequence policy optimization.
+Preprint, arXiv:2507.18071.
+Jinguo Zhu, Weiyun Wang, Zhe Chen, Zhaoyang Liu,
+Shenglong Ye, Lixin Gu, Hao Tian, Yuchen Duan,
+Weijie Su, Jie Shao, et al. 2025.
+Internvl3: Ex-
+ploring advanced training and test-time recipes for
+open-source multimodal models.
+arXiv preprint
+arXiv:2504.10479.
+Ye Zhu, Ai Zhao, and Jinwei Wang. Forensic prompt-
+ing with dual-action policy optimization for vision-
+language forgery detection and localization. In Forty-
+third International Conference on Machine Learning.
+Bojia Zi, Minghao Chang, Jingjing Chen, Xingjun Ma,
+and Yu-Gang Jiang. 2020. Wilddeepfake: A chal-
+lenging real-world dataset for deepfake detection. In
+Proceedings of the 28th ACM international confer-
+ence on multimedia, pages 2382–2390.
+
+
+Appendix
+Table of Contents
+A
+Proofs and Derivations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+14
+B
+Evidence-first Single-cue Record . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+14
+C
+CAWE Evaluation Protocol . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+15
+D
+Implementation Details. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+15
+D.1
+Training and Inference . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+15
+D.2
+Cue Extraction Pipeline . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+16
+E
+Supportability Analysis. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+E.1
+Dataset Visual Statistics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+E.2
+Teacher Robustness . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+F
+Qualitative Examples . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+F.1
+Comparison with Baselines . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+F.2
+Before vs. After Training . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+18
+G
+Extended Comparison. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+18
+H
+Inference Efficiency . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+19
+I
+Extended Limitations and Future Work . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+20
+13
+
+
+A
+Proofs and Derivations
+We justify the three components of the supportabil-
+ity criterion (Sec. 3.1).
+Proposition 1 (Transfer Utility measures direct-cue
+dependence). Let zt denote the annotated cue token
+at position t ∈span(c). The transfer utility is
+defined as
+TUc,t =
+
+log pbase,t
+c
+(zt) −log pmask,t
+c
+(zt)
+
++,
+where the full-context teacher pbase,t
+c
+observes the
+target cue and the cue-masked teacher pmask,t
+c
+does
+not.
+If the cue adds no predictive information, remov-
+ing it leaves the prediction unchanged, i.e., the cue
+is inferable from the remaining context:
+pbase,t
+c
+(zt) ≈pmask,t
+c
+(zt)
+=⇒
+TUc,t ≈0.
+If zt is likely only when the cue text is present, then
+pbase,t
+c
+(zt) ≫pmask,t
+c
+(zt)
+=⇒
+TUc,t ≫0,
+indicating strong direct-cue dependence.
+The text-side weight gtext
+c,t
+= exp(−TUc,t /τa)
+satisfies
+∂gtext
+c,t
+∂TUc,t
+= −1
+τa
+gtext
+c,t
+< 0,
+so tokens that copy rather than infer receive lower
+weight.
+TU does not verify grounding in the current im-
+age: a low-TU cue may merely reflect a dataset-
+level pattern.
+Proposition 2 (Differential visual sensitivity re-
+moves generic perturbation effects). The visual
+sensitivity test compares the cue likelihood degra-
+dation caused by perturbing high-attribution visual
+tokens versus low-attribution visual tokens of the
+same size k. Suppose the degradation for any token
+set M decomposes as
+∆ℓc(M) = ∆generic + ∆cue(M),
+where ∆generic is the drop from removing any k to-
+kens and ∆cue(M) is the cue-specific contribution
+of M. Then
+∆ℓc(Mhigh
+c
+) = ∆generic + ∆cue(Mhigh
+c
+),
+∆ℓc(Mlow
+c
+) = ∆generic + ∆cue(Mlow
+c
+).
+Taking the difference cancels the shared generic
+term:
+VS(c) =
+
+∆ℓc(Mhigh
+c
+) −∆ℓc(Mlow
+c
+)
+
++
+=
+
+∆cue(Mhigh
+c
+) −∆cue(Mlow
+c
+)
+
++.
+Thus VS tests whether the high-attribution region
+matters more to the cue than a same-size low-
+attribution region, rather than whether the model
+uses the image at all.
+Remark.
+The cancellation assumes matched
+generic effects between the two sets; this is approx-
+imate but reasonable given the identical zero-out
+operation and equal set size.
+We next combine both audits into a single
+weight.
+Proposition 3 (The multiplicative joint gate is a
+soft relaxation of the supportability criterion). Sup-
+portability requires low TU and high VS:
+Supp(c) ⇐⇒low TU ∧high VS.
+Ignoring the span indicator, we implement it as
+wc,t = gtext
+c,t
+· gvis
+c ,
+where both factors lie in [0, 1]. For any a, b ∈[0, 1],
+we have ab ≤min(a, b), so
+wc,t ≤min
+ gtext
+c,t , gvis
+c
+
+.
+Hence wc,t →0 if either gtext
+c,t
+→0 (direct-cue
+dependence) or gvis
+c
+→0 (no visual grounding),
+and wc,t ≈1 only when both are ≈1. An additive
+form would let one dimension compensate for the
+other, violating the AND semantics.
+B
+Evidence-first Single-cue Record
+Table 4 summarizes the teacher-student informa-
+tion asymmetry. The teacher receives the full an-
+notation g = (y, o, r, c) and any available mask or
+source image; the student sees only I and q. The
+cue-masked teacher (Sec. 3.2) additionally with-
+holds c.
+Each training record (Ii, qi, gi) carries the single
+annotated cue ci of gi; an image annotated with
+several cues appears in several records, each carry-
+ing one cue. The record places the cue before the
+decision:
+Evidence:
+- region: <region>
+- cue: <cue>
+Decision: <real/fake>
+14
+
+
+Information
+Teacher
+Student
+Image I
+✓
+✓
+Task prompt q
+✓
+✓
+GT label y
+✓
+✗
+Forgery type o
+✓
+✗
+Manipulation region r
+✓
+✗
+Target cue c
+Base: ✓/ Masked: ✗
+✗
+Manipulation mask m
+if available
+✗
+Source image Isrc
+if available
+✗
+Table 4: Information accessibility for teacher and stu-
+dent.
+This makes the cue span stably locatable for
+token-level scoring, and the scoring prefix ends
+before Decision:, reducing post-hoc, answer-
+conditioned rationalization. The single-cue format
+applies only to training records; at inference, the
+student is free to list multiple - region/- cue
+entries under Evidence:, and produces about two
+cues per sample on average.
+C
+CAWE Evaluation Protocol
+We measure explanation faithfulness with the
+Correct-Answer Wrong-Evidence (CAWE) metric,
+following the protocol of Kuckreja et al. (Kuckreja
+et al., 2026).
+Evidence evaluator.
+We fine-tune a VLM eval-
+uator on image-cue pairs labeled supported or un-
+supported. A cue is unsupported if it fails any of
+three dimensions:
+1. Factual correctness: the artifact is absent from
+the image.
+2. Visual verifiability:
+the artifact cannot be
+verified at the given resolution (e.g., “subtle
+frequency-domain inconsistency”).
+3. Spatial specificity: the cue is too generic to
+localize (e.g., “the image looks unnatural”).
+Negative pairs pair an image with a cue from an-
+other sample, a cue describing invisible artifacts,
+or an overly generic cue, violating dimensions 1, 2,
+and 3, respectively.
+CAWE computation.
+Generated explanations
+are segmented into cues at the sentence level, each
+sentence stating one evidence claim. Among Ncorr
+correctly classified samples, each generated cue
+is judged independently, and a sample counts as
+a CAWE case if any cue is unsupported. With
+Nunsup such samples,
+CAWE = Nunsup
+Ncorr
+.
+Acc
+Prec.
+Rec.
+F1
+κ
+CAWE Eval.
+87.4
+91.0
+89.5
+90.2
+0.72
+Table 5: Reliability of the CAWE evaluator against hu-
+man majority vote on 3,600 image-cue pairs. Metrics
+(%) are macro-averaged over six benchmarks; κ is Co-
+hen’s kappa.
+For correctly classified real images, stating that no
+artifact is observed is supported, whereas halluci-
+nating specific artifacts (e.g., “slight skin smooth-
+ing around the cheeks”) is unsupported. CAWE
+thus decouples faithfulness from detection accu-
+racy.
+Evaluator reliability.
+We compare the evalua-
+tor with human majority votes (three annotators)
+on the 3,600 image-cue pairs from the human
+study (Sec. 4), computing metrics on each 600-
+pair benchmark subset and macro-averaging over
+six benchmarks (Table 5).
+The evaluator reaches 87.4% accuracy and
+κ=0.72 (substantial agreement) with balanced pre-
+cision and recall, supporting it as a reliable proxy
+for human judgment.
+Cue-multiplicity control.
+Since models produc-
+ing more cues are more likely to incur a CAWE
+case, we retain one random cue per correctly classi-
+fied sample and recompute CAWE, averaging over
+five seeds.
+Controlling for cue multiplicity lowers CAWE
+for all methods, while ours remains best on every
+benchmark (Table 6). The drop is larger for ours
+because it lists about two cues per sample, so its
+per-cue unsupported rate (12.8% on average) is less
+than half that of the strongest baseline. This per-
+cue support also exceeds that of the top-wc training
+cues (Table 3) because, for correctly classified real
+images, “no visible artifact” statements count as
+supported.
+D
+Implementation Details
+D.1
+Training and Inference
+Algorithm 1 summarizes training; Table 7 lists set-
+tings not reported in the main text.
+Teacher and student are both initialized from
+Qwen/Qwen3-VL-8B without prior SFT; the teacher
+stays frozen. At each step, the student’s greedy roll-
+out prefix is fed to the full-context and cue-masked
+teachers in one batched forward pass. TU is com-
+puted online since ˜y<t evolves; VS is deterministic
+15
+
+
+Method
+FF++
+Celeb-DF v2
+DFDC
+WildDF
+Average
+Orig.
+1-Cue
+Orig.
+1-Cue
+Orig.
+1-Cue
+Orig.
+1-Cue
+Orig.
+1-Cue
+FFAA
+62.8
+49.8
+68.4
+54.2
+65.2
+51.7
+71.6
+57.4
+67.0
+53.3
+VLFFD
+56.3
+44.7
+60.1
+48.2
+62.4
+49.5
+65.8
+52.6
+61.2
+48.8
+Identity-Aware VLM
+53.6
+41.8
+55.4
+43.1
+61.7
+48.7
+59.2
+46.0
+57.5
+44.9
+RLSBI
+58.1
+45.9
+63.8
+50.7
+62.0
+49.3
+68.4
+54.6
+63.1
+50.1
+SIDA
+54.5
+43.0
+58.6
+46.8
+63.8
+50.2
+61.0
+48.0
+59.5
+47.0
+FakeVLM
+48.7
+37.5
+51.2
+39.8
+54.8
+42.6
+52.4
+40.7
+51.8
+40.2
+M2F2-Det
+50.4
+38.4
+52.1
+40.1
+58.6
+45.9
+55.3
+42.7
+54.1
+41.8
+FakeShield
+41.2
+30.9
+43.8
+32.7
+49.5
+37.8
+46.7
+35.2
+45.3
+34.2
+EDD
+38.5
+29.4
+40.2
+30.8
+42.6
+32.7
+39.8
+30.2
+40.3
+30.8
+PATE-Forensics
+36.4
+26.9
+35.6
+26.4
+38.2
+28.6
+36.5
+27.0
+36.7
+27.2
+Ours
+21.6
+11.5
+22.8
+12.1
+27.4
+14.8
+24.1
+12.9
+24.0
+12.8
+Table 6: CAWE (%) under the original evaluation and the one-cue control. “1-Cue” retains one uniformly sampled
+cue per correctly classified sample and averages results over five random seeds.
+Algorithm 1 Supportability-Aware Distillation
+Require: Image set D; frozen teacher pT ; student pS; TU
+temperature τa; VS margin mpert, temperature Tpert;
+top/bottom-k; loss weights λans, λsup
+1: for each mini-batch {(Ii, qi, gi)} from D do
+2:
+˜y<t ←student greedy rollout on (Ii, qi), with cue
+tokens teacher-forced
+3:
+for each sample i in the mini-batch, with cue c ←ci
+from gi do
+4:
+// Transfer Utility (text-side audit)
+5:
+pbase,t
+c
+←pT (· | Ii, qi, gi, ˜y<t)
+6:
+pmask,t
+c
+←pT (· | Ii, qi, g−c
+i
+, ˜y<t)
+7:
+TUc,t ←[log pbase,t
+c
+(zt) −log pmask,t
+c
+(zt)]+
+8:
+gtext
+c,t
+←exp(−TUc,t/τa)
+9:
+// Visual Sensitivity (image-side audit)
+10:
+Ac,u ←∥∂ℓc
+∂vu ⊙vu∥1
+(grad × activation)
+11:
+M high
+c
+, M low
+c
+←top-k, bottom-k by Ac,u
+12:
+VS(c)
+←
+[ℓc(T (Ii, M low
+c
+))
+−
+ℓc(T (Ii, M high
+c
+))]+
+13:
+gvis
+c
+←σ((VS(c) −mpert)/Tpert)
+14:
+// Joint weight
+15:
+wc,t ←1[t ∈span(c)] · gtext
+c,t
+· gvis
+c
+16:
+end for
+17:
+Lsup ←
+P
+c
+P
+t wc,t DKL(sg[pmask,t
+c
+]∥pt
+S)
+P
+c
+P
+t wc,t+ϵ
+18:
+Ltotal ←λans CE(yi, pans
+S ) + λsup Lsup
+19:
+Update pS via ∇Ltotal
+20: end for
+per (image, cue) pair but computed jointly with TU
+for simplicity. We select the checkpoint with the
+lowest CAWE on a held-out 10% split.
+For
+VS
+(Algorithm
+1,
+lines
+10–13),
+gradient×activation
+attribution
+is
+computed
+on the last vision-encoder hidden state w.r.t.
+the cue-masked log-likelihood and reduced per
+token via the L1 norm; top-k and bottom-k
+sets have equal size, and each cue is audited
+independently.
+At inference, the decision is
+Setting
+Value
+Optimizer
+AdamW
+Weight decay
+0.01
+Scheduler
+Cosine, 3% warmup
+Grad. clipping
+Max norm 1.0
+Precision
+BF16
+Max seq. length
+2048 tokens
+Image resolution
+448 px (longer side)
+Image processor
+Qwen3-VL default
+Fine-tuning
+Full (no LoRA)
+Random seed
+42
+Ckpt. selection
+Lowest val. CAWE (10%)
+Teacher / Student
+Qwen/Qwen3-VL-8B
+Teacher update
+Frozen
+TU/VS computation
+Online (every step)
+Attribution layer
+Last vision hidden state
+Attribution reduction
+L1(grad × activation)
+Perturbation
+Zero-out embedding
+Decoding
+Greedy
+Max new tokens
+1024
+AUC/EER score
+p(F)
+p(F)+p(R)
+Decision parsing
+“Decision:” tag
+Table 7: Implementation summary. Main-text hyperpa-
+rameters (τa, mpert, Tpert, k, λans, λsup, epochs, LR,
+batch size, hardware) are omitted.
+parsed from the “Decision:”
+tag (unparseable
+outputs count as incorrect), and AUC/EER use
+sfake
+=
+p(Fake)/(p(Fake) + p(Real)) at the
+decision position.
+D.2
+Cue Extraction Pipeline
+The cue c in g = (y, o, r, c) is derived from native
+dataset metadata in two stages.
+16
+
+
+Dataset
+Resolution
+Vis. Sup. (%)
+#Sampled
+FF++ (Rossler et al., 2019)
+256×256
+51.6
+200
+Celeb-DF v2 (Li et al., 2020b)
+256×256
+40.3
+160
+DFDC (Dolhansky et al., 2020)
+320×320
+30.5
+240
+WildDF (Zi et al., 2020)
+varies
+21.4
+180
+DeeperForensics (Jiang et al., 2020)
+256×256
+35.2
+200
+ForgeryNet (He et al., 2021)
+256×256
+25.7
+220
+Celeb-DF++ (Li et al.)
+256×256
+42.5
+170
+DF40 (Yan et al., 2024)
+256×256
+38.2
+200
+DeepFakeBench (Yan et al., 2023b)
+256×256
+34.8
+190
+Table 8: Per-dataset image resolution and visual-support
+ratio. “Vis. Sup.” denotes the percentage, over all anno-
+tated cues on the sampled images, of cues whose visual
+evidence is identifiable by human inspection. #Sam-
+pled is the number of randomly sampled test images
+inspected.
+Stage 1: Rule-based extraction.
+Per-dataset
+templates convert metadata (forgery method labels,
+region masks, identity pairs) into standardized cue
+phrases; e.g., “NeuralTextures” with a mouth mask
+yields “neural texture re-rendering in the mouth
+region”. This covers most samples.
+Stage 2: VLM-based refinement.
+For less struc-
+tured annotations (e.g., ForgeryNet free-form de-
+scriptions) or overly generic template outputs, GPT-
+4o distills the metadata into one concise cue, nor-
+malized to the rule-based vocabulary. Over 95% of
+200 randomly sampled outputs correctly reflect the
+described forgery.
+Neither stage checks whether a cue is support-
+able by the image; this is the role of the supporta-
+bility audit (Secs. 3.2–3.4).
+E
+Supportability Analysis
+We show that visual supportability varies across
+datasets (Sec. E.1) and that the gains stem from the
+audit rather than teacher capacity (Sec. E.2).
+E.1
+Dataset Visual Statistics
+We manually inspect a random sample of test im-
+ages per dataset to check whether annotated cues
+have visible evidence (Table 8); DeepFakeBench is
+included for analysis only.
+FF++ and the Celeb-DF series show the high-
+est supportability (40.3–51.6%), DeeperForen-
+sics and multi-method benchmarks (DF40, Deep-
+FakeBench) are moderate (34.8–38.2%), DFDC,
+with diverse capture conditions and perturbations,
+is lower (30.5%), and ForgeryNet and WildDF,
+with diverse compression and resolution, are low-
+est (25.7% and 21.4%). Without the VS gate, un-
+grounded cues would be distilled equally, inflating
+CAWE on harder benchmarks.
+Method
+Teacher
+Params
+ACC
+CAWE
+Qwen2.5-VL family (Bai et al., 2025b)
+Standard OPD
+Qwen2.5-VL-3B
+3B
+95.40
+61.4
+Standard OPD
+Qwen2.5-VL-7B
+7B
+96.20
+59.3
+Qwen3-VL family (Bai et al., 2025a)
+Standard OPD
+Qwen3-VL-8B
+8B
+96.50
+58.6
+Standard OPD
+Qwen3-VL-32B
+32B
+97.30
+54.9
+InternVL3 family (Zhu et al., 2025)
+Standard OPD
+InternVL3-8B
+8B
+96.35
+58.0
+Standard OPD
+InternVL3-38B
+38B
+97.50
+54.1
+Ours
+Qwen3-VL-8B
+8B
+99.12
+21.6
+Table 9: Effect of teacher identity and scale on FF++
+(student: Qwen3-VL-8B; same protocol as Table 1).
+E.2
+Teacher Robustness
+To test whether the high CAWE of Standard OPD
+merely reflects limited teacher capacity, we fix
+the student (Qwen3-VL-8B) and vary the teacher
+across six models from three families (3B–38B) on
+FF++.
+As shown in Table 9, scaling the teacher within
+a family reduces CAWE by only 2–4 points; even
+InternVL3-38B retains 54.1% CAWE, and 7B/8B-
+class teachers across families stay within 58–60%.
+Ours with the default 8B teacher reaches 99.12%
+ACC and 21.6% CAWE, over 32 points lower than
+any Standard OPD setting. The bottleneck is thus
+unsupported privileged cues, not teacher capacity.
+F
+Qualitative Examples
+F.1
+Comparison with Baselines
+We compare with recent explainable detectors on a
+real and a forged image.
+Case 1: Real image (Fig. 8).
+FakeShield and
+M2F2-Det misclassify it as Fake, hallucinating
+“overly smooth” skin and inconsistencies around
+the eyes, mouth, or facial boundaries (Dimension
+1). Identity-Aware VLM predicts Real without fab-
+ricating specific artifacts, which counts as faithful
+(Appendix C); VLFFD also predicts Real but still
+mentions minor texture variations near the facial
+boundaries (Dimension 1). Ours predicts Real with
+a spatially grounded negative explanation (contin-
+uous cheek and jawline contours, no texture dis-
+continuity) that a human can verify in the cited
+regions.
+Case 2: Forged image (Fig. 9).
+Artifacts identi-
+fied by annotators: cheek-beard texture transition,
+glasses-face boundary irregularity, and lower-face
+over-smoothing. FakeShield detects the forgery
+17
+
+
+Figure 8: Visualization on a real image (Case 1). ×: wrong prediction; ✓×: correct prediction with unfaithful
+evidence; ✓: correct prediction with faithful evidence.
+but also cites an invisible “weak blending consis-
+tency” (Dimension 1). M2F2-Det and Identity-
+Aware VLM predict Real. PATE-Forensics local-
+izes the cheek-beard and glasses-face artifacts but
+adds “local texture details become less consistent”
+without saying where (Dimension 3). Ours pin-
+points the cheek-beard texture inconsistency and
+the glasses-face boundary, each with an explicit
+region and observable pattern, satisfying all three
+dimensions.
+F.2
+Before vs. After Training
+Fig. 10 compares our model’s explanations before
+and after training.
+Sample 1 (GT: Fake).
+Before training, the model
+wrongly predicts Real (“visually coherent ... no
+obvious boundary discontinuities”). After training,
+it predicts Fake and localizes inconsistencies at the
+cheek-beard, eye-skin, and teeth-lip boundaries,
+two of which (cheek-beard, teeth-lip) match the
+artifacts identified by annotators (fused teeth, sharp
+cheek-beard contour, smeared moustache).
+Sample 2 (GT: Fake).
+Both models predict Fake,
+but before training the evidence is generic (“skin
+smoothing around the forehead and cheeks”). After
+training, the model pinpoints the blurred ear-cheek
+boundary, asymmetric periocular texture, and un-
+even jaw stubble, all identified by annotators.
+Sample 3 (GT: Real).
+Before training, the model
+wrongly predicts Fake, citing cheek smoothing and
+eye-beard asymmetry. After training, it predicts
+Real, noting coherent texture and natural transitions
+with no supported manipulation cue.
+Overall, training shifts the model from generic or
+hallucinated cues to localized, verifiable evidence.
+G
+Extended Comparison
+Table 10 extends the comparison to DeeperForen-
+sics (Jiang et al., 2020), Celeb-DF v2 (Li et al.,
+2020b), ForgeryNet (He et al., 2021), Celeb-
+DF++ (Li et al.), and DF40 (Yan et al., 2024),
+adding nine traditional and five explainable base-
+lines, under the same multi-dataset protocol as Ta-
+ble 1. Tables 2 and 10 use the same checkpoint, so
+our results on DeeperForensics, ForgeryNet, and
+18
+
+
+Figure 9: Visualization on a forged image (Case 2). Symbols follow Fig. 8.
+Celeb-DF++ coincide. For Celeb-DF v2, since
+Celeb-DF++ extends it and shares source videos,
+Table 2 evaluates on the test subset disjoint from
+Celeb-DF++ (99.10), whereas Tables 1 and 10 use
+the full official test set (99.35).
+Recent traditional detectors (UCF, TALL,
+RECCE) outperform earlier ones, yet all drop
+sharply on DF40 (40 forgery methods). The ad-
+ditional explainable methods keep high average
+CAWE (46.8–58.6%, Table 11), consistent with
+Table 1. Ours achieves the best ACC and AUC
+on all five benchmarks among the methods in Ta-
+ble 10 (on Celeb-DF v2, its AUC of 99.86 still
+trails M2F2-Det’s 99.92 in Table 1); on DF40 it ex-
+ceeds GE-AIGC by 9.0 ACC and 7.4 AUC points,
+with 15.6 points lower average CAWE. Our per-
+benchmark CAWE is 28.6 (DeeperForensics), 22.8
+(Celeb-DF v2, full test set), 38.4 (ForgeryNet), 30.8
+(Celeb-DF++), and 35.4 (DF40), averaging 31.2.
+H
+Inference Efficiency
+Table 12 compares the inference cost of all methods
+in Table 1 on a single A100 80GB GPU (batch size
+1). Unlike Inf. in Table 2, which counts all prompt,
+visual, and output tokens, Out Tok. counts only
+generated tokens.
+Traditional detectors are orders of magnitude
+faster but give no explanations. Among VLM-
+based methods, latency is dominated by output
+length; FakeShield is slowest (5.86s) due to its
+13B backbone. Ours generates the fewest tokens
+(156, 30–51% fewer than other 8B methods), yield-
+ing the lowest latency (2.08s, 30.2% below EDD)
+and highest throughput, as down-weighting unsup-
+ported cues teaches concise explanations. Inf. in
+Table 2 (e.g., 547 on DeeperForensics) additionally
+includes ≈390 prompt and visual tokens. Table 13
+splits latency into visual encoding and text genera-
+tion.
+Text generation accounts for 80–92% of infer-
+ence time. Ours reduces it to 1.66s (vs. 2.56s for
+19
+
+
+Figure 10: Before vs. after supportability-aware training. Left: explanations before training; right: explanations
+after training. ×: wrong prediction; ✓×: correct prediction with unfaithful evidence; ✓: correct prediction with
+faithful evidence.
+EDD) purely through training, without inference-
+time pruning or early stopping.
+I
+Extended Limitations and Future Work
+Audit granularity and teacher dependence.
+Cues are scored independently, which may under-
+estimate jointly supportable combinations (e.g., a
+blending boundary visible only with a color shift);
+group-level audits or cue graphs could help. The
+framework also only filters cues, so artifacts omit-
+ted by the teacher annotation cannot be learned;
+retrieval-augmented or open-vocabulary cue pro-
+posal could complement it.
+Domain and deployment scope.
+We evaluate
+only face forgeries; non-facial deepfakes (e.g.,
+full-body synthesis, document forgery) may need
+domain-specific attribution, such as temporal atten-
+tion for video. Extending supportability to multi-
+turn and multilingual explanations also remains
+open.
+Training efficiency.
+TU and VS require extra
+forward passes, roughly doubling per-step training
+cost (inference is unaffected). Cached attributions,
+batch-shared perturbations, or lightweight proxy
+models could improve scalability.
+20
+
+
+DeeperForensics
+Celeb-DF v2
+ForgeryNet
+Celeb-DF++
+DF40
+Category
+Method
+ACC
+AUC
+ACC
+AUC
+ACC
+AUC
+ACC
+AUC
+ACC
+AUC
+Traditional
+EfficientNet (Tan and Le, 2019)
+88.60
+92.40
+90.80
+93.20
+70.40
+76.80
+89.60
+91.80
+72.50
+78.40
+Face X-ray (Li et al., 2020a)
+90.40
+93.80
+92.60
+94.50
+72.80
+78.60
+91.80
+93.20
+74.20
+80.60
+F3Net (Qian et al., 2020)
+91.20
+94.60
+93.40
+95.80
+74.50
+80.40
+92.60
+94.50
+75.80
+82.40
+MAT (Zhao et al., 2021)
+91.80
+95.10
+93.80
+96.20
+75.20
+81.60
+93.00
+94.80
+76.40
+83.20
+SPSL (Liu et al., 2021)
+90.80
+94.20
+93.20
+95.60
+73.80
+79.80
+92.40
+94.20
+75.20
+81.80
+RECCE (Cao et al., 2022)
+92.40
+95.60
+94.20
+96.50
+76.80
+83.20
+93.60
+95.40
+77.60
+84.50
+IID (Dong et al., 2023)
+92.80
+95.90
+94.80
+96.70
+76.20
+82.50
+93.80
+95.60
+78.40
+85.20
+UCF (Yan et al., 2023a)
+93.40
+96.20
+95.20
+97.10
+77.80
+84.40
+94.40
+96.00
+79.60
+86.40
+TALL (Xu et al., 2023)
+93.80
+96.50
+95.60
+97.40
+78.40
+85.20
+94.80
+96.40
+80.20
+87.10
+Explainable
+RAIDx (Li et al., 2025)
+91.60
+95.20
+93.80
+96.10
+75.40
+81.80
+93.20
+95.40
+76.80
+83.60
+So-Fake (Huang et al., 2025b)
+92.40
+95.80
+94.20
+96.40
+76.80
+83.20
+93.60
+95.80
+77.40
+84.20
+REVEAL (Praharaj et al., 2025)
+93.80
+96.40
+95.60
+97.20
+78.60
+84.80
+94.80
+96.60
+79.20
+85.80
+FP-DAPO (Zhu et al.)
+94.60
+97.10
+96.20
+97.80
+80.40
+86.60
+95.60
+97.20
+81.20
+88.00
+GE-AIGC (Guo et al., 2026)
+95.20
+97.40
+96.80
+98.10
+81.60
+87.40
+96.20
+97.60
+82.40
+88.80
+Ours
+97.25
+98.80
+99.35
+99.86
+90.80
+95.60
+98.85
+99.40
+91.40
+96.20
+Table 10: Extended comparison on five benchmarks with methods not included in Table 1. All models are trained
+on the combined multi-dataset split, following the same protocol as Table 1.
+Category
+Method
+CAWE↓(Avg.)
+∆vs. Ours
+Explainable
+RAIDx (Li et al., 2025)
+58.6
++27.4
+So-Fake (Huang et al., 2025b)
+56.4
++25.2
+REVEAL (Praharaj et al., 2025)
+52.8
++21.6
+FP-DAPO (Zhu et al.)
+48.6
++17.4
+GE-AIGC (Guo et al., 2026)
+46.8
++15.6
+Ours
+31.2
+–
+Table 11: Average CAWE across the five benchmarks
+for explainable methods. ∆denotes the gap relative to
+our method.
+Cat.
+Method
+Params
+Out Tok.
+Latency (s)
+Thru. (samples/s)
+Traditional
+Xception
+23M
+–
+0.008
+125.0
+SBI
+23M
+–
+0.012
+83.3
+Forensics Adapter
+151M
+–
+0.015
+66.7
+Explainable
+FFAA
+8B
+286
+3.82
+0.26
+VLFFD
+8B
+245
+3.28
+0.30
+Identity-Aware VLM
+8B
+312
+4.16
+0.24
+RLSBI
+8B
+268
+3.58
+0.28
+SIDA
+8B
+254
+3.40
+0.29
+FakeVLM
+8B
+238
+3.18
+0.31
+M2F2-Det
+8B
+302
+4.04
+0.25
+FakeShield
+13B
+275
+5.86
+0.17
+EDD
+8B
+224
+2.98
+0.34
+PATE-Forensics
+8B
+318
+4.24
+0.24
+Ours
+8B
+156
+2.08
+0.48
+Table 12: Inference efficiency comparison on FF++.
+Params: model parameters. Out Tok.: average output
+tokens. Latency: seconds per sample. Thru.: throughput
+(samples/second). Traditional methods do not generate
+text.
+Method
+Vis. Enc. (s)
+Text Gen. (s)
+Total (s)
+Gen. Ratio
+FFAA
+0.42
+3.40
+3.82
+89.0%
+VLFFD
+0.42
+2.86
+3.28
+87.2%
+EDD
+0.42
+2.56
+2.98
+85.9%
+PATE-Forensics
+0.42
+3.82
+4.24
+90.1%
+FakeShield
+0.48
+5.38
+5.86
+91.8%
+Ours
+0.42
+1.66
+2.08
+79.8%
+Table 13: Inference time breakdown. Vis. Enc.: visual
+encoding time. Text Gen.: autoregressive text genera-
+tion time. Gen. Ratio: fraction of total time spent on
+text generation.
+21

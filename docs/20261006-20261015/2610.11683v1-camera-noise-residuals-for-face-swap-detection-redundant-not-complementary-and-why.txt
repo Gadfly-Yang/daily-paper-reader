@@ -1,0 +1,526 @@
+Camera-Noise Residuals for Face-Swap Detection:
+Redundant, Not Complementary, and Why
+Danil Davydov∗, Bader Rasheed†, Dmitriy Vatolin†
+∗Innopolis University, Innopolis, Russia
+†Laboratory of Innovative Technologies for Processing Video Content, Innopolis University, Innopolis, Russia
+{d.davydov, b.rasheed, d.vatolin}@innopolis.university
+Abstract—Fusing a learned camera-noise fingerprint with an
+RGB appearance backbone is an appealing route to generator-
+independent deepfake detection, because the noise residual is
+grounded in image-formation physics rather than in the texture
+statistics of a particular generator. We test, on FaceForensics++,
+whether a Noiseprint++ residual channel carries information
+complementary to an RGB Xception backbone for face-swap
+detection. A three-model ablation (RGB-only, residual-only, late-
+fusion) shows that fusion does not improve over RGB alone
+and that the residual branch alone is near chance. A seven-
+level bottleneck diagnostic localizes the cause: the noise maps
+do carry a discriminative signal, but it is statistical—carried
+by the per-sample first and second moments (mean, variance,
+energy) of the residual—and the per-sample InstanceNorm
+layer placed at the noise-branch input, following the TruFor
+template, standardizes exactly those moments away (five-fold
+cross-validated AUC drops from 0.747 to 0.554). A context-
+crop control rules out cropping geometry, and two fixed-fusion
+variants that remove the bottleneck recover the statistical signal
+yet still fail to beat RGB on every dataset. We conclude that, on
+this manipulation distribution, the noise residual is redundant
+with RGB rather than complementary, and we give concrete
+guidance for practitioners adopting noise-residual fusion for face-
+swap detection.
+Index Terms—deepfake detection, image forensics, sensor
+noise, Noiseprint, face swapping, feature fusion, instance nor-
+malization.
+I. INTRODUCTION
+Face-swap deepfakes have become photorealistic and cheap
+to produce, eroding the reliability of visual media [1], [10].
+Detectors trained on the texture-level artefacts of one generator
+family often fail when confronted with a new architecture
+or dataset, behaving as fingerprint matchers that memorize
+dataset-specific quirks rather than validators of physical plau-
+sibility. This motivates detection signals grounded in invariants
+of image formation, which a generator would have to repro-
+duce by implicitly solving the underlying inverse problems.
+The sensor-noise residual is the canonical such invari-
+ant. Photo-response non-uniformity and learned camera-model
+fingerprints survive throughout a device’s lifetime and are
+disrupted where two images are composited [3]. Noiseprint [3]
+extracts a camera-model fingerprint disentangled from scene
+content, and TruFor [2] builds an end-to-end forgery detector
+around the Noiseprint++ fingerprint with a learned fusion
+head. These methods are reported as effective in general
+image-forgery settings, but the specific question of whether
+the noise channel is complementary to an RGB appearance
+backbone on face-swap manipulations—as opposed to redun-
+dant with it, or destroyed by architectural choices—has not
+been settled by a controlled ablation.
+Terminology. We use complementary and redundant in
+a precise, measurable sense throughout. Let A(·) denote
+detection AUC for a given channel or fusion of channels.
+Two channels are complementary when fusing them strictly
+exceeds the better single channel beyond statistical noise,
+A(fusion) > max{A(RGB), A(residual)},
+i.e. the second channel supplies discriminative information the
+first does not. They are redundant when fusion fails to exceed
+the stronger single channel,
+A(fusion) ≈max{A(RGB), A(residual)} ≤A(RGB),
+i.e. the second channel adds nothing the first has not already
+captured. Our question is whether the Noiseprint++ residual is
+complementary to RGB in this sense for face-swap detection.
+We address that question directly on FaceForensics++
+(FF++) [1]. Our contributions are:
+• A controlled three-model ablation (RGB-only, residual-
+only, late-fusion) showing that an architecturally fused
+Noiseprint++ residual channel does not improve over
+RGB alone on FF++ (Wilcoxon p = 0.977), while the
+residual branch alone is near chance.
+• A seven-level bottleneck diagnostic that localizes the
+failure
+of
+the
+residual
+branch
+to
+the
+per-sample
+InstanceNorm input layer: a classifier on six scalar
+noise statistics reaches AUC 0.747, but the same statistics
+after InstanceNorm pooling collapse to 0.554.
+• A context-crop control and two five-seed fixed-fusion
+variants that rule out cropping geometry and the normal-
+ization bottleneck as the cause of the fusion failure, leav-
+ing redundancy with the RGB channel as the explanation
+supported by the evidence—together with practitioner
+guidance.
+II. RELATED WORK
+Deepfake detection and generalization. FF++ [1] es-
+tablished that convolutional detectors achieve strong in-
+distribution accuracy but degrade sharply across manipula-
+tion methods and datasets. The Self-Blended Images (SBI)
+framework [4], building on Face X-Ray [5], generates training
+fakes by self-blending a single source image, removing the
+arXiv:2610.11683v1  [cs.LG]  8 Oct 2026
+
+
+dependence on labelled fakes and yielding markedly better
+cross-dataset transfer; we use an off-the-shelf SBI model as a
+reference baseline.
+Sensor-noise forensics. Noiseprint [3] learns a camera-
+model fingerprint via a Siamese contrastive objective on same-
+camera versus different-camera patches. TruFor [2] couples
+the Noiseprint++ fingerprint with an RGB stream through a
+learned fusion head and places an InstanceNorm layer at
+the noise-branch input. Our study adopts that architectural
+template as the basis for a face-swap-specific ablation and asks
+where, in the extraction–processing–fusion pipeline, the signal
+is or is not retained.
+III. METHOD
+A. Data and noise extraction
+All experiments use face crops from FF++ [1] and its
+DeepFakeDetection extension, partitioned at the video level so
+that no source video contributes frames to more than one split
+(19,571 train, 3,573 val, 4,675 test crops). Faces are detected
+with MTCNN [8], the box expanded by 1.3× and square-
+padded. Noise maps are precomputed with Noiseprint++ [2]
+on the full frame at native resolution before cropping; this
+extract-then-crop order preserves the camera-model fingerprint
+at the face location, whereas running the extractor on the small
+crop degrades its receptive-field context. Class imbalance is
+handled with class-weighted cross-entropy. The full data pro-
+tocol and training configuration are tabulated in the Appendix
+(Table IV).
+B. Three ablation models
+• RGB-only: an ImageNet-pretrained Xception [6] back-
+bone on the face crop with a three-layer head—isolating
+the RGB appearance signal.
+• Residual-only: a ResNet [7] backbone on the 299 × 299
+Noiseprint++ map with the identical head; its first layer
+is InstanceNorm2d, following the TruFor architec-
+ture [2].
+• Late-Fusion: parallel RGB and noise branches concate-
+nated into a joint head—testing whether the noise signal
+is complementary to RGB.
+Models are trained with AdamW, a tri-rate learning-rate
+schedule with three-epoch warmup, ReduceLROnPlateau
+on validation macro-F1, gradient clipping, and a progressive
+backbone-unfreezing schedule.
+C. Seven-level bottleneck diagnostic
+To localize the residual branch’s failure independently of the
+deep network, we run a progressive probe on the precomputed
+noise maps via five-fold cross-validation on 3,000 FF++ test
+samples. The seven levels are: (L1) logistic regression on
+mean |noise|; (L2) logistic regression on six scalar statis-
+tics (mean, std, energy, max, kurtosis, pixel count); (L3) a
+small MLP on those six features; (L4) logistic regression on
+InstanceNorm-pooled noise; (L5) logistic regression on
+raw-pooled noise; (L6) a two-layer ConvNet on raw noise;
+(L7) the same ConvNet with InstanceNorm before the first
+TABLE I
+IN-DISTRIBUTION AND CROSS-DATASET VIDEO-LEVEL AUC
+(FRAME-LEVEL FOR DFF). RGB-ONLY ≈LATE-FUSION (WILCOXON
+p = 0.977); RESIDUAL-ONLY IS NEAR CHANCE. SBI IS AN
+OFF-THE-SHELF REFERENCE, SHOWN FOR CONTEXT.
+Model
+FF++
+Celeb-DF
+DFDC
+DFF
+RGB-Only
+0.928
+0.888
+0.717
+0.531
+Late-Fusion
+0.924
+0.881
+0.712
+0.475
+Residual-Only
+0.579
+0.547
+0.578
+0.212
+SBI (ref.)
+0.865
+0.907
+0.884
+0.614
+convolution. L1–L3 test whether scalar statistics suffice; L4
+(standardize-then-pool) tests whether removing the per-sample
+moments collapses a linear readout, and L7 tests whether a
+learned convolution can recover signal after standardization;
+L5–L6 test raw spatial patterns.
+D. Context-crop control
+We additionally test whether expanding the crop from 1.3×
+to 2.7× the box—to capture the blending boundary where
+PRNU discontinuities should be most visible—helps. The
+same probe is applied to both crop scales on 2,000 samples
+each from FF++ and Celeb-DF, alongside a classifier-free
+corpus signal-to-noise ratio (SNR) comparing between-class
+to within-class variance of the noise statistics.
+E. Fixed-fusion variants
+Finally, two variants (five seeds each) directly remove the
+diagnosed bottleneck: StatNoise-Fusion bypasses spatial pro-
+cessing and fuses thirteen scalar noise statistics with Xception
+features through a small MLP; ResAware-Fusion replaces
+the noise branch’s InstanceNorm with BatchNorm and
+processes the noise crop at native resolution, preserving the
+per-sample statistics through the spatial pipeline.
+IV. RESULTS
+A. Ablation and cross-dataset transfer
+Table I reports video-level AUC (frame-level for DFF) in
+distribution and across three further corpora [9]–[11]. RGB-
+only and Late-Fusion are statistically indistinguishable on
+FF++ (Wilcoxon paired test on per-video squared errors,
+p = 0.977 after Bonferroni correction), the residual branch is
+near chance everywhere, and the SBI reference—an orthogonal
+training-data prior—transfers best across datasets. Adding the
+noise branch buys nothing over RGB: RGB-Only and Late-
+Fusion are indistinguishable at both frame and video level,
+while Residual-Only stays near chance.
+B. The bottleneck is per-sample InstanceNorm
+Table II resolves where the residual signal is lost. The noise
+maps do carry a discriminative signal, and it is statistical: an
+MLP on six scalar statistics (L3) reaches AUC 0.747, well
+above chance. But the same statistics after InstanceNorm
+pooling (L4) collapse to 0.554.
+To see why, consider the operation itself. For a single
+noise map x ∈RC×H×W , InstanceNorm standardizes
+
+
+TABLE II
+SEVEN-LEVEL BOTTLENECK DIAGNOSTIC ON NOISEPRINT++ MAPS.
+FIVE-FOLD CROSS-VALIDATED AUC ON 3,000 FF++ TEST SAMPLES. L3
+SETS THE STATISTICAL CEILING (0.747); L4 LOCALIZES THE
+INST A N C ENO R M COLLAPSE (0.554).
+Classifier
+Input
+AUC
+L1: LogReg
+mean |noise|
+0.653 ± 0.018
+L2: LogReg
+6 scalar stats
+0.664 ± 0.018
+L3: MLP (ceiling)
+6 scalar stats
+0.747 ± 0.023
+L4: LogReg
+InstanceNorm-pooled noise
+0.554 ± 0.014
+L5: LogReg
+raw-pooled noise
+0.559 ± 0.026
+L6: ConvNet (2-layer)
+raw noise
+0.602 ± 0.021
+L7: ConvNet + IN
+raw noise
+0.670 ± 0.014
+Fig. 1. Seven-level bottleneck AUC (L1–L7) with five-fold standard-deviation
+bars. The L3 →L4 drop localizes the loss to standardize-then-pool; L7
+recovers part of the statistical ceiling.
+each channel c independently using only that sample’s own
+spatial statistics,
+ˆxc,h,w = γc
+xc,h,w −µc
+p
+σ2c + ϵ
++ βc,
+(1)
+µc =
+1
+HW
+X
+h,w
+xc,h,w,
+σ2
+c =
+1
+HW
+X
+h,w
+ xc,h,w −µc
+2.
+(2)
+Eq. (1) subtracts the per-sample mean µc and divides by the
+per-sample standard deviation σc. It therefore discards exactly
+the first- and second-moment information of each noise map—
+the per-sample mean and the variance/energy—and rescales
+any scale-dependent descriptor such as max |x| to a com-
+mon per-sample scale. These are precisely the quantities that
+dominate the discriminative six-feature set (mean, std, energy,
+max). Standardized higher-order moments such as kurtosis
+are invariant to the affine normalization in Eq. (1) and so
+survive it in principle; the empirical L3→L4 collapse to near
+chance shows that, once the first two moments are removed,
+the residual carries little discriminative signal on its own.
+The Residual-Only ConvNet, which applies InstanceNorm
+before any deep convolution, therefore never sees the discrimi-
+native statistics; L7 (ConvNet with InstanceNorm) recovers
+only part of the ceiling. Fig. 1 visualizes the L3→L4 collapse.
+C. Cropping geometry is not the cause
+The tight crop outperforms the context crop at every probe
+level on both datasets. On FF++, corpus SNR is 0.188 (tight)
+TABLE III
+FIXED-FUSION VARIANTS (MEAN ± STD OVER FIVE SEEDS). REMOVING
+THE IN S T A N C ENO R M BOTTLENECK RECOVERS THE STATISTICAL SIGNAL
+BUT STILL UNDERPERFORMS RGB-ONLY ON BOTH DATASETS.
+Model
+FF++ AUC
+Celeb-DF AUC
+RGB-Only (ref.)
+0.928
+0.888
+Late-Fusion (original)
+0.924
+0.881
+Residual-Only (original)
+0.579
+0.547
+StatNoise-Fusion (fixed)
+0.845 ± 0.009
+0.786 ± 0.015
+ResAware-Fusion (fixed)
+0.856 ± 0.009
+0.805 ± 0.015
+versus 0.080 (context) and best-classifier AUC 0.670 versus
+0.652; on Celeb-DF, SNR 0.158 versus 0.053 and AUC 0.588
+versus 0.580. Expanding the crop dilutes the face-region signal
+with background pixels that are identical between real and
+fake, lowering rather than raising the SNR. The expected
+PRNU discontinuity at the blending boundary does not, on
+these manipulations, yield a stronger signal than the face
+region itself.
+D. Fixing the bottleneck does not recover complementarity
+Table III reports the two fixed-fusion variants. Both deliver a
+non-trivial noise contribution at the fusion point—confirming
+the diagnosis—yet both underperform RGB-only and the orig-
+inal Late-Fusion on every dataset. The original Late-Fusion
+learned to ignore a near-chance noise gradient and tracked
+RGB-only; the fixed variants receive a stronger but redundant
+noise signal and are pulled down by the weaker modality. This
+is the signature of redundancy, not complementarity.
+E. Robustness corroborates redundancy
+A genuinely complementary noise channel should make
+Late-Fusion behave differently from RGB-Only under pertur-
+bations that degrade texture and sensor noise at different rates.
+To test this directly we compute, for each perturbation family,
+the paired per-dataset difference ∆AUC = Late-Fusion −
+RGB-Only at frame level across the three video datasets
+(FF++, Celeb-DF, DFDC; DFF is excluded as image-only
+and near chance for both models), pairing within each dataset
+so that between-dataset scale differences cancel. Fig. 2 plots
+∆AUC with 95% confidence intervals.
+The fusion difference is statistically indistinguishable from
+zero across the entire sweep. Pooled over all operating points
+the mean ∆AUC is −0.003 (max |∆| = 0.035); it is never
+significantly positive at any JPEG, blur, resize, or gamma
+level, and the only point whose CI excludes zero is neg-
+ative (Gaussian blur σ = 2: −0.017). Adding the noise
+branch therefore never improves robustness and, where it
+has any measurable effect, slightly degrades it—the paired-
+perturbation counterpart of the in-distribution Wilcoxon result
+(p = 0.977). For contrast, the same paired difference for the
+SBI reference (SBI−RGB-Only) is positive at every operating
+point (means +0.04 to +0.17, largest under heavy JPEG),
+confirming that the comparison readily resolves a genuinely
+different model. The noise-fusion curve, by contrast, sits on
+the zero line—the most direct evidence that the fusion head
+
+
+has learned to ignore the near-chance noise gradient rather
+than exploit it.
+V. DISCUSSION
+The evidence supports a single, mechanistic account. (i)
+The Noiseprint++ residual does carry a face-swap signal on
+FF++, but it is statistical—differences in the per-sample first
+and second moments (mean, variance/energy) of the residual—
+consistent with the Noiseprint family’s premise that composit-
+ing disrupts the per-region camera-model fingerprint [3]. (ii)
+That signal is destroyed inside the trained branch by the per-
+sample InstanceNorm layer that the TruFor template places
+at the input [2]: as Eq. (1) shows, standardizing each sample
+to zero mean and unit variance removes precisely the first
+two moments that carry the signal. The collapse is invisible in
+loss curves and is only exposed by the classifier-free probe.
+(iii) Once the bottleneck is removed, the recovered signal is
+redundant with what the RGB backbone already extracts from
+the same blending operation: the fixed-fusion variants never
+exceed RGB-only, and the original Late-Fusion tracks RGB-
+only across the perturbation sweep (Fig. 2), consistent with the
+fusion head learning to ignore the noise gradient. (iv) Cropping
+geometry is not responsible—the tight crop is uniformly better.
+The practical guidance follows directly. A noise-residual
+side channel adopted from a general image-forgery detector
+should not be assumed complementary for face-swap detec-
+tion: if the discriminative signal is statistical, a per-sample
+normalization at the branch input will erase it, and even when
+preserved it may add nothing over RGB. The contrast with
+the SBI reference is instructive: a physical prior injected at
+the training-data level transfers across datasets far better than
+this architectural side channel, suggesting that the locus of
+injection matters more than the presence of the prior.
+Limitations. The study is on the FF++ face-swap distribu-
+tion; the conclusion is specific to that manipulation family and
+to the Noiseprint++/TruFor template. We do not claim sensor-
+noise residuals are useless for forgery detection in general—
+only that they are redundant, not complementary, for face-swap
+detection here, and that a common architectural choice silently
+destroys the signal they do carry.
+VI. CONCLUSION
+We asked whether a learned camera-noise residual is
+complementary to an RGB backbone for face-swap detec-
+tion, and—if not—where the signal is lost. On FaceForen-
+sics++, architectural fusion gives no improvement over RGB;
+a seven-level probe localizes the failure to a per-sample
+InstanceNorm layer that erases the statistical signal the
+residual carries (AUC 0.747→0.554); a context-crop control
+rules out cropping geometry; and two fixed-fusion variants
+show that, once the signal is preserved, it is redundant with
+RGB. The bottleneck probe is a reusable diagnostic for audit-
+ing where an auxiliary forensic channel succeeds or fails.
+APPENDIX A
+DATA PROTOCOL AND TRAINING DETAILS
+Table IV consolidates the dataset partitioning, preprocess-
+ing, and training configuration used for all three ablation
+models, for reproducibility.
+REFERENCES
+[1] A. R¨ossler, D. Cozzolino, L. Verdoliva, C. Riess, J. Thies, and M.
+Nießner, “FaceForensics++: Learning to detect manipulated facial im-
+ages,” in Proc. IEEE/CVF ICCV, 2019.
+[2] F. Guillaro, D. Cozzolino, A. Sud, N. Dufour, and L. Verdoliva, “TruFor:
+Leveraging all-round clues for trustworthy image forgery detection and
+localization,” in Proc. IEEE/CVF CVPR, 2023.
+[3] D. Cozzolino and L. Verdoliva, “Noiseprint: A CNN-based camera
+model fingerprint,” IEEE Trans. Inf. Forensics Security, vol. 15, pp. 144–
+159, 2020.
+[4] K. Shiohara and T. Yamasaki, “Detecting deepfakes with self-blended
+images,” in Proc. IEEE/CVF CVPR, 2022.
+[5] L. Li, J. Bao, T. Zhang, H. Yang, D. Chen, F. Wen, and B. Guo, “Face X-
+ray for more general face forgery detection,” in Proc. IEEE/CVF CVPR,
+2020.
+[6] F. Chollet, “Xception: Deep learning with depthwise separable convo-
+lutions,” in Proc. IEEE CVPR, 2017.
+[7] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for image
+recognition,” in Proc. IEEE CVPR, 2016.
+[8] K. Zhang, Z. Zhang, Z. Li, and Y. Qiao, “Joint face detection and
+alignment using multitask cascaded convolutional networks,” IEEE
+Signal Process. Lett., vol. 23, no. 10, pp. 1499–1503, 2016.
+[9] Y. Li, X. Yang, P. Sun, H. Qi, and S. Lyu, “Celeb-DF: A large-scale
+challenging dataset for DeepFake forensics,” in Proc. IEEE/CVF CVPR,
+2020.
+[10] B. Dolhansky, J. Bitton, B. Pflaum, J. Lu, R. Howes, M. Wang, and
+C. C. Ferrer, “The DeepFake Detection Challenge (DFDC) dataset,”
+arXiv:2006.07397, 2020.
+[11] H. Song et al., “Robustness and generalizability of deepfake detection:
+A study with diffusion models (DeepFakeFace),” arXiv preprint, 2023.
+
+
+Fig. 2. Paired per-dataset difference in frame-level AUC relative to RGB-Only, by perturbation family (JPEG, Gaussian blur, resize, gamma), across FF++,
+Celeb-DF, and DFDC; shaded bands are 95% CIs (n = 3 datasets, paired within dataset). Late-Fusion −RGB-Only (blue) hugs the zero line at every
+operating point—never significantly positive, its only CI-excluding-zero point being negative (blur σ = 2)—so the noise branch adds nothing over RGB. SBI
+−RGB-Only (orange), included as a reference for what a genuinely different model looks like, is positive throughout and largest under heavy JPEG. DFF
+is excluded (image-only and near chance for the RGB and fusion models).
+
+
+TABLE IV
+DATA PROTOCOL AND TRAINING CONFIGURATION. SPLITS ARE AT THE VIDEO LEVEL SO NO SOURCE VIDEO CROSSES PARTITIONS.
+Item
+Setting
+Data
+Source corpus
+FF++ + DeepFakeDetection extension
+Split granularity
+Video level (no leakage across splits)
+Train / val / test
+19,571 / 3,573 / 4,675 crops
+Cross-dataset eval
+Celeb-DF, DFDC, DFF
+Class balance
+Class-weighted cross-entropy
+Preprocessing
+Face detection
+MTCNN
+Crop box
+1.3× expansion, square-padded
+Input resolution
+299 × 299
+Noise extractor
+Noiseprint++ (TruFor)
+Extraction order
+Full frame at native res., then crop
+Item
+Setting
+Architectures
+RGB branch
+Xception (ImageNet-pretrained) + 3-layer
+head
+Residual branch
+ResNet + 3-layer head; InstanceNorm2d
+input
+Late-Fusion
+Concatenated RGB + noise branches, joint
+head
+Training
+Optimizer
+AdamW
+LR schedule
+Tri-rate, 3-epoch warmup
+LR plateau control
+ReduceLROnPlateau on val macro-F1
+Backbone unfreezing
+Progressive
+Stabilization
+Gradient clipping
+Loss
+Class-weighted cross-entropy
+Evaluation
+Primary metric
+ROC-AUC
+Aggregation
+Video-level (mean); frame-level for DFF
+Bottleneck probe
+5-fold CV, 3,000 FF++ test samples
+Fixed-fusion variants
+5 seeds each

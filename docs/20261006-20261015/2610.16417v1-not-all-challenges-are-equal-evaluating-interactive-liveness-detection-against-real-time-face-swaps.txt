@@ -1,0 +1,485 @@
+F. Boutros, N. Damer, M. Fang, M. Gomez-Barrero, P. Neto, K. Raja,
+C. Rathgeb, A. Sequeira, M. Todisco and R. Tolosana: (Hrsg.): BIOSIG 2026,
+Lecture Notes in Informatics (LNI), Gesellschaft für Informatik, Bonn 2026
+Not All Challenges Are Equal: Evaluating Interactive
+Liveness Detection Against Real-Time Face Swaps
+Anton Firc
+1, David Drtil1, Martin Perešíni
+1, Milan Šalko
+1, Vojtěch Staněk
+1, and
+Kamil Malinka
+1
+Abstract: Remote identity verification assumes that a camera stream shows a live person, yet public
+real-time face-swap tools can replace that person before the stream reaches the verifier. Passive deepfake
+detectors generalize poorly to new generators, while interactive challenges are often selected without
+evidence of which gestures expose current attacks. We evaluate randomized gesture challenges in 108
+live sessions with six subjects, 24 impersonated identities, and two face-swap tools, DeepFaceLive and
+FaceFusion, injected through a virtual camera. The static calibration segment reaches a session-level
+AUC of 0.878 with a frozen UCF spatial detector, while the mean across the active-gesture windows
+reaches 0.988. Pose and combined gestures have the highest point estimates, whereas expressions show
+no clear improvement. Hand occlusion against FaceFusion, configured with an occlusion mask, scores
+below the static baseline. The end-to-end time required to satisfy the validator also distinguishes
+attacks from genuine sessions, achieving a session-level AUC of 0.732, although this signal includes
+synthesis and transport delays. These results show that challenge sets should be tested against current
+attack configurations and that response time can provide an additional, deployment-specific signal.
+Keywords: Deepfake, Face Swapping, Liveness Detection, Interactive Verification, Passive Detection,
+Remote Identity Verification, Biometric Security, Presentation Attack Detection
+1
+Introduction
+Remote identity verification, from video calls to online banking onboarding, rests on a
+strong premise: that the camera shows a real person, in real time, in front of a real lens. Deep
+learning has reduced the cost of a convincing synthetic face to minutes of setup [FMH23].
+A single public photo feeds a real-time face-swap pipeline on a consumer graphics card,
+and the attacker routes the synthesized stream into the call through a virtual camera driver.
+No server compromise, network tampering, or physical artifact is needed. The threat is real:
+a widely reported case includes a 25 million USD transfer authorized after a video call with
+a deepfake CFO [CN24].
+Traditional passive detection searches individual frames for digital inconsistencies such as
+blending seams or unnatural textures. It catches older generators but generalizes poorly
+across the moving target of new tools [Pe24], and deployed liveness systems fall to injected
+1
+Security@FIT, Brno University of Technology, Brno, The Czech Republic,
+ifirc@fit.vut.cz,
+https://orcid.org/0000-0002-4717-1910;
+iperesini@fit.vut.cz,
+https://orcid.org/0000-0002-2875-9567;
+isalko@fit.vut.cz,
+https://orcid.org/0009-0004-9604-168X;
+istanek@fit.vut.cz,
+https://orcid.org/0009-0000-5722-0571;
+malinka@fit.vut.cz,
+https://orcid.org/0000-0002-9009-2193
+arXiv:2610.16417v1  [cs.CV]  12 Oct 2026
+
+
+Anton Firc, David Drtil, Martin Perešíni, Milan Šalko, Vojtěch Staněk, and Kamil Malinka
+streams even when the vendor advertises an active test [WLL24]. A static detector alone is
+not a reliable strategy for a service that must keep verifying users when the next generator
+releases.
+A natural response is to add an interactive layer to the passive pipeline. The user performs a
+short, randomized sequence of actions, such as rotating the head, changing expression, or
+covering part of the face, within a fixed time. These actions can expose synthesis errors
+when the swap must reproduce unusual poses or occlusions in real time. Randomization
+reduces the risk of simple pre-recorded replay, although it does not prevent an attacker from
+generating and injecting a live response. Such challenges are widely deployed in commercial
+liveness verification [Li22; WLL24], but their selection is often based on intuition. This
+proof-of-concept study measures which gesture categories improve detection relative to
+current real-time face swaps and identifies cases in which a challenge provides little or no
+benefit.
+We implement a hybrid architecture that combines frozen passive detectors with randomized
+gesture challenges and evaluate it in 108 live sessions with six subjects, 24 impersonated
+identities, and two real-time face-swap tools, DeepFaceLive [Li23] and FaceFusion [Ru23],
+injected through a virtual camera. Using the raw UCF [Ya23] spatial score without fusion
+weights, the static calibration segment reaches a session-level AUC of 0.878, while the mean
+across the active-gesture windows reaches 0.988. The improvement is not uniform: pose
+and combined gestures have the highest point estimates, expressions show no clear gain,
+and occlusion against FaceFusion scores below the static baseline. Because FaceFusion
+was tested only with its occlusion mask enabled, this result is consistent with a tool-specific
+countermeasure but does not isolate its causal effect. The campaign also revealed that the
+tested attack pipelines take longer to satisfy the validator. This end-to-end timing signal
+reaches a session-level AUC of 0.732, but it includes synthesis and virtual-camera delay
+as well as user response time. The work described in this paper results from a previously
+completed master‘s thesis [Dr26].
+In summary, the main outcomes of this work are:
+•
+An end-to-end liveness pipeline combining frozen passive detection with randomized
+gesture challenges, evaluated in 108 live genuine and attack sessions.
+•
+A subject-clustered comparison of gesture categories against a static baseline, showing
+aggregate improvement but different effects across attack configurations.
+•
+An empirical evaluation of verifier-observed time-to-validation as a complementary
+end-to-end signal during live face-swap attacks.
+2
+Background and Related Work
+Passive detection and its generalization gap. Passive detection analyzes video without
+requiring additional user action; its cues range from synthesis artifacts to physiological incon-
+
+
+Not All Challenges Are Equal
+sistencies, such as the spatial and temporal biological signals used by FakeCatcher [CDY20].
+Artifact-based detectors can learn cues associated with the manipulations present in their
+training data, and their performance can decline when tested on different manipulation
+methods or data distributions. Cross-dataset evaluations and an in-the-wild benchmark of
+deepfakes circulated in 2024 document this generalization gap [Ch25; Pe24]. Methods based
+on self-blended training images [SY22], common forgery features [Ya23], and pretrained
+vision-language features [OLL23] aim to improve transfer beyond the manipulations used for
+training. The deployed pipeline uses UCF [Ya23] and CViT2 [Wo24] with frozen pretrained
+weights, while the evaluation below reports raw UCF scores on live DeepFaceLive and
+FaceFusion outputs without generator-specific adaptation.
+Real-time face-swap tools. Mature open-source toolchains make live face swapping acces-
+sible. DeepFaceLab [Li23] trains a model for a specific identity pair, while DeepFaceLive
+applies the exported .dfm model to a webcam stream. Community models for public
+figures can be downloaded without training a new model. FaceFusion [Ru23] instead swaps
+identities from reference images using InsightFace embeddings [Gu18]. Its optional XSeg
+occlusion mask preserves foreground objects, such as hands, by excluding them from the
+swapped face region. The attacker can route either tool through a virtual camera into an
+application that reads the operating-system camera API [WLL24]. Residual artifacts include
+flicker, mask-boundary errors, identity drift at extreme poses, and failures around occluders;
+interactive challenges are intended to expose these weaknesses.
+Interactive liveness detection. Interactive liveness asks the user to perform an action within
+a time window and verifies the action in the video. Common examples include head rotation,
+blinking measured through the Eye Aspect Ratio [SČ16], expressions measured through
+landmarks or dedicated networks [Mi18], and hand-over-face occlusion. A pre-rendered
+deepfake cannot answer an arbitrary instruction, but a real-time swap can transfer the motion
+of its human driver [Li22]. Motion-only checks are therefore insufficient, as demonstrated
+against commercial services [Li22] and mobile SDKs [WLL24]. Hybrid designs instead use
+the challenge to provoke synthesis artifacts that a passive detector can measure [ŠFM24].
+DF-Captcha proposed this challenge-response principle [Mi22], while GOTCHA evaluated
+visible degradation on recordings from 47 users and 2022-era pipelines [MHM24]. We extend
+this evidence with live end-to-end sessions, subject-clustered estimates of category-level
+effects against current attack configurations, and an empirical analysis of verifier-observed
+time-to-validation.
+3
+Proposed Verification Pipeline
+The pipeline is a thin-client design: the browser only captures the webcam stream and
+displays instruction overlays, while all analysis runs on the server. A central controller
+manages the session as a state machine, drawing random actions from a challenge generator
+and enforcing a per-action timeout. Two branches analyze the incoming frames in parallel:
+a passive branch scoring every frame for deepfake artifacts and an interactive branch
+
+
+Anton Firc, David Drtil, Martin Perešíni, Milan Šalko, Vojtěch Staněk, and Kamil Malinka
+Browser client
+camera + overlay
+Pre-processing
+detect, align, 15 FPS
+Passive branch
+UCF, CViT2, identity
+Interactive branch
+action validators
+Decision
+logic
+Verdict
+genuine / attack
+Challenge generator + timer
+instructions
+Fig. 1: The verification pipeline: a passive branch (blue) scores frames for deepfake artifacts while an
+interactive branch (orange) validates randomized, time-bounded challenges; the decision logic fuses
+both.
+validating the requested action, and a decision logic module fuses both into the session
+verdict. Figure 1 shows the structure.
+Pre-processing. Frames are processed at approximately 15 FPS through the InsightFace
+buffalo_l pack [Gu18] (face detection, landmark regression, ArcFace head [De19]).
+Landmarks are stabilized with a One Euro filter [CRV12] and an affine alignment produces
+a canonical crop per detector. The pipeline runs with a P95 per-frame latency below 40 ms
+on a single consumer GPU.
+Passive branch. Two detectors with frozen public weights score each aligned crop:
+UCF [Ya23] produces a spatial score per frame, while CViT2 [Wo24] predictions are
+averaged over sliding frame windows. The models were not trained on outputs from
+DeepFaceLive or FaceFusion. An additional identity tracker anchors an ArcFace embedding
+on the first valid frame and monitors cosine similarity throughout the session. The deployed
+verdict uses these signals, but the gesture comparisons reported below use only the raw
+UCF spatial score.
+Interactive branch. Action validation runs on the MediaPipe Face Mesh and Hands
+models [Lu19] (468 face landmarks with blendshapes, 21 per hand). The gesture pool covers
+four categories: pose (head rotations and leans, verified through Euler angles), expression
+(smile, open mouth, eyebrows, verified through landmark distances and blendshapes),
+occlusion (covering an eye, the nose, or the mouth, verified by intersecting a hand mask [Sá23]
+with the facial region), and complex (two constraints in one hold, e.g., covering the mouth
+while turning left). A session opens with a two-second Hold Still calibration, followed by a
+randomized sequence of active actions, each bounded by a timeout; the validator reports
+success or failure for each action.
+Decision logic. The deployed system requires every challenge to be completed in time, fuses
+calibrated passive scores with per-category weights, and flags a session irrecoverably on
+a single high-confidence artifact detection. These engineering choices are not the subject
+of this paper: the analysis in Section 5 bypasses the fusion and works on raw per-gesture
+detector responses, so the reported ranking is independent of any weighting.
+
+
+Not All Challenges Are Equal
+4
+Experimental Methodology
+Setup and participants. All sessions ran on a single server (NVIDIA RTX 5080, AMD
+Ryzen 9, 64 GB RAM), with webcam capture pinned to 1280×720 at 30 FPS via an exact
+getUserMedia constraint. Recording took place in three rooms under diffuse daylight,
+subjects seated 50–70 cm from the camera. Six volunteers participated under written
+consent: three men (25, 27, 51) and three women (24, 24, 49), all from the same broad ethnic
+group, appearing in the data only under anonymized identifiers. Each subject recorded 6
+genuine and 12 attack sessions, for a total of 108 sessions (36 genuine, 36 DeepFaceLive,
+36 FaceFusion), with roles shuffled to suppress learning effects. All decision thresholds
+were calibrated before the campaign on recordings of the author only. Each retained session
+begins with a two-second Hold Still calibration followed by 5, 6, or 9 active actions (22, 77,
+and 9 sessions, respectively; median six). Across the campaign, these actions span pose,
+expression, occlusion, and combined or sequential challenges, with their order randomized
+within each session. Labels are assigned at recording time.
+Attack generation. Attack sessions inject a real-time face swap through a virtual camera.
+DeepFaceLive runs pre-trained community .dfm models, two identities per subject with
+three sessions each. FaceFusion runs inswapper_128 with the xseg_1 occlusion module
+and four reference photos per identity (two frontal, two slight profiles). Attack identities are
+matched to the subject on gender and ethnic group, the two attributes that most reliably break
+a swap when mismatched, with an ArcFace cosine ranking as a tie-breaker; the campaign
+covers 24 attack identities in total.
+Analysis protocol. The action window, comprising the frames for which one requested
+action is held, is the gesture-level unit of analysis. Gesture and session AUCs use the
+mean raw UCF spatial score and bypass the deployed fusion weights and calibrations. We
+report ROC AUC between attack and genuine windows by gesture category and generator.
+Confidence intervals use 2 000 subject-clustered bootstrap resamples, with comparisons
+against the Hold Still baseline paired within each resample. Because the study contains only
+six subject clusters and examines several categories–generator contrasts, these intervals are
+descriptive and unadjusted for multiplicity. Session scores compare the mean UCF response
+from the single initial calibration segment with the mean across all subsequent active-gesture
+windows, thereby evaluating active capture as a complete protocol. Challenge-response
+latency is the interval from the end of one action’s hold window to the beginning of the
+next, converted through the measured session frame rate. Attack sessions include synthesis
+and virtual-camera transport that are absent from genuine sessions, so latency reflects
+the complete attack condition rather than an isolated human response time. Timed-out
+sessions were excluded during collection, but their number and durations were not retained;
+we therefore do not treat the observed latency difference as a quantified lower bound.
+We additionally report APCER and BPCER for the deployed system following ISO/IEC
+30107-3 [In23], while noting that virtual-camera injection falls outside the standard’s
+presentation-attack scope.
+
+
+Anton Firc, David Drtil, Martin Perešíni, Milan Šalko, Vojtěch Staněk, and Kamil Malinka
+Scope and limitations.
+This proof-of-concept study includes six subjects from one broad
+ethnic group and two real-time face-swap tools. Accordingly, the reported performance
+and gesture-level effects should be interpreted within the tested population and attack
+configurations. The latency results capture the end-to-end overhead of the tested attack
+pipelines and may vary across implementations and hardware.
+5
+Results
+5.1
+Contribution of the Interactive Layer
+Among the 108 retained completed sessions, the deployed system, including fusion and
+gesture-completion logic, achieves 94.4 % accuracy, with an APCER of 2.8 % and a BPCER
+of 11.1 % [In23]. The observed BPCER indicates that reducing genuine-user rejection
+remains an important requirement for practical deployment. To compare the aggregate
+active-capture protocol with its initial calibration segment, we use raw UCF scores from
+the two segments of the same sessions. The Hold Still calibration segment separates attack
+from genuine sessions with an AUC of 0.878 (95 % CI [0.819, 0.963]). The mean across the
+active-gesture windows reaches 0.988 [0.966, 1.000], a paired difference of +0.110 [+0.032,
++0.161]. Restricting each session to its first 5 active actions yields a similar AUC of 0.987
+[0.968, 1.000]. Across six leave-one-subject-out analyses, the active-window AUC ranges
+from 0.983 to 0.998. Figure 2 shows that several attacks overlap the genuine cluster during
+calibration but shift upward during the active segment. Thus, under the tested conditions,
+aggregating responses across randomized actions improves separation without retraining
+the detector.
+5.2
+Gesture-Level Effectiveness
+Table 1 compares each gesture category with the Hold Still baseline. Pose and complex
+actions have the highest point estimates against DeepFaceLive, but their intervals include
+zero, and expression shows no clear improvement. The estimates, therefore, do not establish
+a universal ranking. The session-level evidence is stronger because it aggregates multiple
+randomized windows.
+The clearest category-level difference points downward. Occlusion against FaceFusion
+reaches an AUC of 0.840, compared with 0.910 for Hold Still; the paired difference is −0.069
+[−0.180, −0.017]. This is exploratory evidence because the intervals are not adjusted for
+the eight category–generator contrasts. FaceFusion was tested with its xseg_1 occlusion
+mask enabled, so the result is consistent with the mask preserving foreground occluders
+and reducing visible swap artifacts. However, the experiment did not include a matched
+run with xseg_1 disabled and therefore cannot isolate its causal effect. Complex actions
+against FaceFusion show the same direction (−0.043 [−0.142, +0.024]), but their interval
+
+
+Not All Challenges Are Equal
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Session score, Hold Still only (static baseline)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Session score, active gestures
+Genuine
+DeepFaceLive
+FaceFusion
+Fig. 2: Per-session raw spatial score on the Hold Still baseline (x) versus the mean across the
+active-gesture windows (y). Points above the diagonal have a higher score during active capture than
+during calibration.
+DeepFaceLive
+FaceFusion
+Category
+AUC
+Δ vs. baseline [CI]
+AUC
+Δ vs. baseline [CI]
+Hold Still (baseline)
+0.847
+—
+0.910
+—
+Expression
+0.871
++0.024 [−0.079, +0.097]
+0.924
++0.015 [−0.054, +0.094]
+Pose
+0.927
++0.080 [−0.013, +0.166]
+0.943
++0.033 [−0.036, +0.083]
+Occlusion
+0.882
++0.035 [−0.051, +0.085]
+0.840
+−0.069 [−0.180, −0.017]
+Complex
+0.932
++0.085 [−0.002, +0.185]
+0.867
+−0.043 [−0.142, +0.024]
+Tab. 1: Raw UCF AUC by gesture category and paired difference from Hold Still. Intervals use a
+subject-clustered bootstrap and are unadjusted for multiplicity; only the FaceFusion occlusion contrast
+has a 95 % interval that excludes zero.
+includes zero. The result illustrates that a challenge reported as effective against earlier
+pipelines [MHM24] may provide less evidence against an attack configuration designed to
+handle it.
+Single-gesture cells are too small for inference; for example, Smile against DeepFaceLive
+reaches an AUC of 0.643.
+5.3
+Challenge-Response Latency
+Time-to-validation provides a second observable in addition to the detector score. Under
+the tested conditions, attack sessions take longer to satisfy the validator for all six subjects,
+with a median within-subject difference of +1.0 s and a range of +0.2 to +1.6 s. Pooled
+
+
+Anton Firc, David Drtil, Martin Perešíni, Milan Šalko, Vojtěch Staněk, and Kamil Malinka
+0
+2
+4
+6
+8
+10
+12
+14
+16
+Time to satisfy the validator (s)
+Expression
+Pose
+Occlusion
+Complex
+Genuine
+DeepFaceLive
+FaceFusion
+Fig. 3: Time to satisfy the challenge validator per gesture category. Attack sessions shift right across
+all categories, most strongly for occlusion and complex actions.
+over gestures, the median is 3.1 s for genuine sessions, 4.0 s for DeepFaceLive, and 3.6 s for
+FaceFusion. Latency alone separates attacks from genuine windows, with an AUC of 0.653
+[0.594, 0.734], while the mean latency per session is 0.732 [0.635, 0.870]. These estimates
+describe the complete attack condition, including synthesis and virtual-camera transport,
+rather than human response time alone.
+Occlusion yields the highest latency AUC, 0.800 [0.674, 0.961], with paired differences
+from pose of +0.173 [+0.097, +0.267] for DeepFaceLive and +0.181 [+0.060, +0.276]
+for FaceFusion. Thus, FaceFusion occlusion windows combine weaker spatial evidence
+with a timing difference. Because attacks add synthesis and virtual-camera transport, and
+timed-out attempts are not retained, latency should be calibrated locally as an end-to-end
+signal.
+6
+Conclusions
+The static calibration segment reaches a session-level AUC of 0.878 against two unseen
+attack tools, while the mean across the active-gesture windows reaches 0.988 without
+retraining the UCF detector. The category results are less definitive: pose and combined
+tasks have the highest point estimates, expressions show no clear improvement, and face
+covering against FaceFusion scores below the static baseline. Verifier-observed time-to-
+validation provides additional separation, reaching a session-level AUC of 0.732, although
+this estimate includes synthesis and transport delay.
+Remote verifiers should combine passive inspection with short, randomized actions and
+re-evaluate these actions as attack tools change. Response time may add evidence, but
+
+
+Not All Challenges Are Equal
+requires deployment-specific calibration. Within its six-subject, two-tool scope, this proof-
+of-concept supports active capture as a design principle, not universal performance values
+or a fixed gesture ranking.
+Acknowledgment
+This work was supported by the Brno University of Technology internal project FIT-S-26-
+9011. Computational resources were provided by the e-INFRA CZ project (ID:90254),
+supported by the Ministry of Education, Youth and Sports of the Czech Republic. The
+authors used ChatGPT and Claude for copy-editing, reviewed all AI-assisted text, and take
+full responsibility for the content.
+References
+[CDY20]
+Ciftci, U. A.; Demir, I.; Yin, L.: FakeCatcher: Detection of Synthetic Portrait Videos using
+Biological Signals. IEEE Transactions on Pattern Analysis and Machine Intelligence,
+pp. 1–1, 2020.
+[Ch25]
+Chandra, N. A. et al.: Deepfake-Eval-2024: A Multi-Modal In-the-Wild Benchmark of
+Deepfakes Circulated in 2024, 2025, https://doi.org/10.48550/ARXIV.2503.02857.
+[CN24]
+CNN: Finance worker pays out 25 million USD after video call with deepfake CFO,
+https://edition.cnn.com/2024/02/04/asia/deepfake-cfo-scam-hong-kong-intl-hnk,
+Accessed: 2026-07-07, 2024.
+[CRV12]
+Casiez, G.; Roussel, N.; Vogel, D.: 1 euro Filter: A Simple Speed-based Low-pass
+Filter for Noisy Input in Interactive Systems, New York, NY, USA, 2012, https :
+//doi.org/10.1145/2207676.2208639.
+[De19]
+Deng, J. et al.: ArcFace: Additive Angular Margin Loss for Deep Face Recognition,
+2019, https://doi.org/10.1109/CVPR.2019.00482.
+[Dr26]
+Drtil, D.: Detection of Facial Deepfakes Using Interactive Liveness Tests, Master’s thesis,
+Brno University of Technology, Faculty of Information Technology, 2026.
+[FMH23]
+Firc, A.; Malinka, K.; Hanáček, P.: Deepfakes as a threat to a speaker and facial
+recognition: an overview of tools and attack vectors, 2023.
+[Gu18]
+Guo, J. et al.: InsightFace: 2D and 3D Face Analysis Project, GitHub repository, 2018,
+https://github.com/deepinsight/insightface.
+[In23]
+International Organization for Standardization: ISO/IEC 30107-3:2023 Information
+technology – Biometric presentation attack detection – Part 3: Testing and reporting,
+Geneva, Switzerland, 2023, https://www.iso.org/standard/79520.html.
+[Li22]
+Li, C. et al.: Seeing is living? Rethinking the security of facial liveness verification in
+the deepfake era, Boston, MA, 2022.
+[Li23]
+Liu, K. et al.: DeepFaceLab: Integrated, flexible and extensible face-swapping framework.
+Pattern Recognition 141, p. 109628, 2023.
+[Lu19]
+Lugaresi, C. et al.: MediaPipe: A Framework for Building Perception Pipelines, 2019,
+https://doi.org/10.48550/arXiv.1906.08172.
+
+
+Anton Firc, David Drtil, Martin Perešíni, Milan Šalko, Vojtěch Staněk, and Kamil Malinka
+[MHM24]
+Mittal, G.; Hegde, C.; Memon, N.: GOTCHA: Real-Time Video Deepfake Detection via
+Challenge-Response. In: Proceedings of the 2024 IEEE 9th European Symposium on
+Security and Privacy (EuroS&P). Available at: https://arxiv.org/abs/2210.06186, IEEE,
+2024.
+[Mi18]
+Ming, Z. et al.: FaceLiveNet: End-to-End Networks Combining Face Verification with
+Interactive Facial Expression-Based Liveness Detection, 2018, https://doi.org/10.1109/
+ICPR.2018.8545274.
+[Mi22]
+Mirsky, Y.: DF-Captcha: A Deepfake Captcha for Preventing Fake Calls, arXiv preprint
+arXiv:2208.08524, Available at: https://arxiv.org/abs/2208.08524, 2022.
+[OLL23]
+Ojha, U.; Li, Y.; Lee, Y. J.: Towards Universal Fake Image Detectors That Generalize
+Across Generative Models, 2023, https://doi.org/10.1109/CVPR52729.2023.02345.
+[Pe24]
+Pei, G. et al.: Deepfake Generation and Detection: A Benchmark and Survey, 2024,
+https://doi.org/10.48550/ARXIV.2403.17881.
+[Ru23]
+Ruhs, H.: FaceFusion: Industry leading face manipulation platform, GitHub repository,
+2023, https://github.com/facefusion/facefusion.
+[Sá23]
+Sánchez-Brizuela, G. et al.: Lightweight real-time hand segmentation leveraging Medi-
+aPipe landmark detection, 2023, https://doi.org/10.1007/s10055-023-00858-0.
+[SČ16]
+Soukupová, T.; Čech, J.: Real-Time Eye Blink Detection using Facial Landmarks, 2016,
+https://vision.fe.uni-lj.si/cvww2016/proceedings/papers/05.pdf.
+[ŠFM24]
+Šalko, M.; Firc, A.; Malinka, K.: Security Implications of Deepfakes in Face Authentica-
+tion, Avila, 2024.
+[SY22]
+Shiohara, K.; Yamasaki, T.: Detecting Deepfakes With Self-Blended Images, 2022,
+https://doi.org/10.1109/CVPR52688.2022.01816.
+[WLL24]
+Wang, X.; Luo, K.; Lau, W.: Living a Lie: Security Analysis of Facial Liveness Detection
+Systems in Mobile Apps, ACNS 2024, ed. by Pöpper, C.; Batina, L., Cham, 2024,
+https://doi.org/10.1007/978-3-031-54776-8_17.
+[Wo24]
+Wodajo, D. et al.: Improved Deepfake Video Detection Using Convolutional Vision
+Transformer, 2024, https://doi.org/10.1109/GEM61861.2024.10585593.
+[Ya23]
+Yan, Z. et al.: UCF: Uncovering Common Features for Generalizable Deepfake Detection,
+2023, https://doi.org/10.1109/ICCV51070.2023.02048.
